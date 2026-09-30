@@ -1,45 +1,42 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform focused on original, instant-play games that run directly in modern browsers.
+WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games that run directly in modern browsers.
 
-## v15 snapshot
+## Current release
 
-- **47 playable games** across **76 genre tags**.
-- Featured release: **Driftglass Links**.
-- New v15 releases: Driftglass Links and Tideglass Surveyor.
-- Prism Duel 1.1 adds persistent VS AI play while preserving same-device two-player competition.
-- Local discovery includes search, genre, input, **Solo / Local Multiplayer mode**, status, curated collections, recommendations, Surprise Me, and several sort modes.
-- Local score handling supports both higher-is-better and lower-is-better records.
-- Optional local keyboard remapping is available in **9 compatible games** through the reusable shared input layer.
-- Persistent local favorites, ratings, **50 achievements**, completion count, scores, run history, sessions, playtime, challenges, accessibility/audio preferences, profile backup/restore, and game-specific progression.
-- PWA manifest and `wwg-v15` service worker cache the complete catalog for static/offline-capable hosting.
-- No build step and no required third-party runtime framework dependencies.
+**v20** — 57 games, 90 genre tags, 67 local achievements, 22 remappable releases, responsive desktop/mobile layouts, PWA/offline support, local profiles, favorites, Play Later, ratings, score history, Daily and Weekly Circuits, deterministic Daily Pick, shareable discovery state, curated collections, recommendations, and three-game discovery mixes.
 
-## Running locally
+Featured release: **Mirrormesh Relay**.
 
-Serve the folder with any static web server, for example:
+## Run locally
 
-`python -m http.server 8000`
+Serve this folder with any static HTTP server. For example:
 
-Then open the served origin in a modern browser. Direct `file://` use is not recommended because service workers require HTTP(S).
+```sh
+python -m http.server 8000
+```
 
-## Verification
+Then open `http://localhost:8000`.
 
-Run the included release checks from the project root:
+The project contains no required server-side runtime or paid API dependency.
 
-- `node tests/smoke.js`
-- `python tests/v15_static.py`
-- `python tests/v15_http.py`
-- `python tests/v15_quick.py`
-- `python tests/v15_events.py`
-- `python tests/v15_remap.py`
-- `node tests/v15_direction.js`
-- `python tests/v15_shots.py`
+## Structure
 
-## Privacy
+- `index.html` — discovery/home platform
+- `game.html` — reusable game detail/launch shell
+- `js/games.js` — data-driven game catalog
+- `js/app.js` — platform/profile/discovery logic
+- `assets/wwg-input.js` — shared remappable input layer
+- `games/*/index.html` — self-contained game builds
+- `covers/*.svg` — local game cover art
+- `tests/` — static, runtime, browser, HTTP, remap, score-event, and authored-content checks
+- `sw.js` / `manifest.webmanifest` — PWA/offline support
+- `vercel.json` — static Vercel configuration
 
-Player state and analytics remain local to the browser in v15. WorldWideGames does not require a cloud account.
+## Canonical project targets
 
-## Branding
+- Source mirror: `ArchitectIndustries/World-Wide-Games`
+- Production project ID: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`
+- Production origin: `https://worldwidegames.vercel.app`
 
 WorldWideGames is owned and operated by Architect Industries.

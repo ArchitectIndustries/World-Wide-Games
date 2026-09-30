@@ -2,129 +2,137 @@
 
 Last updated: 2026-09-30
 Owner/operator: Architect Industries
-Current source release: v15
-Status: **47-game** playable static browser-gaming platform; deployment-ready; not yet verified on a public production origin.
+Current source release: v20
+Production release: v15 at `https://worldwidegames.vercel.app`
+Canonical GitHub repository: `ArchitectIndustries/World-Wide-Games` (`main`)
+Status: **57-game** playable static browser-gaming platform. v20 is validated and deployment-ready. Vercel production remains on the last user-verified v15 deployment because the connected deployment authorization still returns 403 for the established project.
 
 ## Architecture
 
 - Static host-anywhere platform with a data-driven catalog in `js/games.js` and reusable `game.html?id=<id>` shell.
-- Local browser profile tracks plays, sessions, longest sessions, total/daily/per-game playtime, recent games, favorites, ratings, achievements, Daily/Weekly Circuit activity, completion milestones, direction-aware best scores, rolling scored-run history, accessibility/audio preferences, keyboard mapping, profile backup/restore, and game-specific saves.
-- Discovery combines search, **76 genre tags**, input capability, **Solo / Local Multiplayer play-mode filtering**, curated collections, player status, sort modes, recommendations, and Surprise Me.
-- `assets/wwg-input.js` provides the reusable keyboard-remapping layer. Nine releases now adopt it: Frostline Rescue, Chronofold Courier, Atlas Below, Quiet Protocol, Skyhook Sprint, Mosslight Vale, Lantern Line, Circuit Rush, and Orbit Breaker.
-- Score metadata supports higher-is-better and lower-is-better records. Lantern Line and Driftglass Links exercise the lower-is-better path.
-- `wwg-v15` service worker caches every registered game page and cover plus shared platform assets, with network-first navigation fallback.
+- Local browser profile tracks plays, sessions, playtime, recent games, favorites, Play Later, ratings, achievements, Daily/Weekly Circuit activity, completion milestones, direction-aware best scores, scored-run history, accessibility/audio preferences, keyboard mapping, profile backup/restore, discovery mixes, and game-specific saves.
+- Discovery supports search, **90 genre tags**, input capability, Solo / Local Multiplayer filtering, curated collections, player status, sorting, recommendations, deterministic Daily Pick, shareable/bookmarkable discovery query state, and one-click three-game mixes.
+- `assets/wwg-input.js` is the reusable keyboard-remapping layer. **22 releases** now adopt it.
+- Score metadata supports both higher-is-better and lower-is-better records.
+- `wwg-v20` service worker caches the complete 57-game catalog and covers plus shared platform assets, with network-first navigation fallback.
 - `vercel.json` remains included for static Vercel deployment.
 
-## v15 production work
+## v20 production work
 
 ### New releases
 
-- **Driftglass Links** — featured six-hole physics/golf game with drag-to-shoot aiming, ricochet walls, sand, water hazards, keyboard, touch/pointer, gamepad support, and lower-is-better stroke records.
-- **Tideglass Surveyor** — six-chart cartography/logic game. Players triangulate hidden waymarks from three lighthouse distance readings, manage four probes per chart, and seal a scored atlas using pointer/touch or keyboard play.
-
-### Prism Duel 1.1
-
-- Added a **VS AI** mode while preserving the original same-device two-player mode.
-- AI turns, advances, fires on alignment, navigates around arena cover, and participates in the same first-to-five rules.
-- Mode can be toggled from the HUD or with `M`; the selected mode persists locally.
-- Added `ai-duel-won` scored completion metadata for solo victories while retaining `duel-complete` for local-versus play.
-- Registry now advertises Prism Duel as both **Solo** and **Local Multiplayer**.
+- **Mirrormesh Relay** — featured six-board optics puzzle. Rotate mirrors to steer a live beam through every beacon and into the receiver. Includes remappable keyboard controls, pointer/touch play, turn-efficient scoring, and independently verified solvability for all six authored boards.
+- **Hushwave Operator** — six-signal radio-tuning puzzle/simulation. Tune frequency, phase, and gain, read the live oscilloscope, use diagnostic hints, and lock increasingly narrow hidden carriers. Includes remappable keyboard controls plus pointer/touch sliders.
 
 ### Platform upgrades
 
-- Added **play-mode filtering** for Solo and Local Multiplayer games.
-- Game cards and game-detail capability badges now expose play modes alongside input capabilities.
-- Added **Aim & Arc** curated discovery for golf, precision, pinball, physics, and sports games.
-- Expanded shared keyboard remapping to **Circuit Rush** and **Orbit Breaker**, bringing compatible releases to **9**.
-- Fixed Orbit Breaker's initial shot cooldown so the first remapped fire input works immediately after launch.
-- Added profile **games cleared** progression based on unique completion-event games.
-- Added five achievements: Links Finisher, Tide Cartographer, Prism Soloist, Twenty Clears, and Catalog Master, bringing the platform total to **50**.
-- Updated featured PWA shortcut to Driftglass Links and upgraded offline cache to `wwg-v15` for the complete 47-game catalog.
+- Added **Make 3-game mix** to discovery. It respects the active search/filter/collection state, prioritizes less-played eligible releases, adds up to three titles to Play Later, and records local mix creation.
+- Added **Signals & Circuits** curated discovery for Signal, Radio, Optics, Programming, Automation, and Logic releases.
+- Added three achievements: Mesh Closer, Quiet Band, and Mix Curator, bringing the platform total to **67**.
+- Remapping coverage rises from 20 to **22 games** with both new releases using the shared input layer.
+- Featured PWA shortcut now launches Mirrormesh Relay.
+- Offline cache upgraded to `wwg-v20`.
 
-## Current catalog — 47 games
+## Current catalog — 57 games
 
-1. **Driftglass Links** — Golf / Sports / Physics / Precision
-2. **Tideglass Surveyor** — Cartography / Logic / Puzzle / Exploration
-3. **Spanwright** — Construction / Engineering / Physics / Puzzle
-4. **Lantern Line** — Vehicle Simulation / Transit / Logistics / Simulation
-5. **Frostline Rescue** — Rescue / Emergency / Action / Strategy
-6. **Signal Choir** — Memory / Music / Puzzle / Relaxing
-7. **Terrace Keeper** — Farming / Agriculture / Management / Relaxing
-8. **Chronofold Courier** — Time Loop / Puzzle / Strategy / Experimental
-9. **Hearthline Kitchen** — Cooking / Time Management / Management / Arcade
-10. **Spectra Safari** — Photography / Nature / Exploration / Relaxing
-11. **Ashfall Caravan** — Narrative / Adventure / Management / Interactive Fiction
-12. **Twinforge Expedition** — Co-op / Multiplayer / Exploration / Survival
-13. **Mothlight Museum** — Hidden Object / Mystery / Puzzle / Observation
-14. **Windward Cargo** — Flight / Delivery / Physics / Arcade
-15. **Cipher Court** — Deduction / Mystery / Logic / Puzzle
-16. **Moonwake Angler** — Fishing / Relaxing / Simulation
-17. **Deepwater Signal** — Underwater / Stealth / Exploration / Simulation
-18. **Emberdeck Pilgrim** — Deckbuilder / Card / Roguelike / Strategy
-19. **Command Bloom** — Programming / Logic / Puzzle
-20. **Railspire Dispatch** — Logistics / Strategy / Puzzle
-21. **Glyphsmith** — Word / Typing / Puzzle
-22. **Solar Loom** — Sandbox / Experimental / Simulation / Strategy
-23. **Atlas Below** — Exploration / Survival / Crafting
-24. **Aetherstead Colony** — City Builder / Colony / Simulation / Strategy
-25. **Prism Duel** — Multiplayer / Competitive / Arena / Physics
-26. **Crownline Tactics** — Tactical / Strategy / Turn-Based
-27. **Echo Bazaar** — Economy / Simulation / Management / Strategy
-28. **Lumen Relay** — Logic / Puzzle / Board
-29. **Starweaver Drift** — Space / Exploration / Simulation
-30. **Pulse Archive** — Rhythm / Music / Arcade
-31. **Verdant Circuit** — Ecology / Strategy / Simulation / Board
-32. **Quiet Protocol** — Stealth / Puzzle / Action
-33. **Forgeflow** — Automation / Strategy / Simulation / Puzzle
-34. **Cloudforge Pinball** — Pinball / Physics / Arcade
-35. **Mosslight Vale** — RPG / Adventure / Exploration
-36. **Gravity Foundry** — Physics / Puzzle / Simulation
-37. **Hexbound Tactics** — Card / Strategy / Board
-38. **Harbor Pulse** — Simulation / Management / Arcade
-39. **Rift Relay** — Co-op / Multiplayer / Arcade
-40. **Skyhook Sprint** — Platformer / Action / Speedrun
-41. **Neon Stack** — Puzzle / Arcade
-42. **Circuit Rush** — Racing / Arcade / Time Trial
-43. **Bastion Bloom** — Strategy / Tower Defense
-44. **Emberfield Survival** — Survival / Action / Roguelite
-45. **Vector League** — Sports / Competitive / Arcade
-46. **Orbit Breaker** — Space / Shooter / Arcade
-47. **Rune Depths** — Dungeon / Roguelite / Adventure
+1. Mirrormesh Relay
+2. Hushwave Operator
+3. Pulsevine Parkour
+4. Tessera Commons
+5. Glasswing Polo
+6. Rootsong Architect
+7. Stoneveil Ascent
+8. Tidal Foundry
+9. Riftwake Regatta
+10. Archive Alchemist
+11. Driftglass Links
+12. Tideglass Surveyor
+13. Spanwright
+14. Lantern Line
+15. Frostline Rescue
+16. Signal Choir
+17. Terrace Keeper
+18. Chronofold Courier
+19. Hearthline Kitchen
+20. Spectra Safari
+21. Ashfall Caravan
+22. Twinforge Expedition
+23. Mothlight Museum
+24. Windward Cargo
+25. Cipher Court
+26. Moonwake Angler
+27. Deepwater Signal
+28. Emberdeck Pilgrim v1.2
+29. Command Bloom
+30. Railspire Dispatch
+31. Glyphsmith
+32. Solar Loom
+33. Atlas Below v1.4
+34. Aetherstead Colony
+35. Prism Duel v1.1
+36. Crownline Tactics
+37. Echo Bazaar
+38. Lumen Relay
+39. Starweaver Drift
+40. Pulse Archive
+41. Verdant Circuit
+42. Quiet Protocol
+43. Forgeflow
+44. Cloudforge Pinball v1.1
+45. Mosslight Vale v1.7
+46. Gravity Foundry
+47. Hexbound Tactics
+48. Harbor Pulse
+49. Rift Relay
+50. Skyhook Sprint
+51. Neon Stack v1.1
+52. Circuit Rush
+53. Bastion Bloom
+54. Emberfield Survival
+55. Vector League
+56. Orbit Breaker
+57. Rune Depths
 
 ## Validation completed on 2026-09-30
 
 See `TEST_REPORT.md` for exact coverage and limitations.
 
-- All **47 game scripts** boot and advance under the runtime harness.
-- Registry contains 47 unique game IDs, **76 distinct genre tags**, one featured release, normalized score metadata on every game, and 9 remappable releases.
-- All registered game pages/covers exist and are included in the `wwg-v15` service worker.
-- Fresh local HTTP delivery returned **200 across 105 tested paths**.
-- Chromium in-memory browser checks confirmed 47 catalog cards, **50 achievements**, Aim & Arc filtering, Solo/Local Multiplayer filtering, Remappable filtering, 390 px mobile width without horizontal overflow, direct interaction/scoring for both new games, Prism Duel AI mode, and custom remapped input in Circuit Rush and Orbit Breaker.
-- Shared-remap regression is green across **9 compatible games**.
-- Standardized numeric score-event suite is green across **37 representative games**.
-- Dedicated direction-aware record tests verify worse low scores are rejected and better low scores are accepted for both Lantern Line and Driftglass Links.
-- Public-facing source scan covered **102 files** and found no prohibited internal branding.
-- A real-origin Chromium smoke attempt against the local HTTP server was blocked by the execution environment with `net::ERR_BLOCKED_BY_ADMINISTRATOR`; HTTP delivery and browser behavior were therefore validated separately rather than claimed as one end-to-end origin test.
+- All **57 game scripts** boot and advance under the runtime harness.
+- Registry contains 57 unique IDs, **90 distinct genre tags**, one featured release, normalized score metadata on every game, and **22 remappable releases**.
+- All registered pages/covers exist and are included in `wwg-v20`.
+- Fresh local HTTP delivery returned **200 across 123 tested paths**.
+- Chromium interaction checks confirmed 57 catalog cards, **67 achievements**, Signals & Circuits discovery, 390 px mobile layout without horizontal overflow, three-game mix behavior, remapped input, and scored completion for both new games.
+- Shared-remap regression is green across **22 compatible games**.
+- Numeric score-event regression is green across **47 representative games**.
+- Deep validation proves all six Mirrormesh authored relays have valid solutions and all six Hushwave targets are reachable in-domain with an 86% lock threshold.
+- Public-facing source scan covered **122 files** and found no prohibited internal branding.
+
+## GitHub state
+
+- Repository: `ArchitectIndustries/World-Wide-Games`, default branch `main`.
+- Connected GitHub authorization has push/admin repository access.
+- At the beginning of the v20 run, GitHub `main` was still on v15 commit `647d291c28245e1d732aec457e84cfd39ec4d413`.
+- v20 is the verified source intended for synchronization during this run. The resulting GitHub commit is recorded in the run report and should be treated as the durable source mirror once synchronization completes.
 
 ## Vercel state
 
-- Connected team: Architect Industries (`architect-industries`).
-- Team ID: `team_wwOmTAdrfPwvTGNSLU1VarOy`.
-- Fresh workspace inspection returned **0 projects**.
-- The exposed `deploy_to_vercel` action was retried during v15 release work and failed before build creation with `Tool deploy_to_vercel not found`.
-- No project-creation action is currently exposed through the connected Vercel toolset.
-- No preview/production deployment, build log, runtime log, or verified public URL exists for v15. No deployment is claimed until a writable path succeeds and the live origin is browser-smoke-tested.
+- Production project: `worldwidegames`.
+- Project ID: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`.
+- Team: Architect Industries / `architect-industries`, team ID `team_wwOmTAdrfPwvTGNSLU1VarOy`.
+- Production domain: `https://worldwidegames.vercel.app`.
+- Last user-verified live release remains **v15 / Ready**.
+- Connected Vercel authorization previously returned **403 Forbidden** for deployment enumeration against the explicit project ID. Re-check on each release; when write access becomes available, deploy the newest verified release automatically to this exact project and smoke-test production. Never create a duplicate project solely because connector enumeration is stale.
 
-## Known issues / limitations
+## Persistence and recovery
 
-- Browser behavior and real HTTP delivery are validated separately in this environment; the release has not yet received an end-to-end smoke test against a public production origin.
-- All player identity, saves, scores, and analytics remain local-only. Cloud leaderboards/accounts require an authenticated backend before they can be added safely.
-- Nine games currently consume the shared keyboard mapping layer; remaining legacy releases keep their established controls until migrated deliberately.
+- `/WorldWideGames` remains the persistent release archive.
+- `ArchitectIndustries/World-Wide-Games` is the durable source mirror and should be consulted together with the Library on every run.
+- If one location is temporarily behind, prefer the newest fully verified release rather than rebuilding from an older source.
 
 ## Next high-value priorities
 
-- Establish the first verified Vercel deployment as soon as project/deployment write capability becomes available.
-- Continue migrating suitable legacy action/racing games to the shared remapping layer without changing established control feel.
-- Deepen Prism Duel AI with difficulty selection and stronger cover tactics, or expand another long-form title such as Mosslight Vale.
-- Add richer player-mode metadata where future games support both solo and local-co-op/competitive play.
-- Add cloud leaderboards/social identity only when authenticated storage can be introduced without compromising local-first reliability.
+- Deploy the newest verified release to the existing Vercel project when connector write access becomes available, then smoke-test the production origin and inspect logs.
+- Continue deliberate remapping migration for suitable legacy games.
+- Deepen a long-form title such as Emberdeck Pilgrim, Ashfall Caravan, or Mosslight Vale while maintaining catalog diversity.
+- Add consistent difficulty/assist metadata only when it can be authored per-game rather than inferred from genre.
+- Consider authenticated cloud scoreboards/social identity only when persistence, abuse handling, moderation, and privacy can be introduced without weakening local-first reliability.

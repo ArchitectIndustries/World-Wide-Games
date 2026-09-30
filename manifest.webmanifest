@@ -15,9 +15,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Driftglass Links",
-      "short_name": "Driftglass",
-      "url": "game.html?id=driftglass-links",
+      "name": "Mirrormesh Relay",
+      "short_name": "Mirrormesh",
+      "url": "game.html?id=mirrormesh-relay",
       "icons": [
         {
           "src": "assets/app-icon.svg",

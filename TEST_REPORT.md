@@ -1,104 +1,70 @@
 # WorldWideGames Validation Report
 
 Date: 2026-09-30
-Release: v15 — 47-game catalog, Driftglass Links + Tideglass Surveyor, Prism Duel AI, play-mode discovery, 9-game remapping coverage, and 50 achievements
-
-## Passed static/code checks
-
-- `js/games.js`, `js/app.js`, `js/game-page.js`, `assets/wwg-input.js`, and `sw.js` pass syntax/runtime bootstrap checks.
-- Inline JavaScript compiles and boots for all **47 game pages** under the runtime smoke harness.
-- Catalog contains exactly **47 unique game IDs** and **76 distinct genre tags**.
-- Exactly one featured release is registered: **Driftglass Links**.
-- Every catalog item has score metadata, a local game page, and a cover asset.
-- The `wwg-v15` service worker includes every registered game page and cover.
-- The PWA shortcut targets Driftglass Links.
-- Shared keyboard remapping is declared on **9 games**.
-- Lower-is-better score metadata is active for Driftglass Links and Lantern Line.
-- Public-facing source scan covered **102 files** with no `ChatGPT`, `OpenAI`, or internal-agent branding.
+Release: v20 — 57-game catalog, Mirrormesh Relay + Hushwave Operator, three-game discovery mixes, Signals & Circuits collection, 22-game remapping coverage, and 67 achievements
 
 ## Runtime smoke harness
 
 `node tests/smoke.js`
 
-- All 47 games initialize and advance animation/update frames without uncaught exceptions in the runtime harness.
-- Platform homepage boot passes.
-- Reusable game-detail shell boot passes.
+- All **57 registered games** boot and advance under the isolated runtime harness.
+- Platform homepage and reusable game-detail shell pass.
+- Result: **All smoke harness checks passed.**
 
-## HTTP delivery
+## Static/code checks
 
-`python tests/v15_http.py`
+`python tests/v20_static.py`
 
-- Fresh local threaded HTTP server returned **200 across 105 paths**.
-- Coverage includes the homepage, game shell, manifest, service worker, shared assets, every game page, and every cover.
+- 57 unique game IDs and **90 distinct genre tags**.
+- Exactly one featured game: Mirrormesh Relay.
+- Every game has score metadata, page, cover, and service-worker registration.
+- `wwg-v20` cache and PWA shortcut point at the v20 release.
+- **22 games** declare shared remapping.
+- Signals & Circuits, mix controls, and all three v20 achievements are registered.
+- Achievement total: **67**.
+- Public-facing scan covered **122 files** and found no prohibited internal branding.
 
-## Chromium interaction checks
+## HTTP origin delivery
 
-`python tests/v15_quick.py`
+`python tests/v20_http.py`
 
-- Homepage renders **47 cards** and reports a 47-game catalog.
-- Player profile renders **50 achievements**.
-- Aim & Arc collection includes Driftglass Links and existing compatible games.
-- Local Multiplayer filter exposes Prism Duel and Twinforge Expedition while excluding solo-only Driftglass Links.
-- Solo filter includes both Driftglass Links and dual-mode Prism Duel.
-- Remappable filter includes newly migrated Circuit Rush and Orbit Breaker.
-- 390×844 viewport reports no horizontal document overflow.
-- Driftglass Links keyboard aim + shot input was exercised before numeric course completion validation.
-- Tideglass Surveyor keyboard cursor movement and final chart completion were exercised.
-- Prism Duel's actual HUD mode toggle was clicked and an AI victory path produced `ai-duel-won` scoring metadata.
-- Custom remapped keyboard inputs were exercised in Circuit Rush and Orbit Breaker.
-- No tested page/script errors occurred.
+- Fresh local HTTP server requested platform pages/assets plus every registered game page and cover.
+- **123/123 paths returned HTTP 200.**
 
-## Shared remapping regression
+## Chromium interaction / responsive validation
 
-`python tests/v15_remap.py`
+`python tests/v20_quick.py`
 
-Custom I/J/K/L/F/H mapping was exercised in **9 games**:
+- 57 catalog cards and 67 achievements render.
+- Signals & Circuits returns both new releases.
+- Skill & Timing retains Pulsevine Parkour.
+- 390×844 viewport has no horizontal overflow.
+- Pulsevine and Tessera prior v19 interactions remain green.
+- Full authored completion paths emit numeric scores for Mirrormesh Relay and Hushwave Operator.
+- Make 3-game mix populates the persistent Play Later queue.
+- Share discovery control remains regression-covered.
 
-- Frostline Rescue
-- Atlas Below
-- Quiet Protocol
-- Skyhook Sprint
-- Mosslight Vale
-- Lantern Line
-- Chronofold Courier
-- Circuit Rush
-- Orbit Breaker
+## Shared input remapping
 
-## Score-event regression
+`python tests/v20_remap.py`
 
-`python tests/v15_events.py`
+- Custom I/J/K/L/F/H mapping passes across **22 supported games**.
+- New coverage verifies mapped mirror rotation in Mirrormesh Relay and mapped frequency adjustment in Hushwave Operator.
 
-- Numeric completion-score events validated across **37 representative games**.
-- New v15 coverage includes `driftglass-links:course-complete` and `tideglass-surveyor:survey-complete`.
-- Prism Duel's legacy local-versus `duel-complete` event remains intact.
+## Numeric game-event regression
 
-## Direction-aware best-score regression
+`python tests/v20_events.py`
 
-`node tests/v15_direction.js`
+- **47 games** emit numeric completion/score events under focused completion harnesses.
+- v20 adds `mirrormesh-relay:mesh-complete` and `hushwave-operator:band-decoded` coverage.
 
-- Lantern Line: stored 30 sec best rejects 40 sec and accepts 18 sec.
-- Driftglass Links: stored 22-stroke best rejects 29 strokes and accepts 17 strokes.
+## Deep authored-content validation
 
-## Visual checks
+`python tests/v20_deep.py`
 
-`python tests/v15_shots.py`
+- Independently enumerates mirror orientations and proves every one of the **six Mirrormesh relays** has at least one valid solution touching all required beacons and reaching the receiver.
+- Confirms **six Hushwave targets**, all parameters within the legal 0–100 range, and the intended 86% completion threshold.
 
-Generated release screenshots for:
+## Known test-environment limitation
 
-- full v15 homepage/catalog
-- Driftglass Links
-- Tideglass Surveyor
-- Prism Duel VS AI
-
-Screenshots were inspected for readable HUDs, coherent rendering, control visibility, and obvious layout breakage.
-
-## Real-origin browser limitation
-
-A dedicated Chromium test attempted to load the same local HTTP server by URL. The environment blocked loopback navigation with `net::ERR_BLOCKED_BY_ADMINISTRATOR`. This is recorded as an environment limitation, not as a passing origin test. Real HTTP status validation and Chromium behavior validation therefore remain separate in this release.
-
-## Deployment verification
-
-- Architect Industries Vercel team inspection returned **0 projects**.
-- `deploy_to_vercel` was retried and failed before build creation with `Tool deploy_to_vercel not found`.
-- No deployment ID, URL, build log, runtime log, or verified public origin exists for v15.
-- Production deployment is **not claimed**.
+- Production-origin deployment/log verification remains blocked by the connected Vercel authorization for the established project. Local HTTP, Chromium, runtime, static, and authored-content checks are not represented as production-origin tests.

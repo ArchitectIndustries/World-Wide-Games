@@ -1,7 +1,7 @@
 # Third-Party Notices
 
-WorldWideGames v15 has no third-party runtime JavaScript, art, audio, font, game-engine, or hosted-model dependency bundled into the release.
+WorldWideGames v20 is designed to run from first-party project source and locally authored procedural/vector presentation. The v20 release does not add a new external runtime library, hosted API, third-party game asset pack, music track, font package, or model dependency.
 
-Current game visuals are project-authored procedural canvas/CSS/SVG assets, and compatible game audio is generated procedurally with browser Web Audio APIs. The shared keyboard-remapping layer, direction-aware score system, Driftglass Links assets/code, Tideglass Surveyor assets/code, Prism Duel AI expansion, and platform play-mode discovery are project-authored and dependency-free. Development/testing uses environment-provided tooling outside the shipped runtime package.
+Browser behavior relies on standard web platform APIs implemented by the user's browser. Test tooling present in the development package (for example Playwright/Python harnesses) is development-only and is not shipped as a runtime dependency to players.
 
-Future integrations may use permissively licensed or public-domain resources when they materially improve the platform. Any such integration must be checked for license compatibility and attribution requirements before inclusion, and this notice must be updated accordingly.
+Any future third-party code or assets must be reviewed for provenance, commercial-use compatibility, attribution requirements, and license compatibility before being incorporated into a public WorldWideGames release.

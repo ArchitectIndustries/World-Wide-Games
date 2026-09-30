@@ -1,8 +1,88 @@
 window.WWG_GAMES = [
   {
+    id: 'mirrormesh-relay', title: 'Mirrormesh Relay', tagline: 'Turn the light. Close the mesh.',
+    description: 'A six-relay optics puzzle about rotating mirrors, touching every beacon, and steering a live beam into its receiver with as few turns as possible.',
+    genres: ['Optics', 'Logic', 'Puzzle', 'Physics'], added: '2026-09-30', featured: true, basePopularity: 204,
+    cover: 'covers/mirrormesh-relay.svg', path: 'games/mirrormesh-relay/index.html', accent: '#67e8f9', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Relay score' },
+    controls: ['Remappable directions move the cursor', 'Primary / Space rotates the selected mirror', 'Tap or click a mirror to rotate it', 'R resets the current relay']
+  },
+  {
+    id: 'hushwave-operator', title: 'Hushwave Operator', tagline: 'Find the carrier beneath the noise.',
+    description: 'A six-signal radio tuning puzzle. Adjust frequency, phase, and gain, read the scope, follow diagnostic hints, and lock increasingly narrow hidden carriers.',
+    genres: ['Signal', 'Radio', 'Simulation', 'Puzzle'], added: '2026-09-30', featured: false, basePopularity: 196,
+    cover: 'covers/hushwave-operator.svg', path: 'games/hushwave-operator/index.html', accent: '#a78bfa', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Decode score' },
+    controls: ['Remappable Left / Right adjusts the selected control', 'Remappable Up / Down changes control', 'Primary / Space samples the carrier', 'Pointer and touch sliders supported', 'R restarts the band']
+  },
+  {
+    id: 'pulsevine-parkour', title: 'Pulsevine Parkour', tagline: 'Run the line. Lock the pulse.',
+    description: 'A rooftop parkour speedrun with five checkpoint gates, momentum movement, coyote-time jumps, thorn hazards, fall recovery, gamepad support, touch controls, remappable inputs, and lower-is-better circuit times.',
+    genres: ['Parkour', 'Platformer', 'Traversal', 'Speedrun'], added: '2026-09-30', updated: '2026-09-30', version: '1.0', featured: false, basePopularity: 224,
+    cover: 'covers/pulsevine-parkour.svg', path: 'games/pulsevine-parkour/index.html', accent: '#6ee7b7', remappable: true,
+    scoreMeta: { unit: 'sec', direction: 'low', label: 'Circuit time' },
+    controls: ['Remappable Left / Right movement', 'Primary jumps with coyote-time forgiveness', 'Touch movement and jump controls', 'Gamepad left stick + A supported', 'R restarts the circuit', 'Clear five gates then reach the exit beacon; lower time is better']
+  },
+  {
+    id: 'tessera-commons', title: 'Tessera Commons', tagline: 'Draft a district where every edge has a neighbor.',
+    description: 'A ten-round board-inspired tile-placement strategy game. Draft paired civic symbols, grow a connected commons, score cooperative adjacencies, preserve four-way diversity, and build a stronger final district.',
+    genres: ['Tile Placement', 'Board', 'Strategy', 'Puzzle'], added: '2026-09-30', updated: '2026-09-30', version: '1.0', featured: false, basePopularity: 207,
+    cover: 'covers/tessera-commons.svg', path: 'games/tessera-commons/index.html', accent: '#fbbf24', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Commons score' },
+    controls: ['Tap or click a board space and draft tile', 'Remappable directions move the board cursor', 'Primary places the selected tile', 'Secondary cycles the three-tile offer', 'R starts a new table', 'Build ten connected tiles and maximize adjacency plus symbol diversity']
+  },
+  {
+    id: 'glasswing-polo', title: 'Glasswing Polo', tagline: 'Bank the wing. Break the line. Own the goal.',
+    description: 'A fast hover-ball sport for solo play against a tracking AI or same-device competition. Drive momentum, body the glowing ball, use timed dash bursts, and win a first-to-five arena match.',
+    genres: ['Hover Sport', 'Sports', 'Competitive', 'Physics'], added: '2026-09-30', updated: '2026-09-30', version: '1.0', featured: false, basePopularity: 216,
+    cover: 'covers/glasswing-polo.svg', path: 'games/glasswing-polo/index.html', accent: '#5eead4', remappable: true, modes: ['Solo','Local Multiplayer'],
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Match score' },
+    controls: ['P1 uses remappable directional controls', 'Primary triggers a dash burst', 'Solo mode includes a tracking arena AI', 'Local 2P adds Arrow keys + Enter for P2', 'Touch pads support mobile play', 'Gamepads supported through browser input when available', 'R restarts the match']
+  },
+  {
+    id: 'rootsong-architect', title: 'Rootsong Architect', tagline: 'Every branch spends growth. Every node changes the grove.',
+    description: 'A six-garden ecological network puzzle. Grow a connected root system through water and nutrient nodes, route around stone, budget costly clay growth, reclaim bad branches, and awaken each blossom.',
+    genres: ['Botany', 'Network', 'Puzzle', 'Nature'], added: '2026-09-30', updated: '2026-09-30', version: '1.0', featured: false, basePopularity: 198,
+    cover: 'covers/rootsong-architect.svg', path: 'games/rootsong-architect/index.html', accent: '#86efac', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Grove score' },
+    controls: ['Tap or click a soil cell adjacent to the living network', 'Remappable directions move the garden cursor', 'Primary grows into the selected cell', 'Secondary / Backspace reclaims the most recent branch', 'Clay costs two growth instead of one', 'R resets the current garden']
+  },
+  {
+    id: 'stoneveil-ascent', title: 'Stoneveil Ascent', tagline: 'Read the wall. Spend your grip. Earn the summit.',
+    description: 'A five-route climbing and route-finding game about reachable holds, stamina budgeting, chalk timing, fall recovery, and efficient summit lines. Supports remappable keyboard controls, pointer/touch play, and gamepad input.',
+    genres: ['Climbing', 'Mountaineering', 'Sports', 'Precision'], added: '2026-09-30', featured: false, basePopularity: 204,
+    cover: 'covers/stoneveil-ascent.svg', path: 'games/stoneveil-ascent/index.html', accent: '#67e8f9', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Ascent score' },
+    controls: ['Click or tap a glowing reachable hold to climb directly', 'Remappable Left / Right cycles safe holds', 'Remappable Up chooses the highest safe hold', 'Primary commits the selected climb', 'Secondary uses one chalk refill per route', 'Gamepad stick + A/B supported', 'R returns to the belay with a fall penalty']
+  },
+  {
+    id: 'tidal-foundry', title: 'Tidal Foundry', tagline: 'Restore pressure one channel at a time.',
+    description: 'A six-commission hydraulic routing puzzle. Rotate channel plates, trace pressure from source to receiver, diagnose breaks, and commission the foundry efficiently with keyboard, pointer, or touch controls.',
+    genres: ['Hydraulics', 'Engineering', 'Logic', 'Puzzle'], added: '2026-09-30', featured: false, basePopularity: 190,
+    cover: 'covers/tidal-foundry.svg', path: 'games/tidal-foundry/index.html', accent: '#5eead4', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Foundry score' },
+    controls: ['Tap or click a channel plate to rotate it', 'Remappable directions move the keyboard cursor', 'Primary rotates the selected plate', 'Secondary tests pressure flow', 'R resets the current commission', 'Restore all six commissions efficiently']
+  },
+  {
+    id: 'riftwake-regatta', title: 'Riftwake Regatta', tagline: 'Read the wind. Trim the sail. Beat the harbor rival.',
+    description: 'A wind-driven sailing race through seven harbor gates with sail-trim efficiency, shifting wind, rock hazards, a moving rival boat, touch controls, gamepad support, remappable steering, and lower-is-better adjusted time.',
+    genres: ['Sailing', 'Racing', 'Sports', 'Simulation'], added: '2026-09-30', featured: false, basePopularity: 196,
+    cover: 'covers/riftwake-regatta.svg', path: 'games/riftwake-regatta/index.html', accent: '#67e8f9', remappable: true,
+    scoreMeta: { unit: 'sec', direction: 'low', label: 'Regatta time' },
+    controls: ['Remappable Left / Right steers the hull', 'Remappable Up / Down adjusts sail trim', 'Primary / Space performs a quick tack', 'Gamepad left stick + A supported', 'Touch controls on mobile', 'Clear all seven gates in order; lower adjusted time is better']
+  },
+  {
+    id: 'archive-alchemist', title: 'Archive Alchemist', tagline: 'Every failed brew is evidence.',
+    description: 'A six-commission crafting deduction game. Combine exactly two reagents, match four target properties, use failed mixtures as notebook evidence, and restore the archive with as few mistakes as possible.',
+    genres: ['Alchemy', 'Crafting', 'Logic', 'Puzzle'], added: '2026-09-30', featured: false, basePopularity: 184,
+    cover: 'covers/archive-alchemist.svg', path: 'games/archive-alchemist/index.html', accent: '#c4b5fd',
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Archive score' },
+    controls: ['Tap or click two reagent vials', 'Keys 1-6 toggle reagents', 'Enter brews the selected pair', 'Failed mixtures remain in the notebook as evidence', 'R restarts the archive']
+  },
+  {
     id: 'driftglass-links', title: 'Driftglass Links', tagline: 'Read the bank. Trust the roll.',
     description: 'A six-hole precision golf and physics game with drag-to-shoot aiming, ricochet walls, sand, water hazards, gamepad support, and lower-is-better stroke scoring.',
-    genres: ['Golf', 'Sports', 'Physics', 'Precision'], added: '2026-09-30', featured: true, basePopularity: 188,
+    genres: ['Golf', 'Sports', 'Physics', 'Precision'], added: '2026-09-30', featured: false, basePopularity: 188,
     cover: 'covers/driftglass-links.svg', path: 'games/driftglass-links/index.html', accent: '#5eead4',
     scoreMeta: { unit: 'strokes', direction: 'low', label: 'Course strokes' },
     controls: ['Drag from the ball to aim and set shot power', 'Arrow Left / Right adjusts aim and Up / Down adjusts power', 'Space takes the shot', 'Gamepad left stick aims, triggers change power, and A shoots', 'Touch and pointer play supported', 'R restarts the course', 'Lower stroke totals are better']
@@ -144,7 +224,7 @@ window.WWG_GAMES = [
   {
     id: 'emberdeck-pilgrim', title: 'Emberdeck Pilgrim', tagline: 'Carry a living deck through three furnace gates.',
     description: 'A branching deckbuilding roguelike with readable enemy intent, energy, block, healing, route-specific encounters, Legacy-gated boons, card rewards, and score pressure from health and run time.',
-    genres: ['Deckbuilder', 'Card', 'Roguelike', 'Strategy'], added: '2026-09-30', featured: false, basePopularity: 129,
+    genres: ['Deckbuilder', 'Card', 'Roguelike', 'Strategy'], added: '2026-09-30', updated: '2026-09-30', version: '1.2', featured: false, basePopularity: 129,
     cover: 'covers/emberdeck-pilgrim.svg', path: 'games/emberdeck-pilgrim/index.html', accent: '#fb923c',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Pilgrimage score' },
     controls: ['Tap cards or use keys 1-5 to play them', 'E or Space ends the current turn', 'Read enemy intent before spending energy', 'Choose one reward card after the first two victories', 'R restarts the pilgrimage']
@@ -188,16 +268,16 @@ window.WWG_GAMES = [
     id: 'atlas-below',
     title: 'Atlas Below',
     tagline: 'Mine the dark. Build the signal. Find the way home.',
-    description: 'A procedural cave expedition where rank changes the cave itself: route width, chamber density, crystal abundance, toxic gas, and survey-cache frequency evolve as you earn Rebreather, Surveyor, and Deep Cartographer status. Mine, craft a beacon, and extract before your air runs out.',
+    description: 'A procedural cave expedition with three selectable contracts — Survey Sweep, Crystal Census, and Deep Beacon — plus rank-shaped tunnel width, chamber density, crystal abundance, toxic gas, caches, oxygen upgrades, and persistent contractor mastery.',
     genres: ['Exploration', 'Survival', 'Crafting'],
-    added: '2026-09-30',
+    added: '2026-09-30', updated: '2026-09-30', version: '1.4',
     featured: false,
     basePopularity: 120,
     cover: 'covers/atlas-below.svg',
     path: 'games/atlas-below/index.html',
     accent: '#7dd3fc', remappable: true,
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Expedition score' },
-    controls: ['WASD / Arrow keys move', 'Space mines an adjacent resource vein', 'C crafts the extraction beacon after collecting 6 ore and 2 crystals', 'R restarts the expedition', 'Gamepad left stick + A mine / B craft supported', 'Touch controls on mobile', 'Successful extractions unlock rank-shaped cave generation, oxygen, a signal compass, survey caches, and gas protection']
+    controls: ['Remappable directions move', 'Space mines an adjacent resource vein', 'Secondary / C crafts the active contract beacon once its ore, crystal, and cache target is met', 'R restarts the expedition', 'Gamepad left stick + A mine / B craft supported', 'Touch controls on mobile', 'Keys 1-3 or contract buttons switch Survey, Crystal, and Deep expedition contracts', 'Successful extractions unlock rank-shaped cave generation, oxygen, a signal compass, survey caches, gas protection, and contract mastery']
   },
   {
     id: 'aetherstead-colony',
@@ -220,7 +300,7 @@ window.WWG_GAMES = [
     tagline: 'Bank the shot. Read the angle. Beat the room.',
     description: 'A ricochet arena for solo or same-device competitive play. Duel a tracking AI or a second local pilot, bank shots around prism cover, and win a first-to-five skiff battle.',
     genres: ['Multiplayer', 'Competitive', 'Arena', 'Physics'],
-    added: '2026-09-30',
+    added: '2026-09-30', updated: '2026-09-30', version: '1.1',
     featured: false,
     basePopularity: 124,
     cover: 'covers/prism-duel.svg',
@@ -347,27 +427,27 @@ window.WWG_GAMES = [
     tagline: 'Charge the storm. Keep the sphere alive.',
     description: 'A physics-driven pinball table suspended over a storm forge, with reactive bumpers, combo lanes, multiball charge, keyboard/touch controls, and gamepad-ready flippers.',
     genres: ['Pinball', 'Physics', 'Arcade'],
-    added: '2026-09-30',
+    added: '2026-09-30', updated: '2026-09-30', version: '1.1',
     featured: false,
     basePopularity: 101,
     cover: 'covers/cloudforge-pinball.svg',
     path: 'games/cloudforge-pinball/index.html',
-    accent: '#60a5fa',
-    controls: ['A / Left Arrow controls left flipper', 'D / Right Arrow controls right flipper', 'Space launches and nudges', 'Gamepad triggers / A supported', 'Touch buttons on mobile']
+    accent: '#60a5fa', remappable: true,
+    controls: ['Remappable Left / Right control the flippers', 'Primary launches and nudges', 'Gamepad triggers / A supported', 'Touch buttons on mobile', 'R resets the table']
   },
   {
     id: 'mosslight-vale',
     title: 'Mosslight Vale',
     tagline: 'A small world with a long memory.',
-    description: 'A growing top-down exploration RPG spanning five linked regions from Mosslight Village through Silverfen, Sunfall Reach, and Moonroot Hollow, with NPC quest arcs, real-time combat, collectible relics, boss progression, a field-pack inventory, five gear tiers, local saving, four-stop fast travel, and persistent world state.',
+    description: 'A growing top-down exploration RPG spanning six linked regions from Mosslight Village through Silverfen, Sunfall Reach, Moonroot Hollow, and Starbloom Canopy, with NPC quest arcs, real-time combat, collectible relics, boss progression, a field-pack inventory, six gear tiers, local saving, five-hub fast travel, and persistent world state.',
     genres: ['RPG', 'Adventure', 'Exploration'],
-    added: '2026-09-30',
+    added: '2026-09-30', updated: '2026-09-30', version: '1.7',
     featured: false,
     basePopularity: 100,
     cover: 'covers/mosslight-vale.svg',
     path: 'games/mosslight-vale/index.html',
     accent: '#86efac', remappable: true,
-    controls: ['WASD / Arrow keys move', 'Space attacks', 'E interacts / talks / saves', 'Shift dashes', 'H uses a potion', 'F cycles unlocked fast-travel hubs including Moonroot Hollow', 'I opens the field-pack inventory', 'Touch controls on mobile']
+    controls: ['WASD / Arrow keys move', 'Space attacks', 'E interacts / talks / saves', 'Shift dashes', 'H uses a potion', 'F cycles unlocked fast-travel hubs including Starbloom Canopy', 'I opens the field-pack inventory', 'Touch controls on mobile']
   },
   {
     id: 'gravity-foundry',
@@ -445,13 +525,13 @@ window.WWG_GAMES = [
     tagline: 'Stack fast. Clear clean. Chase the glow.',
     description: 'A crisp falling-block puzzler with escalating speed, combo scoring, ghost placement, keyboard and touch controls, and instant restarts.',
     genres: ['Puzzle', 'Arcade'],
-    added: '2026-09-29',
+    added: '2026-09-29', updated: '2026-09-30', version: '1.1',
     featured: false,
     basePopularity: 94,
     cover: 'covers/neon-stack.svg',
     path: 'games/neon-stack/index.html',
-    accent: '#8b5cf6',
-    controls: ['← / → move', '↓ soft drop', 'Z / X rotate', 'Space hard drop', 'P pause', 'Gamepad D-pad + face buttons supported', 'Touch controls on mobile']
+    accent: '#8b5cf6', remappable: true,
+    controls: ['Remappable Left / Right move', 'Remappable Down soft-drops', 'Secondary / Z rotates', 'Primary hard-drops', 'P pauses', 'Gamepad D-pad + face buttons supported', 'Touch controls on mobile']
   },
   {
     id: 'circuit-rush',
@@ -492,8 +572,8 @@ window.WWG_GAMES = [
     basePopularity: 91,
     cover: 'covers/emberfield-survival.svg',
     path: 'games/emberfield-survival/index.html',
-    accent: '#f97316',
-    controls: ['WASD / Arrow keys move', 'Space dashes', 'Weapons automatically target the nearest threat', 'Choose upgrades when you level', 'Gamepad left stick + A dash supported', 'Touch controls on mobile']
+    remappable: true, accent: '#f97316',
+    controls: ['Remappable directions move', 'Space dashes', 'Weapons automatically target the nearest threat', 'Choose upgrades when you level', 'Gamepad left stick + A dash supported', 'Touch controls on mobile']
   },
   {
     id: 'vector-league',
@@ -506,8 +586,8 @@ window.WWG_GAMES = [
     basePopularity: 90,
     cover: 'covers/vector-league.svg',
     path: 'games/vector-league/index.html',
-    accent: '#22d3ee',
-    controls: ['WASD / Arrow keys move', 'Space kicks when near the ball', 'Aim vertical shot angle while moving up/down', 'First to 5 or leader at 90 seconds wins', 'Gamepad left stick + A supported', 'Touch controls on mobile']
+    remappable: true, accent: '#22d3ee',
+    controls: ['Remappable directions move', 'Space kicks when near the ball', 'Aim vertical shot angle while moving up/down', 'First to 5 or leader at 90 seconds wins', 'Gamepad left stick + A supported', 'Touch controls on mobile']
   },
   {
     id: 'orbit-breaker',
