@@ -1,0 +1,39 @@
+{
+  "id": "./index.html",
+  "name": "WorldWideGames",
+  "short_name": "WWGames",
+  "description": "An Architect Industries browser gaming platform for instant-play original games.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#070b17",
+  "theme_color": "#070b17",
+  "categories": [
+    "games",
+    "entertainment"
+  ],
+  "shortcuts": [
+    {
+      "name": "Driftglass Links",
+      "short_name": "Driftglass",
+      "url": "game.html?id=driftglass-links",
+      "icons": [
+        {
+          "src": "assets/app-icon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml",
+          "purpose": "any"
+        }
+      ]
+    }
+  ],
+  "icons": [
+    {
+      "src": "./assets/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
