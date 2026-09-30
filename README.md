@@ -1,42 +1,37 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games that run directly in modern browsers.
+WorldWideGames is an Architect Industries browser-gaming platform built around instant-play original games. The current verified release is **v21** with **59 games across 94 genre tags**.
 
-## Current release
+## Current highlights
 
-**v20** — 57 games, 90 genre tags, 67 local achievements, 22 remappable releases, responsive desktop/mobile layouts, PWA/offline support, local profiles, favorites, Play Later, ratings, score history, Daily and Weekly Circuits, deterministic Daily Pick, shareable discovery state, curated collections, recommendations, and three-game discovery mixes.
-
-Featured release: **Mirrormesh Relay**.
+- Featured release: **Kiteglass Drift**, a seven-gate gliding time trial.
+- New in v21: **Runelight Locksmith**, a six-lock mechanical timing game.
+- 69 local achievements, Daily/Weekly challenge systems, Daily Pick, favorites, ratings, Play Later, recommendations, shareable discovery state, three-game mixes, persistent local scoring, playtime/activity history, and profile backup/restore.
+- Discovery supports genre, input, play mode, curated collection, Unplayed, In progress, Uncleared, Favorites, Cleared, and Play Later filters.
+- 26 releases use the shared user-remappable keyboard layer.
+- PWA/offline cache covers the full registered catalog.
+- No installation is required for normal browser play.
 
 ## Run locally
 
-Serve this folder with any static HTTP server. For example:
+Serve this folder from a local HTTP origin, for example:
 
-```sh
-python -m http.server 8000
+```bash
+python3 -m http.server 8080
 ```
 
-Then open `http://localhost:8000`.
+Then open `http://localhost:8080/`.
 
-The project contains no required server-side runtime or paid API dependency.
+Opening individual HTML files directly may work for some games, but HTTP serving is recommended for service-worker/PWA and browser-origin behavior.
 
-## Structure
+## Validation
 
-- `index.html` — discovery/home platform
-- `game.html` — reusable game detail/launch shell
-- `js/games.js` — data-driven game catalog
-- `js/app.js` — platform/profile/discovery logic
-- `assets/wwg-input.js` — shared remappable input layer
-- `games/*/index.html` — self-contained game builds
-- `covers/*.svg` — local game cover art
-- `tests/` — static, runtime, browser, HTTP, remap, score-event, and authored-content checks
-- `sw.js` / `manifest.webmanifest` — PWA/offline support
-- `vercel.json` — static Vercel configuration
+The current release includes versioned tests under `tests/`. The v21 release gate covers runtime boot checks, static registry/cache consistency, 127 local-origin HTTP requests, Chromium interaction/responsive checks, authored-content invariants, 26-game remapping regression, scored game events, and lower-is-better score direction.
 
-## Canonical project targets
+## Deployment
 
-- Source mirror: `ArchitectIndustries/World-Wide-Games`
-- Production project ID: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`
-- Production origin: `https://worldwidegames.vercel.app`
+`vercel.json` is included for static Vercel hosting. The intended production project is the existing Architect Industries WorldWideGames project rather than a duplicate deployment target.
 
-WorldWideGames is owned and operated by Architect Industries.
+## Ownership
+
+WorldWideGames and its original game content are developed and operated by Architect Industries. See `THIRD_PARTY_NOTICES.md` for dependency and attribution information.

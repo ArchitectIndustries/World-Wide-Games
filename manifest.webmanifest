@@ -15,9 +15,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Mirrormesh Relay",
-      "short_name": "Mirrormesh",
-      "url": "game.html?id=mirrormesh-relay",
+      "name": "Kiteglass Drift",
+      "short_name": "Kiteglass",
+      "url": "game.html?id=kiteglass-drift",
       "icons": [
         {
           "src": "assets/app-icon.svg",

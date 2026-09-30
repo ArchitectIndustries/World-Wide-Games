@@ -1,4 +1,4 @@
-const CACHE='wwg-v20';
+const CACHE='wwg-v21';
 const ASSETS=[
   './',
   './index.html',
@@ -10,6 +10,10 @@ const ASSETS=[
   './js/app.js',
   './js/game-page.js',
   './manifest.webmanifest',
+  './covers/kiteglass-drift.svg',
+  './games/kiteglass-drift/index.html',
+  './covers/runelight-locksmith.svg',
+  './games/runelight-locksmith/index.html',
   './covers/mirrormesh-relay.svg',
   './games/mirrormesh-relay/index.html',
   './covers/hushwave-operator.svg',

@@ -1,8 +1,24 @@
 window.WWG_GAMES = [
   {
+    id: 'kiteglass-drift', title: 'Kiteglass Drift', tagline: 'Read the crosswind. Hold the gate line.',
+    description: 'A seven-gate gliding time trial with momentum flight, shifting crosswind, thermal columns, missed-gate penalties, gamepad support, touch controls, remappable pitch, and lower-is-better adjusted times.',
+    genres: ['Gliding', 'Flight', 'Racing', 'Sports'], added: '2026-09-30', updated: '2026-09-30', version: '1.0', featured: true, basePopularity: 232,
+    cover: 'covers/kiteglass-drift.svg', path: 'games/kiteglass-drift/index.html', accent: '#67e8f9', remappable: true,
+    scoreMeta: { unit: 'sec', direction: 'low', label: 'Adjusted glide time' },
+    controls: ['Remappable Up / Down adjusts pitch', 'Primary / Space flares and levels the wing', 'Gamepad left stick + A supported', 'Touch pitch and flare controls on mobile', 'Thread seven suspended gates; missed gates add six seconds', 'Lower adjusted time is better']
+  },
+  {
+    id: 'runelight-locksmith', title: 'Runelight Locksmith', tagline: 'Listen for the bright window. Set the pin.',
+    description: 'A six-lock mechanical timing game. Select moving pins, read their cyan set windows, commit at the right instant, absorb slips, and open the Runelight vault with as few misses as possible.',
+    genres: ['Lockpicking', 'Mechanical', 'Timing', 'Puzzle'], added: '2026-09-30', updated: '2026-09-30', version: '1.0', featured: false, basePopularity: 215,
+    cover: 'covers/runelight-locksmith.svg', path: 'games/runelight-locksmith/index.html', accent: '#a78bfa', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Vault score' },
+    controls: ['Remappable Left / Right selects a pin', 'Primary / Space sets the selected pin', 'Tap or click a pin to select it', 'Catch each moving needle inside its cyan set window', 'R restarts the vault']
+  },
+  {
     id: 'mirrormesh-relay', title: 'Mirrormesh Relay', tagline: 'Turn the light. Close the mesh.',
     description: 'A six-relay optics puzzle about rotating mirrors, touching every beacon, and steering a live beam into its receiver with as few turns as possible.',
-    genres: ['Optics', 'Logic', 'Puzzle', 'Physics'], added: '2026-09-30', featured: true, basePopularity: 204,
+    genres: ['Optics', 'Logic', 'Puzzle', 'Physics'], added: '2026-09-30', featured: false, basePopularity: 204,
     cover: 'covers/mirrormesh-relay.svg', path: 'games/mirrormesh-relay/index.html', accent: '#67e8f9', remappable: true,
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Relay score' },
     controls: ['Remappable directions move the cursor', 'Primary / Space rotates the selected mirror', 'Tap or click a mirror to rotate it', 'R resets the current relay']
@@ -189,9 +205,9 @@ window.WWG_GAMES = [
     tagline: 'Read the sky. Protect the payload.',
     description: 'A momentum-based flight and delivery game with shifting wind fields, fuel management, cargo integrity, gentle landing requirements, four escalating routes, procedural audio, touch controls, and gamepad support.',
     genres: ['Flight', 'Delivery', 'Physics', 'Arcade'],
-    added: '2026-09-30', featured: false, basePopularity: 142,
-    cover: 'covers/windward-cargo.svg', path: 'games/windward-cargo/index.html', accent: '#38bdf8',
-    controls: ['W / Arrow Up applies thrust', 'A / D or Left / Right changes pitch', 'Space boosts at higher fuel cost', 'Fly through cyan pickup rings and land gently in gold delivery rings', 'Touch controls on mobile', 'Gamepad left stick + A/B supported'], scoreMeta:{unit:'pts',direction:'high',label:'flight score'}
+    added: '2026-09-30', updated: '2026-09-30', version: '1.1', featured: false, basePopularity: 142,
+    cover: 'covers/windward-cargo.svg', path: 'games/windward-cargo/index.html', accent: '#38bdf8', remappable: true,
+    controls: ['Remappable Up applies thrust', 'Remappable Left / Right changes pitch', 'Primary boosts at higher fuel cost', 'Fly through cyan pickup rings and land gently in gold delivery rings', 'Touch controls on mobile', 'Gamepad left stick + A/B supported'], scoreMeta:{unit:'pts',direction:'high',label:'flight score'}
   },
   {
     id: 'cipher-court',
@@ -361,9 +377,9 @@ window.WWG_GAMES = [
     featured: false,
     basePopularity: 110,
     cover: 'covers/starweaver-drift.svg',
-    path: 'games/starweaver-drift/index.html',
+    path: 'games/starweaver-drift/index.html', remappable: true, updated: '2026-09-30', version: '1.1',
     accent: '#67e8f9',
-    controls: ['WASD / Arrow keys steer', 'Space boosts at extra fuel cost', 'Hold E near a beacon to scan', 'R restarts the survey', 'Gamepad left stick + A/B supported', 'Touch controls on mobile']
+    controls: ['Remappable directions steer', 'Primary boosts at extra fuel cost', 'Hold Secondary near a beacon to scan', 'R restarts the survey', 'Gamepad left stick + A/B supported', 'Touch controls on mobile']
   },
   {
     id: 'pulse-archive',

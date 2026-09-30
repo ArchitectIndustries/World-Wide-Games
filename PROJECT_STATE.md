@@ -2,137 +2,79 @@
 
 Last updated: 2026-09-30
 Owner/operator: Architect Industries
-Current source release: v20
-Production release: v15 at `https://worldwidegames.vercel.app`
-Canonical GitHub repository: `ArchitectIndustries/World-Wide-Games` (`main`)
-Status: **57-game** playable static browser-gaming platform. v20 is validated and deployment-ready. Vercel production remains on the last user-verified v15 deployment because the connected deployment authorization still returns 403 for the established project.
+Current verified source release: **v21**
+Status: **59-game** playable static browser-gaming platform with 94 genre tags, 69 achievements, 26 remappable releases, persistent local player data, PWA/offline support, GitHub source continuity, and a Vercel production target.
 
 ## Architecture
 
 - Static host-anywhere platform with a data-driven catalog in `js/games.js` and reusable `game.html?id=<id>` shell.
-- Local browser profile tracks plays, sessions, playtime, recent games, favorites, Play Later, ratings, achievements, Daily/Weekly Circuit activity, completion milestones, direction-aware best scores, scored-run history, accessibility/audio preferences, keyboard mapping, profile backup/restore, discovery mixes, and game-specific saves.
-- Discovery supports search, **90 genre tags**, input capability, Solo / Local Multiplayer filtering, curated collections, player status, sorting, recommendations, deterministic Daily Pick, shareable/bookmarkable discovery query state, and one-click three-game mixes.
-- `assets/wwg-input.js` is the reusable keyboard-remapping layer. **22 releases** now adopt it.
-- Score metadata supports both higher-is-better and lower-is-better records.
-- `wwg-v20` service worker caches the complete 57-game catalog and covers plus shared platform assets, with network-first navigation fallback.
+- Local browser profile tracks plays, sessions, playtime, favorites, ratings, Play Later, achievements, daily/weekly challenge activity, completion milestones, direction-aware best scores, scored-run history, discovery mixes, accessibility/audio preferences, keyboard mapping, and game-specific saves.
+- Discovery supports search, **94 genre tags**, input capability, Solo / Local Multiplayer modes, curated collections, player-status filters, shareable query state, multiple sort modes, recommendations, Daily Pick, and Surprise Me.
+- Player-status discovery now includes **In progress** (played but not cleared) and **Uncleared** filters.
+- Profile metrics now expose **catalog explored %** and **catalog cleared %**.
+- `assets/wwg-input.js` provides the reusable keyboard-remapping layer; **26 releases** currently adopt it.
+- Score metadata supports both higher-is-better and lower-is-better records. Kiteglass Drift joins Lantern Line, Driftglass Links, Riftwake Regatta, and Pulsevine Parkour on the lower-is-better path.
+- `wwg-v21` service worker caches the complete 59-game catalog and covers plus shared platform assets, with network-first navigation fallback.
 - `vercel.json` remains included for static Vercel deployment.
 
-## v20 production work
+## v21 production work
 
 ### New releases
 
-- **Mirrormesh Relay** — featured six-board optics puzzle. Rotate mirrors to steer a live beam through every beacon and into the receiver. Includes remappable keyboard controls, pointer/touch play, turn-efficient scoring, and independently verified solvability for all six authored boards.
-- **Hushwave Operator** — six-signal radio-tuning puzzle/simulation. Tune frequency, phase, and gain, read the live oscilloscope, use diagnostic hints, and lock increasingly narrow hidden carriers. Includes remappable keyboard controls plus pointer/touch sliders.
+- **Kiteglass Drift** — featured seven-gate gliding time trial with momentum flight, shifting crosswind, thermal columns, missed-gate penalties, gamepad support, touch controls, remappable pitch, and lower-is-better adjusted times.
+- **Runelight Locksmith** — six-lock mechanical timing game. Select moving pins, read their cyan set windows, commit at the right instant, and open the Runelight vault with minimal misses. Supports remappable keyboard controls and pointer/touch play.
+
+### Existing-game upgrades
+
+- **Starweaver Drift 1.1** — migrated directional flight, boost, and scan actions onto the shared remapping system while preserving Arrow-key, touch, and gamepad fallbacks.
+- **Windward Cargo 1.1** — migrated thrust, pitch, and boost controls onto the shared remapping system while preserving touch and gamepad play.
 
 ### Platform upgrades
 
-- Added **Make 3-game mix** to discovery. It respects the active search/filter/collection state, prioritizes less-played eligible releases, adds up to three titles to Play Later, and records local mix creation.
-- Added **Signals & Circuits** curated discovery for Signal, Radio, Optics, Programming, Automation, and Logic releases.
-- Added three achievements: Mesh Closer, Quiet Band, and Mix Curator, bringing the platform total to **67**.
-- Remapping coverage rises from 20 to **22 games** with both new releases using the shared input layer.
-- Featured PWA shortcut now launches Mirrormesh Relay.
-- Offline cache upgraded to `wwg-v20`.
+- Added **In progress** discovery for games that have been played locally but have no recorded completion milestone.
+- Added **Uncleared** discovery for every game without a recorded completion milestone.
+- Added **Air & Altitude** curated discovery for Gliding, Flight, Climbing, Mountaineering, Space, and Sailing releases.
+- Added catalog exploration and clear percentages to the local profile dashboard.
+- Added **Kiteglass Pilot** and **Runelight Master** achievements, bringing the platform total to **69**.
+- Shared keyboard-remapping coverage rises from 22 to **26 games**.
+- Featured PWA shortcut now launches Kiteglass Drift.
+- Offline cache upgraded to `wwg-v21`.
 
-## Current catalog — 57 games
+## Current catalog — 59 games
 
-1. Mirrormesh Relay
-2. Hushwave Operator
-3. Pulsevine Parkour
-4. Tessera Commons
-5. Glasswing Polo
-6. Rootsong Architect
-7. Stoneveil Ascent
-8. Tidal Foundry
-9. Riftwake Regatta
-10. Archive Alchemist
-11. Driftglass Links
-12. Tideglass Surveyor
-13. Spanwright
-14. Lantern Line
-15. Frostline Rescue
-16. Signal Choir
-17. Terrace Keeper
-18. Chronofold Courier
-19. Hearthline Kitchen
-20. Spectra Safari
-21. Ashfall Caravan
-22. Twinforge Expedition
-23. Mothlight Museum
-24. Windward Cargo
-25. Cipher Court
-26. Moonwake Angler
-27. Deepwater Signal
-28. Emberdeck Pilgrim v1.2
-29. Command Bloom
-30. Railspire Dispatch
-31. Glyphsmith
-32. Solar Loom
-33. Atlas Below v1.4
-34. Aetherstead Colony
-35. Prism Duel v1.1
-36. Crownline Tactics
-37. Echo Bazaar
-38. Lumen Relay
-39. Starweaver Drift
-40. Pulse Archive
-41. Verdant Circuit
-42. Quiet Protocol
-43. Forgeflow
-44. Cloudforge Pinball v1.1
-45. Mosslight Vale v1.7
-46. Gravity Foundry
-47. Hexbound Tactics
-48. Harbor Pulse
-49. Rift Relay
-50. Skyhook Sprint
-51. Neon Stack v1.1
-52. Circuit Rush
-53. Bastion Bloom
-54. Emberfield Survival
-55. Vector League
-56. Orbit Breaker
-57. Rune Depths
+The authoritative ordered catalog is `js/games.js`. v21 adds Kiteglass Drift and Runelight Locksmith to the v20 57-game catalog.
 
-## Validation completed on 2026-09-30
+## Validation summary
 
-See `TEST_REPORT.md` for exact coverage and limitations.
+- `node tests/smoke.js`: all **59 registered games** boot and advance; platform homepage and reusable detail shell pass.
+- `python tests/v21_static.py`: 59 unique IDs, **94 genres**, exactly one featured release, 69 achievements, 26 remappable games, complete page/cover/cache registration, and public-source branding scan.
+- `python tests/v21_http.py`: **127/127** requested local-origin paths returned HTTP 200.
+- `python tests/v21_quick.py`: 59 cards, 69 achievements, 390px layout without horizontal overflow, Air & Altitude discovery, In progress filtering, custom remapping, and scored completion for both new releases.
+- `python tests/v21_deep.py`: all seven Kiteglass gates can be crossed cleanly at their authored centerlines; all six Runelight lock definitions have legal target windows and tighten tolerance across the campaign.
+- `python tests/v21_remap.py`: custom I/J/K/L/F/H mapping passes across **26 supported games**, including both new releases plus Starweaver Drift 1.1 and Windward Cargo 1.1.
+- `python tests/v21_events.py`: both v21 games emit numeric completion events. The 47 v20 scored-event paths are unchanged, producing **49 covered scored releases** across the carried-forward + v21 evidence set.
+- `node tests/v21_direction.js`: lower-is-better semantics pass for all five current low-score titles including Kiteglass Drift.
 
-- All **57 game scripts** boot and advance under the runtime harness.
-- Registry contains 57 unique IDs, **90 distinct genre tags**, one featured release, normalized score metadata on every game, and **22 remappable releases**.
-- All registered pages/covers exist and are included in `wwg-v20`.
-- Fresh local HTTP delivery returned **200 across 123 tested paths**.
-- Chromium interaction checks confirmed 57 catalog cards, **67 achievements**, Signals & Circuits discovery, 390 px mobile layout without horizontal overflow, three-game mix behavior, remapped input, and scored completion for both new games.
-- Shared-remap regression is green across **22 compatible games**.
-- Numeric score-event regression is green across **47 representative games**.
-- Deep validation proves all six Mirrormesh authored relays have valid solutions and all six Hushwave targets are reachable in-domain with an 86% lock threshold.
-- Public-facing source scan covered **122 files** and found no prohibited internal branding.
+## GitHub source continuity
 
-## GitHub state
+Canonical repository: `ArchitectIndustries/World-Wide-Games`.
 
-- Repository: `ArchitectIndustries/World-Wide-Games`, default branch `main`.
-- Connected GitHub authorization has push/admin repository access.
-- At the beginning of the v20 run, GitHub `main` was still on v15 commit `647d291c28245e1d732aec457e84cfd39ec4d413`.
-- v20 is the verified source intended for synchronization during this run. The resulting GitHub commit is recorded in the run report and should be treated as the durable source mirror once synchronization completes.
+Verified v21 source is synchronized on `release-v21`, based directly on the complete v20 release branch. The branch is intended for atomic promotion to `main`; if promotion is connector-blocked, `release-v21` remains the durable verified source until a safe merge becomes available.
 
-## Vercel state
+The release branch is based on the complete verified v20 branch rather than the older v15 default branch, so v16-v21 history is preserved without reconstructing from an obsolete baseline.
 
-- Production project: `worldwidegames`.
-- Project ID: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`.
-- Team: Architect Industries / `architect-industries`, team ID `team_wwOmTAdrfPwvTGNSLU1VarOy`.
+## Production deployment
+
+- Canonical Vercel project: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq` under Architect Industries.
 - Production domain: `https://worldwidegames.vercel.app`.
-- Last user-verified live release remains **v15 / Ready**.
-- Connected Vercel authorization previously returned **403 Forbidden** for deployment enumeration against the explicit project ID. Re-check on each release; when write access becomes available, deploy the newest verified release automatically to this exact project and smoke-test production. Never create a duplicate project solely because connector enumeration is stale.
-
-## Persistence and recovery
-
-- `/WorldWideGames` remains the persistent release archive.
-- `ArchitectIndustries/World-Wide-Games` is the durable source mirror and should be consulted together with the Library on every run.
-- If one location is temporarily behind, prefer the newest fully verified release rather than rebuilding from an older source.
+- Last user-verified production baseline: **v15**.
+- Fresh automated deployment enumeration on 2026-09-30 still returned **403 Forbidden** for this established project.
+- No duplicate Vercel project was created and v21 is not represented as production-live without deployment evidence.
 
 ## Next high-value priorities
 
-- Deploy the newest verified release to the existing Vercel project when connector write access becomes available, then smoke-test the production origin and inspect logs.
-- Continue deliberate remapping migration for suitable legacy games.
-- Deepen a long-form title such as Emberdeck Pilgrim, Ashfall Caravan, or Mosslight Vale while maintaining catalog diversity.
-- Add consistent difficulty/assist metadata only when it can be authored per-game rather than inferred from genre.
-- Consider authenticated cloud scoreboards/social identity only when persistence, abuse handling, moderation, and privacy can be introduced without weakening local-first reliability.
+1. Promote the verified GitHub release branch to `main` when the available GitHub workflow permits the safe fast-forward/merge.
+2. Deploy the newest verified source to the existing Vercel production project as soon as its deployment authorization is available, then run production-origin smoke checks.
+3. Continue expanding remapping coverage into remaining action/simulation releases.
+4. Add another substantial evolving game/update rather than only increasing catalog count.
+5. Continue richer completion-state discovery and local progression without introducing server cost until server-backed features are justified.
