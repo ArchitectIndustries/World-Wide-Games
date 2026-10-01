@@ -1,10 +1,12 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified release is **v29** with **66 games across 106 genre tags**.
+WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified release is **v30** with **66 games across 106 genre tags**.
+
+v30 is a **Pulsevine Expansion & Explicit Controls** release. **Pulsevine Parkour 2.0** now has five progressively harder courses with persistent unlocks/best times, and every game detail page explicitly states its controls; remappable titles show the player's current key map plus W/A/S/D, Space, and E defaults.
 
 v29 is a **Long-Form Depth Pass** rather than a catalog-growth release. **Aetherstead Colony 2.0** is now a persistent three-charter / 36-turn city-building campaign with policies, crises, upgrades, adjacency systems, charter seals, autosave/resume, and legacy progression. **Mosslight Vale 1.8** now has milestone autosaves, a post-six-region Starshade finale, and durable campaign completion.
 
-Platform highlights include **89 local achievements**, Daily/Weekly challenges, Daily Pick, favorites, ratings, Play Later, Continue Playing, Recently Updated, Release History, recommendations, curated discovery collections including **Long Campaigns**, shareable discovery state, three-game mixes, local scoring/history, profile backup/restore, PWA/offline support, and **40 games** using the shared remappable keyboard layer.
+Platform highlights include **90 local achievements**, Daily/Weekly challenges, Daily Pick, favorites, ratings, Play Later, Continue Playing, Recently Updated, Release History, recommendations, curated discovery collections including **Long Campaigns**, shareable discovery state, three-game mixes, local scoring/history, profile backup/restore, PWA/offline support, and **40 games** using the shared remappable keyboard layer.
 
 ## Run locally
 

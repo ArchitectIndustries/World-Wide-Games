@@ -88,12 +88,12 @@ window.WWG_GAMES = [
     controls: ['Remappable Left / Right adjusts the selected control', 'Remappable Up / Down changes control', 'Primary / Space samples the carrier', 'Pointer and touch sliders supported', 'R restarts the band']
   },
   {
-    id: 'pulsevine-parkour', title: 'Pulsevine Parkour', tagline: 'Run the line. Lock the pulse.',
-    description: 'A rooftop parkour speedrun with five checkpoint gates, momentum movement, coyote-time jumps, thorn hazards, fall recovery, gamepad support, touch controls, remappable inputs, and lower-is-better circuit times.',
-    genres: ['Parkour', 'Platformer', 'Traversal', 'Speedrun'], added: '2026-09-30', updated: '2026-09-30', version: '1.0', featured: false, basePopularity: 224,
+    id: 'pulsevine-parkour', title: 'Pulsevine Parkour', tagline: 'Five courses. One pulse.',
+    description: 'A five-course rooftop parkour campaign with progressively harder checkpoint lines, momentum movement, coyote-time jumps, thorn gauntlets, launch pads, crosswinds, persistent course unlocks and best times, gamepad/touch support, and lower-is-better scoring.',
+    genres: ['Parkour', 'Platformer', 'Traversal', 'Speedrun'], added: '2026-09-30', updated: '2026-10-01', version: '2.0', featured: false, basePopularity: 236,
     cover: 'covers/pulsevine-parkour.svg', path: 'games/pulsevine-parkour/index.html', accent: '#6ee7b7', remappable: true,
-    scoreMeta: { unit: 'sec', direction: 'low', label: 'Circuit time' },
-    controls: ['Remappable Left / Right movement', 'Primary jumps with coyote-time forgiveness', 'Touch movement and jump controls', 'Gamepad left stick + A supported', 'R restarts the circuit', 'Clear five gates then reach the exit beacon; lower time is better']
+    scoreMeta: { unit: 'sec', direction: 'low', label: 'Course time' },
+    controls: ['A / D move left and right by default; Left / Right are remappable, with ← / → as fallback before custom remapping', 'Space jumps by default with coyote-time forgiveness; Primary is remappable and ↑ also jumps', 'R restarts the current course', 'Number keys 1-5 select unlocked courses', 'N advances to the next unlocked course after a clear', 'Gamepad: left stick moves, A jumps, Start restarts, Y advances after a clear', 'Touch: LEFT / RIGHT / JUMP / RESET / NEXT buttons on mobile', 'Clear all five courses; lower course and five-course best-total times are better']
   },
   {
     id: 'tessera-commons', title: 'Tessera Commons', tagline: 'Draft a district where every edge has a neighbor.',

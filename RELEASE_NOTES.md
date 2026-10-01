@@ -1,5 +1,32 @@
 # WorldWideGames Release Notes
 
+## v30 — Pulsevine Expansion & Explicit Controls
+
+WorldWideGames v30 keeps the catalog at **66 games / 106 genre tags**, raises achievements to **90**, and turns a user-favorite title into a larger progression game while making control instructions explicit platform-wide.
+
+### Pulsevine Parkour 2.0
+
+- Five distinct courses replace the original single rooftop circuit.
+- New mechanics include launch pads, crosswind zones, longer checkpoint chains, denser thorn timing, and progressively harder elevation changes.
+- Persistent local course unlocks and per-course best times.
+- Five-course best-total scoring and a `campaign-complete` event.
+- Safer post-checkpoint respawns with actual run-up space after falls.
+- Exact keyboard controls: **A/D or Left/Right move; Space/Up jump; R restart; 1-5 select unlocked courses; N advances after a clear**. Gamepad and touch actions are also listed explicitly.
+
+### Explicit controls everywhere
+
+- Game-detail pages now render a dedicated current keyboard-map panel on every remappable title.
+- The panel names **Up, Down, Left, Right, Primary, Secondary** and their current keys, with **W/A/S/D, Space, E** shown as defaults.
+- Authored control lines automatically expand abstract action labels with the concrete key mapping.
+- All 66 games retain their title-specific pointer/touch/gamepad/keyboard instructions.
+
+### Validation
+
+- Pulsevine: **5/5 courses** passed real-physics reachability plus keyboard input/course-selection tests.
+- Control UI: **66/66 game detail pages** render control instructions; **40/40 remappable titles** render explicit keyboard profiles.
+- Full catalog: **66/66 runtime-clean**, **66/66 smoke boot**, **139/139 HTTP paths**.
+- v29 long-form, v28 direct game/events, v27 defect fixes, remapping, and score-direction regressions remain green.
+
 ## v29 — Long-Form Depth Pass
 
 WorldWideGames v29 keeps the catalog at **66 games / 106 genre tags** and spends the release on deeper campaign play. Achievement coverage rises to **89**, shared remapping to **40 games**, and the PWA cache advances to `wwg-v29`.

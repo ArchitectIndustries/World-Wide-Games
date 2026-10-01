@@ -32,7 +32,7 @@ Result: v27 quality release
 | Runelight Locksmith | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
 | Mirrormesh Relay | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
 | Hushwave Operator | Improved v27 | v27 fix: full-band sample telemetry |
-| Pulsevine Parkour | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
+| Pulsevine Parkour | Expanded v30 | Five-course progression, persistent unlocks/bests, real-physics 5/5 reachability, safer respawns, explicit controls |
 | Tessera Commons | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
 | Glasswing Polo | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
 | Rootsong Architect | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
@@ -119,3 +119,9 @@ The v27 catalog-wide audit established that the registered games were functional
 - **Rune Depths, Emberdeck Pilgrim, Atlas Below, Ashfall Caravan, Bastion Bloom, and Fluxward Conclave:** reviewed as the remaining principal campaign titles; their existing structures were retained for future route/build/contract-specific deep runs.
 
 See `LONGFORM_AUDIT.md` for the detailed campaign-depth evidence and next targets.
+
+## v30 controls and Pulsevine follow-up
+
+Pulsevine Parkour received a full depth expansion from one circuit to five courses. All five were validated through the real movement/collision/checkpoint loop after respawn and hazard placement were tuned from playtest findings.
+
+The platform also added a universal exact-key presentation layer. Every registered game retains its authored control list; remappable games additionally expose the active key profile and defaults so labels such as Primary or Secondary no longer require player inference.

@@ -1,11 +1,40 @@
 # WorldWideGames Validation Report
 
 Date: 2026-10-01
-Release: **v29 — Long-Form Depth Pass**
+Release: **v30 — Pulsevine Expansion & Explicit Controls**
+
+## v30 focused validation
+
+### Pulsevine Parkour 2.0
+
+`python3 tests/v30_pulsevine.py`
+
+- Five authored courses detected with 5 / 6 / 7 / 7 / 8 gates.
+- Real keyboard checks pass for D movement, Space jump, R restart, 1-5 course selection, and N progression behavior.
+- A deterministic playtest agent used the real player physics, platform collision, checkpoint, thorn, spring, wind, fall/respawn, and finish functions; **all 5 courses reached their real finish state**.
+- Checkpoint respawns were revised during testing after the first pass exposed insufficient run-up room on several courses.
+
+### Platform-wide explicit controls
+
+`python3 tests/v30_controls.py` and `python3 tests/v30_controls_browser.py`
+
+- **66/66** games have authored control lists with at least three entries.
+- **66/66** game detail pages rendered their control list.
+- **40/40 remappable games** rendered the exact current map for Up/Down/Left/Right/Primary/Secondary plus W/A/S/D, Space, E defaults.
+- Representative abstract labels were verified to expand into concrete key names.
+
+### Full release regression
+
+- `python3 tests/v30_static.py`: 66 games, 106 genres, **90 achievements**, 40 remappable releases, one featured title, `wwg-v30`, public-source scan green.
+- `python3 tests/v30_http.py`: **139/139** local-origin paths HTTP 200.
+- `python3 tests/v30_catalog_audit.py`: **66/66** runtime-clean in isolated Chromium.
+- `node tests/smoke.js`: **66/66** game boots plus platform homepage/detail shell.
+- `python3 tests/v29_longform.py`: Aetherstead and Mosslight deep campaign/save regressions remain green.
+- v28 direct-game/events, v27 fixes, v30 remapping, and v26 score-direction regressions remain green.
 
 ## Release objective
 
-v29 deliberately prioritizes campaign depth over catalog growth. The release deeply validates and expands two of the catalog's principal long-form games while preserving the broader 66-game runtime, input, scoring, and delivery regressions.
+v30 expands Pulsevine Parkour into a five-course progression game and makes control instructions explicit across the full catalog while preserving the deeper v29 campaign work and the broader 66-game runtime, input, scoring, and delivery regressions.
 
 The evidence below consists of local/self-contained Chromium/runtime testing, local HTTP validation, source/static checks, and persistent-storage reload tests unless explicitly marked otherwise. It does not claim exhaustive coverage of every optional route, procedural seed, hardware/browser combination, or physical gamepad/touch device.
 

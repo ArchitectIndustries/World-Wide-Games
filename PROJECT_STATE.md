@@ -2,8 +2,8 @@
 
 Last updated: 2026-10-01
 Owner/operator: Architect Industries
-Current verified source release: **v29**
-Status: **66-game** playable static browser-gaming platform with **106 genre tags**, **89 achievements**, **40 remappable releases**, persistent local player data, PWA/offline support, durable GitHub/Library continuity, a full-catalog quality audit, and a dedicated long-form campaign-depth audit.
+Current verified source release: **v30**
+Status: **66-game** playable static browser-gaming platform with **106 genre tags**, **90 achievements**, **40 remappable releases**, persistent local player data, PWA/offline support, durable GitHub/Library continuity, a full-catalog quality audit, and a dedicated long-form campaign-depth audit.
 
 ## Architecture
 
@@ -13,8 +13,44 @@ Status: **66-game** playable static browser-gaming platform with **106 genre tag
 - Homepage personalization includes Continue Playing and Recently Updated; Release History exposes the six latest release summaries locally.
 - `assets/wwg-input.js` provides the reusable keyboard-remapping layer; **40 releases** currently adopt it.
 - Score metadata supports higher-is-better and lower-is-better records; six current titles use lower-is-better scoring.
-- `wwg-v29` service worker caches the complete catalog/covers plus shared platform assets, with network-first navigation fallback.
+- `wwg-v30` service worker caches the complete catalog/covers plus shared platform assets, with network-first navigation fallback.
 - `vercel.json` remains included for static Vercel deployment.
+
+## v30 production work — Pulsevine Expansion & Explicit Controls
+
+v30 keeps the catalog at 66 games and focuses on a user-requested favorite plus platform-wide usability.
+
+### Pulsevine Parkour 2.0
+
+- Expanded the original single five-gate run into a **five-course parkour progression**: Rooftop Pulse, Glassroot Gap, Skyline Switchbacks, Thornspire Relay, and Pulse Crown.
+- Course difficulty now escalates through 5 / 6 / 7 / 7 / 8 checkpoint gates, launch pads, crosswinds, denser thorn timing, and mixed elevation lines.
+- Added persistent course unlocks and per-course best times, a five-course best-total campaign score, number-key course selection, and a new full-campaign completion event.
+- Improved checkpoint respawns so a fall returns the player to a safe run-up instead of an edge-trap.
+- Added exact controls: A/D or Left/Right move, Space/Up jumps, R restarts, 1-5 selects unlocked courses, N advances after a clear; gamepad and touch actions are also named explicitly.
+
+### Explicit control presentation across all games
+
+- Every game detail page continues to show its authored game-specific control list.
+- All **40 remappable games** now also display the player's current keyboard mapping for Up, Down, Left, Right, Primary, and Secondary.
+- Abstract labels such as `Primary`, `Secondary`, and `Remappable directions` are expanded in the UI with the actual current key and default (`W/A/S/D`, `Space`, `E`) so players never have to infer what an action label means.
+- Added regression coverage over all **66 game detail pages** to ensure control lists render and every remappable title exposes the explicit keyboard profile.
+
+### Platform/release updates
+
+- Added achievement **Pulse Crown** for clearing all five Pulsevine courses, bringing the total to **90**.
+- Release History advances to **v30 through v25**.
+- Offline cache advances to `wwg-v30`.
+
+### v30 validation summary
+
+- `python3 tests/v30_pulsevine.py`: five courses, real keyboard input, course selection/restart, and **5/5 real-physics reachability** using the authored movement/collision loop.
+- `python3 tests/v30_controls.py`: all 66 catalog entries retain explicit control lists and the exact remapping defaults are present in the game-detail renderer.
+- `python3 tests/v30_controls_browser.py`: all 66 game detail pages render at least three control lines; all **40 remappable titles** expose the current/default keyboard profile.
+- `python3 tests/v30_catalog_audit.py`: **66/66 games runtime-clean** in isolated Chromium.
+- `node tests/smoke.js`: **66/66 registered games** boot; platform homepage/detail shell pass.
+- `python3 tests/v30_static.py`: 66 IDs, 106 genres, one featured release, **90 achievements**, 40 remappable games, `wwg-v30`, metadata/public-source checks.
+- `python3 tests/v30_http.py`: **139/139** local-origin paths returned HTTP 200.
+- v29 long-form, v28 direct-game/event, v27 defect-fix, remapping, and score-direction regressions remain green.
 
 ## v29 production work — Long-Form Depth Pass
 
@@ -64,7 +100,8 @@ Canonical repository: `ArchitectIndustries/World-Wide-Games`.
 
 - GitHub `main` began this production pass at verified v27 commit `1c6650e83eee4d441cd900fe1b93ae013e1db8f8`.
 - `/WorldWideGames/WorldWideGames_v28.zip` was independently verified and used as the v29 development baseline because it was newer than GitHub and had passed its embedded/re-run release gate.
-- The v29 synchronization process preserves v28 as its own verified Git history step before the v29 long-form release, rather than collapsing the two releases into a misleading single change.
+- GitHub `main` was advanced by fast-forward to the verified v28 commit `ad91d9b350dfa15b8e6ba83c97f056bb8c12f157`, preserving the intended v27 -> v28 history step.
+- The complete verified v29 and v30 packages and synchronization records are preserved in `/WorldWideGames`; advancing the repository mirror through v29/v30 remains pending because the current repository write path rejected the content-transfer step even though branch-ref updates are authorized. Future runs should retry the v29 then v30 source mirror before creating redundant work.
 
 ## Production deployment
 
