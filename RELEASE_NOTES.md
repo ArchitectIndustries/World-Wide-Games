@@ -1,5 +1,35 @@
 # WorldWideGames Release Notes
 
+## v28 — Fluxward Conclave / Circuit Rush 2.0
+
+WorldWideGames v28 expands the Architect Industries browser arcade to **66 games**, **106 genre tags**, **87 achievements**, and **39 remappable releases** while substantially upgrading one of the oldest racing titles.
+
+### New game: Fluxward Conclave
+
+- Original three-arena territory strategy built around connected expansion, cell charging, tactical pulse conversion, relay bonus actions, and positional control.
+- Solo campaign against a deterministic tactical rival plus Local Multiplayer pass-and-play duel mode.
+- Pointer/touch, remappable keyboard, and gamepad support.
+- Persistent local records and standardized campaign/win/triple-crown events.
+- New featured release and PWA shortcut target.
+
+### Circuit Rush 2.0
+
+- Rebuilt the original concise racer into a three-lap competition with **three live AI rivals**.
+- Added ordered eight-gate checkpoint progression, live place tracking, cyan boost gates, off-track grip loss, pause/resume, best-time/place persistence, and race-win events.
+- Preserves instant browser launch, touch, gamepad, and shared keyboard remapping.
+
+### Platform and QA
+
+- Added Circuit Champion, Fluxward Victor, and Triple Crown achievements for **87 total**.
+- Remapping coverage rises to **39 games**.
+- Scored-release event coverage rises to **56 releases**.
+- Release History advances to v28 through v23.
+- Offline cache upgraded to `wwg-v28` and includes Fluxward Conclave.
+- **66/66** catalog runtime-clean pass.
+- **66/66** all-game boot smoke pass.
+- **139/139** local HTTP paths returned 200.
+- Fluxward and Circuit Rush both pass direct mechanic-specific regression suites.
+
 ## v27 — Full Catalog Quality Audit
 
 WorldWideGames v27 is a quality-focused release. The catalog intentionally remains at **65 games, 105 genre tags, 84 achievements, and 38 remappable releases** while the entire game library is audited for runtime cleanliness and coherence.
@@ -58,8 +88,3 @@ WorldWideGames v26 expands the Architect Industries browser arcade to **65 games
 - Added Prismweave Atelier.
 - Expanded Bastion Bloom to a ten-wave tower-defense campaign.
 - Added Recently Updated and Craft & Create.
-
-## v22 — Blackglass Watch / Tetherline Salvage
-
-- Added Blackglass Watch and Tetherline Salvage.
-- Added Continue Playing, Fresh Genre, Night Shift, and expanded profile progress metrics.

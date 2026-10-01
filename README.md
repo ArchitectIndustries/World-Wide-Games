@@ -1,10 +1,10 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified release is **v27** with **65 games across 105 genre tags**.
+WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified release is **v28** with **66 games across 106 genre tags**.
 
-v27 is a catalog-quality release: all 65 registered games were independently loaded in Chromium, concise/older titles received targeted visual/source review, and six concrete coherence/correctness defects were fixed instead of simply adding more games. See `CATALOG_AUDIT.md` for the per-game review ledger.
+v28 adds **Fluxward Conclave**, a three-arena territory strategy game with Solo and Local Multiplayer play, and rebuilds **Circuit Rush 2.0** into a fuller three-lap race against three active AI rivals with ordered checkpoints, boost gates, position tracking, persistence, and standardized race events.
 
-Platform highlights include **84 local achievements**, Daily/Weekly challenges, Daily Pick, favorites, ratings, Play Later, Continue Playing, Recently Updated, Release History, recommendations, curated discovery collections, shareable discovery state, three-game mixes, local scoring/history, profile backup/restore, PWA/offline support, and **38 games** using the shared remappable keyboard layer.
+Platform highlights include **87 local achievements**, Daily/Weekly challenges, Daily Pick, favorites, ratings, Play Later, Continue Playing, Recently Updated, Release History, recommendations, curated discovery collections, shareable discovery state, three-game mixes, local scoring/history, profile backup/restore, PWA/offline support, and **39 games** using the shared remappable keyboard layer.
 
 ## Run locally
 
@@ -16,9 +16,9 @@ Then open `http://localhost:8080/`. HTTP serving is recommended for service-work
 
 ## Validation
 
-Versioned tests live under `tests/`. The v27 release gate includes a **65-game Chromium catalog audit**, all-game boot smoke coverage, defect-specific direct interaction checks, static catalog/cache consistency, **137 local-origin HTTP requests**, **38-game input-remapping regression**, scored completion events, and score-direction behavior.
+Versioned tests live under `tests/`. The v28 release gate includes a **66-game Chromium catalog audit**, all-game boot smoke coverage, direct Fluxward and Circuit Rush mechanic tests, static catalog/cache/PWA consistency, **139 local-origin HTTP requests**, **39-game input-remapping regression**, scored completion events, retained v27 defect regressions, and score-direction behavior.
 
-The audit provides representative interaction and targeted deep review. It does not claim exhaustive mastery of every branch/level or every browser, OS, and gamepad combination.
+The gate provides representative interaction and targeted deep review. It does not claim exhaustive mastery of every branch/level or every browser, OS, physical gamepad, and touch device combination.
 
 ## Source continuity
 

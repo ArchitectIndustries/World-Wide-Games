@@ -1,8 +1,16 @@
 window.WWG_GAMES = [
   {
+    id: 'fluxward-conclave', title: 'Fluxward Conclave', tagline: 'Charge the lattice. Capture the relays. Hold the field.',
+    description: 'A three-arena turn-based territory strategy game. Extend a charged lattice, reinforce cells into conversion pulses, seize bonus-action relays, outscore a tactical AI campaign, or pass the controls for a local duel.',
+    genres: ['Territory', 'Turn-Based', 'Competitive', 'Board', 'Multiplayer'], added: '2026-10-01', updated: '2026-10-01', version: '1.0', featured: true, basePopularity: 282,
+    cover: 'covers/fluxward-conclave.svg', path: 'games/fluxward-conclave/index.html', accent: '#67e8f9', remappable: true, modes: ['Solo', 'Local Multiplayer'],
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Conclave score' },
+    controls: ['Remappable directions move the lattice cursor', 'Primary selects a friendly cell and extends into an adjacent open tile', 'Secondary charges a friendly cell; charge 3 releases a conversion pulse', 'Enter ends the current turn; M toggles Solo Campaign and Local Duel', 'Pointer and touch board controls plus mobile action buttons supported', 'Gamepad stick or D-pad + A/B and Start supported', 'R restarts the current campaign or duel']
+  },
+  {
     id: 'strata-cipher', title: 'Strata Cipher', tagline: 'Read the layer. Protect the site. Recover the story.',
     description: 'A six-site archaeology and excavation strategy puzzle. Survey buried strata, triangulate artifact signals, avoid fault pockets, preserve site integrity, and archive eighteen fragments with the fewest destructive digs.',
-    genres: ['Archaeology', 'Excavation', 'Puzzle', 'Strategy'], added: '2026-10-01', updated: '2026-10-01', version: '1.0', featured: true, basePopularity: 264,
+    genres: ['Archaeology', 'Excavation', 'Puzzle', 'Strategy'], added: '2026-10-01', updated: '2026-10-01', version: '1.0', featured: false, basePopularity: 264,
     cover: 'covers/strata-cipher.svg', path: 'games/strata-cipher/index.html', accent: '#f59e0b', remappable: true,
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Excavation score' },
     controls: ['Remappable directions move the excavation cursor', 'Primary excavates the selected tile', 'Secondary surveys nearby strata and reveals artifact-signal counts', 'Touch grid selection and controls supported', 'Gamepad left stick + A/B supported', 'R restarts the full expedition']
@@ -600,16 +608,17 @@ window.WWG_GAMES = [
   {
     id: 'circuit-rush',
     title: 'Circuit Rush',
-    tagline: 'Three laps. One clean line. Beat your own ghost.',
-    description: 'A top-down time-trial racer with momentum steering, off-track slowdown, a pace ghost, touch controls, and persistent best times.',
-    genres: ['Racing', 'Arcade', 'Time Trial'],
-    added: '2026-09-29',
+    tagline: 'Own the checkpoint line.',
+    description: 'A three-lap top-down circuit racer with ordered checkpoint gates, three live AI rivals, boost pads, position tracking, off-track grip loss, remappable controls, gamepad support, and local best-time chasing.',
+    genres: ['Racing', 'Arcade', 'Time Trial', 'Competitive'],
+    added: '2026-09-29', updated: '2026-10-01', version: '2.0',
     featured: false,
-    basePopularity: 93,
+    basePopularity: 176,
     cover: 'covers/circuit-rush.svg',
     path: 'games/circuit-rush/index.html',
-    accent: '#34d399', remappable: true,
-    controls: ['Remappable Up accelerates and Down brakes/reverses', 'Remappable Left / Right steers', 'R restarts', 'Touch controls on mobile', 'Gamepad left stick supported']
+    accent: '#22d3ee', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Race score' },
+    controls: ['Remappable Up accelerates and Down brakes/reverses', 'Remappable Left / Right steers', 'Follow glowing checkpoints in order and use cyan boost pads', 'P pauses and R restarts', 'Touch controls on mobile', 'Gamepad left stick supported']
   },
   {
     id: 'bastion-bloom', title: 'Bastion Bloom', tagline: 'Plant the defense. Grow the line. Hold ten waves.',

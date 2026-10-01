@@ -1,4 +1,4 @@
-const CACHE='wwg-v27';
+const CACHE='wwg-v28';
 const ASSETS=[
   "./",
   "./index.html",
@@ -10,6 +10,8 @@ const ASSETS=[
   "./js/app.js",
   "./js/game-page.js",
   "./manifest.webmanifest",
+  "./covers/fluxward-conclave.svg",
+  "./games/fluxward-conclave/index.html",
   "./covers/strata-cipher.svg",
   "./games/strata-cipher/index.html",
   "./covers/echofall-caverns.svg",

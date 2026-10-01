@@ -100,3 +100,12 @@ Result: v27 quality release
 ## Scope boundary
 
 This audit proves boot/runtime cleanliness, representative interaction, direct checks for identified edge cases, and targeted visual/code review of the weakest-looking legacy titles. It does not claim exhaustive human mastery of every possible level/path or every gamepad/browser/OS combination.
+
+## v28 follow-up — 2026-10-01
+
+The v28 release re-ran the isolated Chromium catalog audit after adding Fluxward Conclave and rebuilding Circuit Rush. **66/66 registered games loaded without page/runtime errors**. Generic input produced observable state changes in 63 titles; Atlas Below, Lumen Relay, and Forgeflow remain geometry/mechanic-specific generic-input exceptions with direct regressions retained from v27.
+
+- **Fluxward Conclave — New v28:** direct pointer expansion, pulse conversion, keyboard remapping, Local Multiplayer handoff, campaign milestones, mobile width, boot/runtime, HTTP delivery, cache registration, and cover/catalog integration all pass.
+- **Circuit Rush — Improved v28 / version 2.0:** direct ordered-checkpoint traversal, three AI rivals, steering/throttle, pause/resume, boost behavior, three-lap completion, win/completion events, boot/runtime, HTTP delivery, and catalog integration all pass.
+
+This follow-up supplements the v27 per-game ledger rather than rewriting its historical findings.

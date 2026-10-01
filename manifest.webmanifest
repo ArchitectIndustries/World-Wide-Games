@@ -15,9 +15,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Strata Cipher",
-      "short_name": "Strata",
-      "url": "game.html?id=strata-cipher",
+      "name": "Fluxward Conclave",
+      "short_name": "Fluxward",
+      "url": "game.html?id=fluxward-conclave",
       "icons": [
         {
           "src": "assets/app-icon.svg",
