@@ -1,8 +1,10 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified release is **v26** with **65 games across 105 genre tags**.
+WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified release is **v27** with **65 games across 105 genre tags**.
 
-Highlights include Strata Cipher, Ashfall Caravan 2.0, Echofall Caverns, Rune Depths 2.0, **84 local achievements**, Daily/Weekly challenges, Daily Pick, favorites, ratings, Play Later, Continue Playing, Recently Updated, Release History, recommendations, Field Studies and other curated discovery collections, shareable discovery state, three-game mixes, local scoring/history, profile backup/restore, and **38 games** using the shared remappable keyboard layer.
+v27 is a catalog-quality release: all 65 registered games were independently loaded in Chromium, concise/older titles received targeted visual/source review, and six concrete coherence/correctness defects were fixed instead of simply adding more games. See `CATALOG_AUDIT.md` for the per-game review ledger.
+
+Platform highlights include **84 local achievements**, Daily/Weekly challenges, Daily Pick, favorites, ratings, Play Later, Continue Playing, Recently Updated, Release History, recommendations, curated discovery collections, shareable discovery state, three-game mixes, local scoring/history, profile backup/restore, PWA/offline support, and **38 games** using the shared remappable keyboard layer.
 
 ## Run locally
 
@@ -14,7 +16,9 @@ Then open `http://localhost:8080/`. HTTP serving is recommended for service-work
 
 ## Validation
 
-Versioned tests live under `tests/`. The v26 release gate covers all-game runtime boot checks, static catalog/cache consistency, **137 local-origin HTTP requests**, Chromium interaction/responsive checks, authored-content invariants, **38-game input-remapping regression**, scored completion events, and score-direction behavior.
+Versioned tests live under `tests/`. The v27 release gate includes a **65-game Chromium catalog audit**, all-game boot smoke coverage, defect-specific direct interaction checks, static catalog/cache consistency, **137 local-origin HTTP requests**, **38-game input-remapping regression**, scored completion events, and score-direction behavior.
+
+The audit provides representative interaction and targeted deep review. It does not claim exhaustive mastery of every branch/level or every browser, OS, and gamepad combination.
 
 ## Source continuity
 
@@ -22,7 +26,7 @@ The canonical source mirror is `ArchitectIndustries/World-Wide-Games`. `/WorldWi
 
 ## Deployment
 
-`vercel.json` targets static hosting. Production should update the existing Architect Industries WorldWideGames Vercel project rather than create a duplicate.
+`vercel.json` targets static hosting. Production should update the existing Architect Industries WorldWideGames Vercel project rather than create a duplicate. Deployment hooks and protection-bypass secrets are credentials and must never be committed to the repository.
 
 ## Ownership
 

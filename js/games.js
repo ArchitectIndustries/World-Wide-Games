@@ -75,7 +75,7 @@ window.WWG_GAMES = [
     id: 'hushwave-operator', title: 'Hushwave Operator', tagline: 'Find the carrier beneath the noise.',
     description: 'A six-signal radio tuning puzzle. Adjust frequency, phase, and gain, read the scope, follow diagnostic hints, and lock increasingly narrow hidden carriers.',
     genres: ['Signal', 'Radio', 'Simulation', 'Puzzle'], added: '2026-09-30', featured: false, basePopularity: 196,
-    cover: 'covers/hushwave-operator.svg', path: 'games/hushwave-operator/index.html', accent: '#a78bfa', remappable: true,
+    cover: 'covers/hushwave-operator.svg', path: 'games/hushwave-operator/index.html', updated: '2026-10-01', version: '1.1', accent: '#a78bfa', remappable: true,
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Decode score' },
     controls: ['Remappable Left / Right adjusts the selected control', 'Remappable Up / Down changes control', 'Primary / Space samples the carrier', 'Pointer and touch sliders supported', 'R restarts the band']
   },
@@ -187,7 +187,7 @@ window.WWG_GAMES = [
     id: 'signal-choir', title: 'Signal Choir', tagline: 'Hear it. See it. Return the pattern.',
     description: 'A six-round audiovisual memory game with five tonal channels, escalating sequences, replay penalties, streak scoring, three lives, and a complete visual mode for muted play.',
     genres: ['Memory', 'Music', 'Puzzle', 'Relaxing'], added: '2026-09-30', featured: false, basePopularity: 163,
-    cover: 'covers/signal-choir.svg', path: 'games/signal-choir/index.html', accent: '#a78bfa',
+    cover: 'covers/signal-choir.svg', path: 'games/signal-choir/index.html', updated: '2026-10-01', version: '1.1', accent: '#a78bfa',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Memory score' },
     controls: ['Keys 1-5 repeat the five signal channels', 'Tap or click the five pads on touch/pointer devices', 'Replay Signal repeats the current pattern for a score penalty', 'R restarts the choir']
   },
@@ -316,7 +316,7 @@ window.WWG_GAMES = [
     id: 'glyphsmith', title: 'Glyphsmith', tagline: 'Forge words before the archive cools.',
     description: 'A sixty-second word-forging sprint. Type or tap runes to recreate the target word, build combo chains, and keep the archive alive under a fast countdown.',
     genres: ['Word', 'Typing', 'Puzzle'], added: '2026-09-30', featured: false, basePopularity: 123,
-    cover: 'covers/glyphsmith.svg', path: 'games/glyphsmith/index.html', accent: '#e879f9',
+    cover: 'covers/glyphsmith.svg', path: 'games/glyphsmith/index.html', updated: '2026-10-01', version: '1.1', accent: '#e879f9',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Forge score' },
     controls: ['Type letters on a keyboard or tap the rune bank', 'Enter forges the current word', 'Backspace removes the last rune', 'Escape clears the entry', 'R restarts after the archive closes']
   },
@@ -397,7 +397,7 @@ window.WWG_GAMES = [
     featured: false,
     basePopularity: 112,
     cover: 'covers/echo-bazaar.svg',
-    path: 'games/echo-bazaar/index.html',
+    path: 'games/echo-bazaar/index.html', updated: '2026-10-01', version: '1.1',
     accent: '#fb7185',
     controls: ['Tap or click a commodity row to select it', 'Buy and Sell trade one unit at the current price', 'Cargo capacity is limited to 12 units', 'Advance Day refreshes prices and market rumors', 'Finish day 12 with the highest possible net worth']
   },
@@ -411,7 +411,7 @@ window.WWG_GAMES = [
     featured: false,
     basePopularity: 111,
     cover: 'covers/lumen-relay.svg',
-    path: 'games/lumen-relay/index.html',
+    path: 'games/lumen-relay/index.html', updated: '2026-10-01', version: '1.1',
     accent: '#fde68a',
     controls: ['Click or tap a mirror to rotate it', 'Route the beam through every crystal before the receiver', 'Absorbers stop the beam immediately', 'R restarts the current stage', 'Complete all 6 stages with as few rotations as possible']
   },
@@ -439,7 +439,7 @@ window.WWG_GAMES = [
     featured: false,
     basePopularity: 108,
     cover: 'covers/pulse-archive.svg',
-    path: 'games/pulse-archive/index.html',
+    path: 'games/pulse-archive/index.html', updated: '2026-10-01', version: '1.1',
     accent: '#c084fc',
     controls: ['D F J K hit the four lanes', 'Hit notes as they cross the timing line', 'Touch lane buttons on mobile', 'Gamepad face buttons supported', 'Mute preference disables procedural tones']
   },

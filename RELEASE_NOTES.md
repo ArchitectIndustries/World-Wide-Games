@@ -1,34 +1,45 @@
 # WorldWideGames Release Notes
 
+## v27 — Full Catalog Quality Audit
+
+WorldWideGames v27 is a quality-focused release. The catalog intentionally remains at **65 games, 105 genre tags, 84 achievements, and 38 remappable releases** while the entire game library is audited for runtime cleanliness and coherence.
+
+### Catalog audit
+
+- Loaded all **65 registered games** independently in Chromium with isolated state and runtime/page errors captured.
+- Exercised common controls across the catalog and added direct interaction checks for mechanic-specific generic-input outliers.
+- Performed targeted visual/source review of concise legacy titles most likely to be mistaken for filler.
+- Added `CATALOG_AUDIT.md` with a durable per-game disposition and explicit scope boundary.
+- No registered game was found to be a placeholder, TODO shell, or runtime-crashing fake page.
+
+### Six game upgrades
+
+- **Glyphsmith 1.1** — rune bank is now finite inventory; spent runes cannot be reused until Backspace/Clear returns them.
+- **Echo Bazaar 1.1** — rumors now forecast the next day's market pressure instead of narrating the move that already happened.
+- **Signal Choir 1.1** — transition input is locked during wrong-note replay and between rounds, eliminating accidental extra penalties.
+- **Pulse Archive 1.1** — visible final score now matches the standardized emitted score including accuracy bonus.
+- **Lumen Relay 1.1** — completed-run rotation totals reset before a replay, keeping new-run scores independent.
+- **Hushwave Operator 1.1** — completion telemetry now reports total samples across all six signals.
+
+### Platform and QA
+
+- Added repeatable `v27_catalog_audit.py` and `v27_fixes.py` regressions.
+- Release History advances to v27 through v22.
+- Offline cache upgraded to `wwg-v27`.
+- 65/65 catalog runtime-clean pass.
+- 65/65 boot smoke pass.
+- 137/137 local HTTP paths returned 200.
+- 38-game shared-remap regression remains green.
+- 55 scored releases remain covered by carried-forward/current numeric-event tests.
+- All six lower-is-better titles retain correct score direction.
+
 ## v26 — Strata Cipher / Ashfall Caravan 2.0
 
 WorldWideGames v26 expands the Architect Industries browser arcade to **65 games**, **105 genre tags**, **84 achievements**, and **38 remappable releases**.
 
-### New game
-
-- **Strata Cipher** — featured six-site archaeology/excavation strategy puzzle. Survey buried strata, interpret local artifact-signal counts, avoid fault pockets, preserve trench integrity, and recover eighteen fragments. Includes shared remapping, touch/pointer controls, gamepad support, persistent expedition records, and numeric high-score completion events.
-
-### Major upgrade
-
-- **Ashfall Caravan 2.0** — expanded from eight to **twelve crossings** with a fifth managed resource (Parts), three persistent road contracts (Relief, Survey, Courier), contract mastery across runs, retained Chronicle trait compatibility, additional road events, revised scoring, gamepad support, and shared remappable Primary/Secondary decisions.
-
-### Platform
-
-- Added **Field Studies** curated discovery for Archaeology, Excavation, Astronomy, Cartography, Botany, Photography, and Ecology experiences.
-- Added Field Archaeologist, Delicate Hands, and Road Contract Master achievements.
-- Shared keyboard-remapping coverage increased from 36 to **38 games**.
-- Release History advances to v26 through v21.
-- Featured PWA shortcut now launches Strata Cipher.
-- Offline cache upgraded to `wwg-v26`.
-
-### Validation
-
-- 65/65 game boot smoke pass.
-- 137/137 local HTTP paths returned 200.
-- 65-card / 84-achievement Chromium UI pass with 390 px responsive width, Field Studies, full Strata Cipher completion, and a complete Ashfall Relief contract journey.
-- 38-game shared-remap regression pass.
-- 55 scored releases in carried-forward/current event coverage.
-- Deep validation confirms all six Strata sites contain exactly three artifacts and four fault pockets and verifies Ashfall's twelve-crossing / three-contract structure.
+- Added **Strata Cipher**, a six-site archaeology/excavation strategy puzzle.
+- Expanded **Ashfall Caravan 2.0** to twelve crossings, Parts, three road contracts, contract mastery, gamepad support, and shared remapping.
+- Added Field Studies, three achievements, and `wwg-v26` offline cache.
 
 ## v25 — Echofall Caverns / Rune Depths 2.0
 
@@ -52,8 +63,3 @@ WorldWideGames v26 expands the Architect Industries browser arcade to **65 games
 
 - Added Blackglass Watch and Tetherline Salvage.
 - Added Continue Playing, Fresh Genre, Night Shift, and expanded profile progress metrics.
-
-## v21 — Kiteglass Drift / Runelight Locksmith
-
-- Added Kiteglass Drift and Runelight Locksmith.
-- Added In progress, Uncleared, and Air & Altitude discovery.
