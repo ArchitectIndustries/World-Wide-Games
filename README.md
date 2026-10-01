@@ -1,37 +1,29 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around instant-play original games. The current verified release is **v21** with **59 games across 94 genre tags**.
+WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified release is **v25** with **64 games across 103 genre tags**.
 
-## Current highlights
-
-- Featured release: **Kiteglass Drift**, a seven-gate gliding time trial.
-- New in v21: **Runelight Locksmith**, a six-lock mechanical timing game.
-- 69 local achievements, Daily/Weekly challenge systems, Daily Pick, favorites, ratings, Play Later, recommendations, shareable discovery state, three-game mixes, persistent local scoring, playtime/activity history, and profile backup/restore.
-- Discovery supports genre, input, play mode, curated collection, Unplayed, In progress, Uncleared, Favorites, Cleared, and Play Later filters.
-- 26 releases use the shared user-remappable keyboard layer.
-- PWA/offline cache covers the full registered catalog.
-- No installation is required for normal browser play.
+Highlights include Echofall Caverns, Rune Depths 2.0, 81 local achievements, Daily/Weekly challenges, Daily Pick, favorites, ratings, Play Later, Continue Playing, Recently Updated, Release History, recommendations, Fresh Genre and curated discovery, shareable discovery state, three-game mixes, local scoring/history, profile backup/restore, and **36 games** using the shared remappable keyboard layer.
 
 ## Run locally
-
-Serve this folder from a local HTTP origin, for example:
 
 ```bash
 python3 -m http.server 8080
 ```
 
-Then open `http://localhost:8080/`.
-
-Opening individual HTML files directly may work for some games, but HTTP serving is recommended for service-worker/PWA and browser-origin behavior.
+Then open `http://localhost:8080/`. HTTP serving is recommended for service-worker/PWA behavior.
 
 ## Validation
 
-The current release includes versioned tests under `tests/`. The v21 release gate covers runtime boot checks, static registry/cache consistency, 127 local-origin HTTP requests, Chromium interaction/responsive checks, authored-content invariants, 26-game remapping regression, scored game events, and lower-is-better score direction.
+Versioned tests live under `tests/`. The v25 release gate covers all-game runtime boot checks, static catalog/cache consistency, 135 local-origin HTTP requests, Chromium interaction/responsive checks, authored-content invariants, 36-game input-remapping regression, scored completion events, and score-direction behavior.
+
+## Source continuity
+
+The canonical source mirror is `ArchitectIndustries/World-Wide-Games`. `/WorldWideGames` remains the persistent packaged-release archive. Use the newest fully verified release when the two temporarily differ.
 
 ## Deployment
 
-`vercel.json` is included for static Vercel hosting. The intended production project is the existing Architect Industries WorldWideGames project rather than a duplicate deployment target.
+`vercel.json` targets static hosting. Production should update the existing Architect Industries WorldWideGames Vercel project rather than create a duplicate.
 
 ## Ownership
 
-WorldWideGames and its original game content are developed and operated by Architect Industries. See `THIRD_PARTY_NOTICES.md` for dependency and attribution information.
+WorldWideGames and its original bundled game content are developed and operated by Architect Industries. See `THIRD_PARTY_NOTICES.md` for attribution information.

@@ -1,8 +1,48 @@
 window.WWG_GAMES = [
   {
+    id: 'echofall-caverns', title: 'Echofall Caverns', tagline: 'Map the dark by sound.',
+    description: 'A six-chamber echolocation exploration puzzle. Send sonar pulses to reveal nearby stone, recover three resonators in each cavern, and seal the atlas with the lowest possible echo cost.',
+    genres: ['Echolocation', 'Navigation', 'Puzzle', 'Exploration'], added: '2026-10-01', featured: true, basePopularity: 206,
+    cover: 'covers/echofall-caverns.svg', path: 'games/echofall-caverns/index.html', accent: '#22d3ee', remappable: true, version: '1.0',
+    scoreMeta: { unit: 'echo', direction: 'low', label: 'Echo cost' },
+    controls: ['Remappable directional keys move one cavern tile', 'Primary sends a sonar pulse that reveals nearby terrain', 'Secondary waits one turn without spending an echo', 'Recover all three resonators before entering each exit', 'Touch controls and gamepad supported', 'R restarts the six-chamber expedition', 'Lower echo cost is better']
+  },
+  {
+    id: 'starfall-observatory', title: 'Starfall Observatory', tagline: 'Acquire the bearing. Match the spectrum. Seal the night.',
+    description: 'A six-target astronomy and precision observation game. Align azimuth and altitude, choose the correct spectral filter, capture clean observations, and complete an Architect Industries night survey.',
+    genres: ['Astronomy', 'Observation', 'Simulation', 'Precision'], added: '2026-10-01', updated: '2026-10-01', version: '1.0', featured: false, basePopularity: 252,
+    cover: 'covers/starfall-observatory.svg', path: 'games/starfall-observatory/index.html', accent: '#7dd3fc', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Observatory score' },
+    controls: ['Remappable Left / Right adjusts azimuth', 'Remappable Up / Down adjusts altitude', 'Secondary cycles Blue, Gold, and Infrared filters', 'Primary captures the current observation', 'Tap or click the scope to point directly', 'Touch controls supported', 'R restarts the night survey']
+  },
+  {
+    id: 'prismweave-atelier', title: 'Prismweave Atelier', tagline: 'Shift the warp. Match the commission.',
+    description: 'A six-commission textile logic game. Rotate whole warp rows and weft columns to restore scrambled three-color patterns, chase par moves, and complete the Architect Industries prism atelier.',
+    genres: ['Weaving', 'Pattern', 'Logic', 'Puzzle'], added: '2026-09-30', updated: '2026-09-30', version: '1.0', featured: false, basePopularity: 246,
+    cover: 'covers/prismweave-atelier.svg', path: 'games/prismweave-atelier/index.html', accent: '#c084fc', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Atelier score' },
+    controls: ['Remappable Left / Right selects a row or column band', 'Remappable Up / Down switches between Rows and Columns', 'Primary shifts the selected band forward', 'Secondary shifts the selected band backward', 'Pointer and touch controls supported', 'R resets the current commission']
+  },
+  {
+    id: 'blackglass-watch', title: 'Blackglass Watch', tagline: 'Six cameras. Seven anomalies. Trust the baseline.',
+    description: 'A seven-anomaly surveillance horror game. Compare six station feeds, classify figures, lighting shifts, displaced objects, and unnatural movement, manage rising stress, and finish the night watch cleanly.',
+    genres: ['Horror', 'Observation', 'Strategy', 'Atmospheric'], added: '2026-09-30', updated: '2026-09-30', version: '1.0', featured: false, basePopularity: 238,
+    cover: 'covers/blackglass-watch.svg', path: 'games/blackglass-watch/index.html', accent: '#82c7c4', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Watch score' },
+    controls: ['Remappable Left / Right changes camera', 'Remappable Up / Down changes report type', 'Primary files the selected anomaly report', 'Secondary steadies station stress twice per watch', 'Pointer and touch controls supported', 'R restarts the watch']
+  },
+  {
+    id: 'tetherline-salvage', title: 'Tetherline Salvage', tagline: 'Hook the drift. Tow the prize. Keep the hull intact.',
+    description: 'A real-time orbital salvage run. Pilot a recovery craft through drifting hazards, hook six cargo pods with a physics tether, manage momentum, and tow every prize into the recovery bay before the shift expires.',
+    genres: ['Salvage', 'Space', 'Physics', 'Action'], added: '2026-09-30', updated: '2026-09-30', version: '1.0', featured: false, basePopularity: 221,
+    cover: 'covers/tetherline-salvage.svg', path: 'games/tetherline-salvage/index.html', accent: '#60a5fa', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Salvage score' },
+    controls: ['Remappable directions pilot the recovery craft', 'Primary hooks or releases nearby salvage', 'Secondary fires the inertial brake', 'Gamepad left stick + A/B supported', 'Touch flight, tether, and brake controls on mobile', 'Recover all six pods before time or hull runs out']
+  },
+  {
     id: 'kiteglass-drift', title: 'Kiteglass Drift', tagline: 'Read the crosswind. Hold the gate line.',
     description: 'A seven-gate gliding time trial with momentum flight, shifting crosswind, thermal columns, missed-gate penalties, gamepad support, touch controls, remappable pitch, and lower-is-better adjusted times.',
-    genres: ['Gliding', 'Flight', 'Racing', 'Sports'], added: '2026-09-30', updated: '2026-09-30', version: '1.0', featured: true, basePopularity: 232,
+    genres: ['Gliding', 'Flight', 'Racing', 'Sports'], added: '2026-09-30', updated: '2026-09-30', version: '1.0', featured: false, basePopularity: 232,
     cover: 'covers/kiteglass-drift.svg', path: 'games/kiteglass-drift/index.html', accent: '#67e8f9', remappable: true,
     scoreMeta: { unit: 'sec', direction: 'low', label: 'Adjusted glide time' },
     controls: ['Remappable Up / Down adjusts pitch', 'Primary / Space flares and levels the wing', 'Gamepad left stick + A supported', 'Touch pitch and flare controls on mobile', 'Thread seven suspended gates; missed gates add six seconds', 'Lower adjusted time is better']
@@ -232,18 +272,18 @@ window.WWG_GAMES = [
   {
     id: 'deepwater-signal', title: 'Deepwater Signal', tagline: 'Ping the dark. Wake nothing.',
     description: 'A sonar-stealth undersea expedition. Synchronize five drowned relays, manage battery and hull, evade sound-hunting predators, and return to the surface gate with the strongest survey score.',
-    genres: ['Underwater', 'Stealth', 'Exploration', 'Simulation'], added: '2026-09-30', featured: false, basePopularity: 132,
-    cover: 'covers/deepwater-signal.svg', path: 'games/deepwater-signal/index.html', accent: '#67e8f9',
+    genres: ['Underwater', 'Stealth', 'Exploration', 'Simulation'], added: '2026-09-30', updated: '2026-09-30', version: '1.1', featured: false, basePopularity: 132,
+    cover: 'covers/deepwater-signal.svg', path: 'games/deepwater-signal/index.html', accent: '#67e8f9', remappable: true,
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Mission score' },
-    controls: ['WASD / Arrow keys pilot the submersible', 'Space fires a sonar pulse', 'E scans a nearby relay or exits at the surface gate', 'Gamepad left stick + A ping / B scan supported', 'Touch movement, ping, and scan controls on mobile', 'R restarts the mission']
+    controls: ['Remappable directions pilot the submersible', 'Primary fires a sonar pulse', 'Secondary scans a nearby relay or exits at the surface gate', 'Gamepad left stick + A ping / B scan supported', 'Touch movement, ping, and scan controls on mobile', 'R restarts the mission']
   },
   {
-    id: 'emberdeck-pilgrim', title: 'Emberdeck Pilgrim', tagline: 'Carry a living deck through three furnace gates.',
-    description: 'A branching deckbuilding roguelike with readable enemy intent, energy, block, healing, route-specific encounters, Legacy-gated boons, card rewards, and score pressure from health and run time.',
-    genres: ['Deckbuilder', 'Card', 'Roguelike', 'Strategy'], added: '2026-09-30', updated: '2026-09-30', version: '1.2', featured: false, basePopularity: 129,
-    cover: 'covers/emberdeck-pilgrim.svg', path: 'games/emberdeck-pilgrim/index.html', accent: '#fb923c',
+    id: 'emberdeck-pilgrim', title: 'Emberdeck Pilgrim', tagline: 'Carry a living deck through five furnace gates.',
+    description: 'A branching five-gate deckbuilding roguelike with readable enemy intent, route-shaped encounters, three furnace relics, legacy boons, persistent dual-route mastery, expanded card rewards, and score pressure from health and run time.',
+    genres: ['Deckbuilder', 'Card', 'Roguelike', 'Strategy'], added: '2026-09-30', updated: '2026-10-01', version: '1.3', featured: false, basePopularity: 182,
+    cover: 'covers/emberdeck-pilgrim.svg', path: 'games/emberdeck-pilgrim/index.html', accent: '#fb923c', remappable: true,
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Pilgrimage score' },
-    controls: ['Tap cards or use keys 1-5 to play them', 'E or Space ends the current turn', 'Read enemy intent before spending energy', 'Choose one reward card after the first two victories', 'R restarts the pilgrimage']
+    controls: ['Digits 1-5 or tap play cards directly', 'Remappable Left / Right selects a card', 'Primary plays the selected card', 'Secondary ends the current turn', 'Choose Glass or Iron route after gate one and bind a relic after gate two', 'Complete both routes across runs to master the pilgrimage', 'R restarts the pilgrimage']
   },
   {
     id: 'command-bloom', title: 'Command Bloom', tagline: 'Program the garden one instruction at a time.',
@@ -513,13 +553,13 @@ window.WWG_GAMES = [
     tagline: 'Two players. One orb. Hold the link.',
     description: 'A same-device two-player cooperative arena game. Coordinate two runners, protect the shared relay orb, dodge moving hazards, and carry the charge through eight rotating rifts before the team shield or clock collapses.',
     genres: ['Co-op', 'Multiplayer', 'Arcade'],
-    added: '2026-09-30',
+    added: '2026-09-30', updated: '2026-09-30', version: '1.1',
     featured: false,
     basePopularity: 96,
     cover: 'covers/rift-relay.svg',
     path: 'games/rift-relay/index.html',
-    accent: '#c4b5fd',
-    controls: ['Player 1 uses WASD', 'Player 2 uses Arrow keys', 'Touch the orb to carry it', 'Stay close while carrying the shared charge', 'Reach all 8 rifts before time or shield runs out']
+    accent: '#c4b5fd', remappable: true,
+    controls: ['Player 1 uses remappable directional controls', 'Player 2 uses Arrow keys', 'Touch the orb to carry it', 'Stay close while carrying the shared charge', 'Reach all 8 rifts before time or shield runs out']
   },
   {
     id: 'skyhook-sprint',
@@ -564,18 +604,12 @@ window.WWG_GAMES = [
     controls: ['Remappable Up accelerates and Down brakes/reverses', 'Remappable Left / Right steers', 'R restarts', 'Touch controls on mobile', 'Gamepad left stick supported']
   },
   {
-    id: 'bastion-bloom',
-    title: 'Bastion Bloom',
-    tagline: 'Plant the defense. Grow the line. Hold the garden.',
-    description: 'A compact tower-defense game where sunlight buys offensive blooms and slowing frost towers. Upgrade your garden between waves and keep the invasion off the final path tile.',
-    genres: ['Strategy', 'Tower Defense'],
-    added: '2026-09-29',
-    featured: false,
-    basePopularity: 92,
-    cover: 'covers/bastion-bloom.svg',
-    path: 'games/bastion-bloom/index.html',
-    accent: '#a3e635',
-    controls: ['Select Bloom or Frost', 'Click or tap a garden node to build', 'Tap an existing tower to upgrade it', 'Start each wave from the bottom controls']
+    id: 'bastion-bloom', title: 'Bastion Bloom', tagline: 'Plant the defense. Grow the line. Hold ten waves.',
+    description: 'A ten-wave tower-defense campaign with Bloom damage towers, Frost slow towers, Spore splash towers, runners, brutes, two boss assaults, upgrades, speed controls, and remappable keyboard play.',
+    genres: ['Tower Defense', 'Strategy', 'Defense'], added: '2026-09-29', updated: '2026-09-30', version: '1.5', featured: false, basePopularity: 181,
+    cover: 'covers/bastion-bloom.svg', path: 'games/bastion-bloom/index.html', accent: '#a3e635', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Garden campaign score' },
+    controls: ['Remappable Left / Right selects a garden node', 'Remappable Up / Down cycles Bloom, Frost, and Spore towers', 'Primary builds or upgrades the selected node', 'Secondary starts the next wave', 'Click or tap nodes and controls for pointer/touch play', 'P pauses, T toggles 1×/2× speed, R restarts the campaign']
   },
   {
     id: 'emberfield-survival',
@@ -622,16 +656,17 @@ window.WWG_GAMES = [
   {
     id: 'rune-depths',
     title: 'Rune Depths',
-    tagline: 'Find the sigils. Survive the maze. Escape alive.',
-    description: 'A compact procedural dungeon run. Explore a fresh maze each game, recover five lost sigils, fight roaming shades, and reach the exit before your health is gone.',
+    tagline: 'Five depths. Three relic paths. One way back.',
+    description: 'A five-depth procedural dungeon campaign with deterministic mazes, four sigils per floor, Shade/Wisp/Brute enemy archetypes, relic choices between depths, potions, persistent best-depth tracking, and full-run mastery.',
     genres: ['Dungeon', 'Roguelite', 'Adventure'],
-    added: '2026-09-29',
+    added: '2026-09-29', updated: '2026-10-01', version: '2.0',
     featured: false,
-    basePopularity: 87,
+    basePopularity: 171,
     cover: 'covers/rune-depths.svg',
     path: 'games/rune-depths/index.html',
-    accent: '#f59e0b',
-    controls: ['WASD / Arrow keys move', 'Space attacks nearby enemies', 'R restarts', 'Touch controls on mobile']
+    accent: '#f59e0b', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Delve score' },
+    controls: ['Remappable directional keys move one dungeon tile', 'Primary attacks adjacent enemies', 'Secondary drinks a potion', 'Clear four sigils and reach the gate on each of five depths', 'Choose Heart, Edge, or Flask relics between floors', 'Touch controls and gamepad supported', 'R restarts the run']
   }
 ];
 

@@ -15,9 +15,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Kiteglass Drift",
-      "short_name": "Kiteglass",
-      "url": "game.html?id=kiteglass-drift",
+      "name": "Echofall Caverns",
+      "short_name": "Echofall",
+      "url": "game.html?id=echofall-caverns",
       "icons": [
         {
           "src": "assets/app-icon.svg",
