@@ -1,5 +1,27 @@
 # WorldWideGames Release Notes
 
+## v31 — Rune Depths Mastery Pass
+
+WorldWideGames v31 keeps the catalog at **66 games / 106 genre tags**, raises achievements to **94**, and deepens Rune Depths into a more persistent, replayable five-floor roguelite campaign.
+
+### Rune Depths 2.1
+
+- Active delves now autosave locally after meaningful actions and resume on the exact saved tile, floor, relic state, enemies, sigils, score, potions, and phase after a reload.
+- Run saves are deliberately separate from durable meta progression; completing a run, dying, or explicitly starting fresh clears the active run without deleting best score, clear count, best depth, or mastery records.
+- Added three pure relic mastery paths: **Heart Rune**, **Edge Rune**, and **Flask Rune**. A mastery requires choosing the same relic family at all four between-floor choices and clearing all five depths.
+- Added persistent three-path mastery tracking plus path-specific completion events and a final triple-mastery event.
+- Added four achievements: **Heartbound Delver**, **Edgeforged Delver**, **Flaskbound Delver**, and **Triune Delver**.
+- Combat pacing is fairer without removing danger: authored enemy counts now rise from 4 to 8 across the five depths, enemies only pursue within a bounded aggro radius, at most one incoming enemy hit can land per player turn, sigils restore health, and Heart Rune provides stronger sustain.
+- Heart Rune now grants +2 maximum HP, heals 4, and grants a potion; Heart-aligned sigil pickups restore an extra point of health.
+- The cover has been refreshed around the new **Delve • Forge • Master** identity.
+
+### Validation
+
+- Completed **three full five-depth clears** through the real dungeon loop and real enemy populations: one pure Heart build, one pure Edge build, and one pure Flask build.
+- Verified exact-position autosave/resume, completion/death save cleanup, corrupt-save recovery, persistent mastery meta, path events, and triple-mastery completion.
+- Full-catalog release gates remain green: **66/66 runtime-clean**, **66/66 smoke boot**, and **139/139 HTTP paths**.
+- v30 explicit-control regressions, v29 long-form campaigns/remapping, v28 direct-game regressions, v27 defect fixes, and v26 score-direction semantics remain green.
+
 ## v30 — Pulsevine Expansion & Explicit Controls
 
 WorldWideGames v30 keeps the catalog at **66 games / 106 genre tags**, raises achievements to **90**, and turns a user-favorite title into a larger progression game while making control instructions explicit platform-wide.

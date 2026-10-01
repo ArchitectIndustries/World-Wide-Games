@@ -86,7 +86,7 @@ Result: v27 quality release
 | Emberfield Survival | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
 | Vector League | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
 | Orbit Breaker | Functional | visual/code review; coherent shooter loop; retained |
-| Rune Depths | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
+| Rune Depths | Deep validated | v31: three legitimate five-depth mastery clears (Heart/Edge/Flask) against real enemies; exact autosave/resume, failure cleanup, corrupt-save recovery, mastery meta/events verified |
 
 ## v27 defect fixes
 
@@ -116,7 +116,8 @@ The v27 catalog-wide audit established that the registered games were functional
 
 - **Aetherstead Colony 2.0:** upgraded and completed through a legal three-charter / 36-turn campaign, including save/reload and persistent legacy state.
 - **Mosslight Vale 1.8:** completed through all six regions, both campaign bosses, milestone autosaves, final campaign event, and completed-save reload.
-- **Rune Depths, Emberdeck Pilgrim, Atlas Below, Ashfall Caravan, Bastion Bloom, and Fluxward Conclave:** reviewed as the remaining principal campaign titles; their existing structures were retained for future route/build/contract-specific deep runs.
+- **Rune Depths:** promoted to deep-validated in v31 after three complete pure-relic mastery runs plus save/meta recovery coverage.
+- **Emberdeck Pilgrim, Atlas Below, Ashfall Caravan, Bastion Bloom, and Fluxward Conclave:** remain the principal campaign titles for future route/build/contract-specific deep runs.
 
 See `LONGFORM_AUDIT.md` for the detailed campaign-depth evidence and next targets.
 

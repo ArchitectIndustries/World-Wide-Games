@@ -2,19 +2,37 @@
 
 Last updated: 2026-10-01
 Owner/operator: Architect Industries
-Current verified source release: **v30**
-Status: **66-game** playable static browser-gaming platform with **106 genre tags**, **90 achievements**, **40 remappable releases**, persistent local player data, PWA/offline support, durable GitHub/Library continuity, a full-catalog quality audit, and a dedicated long-form campaign-depth audit.
+Current verified source release: **v31**
+Status: **66-game** playable static browser-gaming platform with **106 genre tags**, **94 achievements**, **40 remappable releases**, persistent local player data, PWA/offline support, durable GitHub/Library continuity, full-catalog runtime auditing, and expanding deep-run coverage for long-form games.
 
 ## Architecture
 
 - Static host-anywhere platform with a data-driven catalog in `js/games.js` and reusable `game.html?id=<id>` shell.
 - Local browser profile tracks plays, sessions, playtime, favorites, ratings, Play Later, achievements, Daily/Weekly challenge activity, completion milestones, direction-aware best scores, scored-run history, discovery mixes, accessibility/audio preferences, keyboard mapping, and game-specific saves.
-- Discovery supports search, **106 genre tags**, input capability, Solo / Local Multiplayer modes, curated collections, player-status filters, shareable query state, sorting, recommendations, Daily Pick, Surprise Me, three-game mixes, and the new **Long Campaigns** collection.
+- Discovery supports search, **106 genre tags**, input capability, Solo / Local Multiplayer modes, curated collections, player-status filters, shareable query state, sorting, recommendations, Daily Pick, Surprise Me, three-game mixes, and **Long Campaigns**.
 - Homepage personalization includes Continue Playing and Recently Updated; Release History exposes the six latest release summaries locally.
 - `assets/wwg-input.js` provides the reusable keyboard-remapping layer; **40 releases** currently adopt it.
 - Score metadata supports higher-is-better and lower-is-better records; six current titles use lower-is-better scoring.
-- `wwg-v30` service worker caches the complete catalog/covers plus shared platform assets, with network-first navigation fallback.
+- `wwg-v31` service worker caches the complete catalog/covers plus shared platform assets, with network-first navigation fallback.
 - `vercel.json` remains included for static Vercel deployment.
+
+## v31 production work — Rune Depths Mastery Pass
+
+- Rune Depths advances to **2.1** with action-level active-run autosave and exact-state resume after reload.
+- Active saves and durable meta progression are separated: completion/failure/fresh-run actions clear the run snapshot without deleting mastery, clear count, best depth, or best score.
+- Added pure Heart, Edge, and Flask mastery paths requiring a consistent four-relic build through a full five-depth clear.
+- Added path-specific mastery events plus `triple-path-mastered`, four new achievements, persistent 3/3 mastery status, and a refreshed mastery-focused cover.
+- Combat pacing was tuned through actual play: 4→8 enemies across depths, bounded seven-tile aggro, at most one incoming hit per player turn, sigil healing, and stronger Heart sustain.
+- The catalog remains at 66 games to prioritize deep-run quality over raw count.
+
+### v31 validation summary
+
+- `python3 tests/v31_rune_depths.py`: exact autosave/resume, completion/failure cleanup, corrupt-save recovery, and **three full five-depth pure mastery clears against real enemies**.
+- `python3 tests/v31_static.py`: 66 games, 106 genres, **94 achievements**, 40 remappable games, `wwg-v31`, metadata/public-source checks.
+- `python3 tests/v31_catalog_audit.py`: **66/66 games runtime-clean** in isolated Chromium.
+- `node tests/smoke.js`: **66/66 registered games** boot; platform homepage/detail shell pass.
+- `python3 tests/v31_http.py`: **139/139** local-origin paths HTTP 200.
+- v30 explicit controls, v29 long-form/remapping, v28 direct-game, v27 defect-fix, and v26 score-direction regressions remain green.
 
 ## v30 production work — Pulsevine Expansion & Explicit Controls
 
@@ -98,18 +116,17 @@ v29 deliberately keeps the catalog at 66 games and spends the release budget on 
 
 Canonical repository: `ArchitectIndustries/World-Wide-Games`.
 
-- GitHub `main` began this production pass at verified v27 commit `1c6650e83eee4d441cd900fe1b93ae013e1db8f8`.
-- `/WorldWideGames/WorldWideGames_v28.zip` was independently verified and used as the v29 development baseline because it was newer than GitHub and had passed its embedded/re-run release gate.
-- GitHub `main` was advanced by fast-forward to the verified v28 commit `ad91d9b350dfa15b8e6ba83c97f056bb8c12f157`, preserving the intended v27 -> v28 history step.
-- The complete verified v29 and v30 packages and synchronization records are preserved in `/WorldWideGames`; advancing the repository mirror through v29/v30 remains pending because the current repository write path rejected the content-transfer step even though branch-ref updates are authorized. Future runs should retry the v29 then v30 source mirror before creating redundant work.
+- GitHub `main` was successfully advanced from v29 to the complete verified v30 source at commit `9390c4907085ee6da780a2bb7a91c4a7c4897a2c` before v31 development began.
+- v31 was built from the verified v30 Library release and is intended to fast-forward the same `main` branch after the release gate passes.
+- `/WorldWideGames` remains the persistent packaged-release archive; GitHub remains the durable complete-source mirror.
 
 ## Production deployment
 
 - Canonical Vercel project: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq` under Architect Industries.
 - Production domain: `https://worldwidegames.vercel.app`.
-- Connected Vercel deployment enumeration has most recently returned **403 Forbidden**, and project lookup has exposed a connector schema mismatch.
-- The user supplied an existing deployment hook for this exact project; treat the hook as a secret and never commit or expose it in public source.
-- Never create a duplicate Vercel project solely because connector enumeration is unauthorized.
+- Fresh connector checks in this v31 work session still return **403 Forbidden** for deployment enumeration and cannot fetch the protected production origin through the current Vercel authorization.
+- This is treated as connector/project-scope authorization failure, not evidence that the project is missing. No duplicate Vercel project is created.
+- Production-origin verification therefore remains pending until connector access is extended to this established project.
 
 ## Persistence and recovery
 
@@ -119,8 +136,8 @@ Canonical repository: `ArchitectIndustries/World-Wide-Games`.
 
 ## Next high-value priorities
 
-1. Deep-run **Rune Depths** across multiple complete relic builds and verify full-run save/meta boundaries.
-2. Complete **both Emberdeck Pilgrim routes** from clean profiles and verify dual-route mastery persistence.
-3. Complete all **three Ashfall Caravan road contracts** and exercise distinct endings from clean saves.
-4. Continue expansion only after long-form progression remains proportionate to catalog growth.
-5. Verify the newest tested release on the production origin when Vercel deployment visibility becomes available.
+1. Complete **both Emberdeck Pilgrim routes** from clean profiles and verify dual-route mastery persistence.
+2. Complete all **three Ashfall Caravan road contracts** and exercise distinct endings from clean saves.
+3. Deep-run **Atlas Below**, **Bastion Bloom**, and **Fluxward Conclave** across additional build/route combinations.
+4. Continue catalog expansion only after long-form progression remains proportionate to catalog growth.
+5. Verify and update the established Vercel production project when project-scoped connector access becomes available.

@@ -186,7 +186,7 @@ window.WWG_GAMES = [
   {
     id: 'frostline-rescue', title: 'Frostline Rescue', tagline: 'Contain the fire. Bring everyone home.',
     description: 'A real-time emergency rescue game with spreading fire, stranded residents, water management, a safe-zone escort loop, procedural audio, touch controls, gamepad support, and remappable keyboard movement.',
-    genres: ['Rescue', 'Emergency', 'Action', 'Strategy'], added: '2026-09-30', featured: false, basePopularity: 171,
+    genres: ['Rescue', 'Emergency', 'Action', 'Strategy'], added: '2026-09-30', featured: false, basePopularity: 178,
     cover: 'covers/frostline-rescue.svg', path: 'games/frostline-rescue/index.html', accent: '#22d3ee', remappable: true,
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Rescue score' },
     controls: ['Move with remappable directional keys or Arrow keys before customization', 'Primary sprays water at nearby fire', 'Secondary / Enter escorts a nearby resident or secures them at the safe zone', 'Refill water near the blue hydrant', 'Gamepad left stick + A/B supported', 'Touch controls on mobile']
@@ -611,7 +611,7 @@ window.WWG_GAMES = [
     tagline: 'Own the checkpoint line.',
     description: 'A three-lap top-down circuit racer with ordered checkpoint gates, three live AI rivals, boost pads, position tracking, off-track grip loss, remappable controls, gamepad support, and local best-time chasing.',
     genres: ['Racing', 'Arcade', 'Time Trial', 'Competitive'],
-    added: '2026-09-29', updated: '2026-10-01', version: '2.0',
+    added: '2026-09-29', updated: '2026-10-01', version: '2.1',
     featured: false,
     basePopularity: 176,
     cover: 'covers/circuit-rush.svg',
@@ -674,16 +674,16 @@ window.WWG_GAMES = [
     id: 'rune-depths',
     title: 'Rune Depths',
     tagline: 'Five depths. Three relic paths. One way back.',
-    description: 'A five-depth procedural dungeon campaign with deterministic mazes, four sigils per floor, Shade/Wisp/Brute enemy archetypes, relic choices between depths, potions, persistent best-depth tracking, and full-run mastery.',
+    description: 'A five-depth procedural dungeon campaign with deterministic mazes, four sigils per floor, Shade/Wisp/Brute enemies, autosaved active delves, three pure relic mastery paths, potions, persistent best scores, and full-run mastery.',
     genres: ['Dungeon', 'Roguelite', 'Adventure'],
-    added: '2026-09-29', updated: '2026-10-01', version: '2.0',
+    added: '2026-09-29', updated: '2026-10-01', version: '2.1',
     featured: false,
-    basePopularity: 171,
+    basePopularity: 178,
     cover: 'covers/rune-depths.svg',
     path: 'games/rune-depths/index.html',
     accent: '#f59e0b', remappable: true,
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Delve score' },
-    controls: ['Remappable directional keys move one dungeon tile', 'Primary attacks adjacent enemies', 'Secondary drinks a potion', 'Clear four sigils and reach the gate on each of five depths', 'Choose Heart, Edge, or Flask relics between floors', 'Touch controls and gamepad supported', 'R restarts the run']
+    controls: ['Remappable directional keys move one dungeon tile', 'Primary attacks adjacent enemies', 'Secondary drinks a potion', 'Clear four sigils and reach the gate on each of five depths', 'Choose Heart, Edge, or Flask relics between floors; repeat one family for a pure mastery path', 'Active delves autosave locally and can resume after reload', 'Touch controls and gamepad supported', 'R starts a fresh run']
   }
 ];
 

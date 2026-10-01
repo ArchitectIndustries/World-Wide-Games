@@ -15,7 +15,7 @@ This pass evaluated the catalog titles intended to sustain play beyond a short a
 |---|---|---|
 | Mosslight Vale | Six linked regions, NPC quest arcs, combat, collectibles, persistent quest state | **Substantially upgraded** — added milestone autosaves, post-restoration Starshade finale, durable campaign completion, meta clears/best score, and reload-safe ending state |
 | Aetherstead Colony | One 16-turn colony scenario with six structures | **Rebuilt into 2.0** — persistent three-charter / 36-turn campaign with policies, crises, adjacency systems, structure upgrades, charter seals, autosave/resume, legacy bonuses, and real campaign completion |
-| Rune Depths | Five-depth dungeon campaign, four sigils per floor, three enemy archetypes, relic choices, persistent best depth | Retained; already meets the current long-form depth bar |
+| Rune Depths | Five-depth dungeon campaign, four sigils per floor, three enemy archetypes, autosaved active delves, persistent best score/clears, three pure relic mastery paths | v31 deep-validated: full Heart, Edge, and Flask mastery clears completed against the authored enemy populations; reload/failure/corrupt-save boundaries verified |
 | Emberdeck Pilgrim | Five gates, branching Glass/Iron routes, deck progression, three relics, persistent route mastery | Retained; already has meaningful branching and replay progression |
 | Atlas Below | Procedural cave runs with three distinct contracts, rank-shaped generation, oxygen/resources, caches, and contract mastery | Retained; contract selection and persistent mastery provide repeatable long-run structure |
 | Ashfall Caravan | Twelve crossings, resource management, three persistent road contracts, Chronicle traits, route variants, distinct endings | Retained; campaign length and contract mastery are already substantial |
@@ -85,4 +85,9 @@ After the long-form changes, the full catalog regression remains green:
 
 This audit proves full representative campaign paths for Aetherstead Colony and Mosslight Vale, plus source/mechanics review of the other principal long-form titles. It does not claim every optional route, policy combination, relic path, contract variant, seed, physical controller, browser, or operating system has been exhausted.
 
-The next highest-value deep-run targets are **Rune Depths** (multiple relic builds across a complete five-depth run), **Emberdeck Pilgrim** (both route mastery paths from clean profiles), and **Ashfall Caravan** (all three road contracts and ending variants). Those should be validated through legitimate play-state transitions before further catalog expansion is prioritized.
+Rune Depths is now deep-validated across all three pure relic mastery builds. The next highest-value deep-run targets are **Emberdeck Pilgrim** (both route mastery paths from clean profiles) and **Ashfall Caravan** (all three road contracts and ending variants), followed by **Atlas Below**, **Bastion Bloom**, and **Fluxward Conclave** for additional route/build completeness. These should continue to be validated through legitimate play-state transitions before further catalog expansion is prioritized.
+
+
+## v31 Rune Depths deep-run evidence
+
+Rune Depths 2.1 was validated beyond source inspection. A deterministic Chromium playtest agent traversed real generated mazes, collected all four sigils per floor, fought the authored enemy populations through the normal movement/combat functions, selected the requested relic after each cleared depth, and reached the real final completion state. Separate full runs mastered Heart, Edge, and Flask. The same harness also exercised exact-position save/reload, completion and failure cleanup boundaries, durable meta progression, and corrupt-save replacement. This closes the highest-priority v30 long-form validation gap.
