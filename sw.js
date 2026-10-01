@@ -1,4 +1,4 @@
-const CACHE='wwg-v25';
+const CACHE='wwg-v26';
 const ASSETS=[
   "./",
   "./index.html",
@@ -10,6 +10,8 @@ const ASSETS=[
   "./js/app.js",
   "./js/game-page.js",
   "./manifest.webmanifest",
+  "./covers/strata-cipher.svg",
+  "./games/strata-cipher/index.html",
   "./covers/echofall-caverns.svg",
   "./games/echofall-caverns/index.html",
   "./covers/starfall-observatory.svg",

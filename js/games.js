@@ -1,8 +1,16 @@
 window.WWG_GAMES = [
   {
+    id: 'strata-cipher', title: 'Strata Cipher', tagline: 'Read the layer. Protect the site. Recover the story.',
+    description: 'A six-site archaeology and excavation strategy puzzle. Survey buried strata, triangulate artifact signals, avoid fault pockets, preserve site integrity, and archive eighteen fragments with the fewest destructive digs.',
+    genres: ['Archaeology', 'Excavation', 'Puzzle', 'Strategy'], added: '2026-10-01', updated: '2026-10-01', version: '1.0', featured: true, basePopularity: 264,
+    cover: 'covers/strata-cipher.svg', path: 'games/strata-cipher/index.html', accent: '#f59e0b', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Excavation score' },
+    controls: ['Remappable directions move the excavation cursor', 'Primary excavates the selected tile', 'Secondary surveys nearby strata and reveals artifact-signal counts', 'Touch grid selection and controls supported', 'Gamepad left stick + A/B supported', 'R restarts the full expedition']
+  },
+  {
     id: 'echofall-caverns', title: 'Echofall Caverns', tagline: 'Map the dark by sound.',
     description: 'A six-chamber echolocation exploration puzzle. Send sonar pulses to reveal nearby stone, recover three resonators in each cavern, and seal the atlas with the lowest possible echo cost.',
-    genres: ['Echolocation', 'Navigation', 'Puzzle', 'Exploration'], added: '2026-10-01', featured: true, basePopularity: 206,
+    genres: ['Echolocation', 'Navigation', 'Puzzle', 'Exploration'], added: '2026-10-01', featured: false, basePopularity: 206,
     cover: 'covers/echofall-caverns.svg', path: 'games/echofall-caverns/index.html', accent: '#22d3ee', remappable: true, version: '1.0',
     scoreMeta: { unit: 'echo', direction: 'low', label: 'Echo cost' },
     controls: ['Remappable directional keys move one cavern tile', 'Primary sends a sonar pulse that reveals nearby terrain', 'Secondary waits one turn without spending an echo', 'Recover all three resonators before entering each exit', 'Touch controls and gamepad supported', 'R restarts the six-chamber expedition', 'Lower echo cost is better']
@@ -217,11 +225,11 @@ window.WWG_GAMES = [
   },
   {
     id: 'ashfall-caravan', title: 'Ashfall Caravan', tagline: 'Carry the people. Spend the future carefully.',
-    description: 'A branching narrative-management journey across eight ashland crossings with persistent Chronicle progression. Complete journeys to earn caravan traits, alter later routes, and archive distinct endings while balancing supplies, morale, heat, and crew.',
-    genres: ['Narrative', 'Adventure', 'Management', 'Interactive Fiction'], added: '2026-09-30', featured: false, basePopularity: 158,
-    cover: 'covers/ashfall-caravan.svg', path: 'games/ashfall-caravan/index.html', accent: '#fb7185',
+    description: 'A twelve-crossing narrative-management journey with three persistent road contracts, Chronicle traits, route variants, expanded resource pressure, and distinct endings. Master Relief, Survey, and Courier runs across repeat journeys.',
+    genres: ['Narrative', 'Adventure', 'Management', 'Interactive Fiction'], added: '2026-09-30', updated: '2026-10-01', version: '2.0', featured: false, basePopularity: 191,
+    cover: 'covers/ashfall-caravan.svg', path: 'games/ashfall-caravan/index.html', accent: '#fb7185', remappable: true,
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Journey score' },
-    controls: ['Choose between two story decisions each day', 'Keys 1 / 2 choose decisions', 'Tap or click choice cards on touch devices', 'Completed journeys unlock a persistent caravan trait and route variant', 'R restarts after the journey ends']
+    controls: ['Choose one of three persistent road contracts before departure', 'Primary chooses the first decision; Secondary chooses the second', 'Keys 1 / 2 remain available for decisions', 'Tap or click contract and choice cards on touch devices', 'Gamepad A/B supported', 'Completed journeys unlock Chronicle traits, route variants, endings, and contract mastery', 'R restarts after the journey ends']
   },
   {
     id: 'twinforge-expedition', title: 'Twinforge Expedition', tagline: 'Two pilots. One forge. Three sectors.',

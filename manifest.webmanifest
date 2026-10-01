@@ -15,9 +15,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Echofall Caverns",
-      "short_name": "Echofall",
-      "url": "game.html?id=echofall-caverns",
+      "name": "Strata Cipher",
+      "short_name": "Strata",
+      "url": "game.html?id=strata-cipher",
       "icons": [
         {
           "src": "assets/app-icon.svg",
