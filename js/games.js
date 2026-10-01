@@ -354,17 +354,17 @@ window.WWG_GAMES = [
   {
     id: 'aetherstead-colony',
     title: 'Aetherstead Colony',
-    tagline: 'Sixteen turns to make a city float.',
-    description: 'A turn-based city-building simulation about housing, food, water, power, research, morale, upgrades, and population growth across a sixteen-turn colony charter.',
+    tagline: 'Three charters to make a sky-city endure.',
+    description: 'A persistent three-charter city-building campaign. Build and upgrade six structure types, exploit farm-water and home-park adjacency, choose charter-specific civic policies, survive deterministic crises, carry charter seals forward, autosave every decision, and link three floating districts into Aetherstead.',
     genres: ['City Builder', 'Colony', 'Simulation', 'Strategy'],
-    added: '2026-09-30',
+    added: '2026-09-30', updated: '2026-10-01', version: '2.0',
     featured: false,
-    basePopularity: 118,
+    basePopularity: 138,
     cover: 'covers/aetherstead-colony.svg',
     path: 'games/aetherstead-colony/index.html',
-    accent: '#93c5fd',
-    scoreMeta: { unit: 'pts', direction: 'high', label: 'Colony score' },
-    controls: ['Tap or click an open platform to construct the selected building', 'Tap an existing matching building to upgrade it', '1-6 select building types', 'Space advances one turn', 'R restarts the colony']
+    accent: '#93c5fd', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Colony campaign score' },
+    controls: ['Tap or click a platform to construct or upgrade the selected building', '1-6 select the six structure types', 'Remappable directions move the platform cursor', 'Primary builds or upgrades the highlighted platform', 'Secondary cycles structures', 'Enter advances one turn', 'Choose one civic policy before construction begins in each charter', 'R restarts the current charter; New Campaign restarts the three-charter arc while preserving earned charter seals']
   },
   {
     id: 'prism-duel',
@@ -511,15 +511,15 @@ window.WWG_GAMES = [
     id: 'mosslight-vale',
     title: 'Mosslight Vale',
     tagline: 'A small world with a long memory.',
-    description: 'A growing top-down exploration RPG spanning six linked regions from Mosslight Village through Silverfen, Sunfall Reach, Moonroot Hollow, and Starbloom Canopy, with NPC quest arcs, real-time combat, collectible relics, boss progression, a field-pack inventory, six gear tiers, local saving, five-hub fast travel, and persistent world state.',
+    description: 'A long-form top-down exploration RPG spanning six linked regions from Mosslight Village through Silverfen, Sunfall Reach, Moonroot Hollow, and Starbloom Canopy, with NPC quest arcs, real-time combat, collectible relics, six gear tiers, milestone autosaves, five-hub fast travel, persistent world state, and a post-restoration Starshade finale that closes the full campaign.',
     genres: ['RPG', 'Adventure', 'Exploration'],
-    added: '2026-09-30', updated: '2026-09-30', version: '1.7',
+    added: '2026-09-30', updated: '2026-10-01', version: '1.8',
     featured: false,
     basePopularity: 100,
     cover: 'covers/mosslight-vale.svg',
     path: 'games/mosslight-vale/index.html',
     accent: '#86efac', remappable: true,
-    controls: ['WASD / Arrow keys move', 'Space attacks', 'E interacts / talks / saves', 'Shift dashes', 'H uses a potion', 'F cycles unlocked fast-travel hubs including Starbloom Canopy', 'I opens the field-pack inventory', 'Touch controls on mobile']
+    controls: ['Remappable directions move', 'Primary attacks', 'Secondary interacts / talks / saves', 'Shift dashes', 'H uses a potion', 'F cycles unlocked fast-travel hubs including Starbloom Canopy', 'I opens the field-pack inventory', 'Major region restorations autosave automatically', 'Touch controls on mobile']
   },
   {
     id: 'gravity-foundry',

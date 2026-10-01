@@ -2,82 +2,88 @@
 
 Last updated: 2026-10-01
 Owner/operator: Architect Industries
-Current verified source release: **v28**
-Status: **66-game** playable static browser-gaming platform with **106 genre tags**, **87 achievements**, **39 remappable releases**, persistent local player data, PWA/offline support, GitHub source continuity, and a complete v28 release gate.
+Current verified source release: **v29**
+Status: **66-game** playable static browser-gaming platform with **106 genre tags**, **89 achievements**, **40 remappable releases**, persistent local player data, PWA/offline support, durable GitHub/Library continuity, a full-catalog quality audit, and a dedicated long-form campaign-depth audit.
 
 ## Architecture
 
 - Static host-anywhere platform with a data-driven catalog in `js/games.js` and reusable `game.html?id=<id>` shell.
 - Local browser profile tracks plays, sessions, playtime, favorites, ratings, Play Later, achievements, Daily/Weekly challenge activity, completion milestones, direction-aware best scores, scored-run history, discovery mixes, accessibility/audio preferences, keyboard mapping, and game-specific saves.
-- Discovery supports search, **106 genre tags**, input capability, Solo / Local Multiplayer modes, curated collections, player-status filters, shareable query state, sorting, recommendations, Daily Pick, Surprise Me, and three-game mixes.
+- Discovery supports search, **106 genre tags**, input capability, Solo / Local Multiplayer modes, curated collections, player-status filters, shareable query state, sorting, recommendations, Daily Pick, Surprise Me, three-game mixes, and the new **Long Campaigns** collection.
 - Homepage personalization includes Continue Playing and Recently Updated; Release History exposes the six latest release summaries locally.
-- `assets/wwg-input.js` provides the reusable keyboard-remapping layer; **39 releases** currently adopt it.
+- `assets/wwg-input.js` provides the reusable keyboard-remapping layer; **40 releases** currently adopt it.
 - Score metadata supports higher-is-better and lower-is-better records; six current titles use lower-is-better scoring.
-- `wwg-v28` service worker caches the complete 66-game catalog and covers plus shared platform assets, with network-first navigation fallback.
+- `wwg-v29` service worker caches the complete catalog/covers plus shared platform assets, with network-first navigation fallback.
 - `vercel.json` remains included for static Vercel deployment.
 
-## v28 production work — Fluxward Conclave / Circuit Rush 2.0
+## v29 production work — Long-Form Depth Pass
 
-### New release: Fluxward Conclave
+v29 deliberately keeps the catalog at 66 games and spends the release budget on titles intended to sustain longer sessions. `LONGFORM_AUDIT.md` records the evaluation of Mosslight Vale, Aetherstead Colony, Rune Depths, Emberdeck Pilgrim, Atlas Below, Ashfall Caravan, Bastion Bloom, and Fluxward Conclave.
 
-- Added **Fluxward Conclave**, an original three-arena territory strategy game built around extending connected territory, charging cells, pulse conversions, relay bonus actions, and positioning against a deterministic tactical rival.
-- Supports a Solo three-arena campaign and **Local Multiplayer** pass-and-play duel mode.
-- Includes pointer/touch play, shared remappable keyboard input, gamepad support, persistent local records, standardized score/milestone events, responsive presentation, and a dedicated cover.
-- Fluxward Conclave becomes the featured release and the PWA shortcut target.
+### Aetherstead Colony 2.0
 
-### Major existing-game upgrade: Circuit Rush 2.0
+- Rebuilt the former single 16-turn scenario into a persistent **three-charter / 36-turn colony campaign**.
+- Added charter-specific civic policies, deterministic crises/events, six structure classes with three upgrade levels, farm-water/home-park/lab-power adjacency systems, and carry-forward charter-seal bonuses.
+- Added autosave/resume, lifetime campaign clears/best score, persistent charter seals, standardized charter completion/failure events, and scored full-campaign completion.
+- Added shared remapping support: directions move the platform cursor; Primary builds/upgrades; Secondary cycles structures; Enter advances the turn; pointer/touch remains supported.
+- Fixed Emergency Reserve restart behavior so its initial resource grant is reapplied when legitimately restarting the charter while retaining the selected policy.
 
-- Rebuilt **Circuit Rush** into a fuller three-lap competitive racer with **three live AI rivals**, ordered eight-gate checkpoint progression, live position tracking, boost gates, off-track grip loss, pause/resume, best-time/place persistence, and standardized race completion/win events.
-- Preserved touch, keyboard, gamepad, remapping, and fullscreen-friendly browser play.
-- Circuit Rush now participates in achievement/event progression through the new race-win milestone.
+### Mosslight Vale 1.8
 
-### Platform and progression updates
+- Preserved the existing six-region RPG campaign and backward save compatibility.
+- Added silent milestone autosaves so major regional restoration progress no longer depends solely on returning to a shrine.
+- Added the **Starshade Warden** post-restoration final boss after Starbloom Canopy.
+- Added a final Ranger Elian return, durable epilogue state, persistent campaign clear/best score meta, and scored `campaign-complete` event.
+- Final boss HP/death and completed-campaign state survive reloads; older Starbloom-complete saves enter the finale rather than losing access to it.
 
-- Catalog expands from 65 to **66 games** and from 105 to **106 genre tags**.
-- Shared remapping coverage rises from 38 to **39 games**.
-- Added **three achievements**: Circuit Champion, Fluxward Victor, and Triple Crown, bringing the local total to **87**.
-- Numeric scored-release regression coverage rises from 55 to **56 releases**.
-- Release History advances to **v28 through v23**.
-- Offline cache upgraded to `wwg-v28` and includes the new game/cover.
-- PWA shortcut now launches Fluxward Conclave.
+### Platform/release updates
+
+- Added the **Long Campaigns** curated collection.
+- Added achievements **Six-Region Warden** and **Sky-City Architect**, bringing the total to **89**.
+- Release History advances to **v29 through v24**.
+- Shared-remapping coverage increases from 39 to **40** with Aetherstead Colony 2.0.
+- Offline cache advances to `wwg-v29`.
+- Featured game remains Fluxward Conclave.
 
 ## Validation summary
 
-- `python3 tests/v28_catalog_audit.py`: **66/66 games runtime-clean** in isolated Chromium; generic input changed observable state in 63, with the three known geometry-specific cases retaining direct regression coverage.
-- `python3 tests/v28_game.py`: Fluxward pointer expansion, pulse conversion, custom-remap input, Local Multiplayer turn passing, forced campaign milestone events, and 390 px mobile overflow checks pass.
-- `python3 tests/v28_circuit.py`: Circuit Rush checkpoint ordering, three-rival race state, steering/throttle, pause/resume, boost behavior, deterministic three-lap completion, and win/completion events pass.
-- `node tests/smoke.js`: all **66 registered games** boot and advance; homepage and reusable detail shell pass.
-- `python3 tests/v28_static.py`: 66 unique IDs, **106 genres**, exactly one featured release, **87 achievements**, **39 remappable games**, complete game/cover/cache/PWA shortcut registration, and public-source branding/tooling scan across **140 files**.
-- `python3 tests/v28_http.py`: **139/139** requested local-origin paths returned HTTP 200.
-- `python3 tests/v28_remap.py`: inherited custom I/J/K/L/F/H mapping remains green across the previous 38 releases and Fluxward Conclave, for **39 remappable games**.
-- `python3 tests/v28_events.py`: new Fluxward/Circuit events are numeric where scored and carried-forward/current scored-release coverage is **56 releases**.
-- `python3 tests/v27_fixes.py`: all six v27 correctness regressions remain green.
-- `python3 tests/v26_events.py` and `node tests/v26_direction.js`: existing scored-event and score-direction semantics remain green.
+- `python3 tests/v29_longform.py`: legitimate full Aetherstead three-charter completion plus save/reload/custom-remap coverage; full Mosslight six-region progression, two boss defeats, midpoint autosave/reload, final autosave/reload, and campaign completion.
+- `python3 tests/v29_catalog_audit.py`: **66/66 games runtime-clean** in isolated Chromium.
+- `node tests/smoke.js`: **66/66 registered games** boot; platform homepage/detail shell pass.
+- `python3 tests/v29_static.py`: 66 unique IDs, **106 genres**, one featured release, **89 achievements**, **40 remappable games**, `wwg-v29`, version/metadata checks, and public-source scan.
+- `python3 tests/v29_http.py`: **139/139** requested local-origin paths returned HTTP 200.
+- `python3 tests/v29_remap.py`: inherited 39-title remapping regression plus Aetherstead custom mapping pass; **40 total**.
+- `python3 tests/v28_game.py` and `tests/v28_circuit.py`: v28 Fluxward Conclave and Circuit Rush 2.0 direct regressions remain green.
+- `python3 tests/v27_fixes.py`: all six v27 correctness fixes and targeted legacy interactions remain green.
+- `python3 tests/v28_events.py`: numeric scored-release coverage remains **56 releases**.
+- `node tests/v26_direction.js`: lower-is-better semantics remain correct for all six low-score titles and general high-score behavior remains intact.
 
 ## GitHub source continuity
 
 Canonical repository: `ArchitectIndustries/World-Wide-Games`.
 
-v28 was built directly from verified GitHub `main` v27 commit `1c6650e83eee4d441cd900fe1b93ae013e1db8f8` and the matching `/WorldWideGames/WorldWideGames_v27.zip`. The complete v28 source should be synchronized as a fast-forward after the final release gate, without overwriting unrelated newer work. The release record must be updated with the resulting v28 commit SHA after synchronization.
+- GitHub `main` began this production pass at verified v27 commit `1c6650e83eee4d441cd900fe1b93ae013e1db8f8`.
+- `/WorldWideGames/WorldWideGames_v28.zip` was independently verified and used as the v29 development baseline because it was newer than GitHub and had passed its embedded/re-run release gate.
+- The v29 synchronization process preserves v28 as its own verified Git history step before the v29 long-form release, rather than collapsing the two releases into a misleading single change.
 
 ## Production deployment
 
-- Canonical Vercel project: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq` under Architect Industries team `team_wwOmTAdrfPwvTGNSLU1VarOy`.
+- Canonical Vercel project: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq` under Architect Industries.
 - Production domain: `https://worldwidegames.vercel.app`.
-- Production remains distinct from the verified local/GitHub source release until a successful deployment and live-origin smoke test are recorded.
-- Connected Vercel deployment enumeration has previously returned **403 Forbidden**, and project lookup has exposed a connector/schema limitation. This is treated as authorization/visibility trouble, not evidence that the project is missing.
+- Connected Vercel deployment enumeration has most recently returned **403 Forbidden**, and project lookup has exposed a connector schema mismatch.
+- The user supplied an existing deployment hook for this exact project; treat the hook as a secret and never commit or expose it in public source.
 - Never create a duplicate Vercel project solely because connector enumeration is unauthorized.
 
 ## Persistence and recovery
 
 - `/WorldWideGames` is the persistent packaged-release archive.
-- `ArchitectIndustries/World-Wide-Games` is the durable source mirror and should be inspected together with the Library on every run.
+- `ArchitectIndustries/World-Wide-Games` is the durable source mirror and must be inspected together with the Library on every run.
 - When one location lags, continue from the newest fully verified release artifact rather than rebuilding from an older source.
 
 ## Next high-value priorities
 
-1. Complete representative full-run depth tests for another long-form game, especially campaign/progression paths not yet exercised end-to-end.
-2. Expand explicit completion-path regressions and gamepad/touch interaction coverage for older releases.
-3. Continue substantial upgrades of concise legacy games where depth can be added without losing their immediate-play identity.
-4. Verify and deploy the newest tested release to the existing Vercel project when connector write/visibility access permits.
-5. Keep cloud leaderboards/social identity gated on abuse-resistant persistence, privacy controls, and a durable backend.
+1. Deep-run **Rune Depths** across multiple complete relic builds and verify full-run save/meta boundaries.
+2. Complete **both Emberdeck Pilgrim routes** from clean profiles and verify dual-route mastery persistence.
+3. Complete all **three Ashfall Caravan road contracts** and exercise distinct endings from clean saves.
+4. Continue expansion only after long-form progression remains proportionate to catalog growth.
+5. Verify the newest tested release on the production origin when Vercel deployment visibility becomes available.

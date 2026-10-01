@@ -1,10 +1,10 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified release is **v28** with **66 games across 106 genre tags**.
+WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified release is **v29** with **66 games across 106 genre tags**.
 
-v28 adds **Fluxward Conclave**, a three-arena territory strategy game with Solo and Local Multiplayer play, and rebuilds **Circuit Rush 2.0** into a fuller three-lap race against three active AI rivals with ordered checkpoints, boost gates, position tracking, persistence, and standardized race events.
+v29 is a **Long-Form Depth Pass** rather than a catalog-growth release. **Aetherstead Colony 2.0** is now a persistent three-charter / 36-turn city-building campaign with policies, crises, upgrades, adjacency systems, charter seals, autosave/resume, and legacy progression. **Mosslight Vale 1.8** now has milestone autosaves, a post-six-region Starshade finale, and durable campaign completion.
 
-Platform highlights include **87 local achievements**, Daily/Weekly challenges, Daily Pick, favorites, ratings, Play Later, Continue Playing, Recently Updated, Release History, recommendations, curated discovery collections, shareable discovery state, three-game mixes, local scoring/history, profile backup/restore, PWA/offline support, and **39 games** using the shared remappable keyboard layer.
+Platform highlights include **89 local achievements**, Daily/Weekly challenges, Daily Pick, favorites, ratings, Play Later, Continue Playing, Recently Updated, Release History, recommendations, curated discovery collections including **Long Campaigns**, shareable discovery state, three-game mixes, local scoring/history, profile backup/restore, PWA/offline support, and **40 games** using the shared remappable keyboard layer.
 
 ## Run locally
 
@@ -12,22 +12,28 @@ Platform highlights include **87 local achievements**, Daily/Weekly challenges, 
 python3 -m http.server 8080
 ```
 
-Then open `http://localhost:8080/`. HTTP serving is recommended for service-worker/PWA behavior.
+Then open `http://localhost:8080/` in a modern browser.
 
-## Validation
+No package installation, build system, remote game engine, paid API, or external runtime asset service is required for the bundled catalog.
 
-Versioned tests live under `tests/`. The v28 release gate includes a **66-game Chromium catalog audit**, all-game boot smoke coverage, direct Fluxward and Circuit Rush mechanic tests, static catalog/cache/PWA consistency, **139 local-origin HTTP requests**, **39-game input-remapping regression**, scored completion events, retained v27 defect regressions, and score-direction behavior.
+## Project structure
 
-The gate provides representative interaction and targeted deep review. It does not claim exhaustive mastery of every branch/level or every browser, OS, physical gamepad, and touch device combination.
+- `index.html` — discovery/home experience
+- `game.html` — reusable game-detail shell
+- `js/games.js` — data-driven game catalog
+- `js/app.js` — platform discovery/profile/achievement logic
+- `assets/wwg-input.js` — shared keyboard-remapping helper
+- `games/` — self-contained game releases
+- `covers/` — local cover artwork
+- `tests/` — regression and release-gate coverage
+- `CATALOG_AUDIT.md` — full-catalog functionality/coherence ledger
+- `LONGFORM_AUDIT.md` — campaign-depth review and deep-run evidence
+- `PROJECT_STATE.md` / `TEST_REPORT.md` / `RELEASE_NOTES.md` — durable release continuity
 
-## Source continuity
+## Long-form quality direction
 
-The canonical source mirror is `ArchitectIndustries/World-Wide-Games`. `/WorldWideGames` remains the persistent packaged-release archive. Use the newest fully verified release when the two temporarily differ.
+Catalog growth is not treated as a substitute for depth. Campaign-oriented releases are expected to have meaningful progression, persistence where appropriate, a coherent ending or mastery target, and repeatable validation of legitimate play-state transitions. v29 establishes this standard with full representative campaign paths for Aetherstead Colony and Mosslight Vale; Rune Depths, Emberdeck Pilgrim, Ashfall Caravan, Atlas Below, Bastion Bloom, and Fluxward Conclave remain the next comparison set for future depth passes.
 
-## Deployment
+## Branding
 
-`vercel.json` targets static hosting. Production should update the existing Architect Industries WorldWideGames Vercel project rather than create a duplicate. Deployment hooks and protection-bypass secrets are credentials and must never be committed to the repository.
-
-## Ownership
-
-WorldWideGames and its original bundled game content are developed and operated by Architect Industries. See `THIRD_PARTY_NOTICES.md` for attribution information.
+WorldWideGames is owned and operated by **Architect Industries**.

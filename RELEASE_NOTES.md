@@ -1,5 +1,31 @@
 # WorldWideGames Release Notes
 
+## v29 — Long-Form Depth Pass
+
+WorldWideGames v29 keeps the catalog at **66 games / 106 genre tags** and spends the release on deeper campaign play. Achievement coverage rises to **89**, shared remapping to **40 games**, and the PWA cache advances to `wwg-v29`.
+
+### Aetherstead Colony 2.0
+
+- Rebuilt the original single-scenario colony game into a persistent **three-charter / 36-turn campaign**.
+- Added six upgradeable structure classes, adjacency bonuses, charter-specific policies, deterministic crises, charter seals, legacy bonuses, autosave/resume, and lifetime clear/best-score records.
+- Added standardized charter completion/failure events plus scored full-campaign completion.
+- Added shared remappable keyboard control alongside pointer/touch input.
+- Verified all three charters through a legitimate construction/economy path with mid-campaign save/reload.
+
+### Mosslight Vale 1.8
+
+- Extended the six-region RPG arc with milestone autosaves and a true post-restoration finale.
+- Added the **Starshade Warden** final boss after Starbloom Canopy and a final Ranger Elian return.
+- Added backward-compatible durable epilogue state, campaign clears/best score, and scored campaign completion.
+- Verified the complete six-region sequence, both boss battles, intermediate autosave/reload, and completed-campaign reload.
+
+### Platform and QA
+
+- Added a **Long Campaigns** curated collection.
+- Added **Six-Region Warden** and **Sky-City Architect** achievements.
+- Added `LONGFORM_AUDIT.md` and permanent `v29_longform.py` coverage.
+- Full regression remains green: 66/66 runtime-clean, 66/66 smoke boots, 139/139 local-origin HTTP paths, 40 remappable releases, 56 scored-release event coverage, and correct score-direction semantics.
+
 ## v28 — Fluxward Conclave / Circuit Rush 2.0
 
 WorldWideGames v28 expands the Architect Industries browser arcade to **66 games**, **106 genre tags**, **87 achievements**, and **39 remappable releases** while substantially upgrading one of the oldest racing titles.

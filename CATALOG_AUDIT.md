@@ -109,3 +109,13 @@ The v28 release re-ran the isolated Chromium catalog audit after adding Fluxward
 - **Circuit Rush — Improved v28 / version 2.0:** direct ordered-checkpoint traversal, three AI rivals, steering/throttle, pause/resume, boost behavior, three-lap completion, win/completion events, boot/runtime, HTTP delivery, and catalog integration all pass.
 
 This follow-up supplements the v27 per-game ledger rather than rewriting its historical findings.
+
+## v29 long-form follow-up
+
+The v27 catalog-wide audit established that the registered games were functional and coherent at representative interaction depth. v29 follows that work by completing legitimate long-form paths rather than relying on boot checks for campaign-oriented releases.
+
+- **Aetherstead Colony 2.0:** upgraded and completed through a legal three-charter / 36-turn campaign, including save/reload and persistent legacy state.
+- **Mosslight Vale 1.8:** completed through all six regions, both campaign bosses, milestone autosaves, final campaign event, and completed-save reload.
+- **Rune Depths, Emberdeck Pilgrim, Atlas Below, Ashfall Caravan, Bastion Bloom, and Fluxward Conclave:** reviewed as the remaining principal campaign titles; their existing structures were retained for future route/build/contract-specific deep runs.
+
+See `LONGFORM_AUDIT.md` for the detailed campaign-depth evidence and next targets.
