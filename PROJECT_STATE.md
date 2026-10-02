@@ -1,143 +1,68 @@
 # WorldWideGames Project State
 
-Last updated: 2026-10-01
+Last updated: 2026-10-02
 Owner/operator: Architect Industries
-Current verified source release: **v31**
-Status: **66-game** playable static browser-gaming platform with **106 genre tags**, **94 achievements**, **40 remappable releases**, persistent local player data, PWA/offline support, durable GitHub/Library continuity, full-catalog runtime auditing, and expanding deep-run coverage for long-form games.
+Current verified source release: **v35**
+Status: **72-game** static browser-gaming platform with **120 genre tags**, **102 achievements**, **46 remappable releases**, persistent local player data, PWA/offline support, full-catalog Chromium QA, and deep regression coverage for established campaign titles.
 
-## Architecture
+## v35 production work — Verdant Echoes 2.0
 
-- Static host-anywhere platform with a data-driven catalog in `js/games.js` and reusable `game.html?id=<id>` shell.
-- Local browser profile tracks plays, sessions, playtime, favorites, ratings, Play Later, achievements, Daily/Weekly challenge activity, completion milestones, direction-aware best scores, scored-run history, discovery mixes, accessibility/audio preferences, keyboard mapping, and game-specific saves.
-- Discovery supports search, **106 genre tags**, input capability, Solo / Local Multiplayer modes, curated collections, player-status filters, shareable query state, sorting, recommendations, Daily Pick, Surprise Me, three-game mixes, and **Long Campaigns**.
-- Homepage personalization includes Continue Playing and Recently Updated; Release History exposes the six latest release summaries locally.
-- `assets/wwg-input.js` provides the reusable keyboard-remapping layer; **40 releases** currently adopt it.
-- Score metadata supports higher-is-better and lower-is-better records; six current titles use lower-is-better scoring.
-- `wwg-v31` service worker caches the complete catalog/covers plus shared platform assets, with network-first navigation fallback.
-- `vercel.json` remains included for static Vercel deployment.
+Verdant Echoes advances from 1.0 to **2.0** as a substantially deeper two-area action-adventure campaign:
 
-## v31 production work — Rune Depths Mastery Pass
+- Added the connected **Rootvault** dungeon beyond Echo Grove, unlocked after two Echo Relics.
+- Added **Rootkeeper Mira**, a quest chain around three Moon Seeds, Rootvault exploration, and equipment forging.
+- Added permanent equipment progression: the **Moonsteel** blade doubles sword damage and the **Barkguard Charm** raises maximum health from 5 to 7.
+- Enemy roster now includes Briars, tougher Crawlers, and ranged Wisps with projectile pressure.
+- Added the **Hollow Stag** Rootvault boss and Rootsigil prerequisite before the existing Thorn Regent finale.
+- Bombs retain cracked-wall utility and now also damage enemies and bosses.
+- Added active-campaign autosave/resume plus durable best score, campaign clears, Rootvault clears, and quest-completion meta.
+- Death now respawns inside the current campaign area while preserving progression instead of discarding the run.
+- Added standardized quest, seed, Rootvault, forging, equipment, relic, and campaign events.
+- Verdant Echoes becomes the sole featured release and PWA shortcut; the offline cache advances to `wwg-v35`.
+- Added two achievements: **Rootvault Warden** and **Moonsteel Oath**.
 
-- Rune Depths advances to **2.1** with action-level active-run autosave and exact-state resume after reload.
-- Active saves and durable meta progression are separated: completion/failure/fresh-run actions clear the run snapshot without deleting mastery, clear count, best depth, or best score.
-- Added pure Heart, Edge, and Flask mastery paths requiring a consistent four-relic build through a full five-depth clear.
-- Added path-specific mastery events plus `triple-path-mastered`, four new achievements, persistent 3/3 mastery status, and a refreshed mastery-focused cover.
-- Combat pacing was tuned through actual play: 4→8 enemies across depths, bounded seven-tile aggro, at most one incoming hit per player turn, sigil healing, and stronger Heart sustain.
-- The catalog remains at 66 games to prioritize deep-run quality over raw count.
+## Validation
 
-### v31 validation summary
+- `python3 tests/v35_verdant.py`: two-area traversal, Mira quest, 2-relic Rootvault gate, ranged Wisp projectiles, Barkguard health increase, all three Moon Seeds, sanctum opening, Hollow Stag defeat/Rootsigil, Moonsteel forging, autosave contents, remaining relics, Thorn Regent availability, double Moonsteel damage, campaign completion/meta, legacy bomb/dash behavior, and 390×844 layout all pass.
+- `python3 tests/v35_static.py`: 72 games, 120 genres, 102 achievements, 46 remappable games, Verdant Echoes 2.0 metadata, sole featured release, `wwg-v35`, manifest/history/public-source checks.
+- `python3 tests/v32_catalog_audit.py`: **72/72 games runtime-clean** in isolated Chromium.
+- `node tests/smoke.js`: **72/72 registered games** boot; platform homepage/detail shell pass.
+- `python3 tests/v32_http.py`: **151/151** local-origin pages/assets HTTP 200.
+- `python3 tests/v32_controls_browser.py`: **72/72** detail pages expose controls; **46/46** remappable titles expose explicit current/default keyboard profiles.
+- `python3 tests/v32_remap.py`: custom I/J/K/L/F/H mappings pass across the six v32 flagship releases.
+- `python3 tests/v32_new_games.py`: all six flagship mechanic paths remain green after hardening its Ironlight ammunition assertion for the v34 two-weapon ammo object.
+- v34 Ironlight, v33 Polyforge, v31 Rune Depths, v29 Aetherstead/Mosslight, v28 Fluxward/Circuit, v27 correctness, and v26 score-direction regressions remain green.
 
-- `python3 tests/v31_rune_depths.py`: exact autosave/resume, completion/failure cleanup, corrupt-save recovery, and **three full five-depth pure mastery clears against real enemies**.
-- `python3 tests/v31_static.py`: 66 games, 106 genres, **94 achievements**, 40 remappable games, `wwg-v31`, metadata/public-source checks.
-- `python3 tests/v31_catalog_audit.py`: **66/66 games runtime-clean** in isolated Chromium.
-- `node tests/smoke.js`: **66/66 registered games** boot; platform homepage/detail shell pass.
-- `python3 tests/v31_http.py`: **139/139** local-origin paths HTTP 200.
-- v30 explicit controls, v29 long-form/remapping, v28 direct-game, v27 defect-fix, and v26 score-direction regressions remain green.
+## GitHub continuity
 
-## v30 production work — Pulsevine Expansion & Explicit Controls
+Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `main`.
 
-v30 keeps the catalog at 66 games and focuses on a user-requested favorite plus platform-wide usability.
-
-### Pulsevine Parkour 2.0
-
-- Expanded the original single five-gate run into a **five-course parkour progression**: Rooftop Pulse, Glassroot Gap, Skyline Switchbacks, Thornspire Relay, and Pulse Crown.
-- Course difficulty now escalates through 5 / 6 / 7 / 7 / 8 checkpoint gates, launch pads, crosswinds, denser thorn timing, and mixed elevation lines.
-- Added persistent course unlocks and per-course best times, a five-course best-total campaign score, number-key course selection, and a new full-campaign completion event.
-- Improved checkpoint respawns so a fall returns the player to a safe run-up instead of an edge-trap.
-- Added exact controls: A/D or Left/Right move, Space/Up jumps, R restarts, 1-5 selects unlocked courses, N advances after a clear; gamepad and touch actions are also named explicitly.
-
-### Explicit control presentation across all games
-
-- Every game detail page continues to show its authored game-specific control list.
-- All **40 remappable games** now also display the player's current keyboard mapping for Up, Down, Left, Right, Primary, and Secondary.
-- Abstract labels such as `Primary`, `Secondary`, and `Remappable directions` are expanded in the UI with the actual current key and default (`W/A/S/D`, `Space`, `E`) so players never have to infer what an action label means.
-- Added regression coverage over all **66 game detail pages** to ensure control lists render and every remappable title exposes the explicit keyboard profile.
-
-### Platform/release updates
-
-- Added achievement **Pulse Crown** for clearing all five Pulsevine courses, bringing the total to **90**.
-- Release History advances to **v30 through v25**.
-- Offline cache advances to `wwg-v30`.
-
-### v30 validation summary
-
-- `python3 tests/v30_pulsevine.py`: five courses, real keyboard input, course selection/restart, and **5/5 real-physics reachability** using the authored movement/collision loop.
-- `python3 tests/v30_controls.py`: all 66 catalog entries retain explicit control lists and the exact remapping defaults are present in the game-detail renderer.
-- `python3 tests/v30_controls_browser.py`: all 66 game detail pages render at least three control lines; all **40 remappable titles** expose the current/default keyboard profile.
-- `python3 tests/v30_catalog_audit.py`: **66/66 games runtime-clean** in isolated Chromium.
-- `node tests/smoke.js`: **66/66 registered games** boot; platform homepage/detail shell pass.
-- `python3 tests/v30_static.py`: 66 IDs, 106 genres, one featured release, **90 achievements**, 40 remappable games, `wwg-v30`, metadata/public-source checks.
-- `python3 tests/v30_http.py`: **139/139** local-origin paths returned HTTP 200.
-- v29 long-form, v28 direct-game/event, v27 defect-fix, remapping, and score-direction regressions remain green.
-
-## v29 production work — Long-Form Depth Pass
-
-v29 deliberately keeps the catalog at 66 games and spends the release budget on titles intended to sustain longer sessions. `LONGFORM_AUDIT.md` records the evaluation of Mosslight Vale, Aetherstead Colony, Rune Depths, Emberdeck Pilgrim, Atlas Below, Ashfall Caravan, Bastion Bloom, and Fluxward Conclave.
-
-### Aetherstead Colony 2.0
-
-- Rebuilt the former single 16-turn scenario into a persistent **three-charter / 36-turn colony campaign**.
-- Added charter-specific civic policies, deterministic crises/events, six structure classes with three upgrade levels, farm-water/home-park/lab-power adjacency systems, and carry-forward charter-seal bonuses.
-- Added autosave/resume, lifetime campaign clears/best score, persistent charter seals, standardized charter completion/failure events, and scored full-campaign completion.
-- Added shared remapping support: directions move the platform cursor; Primary builds/upgrades; Secondary cycles structures; Enter advances the turn; pointer/touch remains supported.
-- Fixed Emergency Reserve restart behavior so its initial resource grant is reapplied when legitimately restarting the charter while retaining the selected policy.
-
-### Mosslight Vale 1.8
-
-- Preserved the existing six-region RPG campaign and backward save compatibility.
-- Added silent milestone autosaves so major regional restoration progress no longer depends solely on returning to a shrine.
-- Added the **Starshade Warden** post-restoration final boss after Starbloom Canopy.
-- Added a final Ranger Elian return, durable epilogue state, persistent campaign clear/best score meta, and scored `campaign-complete` event.
-- Final boss HP/death and completed-campaign state survive reloads; older Starbloom-complete saves enter the finale rather than losing access to it.
-
-### Platform/release updates
-
-- Added the **Long Campaigns** curated collection.
-- Added achievements **Six-Region Warden** and **Sky-City Architect**, bringing the total to **89**.
-- Release History advances to **v29 through v24**.
-- Shared-remapping coverage increases from 39 to **40** with Aetherstead Colony 2.0.
-- Offline cache advances to `wwg-v29`.
-- Featured game remains Fluxward Conclave.
-
-## Validation summary
-
-- `python3 tests/v29_longform.py`: legitimate full Aetherstead three-charter completion plus save/reload/custom-remap coverage; full Mosslight six-region progression, two boss defeats, midpoint autosave/reload, final autosave/reload, and campaign completion.
-- `python3 tests/v29_catalog_audit.py`: **66/66 games runtime-clean** in isolated Chromium.
-- `node tests/smoke.js`: **66/66 registered games** boot; platform homepage/detail shell pass.
-- `python3 tests/v29_static.py`: 66 unique IDs, **106 genres**, one featured release, **89 achievements**, **40 remappable games**, `wwg-v29`, version/metadata checks, and public-source scan.
-- `python3 tests/v29_http.py`: **139/139** requested local-origin paths returned HTTP 200.
-- `python3 tests/v29_remap.py`: inherited 39-title remapping regression plus Aetherstead custom mapping pass; **40 total**.
-- `python3 tests/v28_game.py` and `tests/v28_circuit.py`: v28 Fluxward Conclave and Circuit Rush 2.0 direct regressions remain green.
-- `python3 tests/v27_fixes.py`: all six v27 correctness fixes and targeted legacy interactions remain green.
-- `python3 tests/v28_events.py`: numeric scored-release coverage remains **56 releases**.
-- `node tests/v26_direction.js`: lower-is-better semantics remain correct for all six low-score titles and general high-score behavior remains intact.
-
-## GitHub source continuity
-
-Canonical repository: `ArchitectIndustries/World-Wide-Games`.
-
-- GitHub `main` was successfully advanced from v29 to the complete verified v30 source at commit `9390c4907085ee6da780a2bb7a91c4a7c4897a2c` before v31 development began.
-- v31 was built from the verified v30 Library release and is intended to fast-forward the same `main` branch after the release gate passes.
-- `/WorldWideGames` remains the persistent packaged-release archive; GitHub remains the durable complete-source mirror.
+- GitHub `main` was re-inspected at the start of this session and remained at verified v31 commit `68059dd5ac9a9bf10c7e6acc4cb9e663d32e69c8`; no newer concurrent user commit was found.
+- The existing `automation/v34-sync` branch was verified identical to `main` before v35 synchronization, so it is safe as an isolated staging branch.
+- v35 is synchronized only after the release gate is green. The complete staged source is verified before `main` is advanced; no force update is permitted.
+- GitHub staging branch `automation/v34-sync` is intentionally **not merged** because the complete release could not be transferred through the current connector in this session. It is eight commits ahead of `main` and contains only a verified subset: `README.md`, the Ashen/Astral/Ironlight/Verdant covers, `js/games.js`, the discovery-collection portion of `js/app.js`, and the manifest shortcut. The connector intermittently rejected later write calls before the full 36-file v31→v35 delta could be staged.
+- `main` therefore remains safely at verified v31 commit `68059dd5ac9a9bf10c7e6acc4cb9e663d32e69c8`; no knowingly partial release was merged. Future runs should continue or rebuild the isolated staging sync from the complete v35 package, verify the branch against the package, and only then fast-forward `main`.
 
 ## Production deployment
 
-- Canonical Vercel project: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq` under Architect Industries.
+- Canonical Vercel project ID: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`.
+- Intended Architect Industries team: `team_wwOmTAdrfPwvTGNSLU1VarOy`.
 - Production domain: `https://worldwidegames.vercel.app`.
-- Fresh connector checks in this v31 work session still return **403 Forbidden** for deployment enumeration and cannot fetch the protected production origin through the current Vercel authorization.
-- This is treated as connector/project-scope authorization failure, not evidence that the project is missing. No duplicate Vercel project is created.
-- Production-origin verification therefore remains pending until connector access is extended to this established project.
+- Fresh connector checks still return **403 Forbidden** for deployment enumeration; project lookup still exposes the connector/schema mismatch, and the Vercel fetch path still cannot see the project through the current authorization.
+- A direct web-origin check on 2026-10-02 also could not access the production URL from the available web fetch environment.
+- These are treated as authorization/visibility limitations, not evidence the project is absent. No duplicate Vercel project is created and v35 is not claimed live until production-origin verification succeeds.
 
 ## Persistence and recovery
 
-- `/WorldWideGames` is the persistent packaged-release archive.
-- `ArchitectIndustries/World-Wide-Games` is the durable source mirror and must be inspected together with the Library on every run.
-- When one location lags, continue from the newest fully verified release artifact rather than rebuilding from an older source.
+- `/WorldWideGames/WorldWideGames_v35.zip` and `/WorldWideGames/WorldWideGames_v35_records.zip` were successfully uploaded after the verified artifacts were exported into the active file-service session, so v35 is now the newest durable packaged release in the Library.
+- The older top-level mutable Library copies of `PROJECT_STATE.md`, `TEST_REPORT.md`, and companion docs could not be canonically replaced in this run because that shared-file replacement call was blocked by the connector safety gate; future runs should prefer the v35 package/records over those stale loose copies until they are refreshed.
+- GitHub remains the desired durable complete-source mirror. The partial isolated staging branch is deliberately not treated as authoritative until all v35 files are present and reverified.
 
 ## Next high-value priorities
 
-1. Complete **both Emberdeck Pilgrim routes** from clean profiles and verify dual-route mastery persistence.
-2. Complete all **three Ashfall Caravan road contracts** and exercise distinct endings from clean saves.
-3. Deep-run **Atlas Below**, **Bastion Bloom**, and **Fluxward Conclave** across additional build/route combinations.
-4. Continue catalog expansion only after long-form progression remains proportionate to catalog growth.
-5. Verify and update the established Vercel production project when project-scoped connector access becomes available.
+1. Extend **Astral Menagerie** with party switching, status effects, more species, trainer encounters, and habitat quests.
+2. Expand **Ashen Covenant** beyond boss arenas with traversal areas, weapon/build choices, more enemy archetypes, and deeper death-recovery progression.
+3. Grow **Polyforge Studio** with grouping/multi-select, scene-code import/export, transform gizmos, and advanced briefs.
+4. Add further **Ironlight Breach** sectors, weapon archetypes, authored secret routes, and enemy projectile behavior while retaining deterministic reachability checks.
+5. Add additional Verdant Echoes NPC arcs, optional Rootvault rooms, equipment choices, and post-campaign mastery without invalidating v2 saves.
+6. Verify and deploy the newest release to the established Vercel project when project-scoped write access is available.

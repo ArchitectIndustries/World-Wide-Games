@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <radialGradient id="bg" cx="70%" cy="18%" r="90%"><stop offset="0" stop-color="#285b43"/><stop offset=".48" stop-color="#102b1d"/><stop offset="1" stop-color="#06110c"/></radialGradient>
+    <linearGradient id="vault" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0ea5e9" stop-opacity=".42"/><stop offset="1" stop-color="#86efac" stop-opacity=".08"/></linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#bg)"/>
+  <circle cx="642" cy="128" r="170" fill="#86efac" opacity=".1"/>
+  <path d="M470 70 Q620 125 675 275 Q610 245 542 278 Q505 188 470 70Z" fill="url(#vault)" stroke="#93c5fd" stroke-opacity=".55" stroke-width="5"/>
+  <path d="M572 161 l28-34 28 34 28-34 28 34 -10 69 -92 0z" fill="none" stroke="#dbeafe" stroke-opacity=".6" stroke-width="7"/>
+  <circle cx="615" cy="208" r="16" fill="#fef08a"/><circle cx="664" cy="208" r="16" fill="#fef08a"/>
+  <rect x="24" y="24" width="752" height="452" rx="34" fill="none" stroke="#86efac" opacity=".55"/>
+  <text x="58" y="305" fill="#fff" font-family="system-ui,sans-serif" font-size="68" font-weight="900">VERDANT</text>
+  <text x="60" y="368" fill="#86efac" font-family="system-ui,sans-serif" font-size="50" font-weight="800">ECHOES</text>
+  <text x="61" y="410" fill="#bfdbfe" font-family="system-ui,sans-serif" font-size="22" font-weight="800" letter-spacing="5">ROOTVAULT 2.0</text>
+  <text x="60" y="76" fill="#fff" opacity=".72" font-family="system-ui,sans-serif" font-size="20" letter-spacing="6">ARCHITECT INDUSTRIES · WORLDWIDEGAMES</text>
+</svg>

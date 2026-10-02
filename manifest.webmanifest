@@ -15,9 +15,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Fluxward Conclave",
-      "short_name": "Fluxward",
-      "url": "game.html?id=fluxward-conclave",
+      "name": "Verdant Echoes",
+      "short_name": "Verdant",
+      "url": "game.html?id=verdant-echoes",
       "icons": [
         {
           "src": "assets/app-icon.svg",

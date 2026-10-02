@@ -1,7 +1,5 @@
 # Third-Party Notices
 
-WorldWideGames v29 introduces no third-party runtime game engine, remote asset library, paid API, or externally hosted gameplay dependency.
+WorldWideGames v32 is built from original Architect Industries code and locally generated vector/canvas assets. The six v32 flagship games do not add external runtime libraries, third-party game assets, franchise characters, copied maps, music, logos, or externally hosted dependencies.
 
-The platform and bundled v29 game assets use original project code, locally bundled SVG/procedural visuals produced for Architect Industries, standard browser APIs, and system UI fonts.
-
-Future external code or media must be reviewed for license compatibility and recorded here before release.
+Existing notices from prior releases remain applicable to any unchanged third-party material already documented in repository history.

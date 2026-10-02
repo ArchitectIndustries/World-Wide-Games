@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Verdant Echoes</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#050a08;color:#edf7f2;font-family:Inter,system-ui,sans-serif;touch-action:none}body{background:radial-gradient(circle at 50% 28%,#173a2d,#050a08 70%)}canvas{display:block;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(94vw,960px);height:auto;aspect-ratio:16/10;background:#07110d;border:1px solid #315846;border-radius:18px;box-shadow:0 24px 90px #0009;max-height:78vh}.hud{position:fixed;left:10px;right:10px;top:10px;display:flex;gap:7px;justify-content:center;flex-wrap:wrap;z-index:4;pointer-events:none}.pill{background:#07120fee;border:1px solid #315846;border-radius:999px;padding:6px 10px;font-size:10px;backdrop-filter:blur(8px)}.pill b{font-size:13px;margin-left:4px;color:#86efac}.brand{position:fixed;left:12px;bottom:12px;max-width:560px;background:#07120fee;border:1px solid #315846;border-radius:13px;padding:9px 11px;font-size:11px;line-height:1.45;z-index:4}.brand strong{letter-spacing:.09em}.brand span{color:#b8d5c7}.touch{display:none;position:fixed;right:12px;bottom:12px;grid-template-columns:repeat(3,52px);gap:6px;z-index:5}.touch button,.card button{border:1px solid #4c735f;background:#0d1f18e8;color:#fff;border-radius:12px;font-weight:800}.touch button{height:48px;font-size:10px}.touch .wide{grid-column:span 2}.overlay{position:fixed;inset:0;display:none;place-items:center;background:#020604dc;z-index:12}.overlay.show{display:grid}.card{width:min(540px,calc(100vw - 30px));background:#0a1712;border:1px solid #4d7b63;border-radius:20px;padding:24px;text-align:center;box-shadow:0 30px 100px #000b}.card h2{margin:0 0 8px;font-size:30px}.card p{color:#bed4c8;line-height:1.55}.card button{padding:11px 16px}.toast{position:fixed;left:50%;top:74px;transform:translateX(-50%);background:#07120ff2;border:1px solid #4d7b63;border-radius:999px;padding:8px 13px;font-size:11px;opacity:0;transition:.18s;z-index:8;pointer-events:none}.toast.show{opacity:1}@media(pointer:coarse){.touch{display:grid}.brand{right:190px}}@media(max-width:620px){canvas{top:46%}.brand{right:12px;bottom:170px;max-width:none}.hud{justify-content:flex-start}.pill{padding:5px 8px}.toast{top:104px}}
+</style>
+</head>
+<body>
+<canvas id="c" width="960" height="600"></canvas>
+<div class="hud">
+  <div class="pill">Area <b id="area">Grove</b></div>
+  <div class="pill">Hearts <b id="hp">5/5</b></div>
+  <div class="pill">Relics <b id="rel">0/4</b></div>
+  <div class="pill">Seeds <b id="seed">0/3</b></div>
+  <div class="pill">Bombs <b id="bomb">3</b></div>
+  <div class="pill">Gear <b id="gear">Reedblade</b></div>
+  <div class="pill">Boss <b id="boss">—</b></div>
+</div>
+<div class="brand"><strong>ARCHITECT INDUSTRIES · WORLDWIDEGAMES</strong><br><span id="objective">Recover four Echo Relics. Rootkeeper Mira waits near the grove entrance.</span><br>Primary sword · Secondary dash · B bomb · F interact.</div>
+<div class="toast" id="toast"></div>
+<div class="touch">
+  <button data-a="left">◀</button><button data-a="up">▲</button><button data-a="right">▶</button>
+  <button data-a="secondary">DASH</button><button data-a="down">▼</button><button data-a="primary">SWORD</button>
+  <button data-special="bomb">BOMB</button><button class="wide" data-special="interact">INTERACT</button>
+</div>
+<div class="overlay" id="ov"><div class="card"><h2 id="ot"></h2><p id="op"></p><button id="next">Begin again</button></div></div>
+<script src="../../assets/wwg-input.js"></script>
+<script>
+const C=document.getElementById('c'),X=C.getContext('2d'),$=s=>document.querySelector(s),T=48;
+const SAVE_KEY='wwg:verdant-echoes:save-v2',META_KEY='wwg:verdant-echoes:meta-v2';
+const AREA={
+  grove:{name:'Echo Grove',W:44,H:28,spawn:[3.5,3.5],portal:[21.5,12.5],npc:[4.5,4.5]},
+  rootvault:{name:'Rootvault',W:30,H:20,spawn:[2.5,2.5],exit:[2.5,2.5]}
+};
+const RELIC_SPECS=[[5.5,5.5],[36.5,5.5],[8.5,23.5],[38.5,24.5]];
+const SEED_SPECS=[[6.5,5.5],[14.5,14.5],[19.5,5.5]];
+const ENEMY_SPECS={
+  grove:[['g1',11.5,5.5,'briar'],['g2',15.5,13.5,'briar'],['g3',24.5,6.5,'wisp'],['g4',28.5,15.5,'briar'],['g5',7.5,19.5,'briar'],['g6',32.5,23.5,'wisp'],['g7',39.5,10.5,'briar']],
+  rootvault:[['v1',8.5,4.5,'crawler'],['v2',11.5,8.5,'crawler'],['v3',16.5,4.5,'wisp'],['v4',17.5,14.5,'crawler'],['v5',21.5,7.5,'wisp'],['v6',20.5,16.5,'crawler']]
+};
+let W=44,H=28,area='grove',p={x:3.5,y:3.5,hp:5,maxHp:5,dir:0},keys={},bombs=3,bombList=[],walls=new Set(),cracks=new Set(),enemies=[],projectiles=[],boss=null,won=false,last=performance.now(),inv=0,dash=0,slash=0;
+let takenRelics=new Set(),takenSeeds=new Set(),defeatedEnemies=new Set(),defeatedBosses=new Set(),broken={grove:new Set(),rootvault:new Set()},quest=0,weapon='reedblade',charm='none',rootSigil=false,deaths=0;
+let meta={best:0,clears:0,rootvaultClears:0,questClears:0};
+function key(x,y){return x+','+y}
+function safeParse(raw,fallback){try{return raw?JSON.parse(raw):fallback}catch{return fallback}}
+function showToast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>el.classList.remove('show'),1500)}
+function addWallLine(x1,y1,x2,y2,gaps=[]){if(x1===x2){for(let y=Math.min(y1,y2);y<=Math.max(y1,y2);y++)if(!gaps.includes(y))walls.add(key(x1,y))}else{for(let x=Math.min(x1,x2);x<=Math.max(x1,x2);x++)if(!gaps.includes(x))walls.add(key(x,y1))}}
+function buildMap(which){area=which;const a=AREA[area];W=a.W;H=a.H;walls=new Set();cracks=new Set();for(let x=0;x<W;x++){walls.add(key(x,0));walls.add(key(x,H-1))}for(let y=0;y<H;y++){walls.add(key(0,y));walls.add(key(W-1,y))}
+  if(area==='grove'){
+    addWallLine(6,8,38,8,[12,26]);addWallLine(18,9,18,23,[16]);addWallLine(20,20,40,20,[34]);
+    ['12,8','18,16','34,20'].forEach(k=>{if(!broken.grove.has(k))cracks.add(k)});
+  }else{
+    addWallLine(5,3,24,3,[9,17]);addWallLine(7,6,7,16,[10]);addWallLine(11,6,25,6,[15,22]);addWallLine(12,9,12,17,[14]);addWallLine(15,9,25,9,[18]);addWallLine(18,10,18,17,[13]);
+    ['7,10','12,14','18,13'].forEach(k=>{if(!broken.rootvault.has(k))cracks.add(k)});
+    // The stag sanctum opens only after all three moon seeds are gathered.
+    if(takenSeeds.size<3)for(let y=10;y<=17;y++)walls.add(key(23,y));
+  }
+  loadEnemies();spawnBossIfNeeded();
+}
+function loadEnemies(){enemies=[];for(const [id,x,y,type] of ENEMY_SPECS[area])if(!defeatedEnemies.has(id)){const stats=type==='wisp'?{hp:2,speed:.65,dmg:1}:{hp:type==='crawler'?4:3,speed:type==='crawler'?1.15:.9,dmg:1};enemies.push({id,x,y,type,hit:0,cool:0,...stats})}}
+function spawnBossIfNeeded(){boss=null;if(area==='rootvault'&&takenSeeds.size===3&&!defeatedBosses.has('stag'))boss={id:'stag',name:'Hollow Stag',x:26,y:15,hp:16,maxHp:16,hit:0,speed:1.35,dmg:1,cool:0};if(area==='grove'&&rootSigil&&takenRelics.size===4&&!defeatedBosses.has('regent')&&p.x>36&&p.y>21)boss={id:'regent',name:'Thorn Regent',x:40,y:24,hp:18,maxHp:18,hit:0,speed:1.15,dmg:1,cool:0}}
+function init(){meta={...meta,...safeParse(localStorage.getItem(META_KEY),{})};const s=safeParse(localStorage.getItem(SAVE_KEY),null);if(s&&!s.won){area=s.area||'grove';p={...p,...s.p};bombs=s.bombs??3;takenRelics=new Set(s.takenRelics||[]);takenSeeds=new Set(s.takenSeeds||[]);defeatedEnemies=new Set(s.defeatedEnemies||[]);defeatedBosses=new Set(s.defeatedBosses||[]);broken={grove:new Set(s.broken?.grove||[]),rootvault:new Set(s.broken?.rootvault||[])};quest=s.quest||0;weapon=s.weapon||'reedblade';charm=s.charm||'none';rootSigil=!!s.rootSigil;deaths=s.deaths||0;if(charm==='barkguard'){p.maxHp=Math.max(p.maxHp||5,7);p.hp=Math.min(p.hp,p.maxHp)}}buildMap(area);sync();saveGame()}
+function saveGame(){if(won)return;localStorage.setItem(SAVE_KEY,JSON.stringify({area,p,bombs,takenRelics:[...takenRelics],takenSeeds:[...takenSeeds],defeatedEnemies:[...defeatedEnemies],defeatedBosses:[...defeatedBosses],broken:{grove:[...broken.grove],rootvault:[...broken.rootvault]},quest,weapon,charm,rootSigil,deaths,won:false}))}
+function saveMeta(){localStorage.setItem(META_KEY,JSON.stringify(meta))}
+function clearSave(){localStorage.removeItem(SAVE_KEY)}
+function blocked(x,y){const tx=Math.floor(x),ty=Math.floor(y),k=key(tx,ty);return tx<0||ty<0||tx>=W||ty>=H||walls.has(k)||cracks.has(k)}
+function objective(){if(quest===0)return 'Speak with Rootkeeper Mira near the grove entrance. Recover four Echo Relics.';if(area==='rootvault'&&takenSeeds.size<3)return `Gather Moon Seeds in the Rootvault (${takenSeeds.size}/3). Bomb cracked stone to open routes.`;if(area==='rootvault'&&!rootSigil)return 'The seed gate is open. Defeat the Hollow Stag and claim its Rootsigil.';if(quest<3&&takenSeeds.size===3)return 'Return to Mira after escaping the Rootvault to forge the Moonsteel edge.';if(!rootSigil)return 'Enter the Rootvault and defeat the Hollow Stag.';if(takenRelics.size<4)return `Recover the remaining Echo Relics (${takenRelics.size}/4).`;return 'Carry the Rootsigil to the eastern grove and defeat the Thorn Regent.'}
+function sync(){$('#area').textContent=AREA[area].name;$('#hp').textContent=p.hp+'/'+p.maxHp;$('#rel').textContent=takenRelics.size+'/4';$('#seed').textContent=takenSeeds.size+'/3';$('#bomb').textContent=bombs;$('#gear').textContent=weapon==='moonsteel'?'Moonsteel'+(charm==='barkguard'?' + Barkguard':''):'Reedblade'+(charm==='barkguard'?' + Barkguard':'');$('#boss').textContent=boss?boss.name+' '+Math.max(0,boss.hp)+' HP':'—';$('#objective').textContent=objective()}
+function post(ev,score=0,extra={}){try{parent.postMessage({type:'wwg:game-event',game:'verdant-echoes',event:ev,score,meta:{relics:takenRelics.size,seeds:takenSeeds.size,weapon,charm,rootSigil,...extra}},'*')}catch{}}
+function move(dx,dy){let nx=p.x+dx,ny=p.y+dy;if(!blocked(nx,p.y))p.x=nx;if(!blocked(p.x,ny))p.y=ny}
+function damageEnemy(e,amount){if(!e||e.hp<=0)return;e.hp-=amount;e.hit=performance.now();if(e.hp<=0){if(e.id==='stag'||e.id==='regent')defeatBoss(e);else{defeatedEnemies.add(e.id);if(Math.random()<.22)bombs=Math.min(6,bombs+1);saveGame()}}}
+function attack(){if(won)return;slash=.2;const dmg=weapon==='moonsteel'?2:1;for(const e of enemies)if(e.hp>0&&Math.hypot(e.x-p.x,e.y-p.y)<1.6)damageEnemy(e,dmg);if(boss&&boss.hp>0&&Math.hypot(boss.x-p.x,boss.y-p.y)<1.8)damageEnemy(boss,dmg)}
+function dashGo(){if(dash<=0&&!won){dash=.38;inv=.5}}
+function plant(){if(bombs>0&&!won){bombs--;bombList.push({x:p.x,y:p.y,t:1.05,done:false});sync()}}
+function near(x,y,r=1.2){return Math.hypot(p.x-x,p.y-y)<=r}
+function interact(){if(won)return;if(area==='grove'&&near(...AREA.grove.npc,1.5)){
+  if(quest===0){quest=1;showToast('Mira: Three Moon Seeds can wake a Moonsteel edge.');post('quest-started')}
+  else if(takenSeeds.size<3){showToast(`Mira: The Rootvault still holds ${3-takenSeeds.size} Moon Seed${3-takenSeeds.size===1?'':'s'}.`)}
+  else if(quest<3){quest=3;weapon='moonsteel';meta.questClears=Math.max(meta.questClears||0,1);saveMeta();post('moonsteel-forged',1200);showToast('Mira forged the Moonsteel edge. Sword damage doubled.');}
+  else showToast('Mira: The grove remembers every path you restore.');saveGame();sync();return;
+ }
+ if(area==='grove'&&near(...AREA.grove.portal,1.4)){if(takenRelics.size<2){showToast('The Rootvault shrine answers after two Echo Relics.');return}enterArea('rootvault');return}
+ if(area==='rootvault'&&near(...AREA.rootvault.exit,1.25)){enterArea('grove');return}
+}
+function enterArea(next){area=next;const a=AREA[area];p.x=a.spawn[0];p.y=a.spawn[1];projectiles=[];bombList=[];buildMap(area);saveGame();showToast(area==='rootvault'?'The Rootvault opens beneath the grove.':'Returned to Echo Grove.');sync()}
+function collect(){if(area==='grove')for(let i=0;i<RELIC_SPECS.length;i++){const [x,y]=RELIC_SPECS[i];if(!takenRelics.has(i)&&near(x,y,.7)){takenRelics.add(i);bombs=Math.min(6,bombs+1);post('relic-found',300,{relic:i+1});showToast('Echo Relic restored. +1 bomb');saveGame()}}
+ if(area==='rootvault')for(let i=0;i<SEED_SPECS.length;i++){const [x,y]=SEED_SPECS[i];if(!takenSeeds.has(i)&&near(x,y,.7)){takenSeeds.add(i);if(takenSeeds.size===3){quest=Math.max(quest,2);showToast('All Moon Seeds gathered. The stag sanctum opens.');buildMap('rootvault')}else showToast('Moon Seed gathered.');post('moon-seed-found',250,{seed:i+1});saveGame()}}
+ if(area==='rootvault'&&charm!=='barkguard'&&near(10.5,16.5,.75)){charm='barkguard';p.maxHp=7;p.hp=Math.min(p.maxHp,p.hp+2);post('barkguard-found',450);showToast('Barkguard Charm equipped. Maximum hearts increased.');saveGame()}
+}
+function launchWisp(e){if(e.cool>0)return;const d=Math.hypot(p.x-e.x,p.y-e.y)||1;projectiles.push({x:e.x,y:e.y,vx:(p.x-e.x)/d*3.2,vy:(p.y-e.y)/d*3.2,t:2.8});e.cool=1.7}
+function hurtPlayer(amount=1){if(inv>0||won)return;p.hp=Math.max(0,p.hp-amount);inv=1;if(p.hp<=0)respawn()}
+function explodeBomb(b){for(const k of[...cracks]){const [x,y]=k.split(',').map(Number);if(Math.hypot(x+.5-b.x,y+.5-b.y)<2.5){cracks.delete(k);broken[area].add(k)}}for(const e of enemies)if(e.hp>0&&Math.hypot(e.x-b.x,e.y-b.y)<2.5)damageEnemy(e,2);if(boss&&boss.hp>0&&Math.hypot(boss.x-b.x,boss.y-b.y)<2.8)damageEnemy(boss,2);saveGame()}
+function defeatBoss(e){if(e.id==='stag'){defeatedBosses.add('stag');rootSigil=true;meta.rootvaultClears=(meta.rootvaultClears||0)+1;saveMeta();post('rootvault-cleared',2000);showToast('Hollow Stag defeated. Rootsigil claimed.');boss=null;saveGame();sync();return}if(e.id==='regent'){defeatedBosses.add('regent');finish()}}
+function enemyUpdate(dt){for(const e of enemies){if(e.hp<=0)continue;e.cool=Math.max(0,e.cool-dt);const d=Math.hypot(p.x-e.x,p.y-e.y);if(e.type==='wisp'){if(d<7)launchWisp(e);if(d<3.2&&d>1.4){const nx=e.x-(p.x-e.x)/d*.55*dt,ny=e.y-(p.y-e.y)/d*.55*dt;if(!blocked(nx,e.y))e.x=nx;if(!blocked(e.x,ny))e.y=ny}}else if(d<5&&d>.85){const nx=e.x+(p.x-e.x)/d*e.speed*dt,ny=e.y+(p.y-e.y)/d*e.speed*dt;if(!blocked(nx,e.y))e.x=nx;if(!blocked(e.x,ny))e.y=ny}if(d<.85)hurtPlayer(e.dmg)}
+ for(const q of projectiles){q.x+=q.vx*dt;q.y+=q.vy*dt;q.t-=dt;if(blocked(q.x,q.y))q.t=0;if(q.t>0&&near(q.x,q.y,.4)){q.t=0;hurtPlayer(1)}}projectiles=projectiles.filter(q=>q.t>0)
+}
+function bossUpdate(dt){spawnBossIfNeeded();if(!boss||boss.hp<=0)return;boss.cool=Math.max(0,boss.cool-dt);const d=Math.hypot(p.x-boss.x,p.y-boss.y)||1;if(d>1.25){const pace=boss.speed*(boss.hp<boss.maxHp/2?1.22:1),nx=boss.x+(p.x-boss.x)/d*pace*dt,ny=boss.y+(p.y-boss.y)/d*pace*dt;if(!blocked(nx,boss.y))boss.x=nx;if(!blocked(boss.x,ny))boss.y=ny}if(d<1.35&&boss.cool<=0){boss.cool=boss.id==='stag'?.9:1.15;hurtPlayer(boss.dmg)}}
+function update(dt){if(won)return;inv=Math.max(0,inv-dt);dash=Math.max(0,dash-dt);slash=Math.max(0,slash-dt);let dx=(keys.right?1:0)-(keys.left?1:0),dy=(keys.down?1:0)-(keys.up?1:0),m=Math.hypot(dx,dy)||1,sp=(dash>0?8.2:3.7)*dt;if(dx||dy){p.dir=Math.atan2(dy,dx);move(dx/m*sp,dy/m*sp)}collect();bombList.forEach(b=>b.t-=dt);for(const b of bombList)if(b.t<=0&&!b.done){b.done=true;explodeBomb(b)}bombList=bombList.filter(b=>b.t>-.28);enemyUpdate(dt);bossUpdate(dt);sync()}
+function respawn(){deaths++;const a=AREA[area];p.x=a.spawn[0];p.y=a.spawn[1];p.hp=p.maxHp;bombs=Math.max(2,bombs);inv=1.2;projectiles=[];saveGame();showToast('The grove returns you to the last threshold.')}
+function scoreNow(){return 7000+takenRelics.size*450+takenSeeds.size*250+(rootSigil?1600:0)+(quest===3?1200:0)+(charm==='barkguard'?500:0)+p.hp*350+bombs*90-Math.min(1800,deaths*250)}
+function finish(){if(won)return;won=true;clearSave();const score=scoreNow();meta.best=Math.max(meta.best||0,score);meta.clears=(meta.clears||0)+1;saveMeta();post('campaign-complete',score,{deaths,rootvault:true,quest:quest===3});$('#ot').textContent='The grove remembers deeper roots';$('#op').textContent=`The Hollow Stag and Thorn Regent are defeated, the Rootsigil is restored, and ${takenRelics.size} Echo Relics sing again. Score ${score}.`;$('#ov').classList.add('show')}
+function drawTileFloor(x,y,sx,sy){if(area==='grove')X.fillStyle=(x+y)%2?'#174f39':'#145032';else X.fillStyle=(x+y)%2?'#173527':'#122d22';X.fillRect(sx,sy,T,T)}
+function draw(){let camX=Math.max(0,Math.min(W*T-C.width,p.x*T-C.width/2)),camY=Math.max(0,Math.min(H*T-C.height,p.y*T-C.height/2));X.fillStyle=area==='grove'?'#0b2a20':'#081711';X.fillRect(0,0,C.width,C.height);for(let y=Math.max(0,Math.floor(camY/T));y<Math.min(H,Math.ceil((camY+C.height)/T));y++)for(let x=Math.max(0,Math.floor(camX/T));x<Math.min(W,Math.ceil((camX+C.width)/T));x++){const sx=x*T-camX,sy=y*T-camY,k=key(x,y);drawTileFloor(x,y,sx,sy);if(walls.has(k)){X.fillStyle=area==='grove'?'#263e2f':'#27362d';X.fillRect(sx,sy,T,T)}if(cracks.has(k)){X.fillStyle='#5b4636';X.fillRect(sx,sy,T,T);X.strokeStyle='#fbbf24';X.lineWidth=2;X.beginPath();X.moveTo(sx+6,sy+8);X.lineTo(sx+28,sy+24);X.lineTo(sx+18,sy+43);X.stroke()}}
+ if(area==='grove'){
+  for(let i=0;i<RELIC_SPECS.length;i++)if(!takenRelics.has(i)){const [x,y]=RELIC_SPECS[i];X.fillStyle='#86efac';X.beginPath();X.arc(x*T-camX,y*T-camY,13,0,Math.PI*2);X.fill();X.strokeStyle='#dcfce7';X.stroke()}
+  // Mira
+  const [nx,ny]=AREA.grove.npc;X.fillStyle='#fde68a';X.beginPath();X.arc(nx*T-camX,ny*T-camY,14,0,Math.PI*2);X.fill();X.fillStyle='#422006';X.font='bold 10px system-ui';X.textAlign='center';X.fillText('MIRA',nx*T-camX,ny*T-camY-20);
+  // Rootvault shrine
+  const [px,py]=AREA.grove.portal;X.strokeStyle=takenRelics.size>=2?'#c4b5fd':'#64748b';X.lineWidth=5;X.beginPath();X.arc(px*T-camX,py*T-camY,20,0,Math.PI*2);X.stroke();
+ }else{
+  for(let i=0;i<SEED_SPECS.length;i++)if(!takenSeeds.has(i)){const [x,y]=SEED_SPECS[i];X.fillStyle='#fef08a';X.beginPath();X.arc(x*T-camX,y*T-camY,10,0,Math.PI*2);X.fill();X.strokeStyle='#a7f3d0';X.stroke()}
+  if(charm!=='barkguard'){X.fillStyle='#bef264';X.fillRect(10.2*T-camX,16.2*T-camY,28,28)}
+  X.strokeStyle='#93c5fd';X.lineWidth=4;X.beginPath();X.arc(AREA.rootvault.exit[0]*T-camX,AREA.rootvault.exit[1]*T-camY,18,0,Math.PI*2);X.stroke();
+ }
+ for(const e of enemies)if(e.hp>0){X.fillStyle=e.hit&&performance.now()-e.hit<100?'#fff':e.type==='wisp'?'#93c5fd':e.type==='crawler'?'#f59e0b':'#fb7185';X.beginPath();X.arc(e.x*T-camX,e.y*T-camY,e.type==='crawler'?17:14,0,Math.PI*2);X.fill();if(e.type==='wisp'){X.strokeStyle='#dbeafe';X.beginPath();X.arc(e.x*T-camX,e.y*T-camY,20,0,Math.PI*2);X.stroke()}}
+ for(const q of projectiles){X.fillStyle='#bfdbfe';X.beginPath();X.arc(q.x*T-camX,q.y*T-camY,6,0,Math.PI*2);X.fill()}
+ for(const b of bombList){X.fillStyle=b.t>0?'#111827':'#f59e0b';X.beginPath();X.arc(b.x*T-camX,b.y*T-camY,b.t>0?10:45,0,Math.PI*2);X.fill()}
+ if(boss&&boss.hp>0){X.fillStyle=boss.id==='stag'?(boss.hit&&performance.now()-boss.hit<100?'#fff':'#0ea5e9'):(boss.hit&&performance.now()-boss.hit<100?'#fff':'#a855f7');X.beginPath();X.arc(boss.x*T-camX,boss.y*T-camY,boss.id==='stag'?30:34,0,Math.PI*2);X.fill();X.strokeStyle='#f0fdf4';X.lineWidth=3;X.stroke()}
+ const sx=p.x*T-camX,sy=p.y*T-camY;X.save();X.translate(sx,sy);X.fillStyle=inv>0?'#d1fae5':'#f0fdf4';X.beginPath();X.arc(0,0,14,0,Math.PI*2);X.fill();if(weapon==='moonsteel'){X.strokeStyle='#bfdbfe';X.lineWidth=3;X.beginPath();X.arc(0,0,19,0,Math.PI*2);X.stroke()}if(slash>0){X.strokeStyle=weapon==='moonsteel'?'#bfdbfe':'#fef08a';X.lineWidth=7;X.beginPath();X.arc(0,0,42,p.dir-.7,p.dir+.7);X.stroke()}X.restore()
+}
+function action(a,on=true){if(['up','down','left','right'].includes(a))keys[a]=on;if(a==='primary'&&on)attack();if(a==='secondary'&&on)dashGo()}
+addEventListener('keydown',e=>{for(const a of['up','down','left','right','primary','secondary'])if(WWGInput.is(e,a)){e.preventDefault();action(a,true);return}if(e.code==='KeyB'){e.preventDefault();plant()}if(e.code==='KeyF'){e.preventDefault();interact()}if(e.code==='KeyR'){e.preventDefault();clearSave();location.reload()}});
+addEventListener('keyup',e=>{for(const a of['up','down','left','right'])if(WWGInput.is(e,a))action(a,false)});
+document.querySelectorAll('[data-a]').forEach(b=>{b.onpointerdown=()=>action(b.dataset.a,true);b.onpointerup=()=>action(b.dataset.a,false);b.onpointercancel=()=>action(b.dataset.a,false)});
+document.querySelectorAll('[data-special]').forEach(b=>b.onclick=()=>b.dataset.special==='bomb'?plant():interact());
+$('#next').onclick=()=>{won=false;clearSave();location.reload()};
+function loop(t){const dt=Math.min(.04,(t-last)/1000);last=t;update(dt);draw();requestAnimationFrame(loop)}
+init();requestAnimationFrame(loop);
+</script>
+</body>
+</html>

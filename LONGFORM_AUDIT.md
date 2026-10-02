@@ -1,5 +1,9 @@
 # WorldWideGames Long-Form Game Audit
 
+**v35 continuity note — 2026-10-02:** Verdant Echoes 2.0 is now a genuine two-area campaign rather than a short Grove-only adventure. A deterministic Chromium path validates the two-relic Rootvault gate, Rootkeeper Mira quest, all three Moon Seeds, Barkguard and Moonsteel equipment progression, Hollow Stag/Rootsigil, Thorn Regent availability, autosave/meta progression, and final campaign completion. v34 Ironlight, v33 Polyforge, Rune Depths, Aetherstead Colony, Mosslight Vale, Fluxward Conclave, Circuit Rush, the v27 correctness suite, and score-direction regressions remain green.
+
+---
+
 Date: 2026-10-01
 Baseline: v28
 Result: v29 Long-Form Depth Pass
@@ -21,6 +25,7 @@ This pass evaluated the catalog titles intended to sustain play beyond a short a
 | Ashfall Caravan | Twelve crossings, resource management, three persistent road contracts, Chronicle traits, route variants, distinct endings | Retained; campaign length and contract mastery are already substantial |
 | Bastion Bloom | Ten-wave tower-defense campaign, three tower classes, upgrades, four enemy archetypes, bosses on waves 5 and 10 | Retained; campaign arc and upgrade pressure are coherent and complete |
 | Fluxward Conclave | Three-arena tactical campaign plus local duel mode, persistent campaign/win records | Retained; multi-arena progression and replay modes are sufficient for its strategy scope |
+| Verdant Echoes | Two connected action-adventure regions, four Echo Relics, Rootkeeper quest, Moon Seeds, equipment, two bosses, active autosave/meta | **v35 deep-validated** — complete Rootvault quest/equipment/boss chain plus finale gating, autosave/meta, and mobile layout |
 
 ## Aetherstead Colony 2.0 — deep validation
 
@@ -85,7 +90,7 @@ After the long-form changes, the full catalog regression remains green:
 
 This audit proves full representative campaign paths for Aetherstead Colony and Mosslight Vale, plus source/mechanics review of the other principal long-form titles. It does not claim every optional route, policy combination, relic path, contract variant, seed, physical controller, browser, or operating system has been exhausted.
 
-Rune Depths is now deep-validated across all three pure relic mastery builds. The next highest-value deep-run targets are **Emberdeck Pilgrim** (both route mastery paths from clean profiles) and **Ashfall Caravan** (all three road contracts and ending variants), followed by **Atlas Below**, **Bastion Bloom**, and **Fluxward Conclave** for additional route/build completeness. These should continue to be validated through legitimate play-state transitions before further catalog expansion is prioritized.
+Rune Depths and Verdant Echoes are now deep-validated across their principal mastery/campaign paths. The next highest-value deep-run targets are **Emberdeck Pilgrim** (both route mastery paths from clean profiles) and **Ashfall Caravan** (all three road contracts and ending variants), followed by **Atlas Below**, **Bastion Bloom**, and **Fluxward Conclave** for additional route/build completeness. These should continue to be validated through legitimate play-state transitions before further catalog expansion is prioritized.
 
 
 ## v31 Rune Depths deep-run evidence

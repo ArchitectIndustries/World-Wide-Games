@@ -1,5 +1,112 @@
 # WorldWideGames Release Notes
 
+## v35 — Verdant Echoes 2.0
+
+v35 keeps the catalog at **72 games / 120 genre tags**, raises achievements to **102**, and spends the release on a deeper connected action-adventure campaign rather than another shallow catalog addition.
+
+### Verdant Echoes 2.0
+
+- Added the connected **Rootvault** dungeon, unlocked after collecting two Echo Relics in Echo Grove.
+- Added **Rootkeeper Mira** and a three-Moon-Seed quest that persists through the campaign save.
+- Added permanent equipment progression: **Moonsteel** doubles sword damage; **Barkguard Charm** raises maximum health from 5 to 7.
+- Enemy roster now includes Briars, Crawlers, and ranged Wisps with projectile attacks.
+- Added the **Hollow Stag** dungeon boss and Rootsigil requirement before the existing Thorn Regent finale.
+- Bombs retain cracked-wall utility and now also damage enemies/bosses.
+- Added active-campaign autosave/resume plus durable best score, campaign clears, Rootvault clears, and quest-completion records.
+- Death respawns inside the current campaign area while retaining progression.
+- Added standardized quest/seed/Rootvault/forging/equipment/relic/campaign events.
+
+### Platform
+
+- Added **Rootvault Warden** and **Moonsteel Oath** achievements for **102 total**.
+- Added Verdant Echoes to the **Long Campaigns** collection.
+- Verdant Echoes becomes the sole featured release and PWA shortcut.
+- Offline cache advances to `wwg-v35`.
+- Catalog/remapping counts remain **72 games / 120 genre tags / 46 remappable releases**.
+
+### QA
+
+- New deterministic Verdant regression validates the complete two-area quest/equipment/boss arc, active autosave contents, meta progression, double Moonsteel damage, legacy bomb/dash behavior, and 390×844 mobile overflow.
+- 72/72 runtime-clean, 72/72 smoke boot, 151/151 local HTTP paths, 72/72 detail control pages, and 46/46 remappable profiles remain green.
+- v32 six-flagship mechanic/remap tests pass; the inherited Ironlight ammo assertion was updated for its v34 rifle/scattergun ammo object.
+- Ironlight, Polyforge, Rune Depths, Aetherstead/Mosslight, Fluxward/Circuit, v27 correctness, and score-direction regressions remain green.
+
+## v34 — Ironlight Breach 2.0
+
+v34 keeps the catalog at **72 games / 120 genre tags** and spends the release on a deeper first-person campaign upgrade plus a QA hardening pass.
+
+### Ironlight Breach 2.0
+
+- Three sectors expand from the original 16×16 layouts to **19×18** authored combat spaces.
+- Added a two-weapon loop: precision **Ironlight rifle** plus close-range multi-target **scattergun**, with keyboard and touch switching.
+- Added keycards and sealed doors with automatic approach interaction.
+- Added two optional secret caches per sector plus ammo and med-gel recovery pickups.
+- Sentinel roster expands to distinct **Guard, Brute, and Drone** classes with different durability, speed, pressure, and silhouettes.
+- Added persistent local best score, campaign clears, and lifetime secret-cache finds.
+- Fixed the retry path so a death/restart returns to the same sector and restores the sector-entry score instead of advancing or permitting score farming.
+- Refreshed cover art, featured placement, PWA shortcut, and offline cache to `wwg-v34`.
+
+### QA
+
+- New reachability gate proves every core, exit, keycard, sealed door, scattergun, secret cache, ammo pickup, and med-gel pickup is reachable in all three sectors while respecting keycard gating.
+- Direct Chromium validation covers rifle ammo, keycard-door consumption, scattergun multi-target damage, Drone sector presence, secret persistence/recovery rewards, retry semantics, campaign meta persistence, event emission, and 390×844 mobile overflow.
+- 72/72 runtime-clean, 72/72 smoke boot, 151/151 local HTTP paths, 72/72 detail control pages, and 46/46 remappable profiles remain green.
+- The v32 remap regression was hardened against a Neon Serpent animation-loop timing race and passes deterministically.
+- Polyforge, Rune Depths, Aetherstead/Mosslight, Fluxward/Circuit, v27 correctness, and score-direction regressions remain green.
+
+## v33 — Polyforge Studio 2.0
+
+v33 keeps the catalog at **72 games / 120 genre tags** and spends the release on making the 3D design flagship meaningfully deeper instead of adding another thin title.
+
+### Polyforge Studio 2.0
+
+- Five distinct materials with material-colored 3D rendering.
+- Selectable 0.25 / 0.50 / 1.00 grid snapping.
+- Object rotation, scaling, X/Y/Z movement, duplicate, and delete.
+- 40-step undo/redo history with keyboard shortcuts.
+- Autosaved scene/campaign state plus explicit Save/Load.
+- Certification campaign expanded from three count-only briefs to **five** briefs with spatial, material, transform, and layout requirements.
+- Persistent best score, highest blueprint, and mastery count.
+- Refreshed cover, sole featured placement, and PWA shortcut.
+
+### QA
+
+- All five certifications completed in deterministic Chromium coverage.
+- 72/72 runtime-clean, 72/72 smoke boot, 151/151 local HTTP paths.
+- 72/72 control pages and 46/46 remappable profiles remain green.
+- Rune Depths, Aetherstead/Mosslight, Fluxward/Circuit, v27 correctness, and score-direction regressions remain green.
+
+## v32 — Flagship Genre Expansion
+
+WorldWideGames v32 raises the quality/depth emphasis by adding six original games aimed at major genre families requested for the platform. These are genre-inspired experiences with original identities, worlds, code, art, mechanics, and names rather than copies of protected franchises.
+
+### New flagship releases
+
+- **Ironlight Breach 1.0** — three-sector software-raycast FPS with core recovery, sentinel combat, extraction, mouse look, touch, and remapping.
+- **Verdant Echoes 1.0** — top-down fantasy action-adventure with sword, dash, bombs, cracked passages, four relics, and Thorn Regent finale.
+- **Ashen Covenant 1.0** — stamina-based three-Lord action RPG with dodge i-frames, heavy/light attacks, flasks, persistent Ash, and deliberate death-mark recovery.
+- **Astral Menagerie 1.0** — ten-species creature-collection RPG with type matchups, capture, leveling, four-creature party, three habitats, and Wardens.
+- **Polyforge Studio 1.0** — browser 3D design/construction game with primitives, projection, selection/transforms, orbit/zoom, scene persistence, and three blueprint certifications.
+- **Neon Serpent: Gridfall 1.0** — three-contract serpent arcade with combo scoring, drones, relay portals, phase ability, persistent unlocks, and local bests.
+
+### Platform
+
+- Catalog: **72 games / 120 genre tags**.
+- Achievements: **100**.
+- Shared remapping: **46 games**.
+- Added **Flagship Worlds** collection.
+- Ironlight Breach is the featured release and PWA shortcut.
+- Offline cache advances to `wwg-v32`.
+
+### QA
+
+- 72/72 game boot smoke.
+- 72/72 isolated Chromium runtime-clean.
+- 151/151 local HTTP paths.
+- 72/72 detail control lists and 46/46 remappable keyboard profiles.
+- Six-game focused mechanics test and six-game custom remap test pass.
+- Prior Rune Depths, Aetherstead/Mosslight, Fluxward/Circuit, v27 correctness, and score-direction regressions pass.
+
 ## v31 — Rune Depths Mastery Pass
 
 WorldWideGames v31 keeps the catalog at **66 games / 106 genre tags**, raises achievements to **94**, and deepens Rune Depths into a more persistent, replayable five-floor roguelite campaign.

@@ -1,128 +1,106 @@
 # WorldWideGames Full Catalog Quality Audit
 
-Date: 2026-10-01
-Baseline: v26 (65 games)
-Result: v27 quality release
+Date: 2026-10-02
+Release: **v35 — Verdant Echoes 2.0**
+Owner/operator: Architect Industries
 
-## Method
+## Current release result
 
-- Loaded every registered game individually in Chromium with isolated browser state.
-- Captured page/console errors and exercised common keyboard controls plus a visible control where available.
-- Ran direct, game-specific interaction checks for geometry/slider titles that generic input could not meaningfully hit.
-- Reviewed the smallest/oldest implementations by source and visual output to distinguish concise games from shallow or incoherent ones.
-- Re-ran platform/static/HTTP/remapping/event/score-direction regression after fixes.
+- **72/72 games** loaded without page/runtime errors in isolated Chromium.
+- Generic interaction produced observable state change in **69** titles; Atlas Below, Lumen Relay, and Forgeflow retain direct mechanic-specific regression coverage.
+- Six v32 flagship releases remain runtime-clean. Verdant Echoes 2.0 received a complete two-area quest/equipment/boss regression covering Rootvault gating, Mira's Moon Seed quest, Wisp projectiles, Barkguard/Moonsteel, Hollow Stag/Rootsigil, Thorn Regent availability, autosave/meta, and mobile-width overflow.
+- **151/151** local-origin platform/game/cover paths returned HTTP 200.
+- **72/72** game detail pages expose authored controls and **46/46** remappable releases expose the current/default keyboard profile.
+- Prior deep regressions remain green for Rune Depths, Aetherstead Colony, Mosslight Vale, Fluxward Conclave, Circuit Rush, the v27 defect-fix set, and score-direction semantics.
 
-## Findings
+## v32 flagship additions
 
-- No registered game was a placeholder, TODO, fake/demo-only page, or runtime-crashing shell.
-- Six older games had concrete coherence/correctness defects and were upgraded in v27.
-- The remaining catalog stays intact; concise titles were retained where their mechanics and presentation formed a coherent playable loop.
-
-## Per-game review ledger
-
-| Game | Result | Review note |
+| Game | Identity | Focused validation |
 |---|---|---|
-| Strata Cipher | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Echofall Caverns | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Starfall Observatory | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Prismweave Atelier | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Blackglass Watch | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Tetherline Salvage | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Kiteglass Drift | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Runelight Locksmith | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Mirrormesh Relay | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Hushwave Operator | Improved v27 | v27 fix: full-band sample telemetry |
-| Pulsevine Parkour | Expanded v30 | Five-course progression, persistent unlocks/bests, real-physics 5/5 reachability, safer respawns, explicit controls |
-| Tessera Commons | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Glasswing Polo | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Rootsong Architect | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Stoneveil Ascent | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Tidal Foundry | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Riftwake Regatta | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Archive Alchemist | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Driftglass Links | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Tideglass Surveyor | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Spanwright | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Lantern Line | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Frostline Rescue | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Signal Choir | Improved v27 | v27 fix: transition input lock |
-| Terrace Keeper | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Chronofold Courier | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Hearthline Kitchen | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Spectra Safari | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Ashfall Caravan | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Twinforge Expedition | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Mothlight Museum | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Windward Cargo | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Cipher Court | Functional | visual/code review; coherent four-case deduction loop; retained |
-| Moonwake Angler | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Deepwater Signal | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Emberdeck Pilgrim | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Command Bloom | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Railspire Dispatch | Functional | visual/code review; coherent switch-routing loop; retained |
-| Glyphsmith | Improved v27 | v27 fix: finite rune inventory + reversible undo |
-| Solar Loom | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Atlas Below | Functional | direct cavern movement/oxygen check + source review; coherent contracts/mining/extraction; retained |
-| Aetherstead Colony | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Prism Duel | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Crownline Tactics | Functional | targeted interaction + visual/code review; retained |
-| Echo Bazaar | Improved v27 | v27 fix: rumor now forecasts next-day pressure |
-| Lumen Relay | Improved v27 | v27 fix: full-run rotation total resets |
-| Starweaver Drift | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Pulse Archive | Improved v27 | v27 fix: displayed final score matches emitted score |
-| Verdant Circuit | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Quiet Protocol | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Forgeflow | Functional | direct pointer rotation + source review; coherent ore-routing/processor/quota loop; retained |
-| Cloudforge Pinball | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Mosslight Vale | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Gravity Foundry | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Hexbound Tactics | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Harbor Pulse | Functional | visual/code review; coherent timed berth-management loop; retained |
-| Rift Relay | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Skyhook Sprint | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Neon Stack | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Circuit Rush | Functional | visual/code review; coherent 3-lap racer; retained |
-| Bastion Bloom | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Emberfield Survival | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Vector League | Functional | Runtime-clean catalog smoke; advertised controls/loop present; retained |
-| Orbit Breaker | Functional | visual/code review; coherent shooter loop; retained |
-| Rune Depths | Deep validated | v31: three legitimate five-depth mastery clears (Heart/Edge/Flask) against real enemies; exact autosave/resume, failure cleanup, corrupt-save recovery, mastery meta/events verified |
+| Ironlight Breach | Original software-raycast FPS | Rifle/scattergun combat, keycard doors, secret caches, three sentinel classes, reachable three-core sectors, runtime render |
+| Verdant Echoes | Original top-down fantasy action-adventure | v35: two-area Rootvault campaign, Mira quest, three Moon Seeds, Barkguard/Moonsteel progression, Wisp projectiles, Hollow Stag + Thorn Regent gating, autosave/meta, mobile layout |
+| Ashen Covenant | Original stamina/action-RPG boss pilgrimage | stamina-spending attack, death drop, leave-and-return Ash recovery |
+| Astral Menagerie | Original creature-collection RPG | starter choice, battle damage, deterministic capture path |
+| Polyforge Studio | Original 3D construction/design game | v33: five materials, snap levels, rotate/scale, undo/redo, autosave, and legitimate completion of all five certification briefs |
+| Neon Serpent: Gridfall | Original three-contract serpent arcade | steering, contract 2 hazards, persistent contract architecture |
 
-## v27 defect fixes
+## Per-game release ledger
 
-- **Glyphsmith 1.1:** rune buttons are consumable inventory now; keyboard input cannot reuse a spent rune, and Backspace/Clear correctly return runes.
-- **Echo Bazaar 1.1:** market rumors are generated before the price move they predict, making the information strategically usable.
-- **Signal Choir 1.1:** input is locked during wrong-note replay and between completed rounds, preventing accidental extra strikes.
-- **Pulse Archive 1.1:** the displayed end score now includes the same accuracy bonus emitted to WorldWideGames scoring.
-- **Lumen Relay 1.1:** total rotations reset after a completed six-stage run, so replay scores do not inherit the previous run.
-- **Hushwave Operator 1.1:** completion telemetry now reports total samples across all six signals instead of only the final signal.
+| Game | Version | Primary genre | Remappable | Runtime |
+|---|---:|---|:---:|---|
+| Ironlight Breach | 2.0 | FPS | Yes | Clean |
+| Verdant Echoes | 2.0 | Action Adventure | Yes | Clean |
+| Ashen Covenant | 1.0 | Soulslike | Yes | Clean |
+| Astral Menagerie | 1.0 | Creature Collection | Yes | Clean |
+| Polyforge Studio | 2.0 | 3D Design | Yes | Clean |
+| Neon Serpent: Gridfall | 1.0 | Snake | Yes | Clean |
+| Fluxward Conclave | 1.0 | Territory | Yes | Clean |
+| Strata Cipher | 1.0 | Archaeology | Yes | Clean |
+| Echofall Caverns | 1.0 | Echolocation | Yes | Clean |
+| Starfall Observatory | 1.0 | Astronomy | Yes | Clean |
+| Prismweave Atelier | 1.0 | Weaving | Yes | Clean |
+| Blackglass Watch | 1.0 | Horror | Yes | Clean |
+| Tetherline Salvage | 1.0 | Salvage | Yes | Clean |
+| Kiteglass Drift | 1.0 | Gliding | Yes | Clean |
+| Runelight Locksmith | 1.0 | Lockpicking | Yes | Clean |
+| Mirrormesh Relay | 1.0 | Optics | Yes | Clean |
+| Hushwave Operator | 1.1 | Signal | Yes | Clean |
+| Pulsevine Parkour | 2.0 | Parkour | Yes | Clean |
+| Tessera Commons | 1.0 | Tile Placement | Yes | Clean |
+| Glasswing Polo | 1.0 | Hover Sport | Yes | Clean |
+| Rootsong Architect | 1.0 | Botany | Yes | Clean |
+| Stoneveil Ascent | 1.0 | Climbing | Yes | Clean |
+| Tidal Foundry | 1.0 | Hydraulics | Yes | Clean |
+| Riftwake Regatta | 1.0 | Sailing | Yes | Clean |
+| Archive Alchemist | 1.0 | Alchemy | No | Clean |
+| Driftglass Links | 1.0 | Golf | No | Clean |
+| Tideglass Surveyor | 1.0 | Cartography | No | Clean |
+| Spanwright | 1.0 | Construction | No | Clean |
+| Lantern Line | 1.0 | Vehicle Simulation | Yes | Clean |
+| Frostline Rescue | 1.0 | Rescue | Yes | Clean |
+| Signal Choir | 1.1 | Memory | No | Clean |
+| Terrace Keeper | 1.0 | Farming | No | Clean |
+| Chronofold Courier | 1.0 | Time Loop | Yes | Clean |
+| Hearthline Kitchen | 1.0 | Cooking | No | Clean |
+| Spectra Safari | 1.0 | Photography | No | Clean |
+| Ashfall Caravan | 2.0 | Narrative | Yes | Clean |
+| Twinforge Expedition | 1.0 | Co-op | No | Clean |
+| Mothlight Museum | 1.0 | Hidden Object | No | Clean |
+| Windward Cargo | 1.1 | Flight | Yes | Clean |
+| Cipher Court | 1.0 | Deduction | No | Clean |
+| Moonwake Angler | 1.0 | Fishing | No | Clean |
+| Deepwater Signal | 1.1 | Underwater | Yes | Clean |
+| Emberdeck Pilgrim | 1.3 | Deckbuilder | Yes | Clean |
+| Command Bloom | 1.0 | Programming | No | Clean |
+| Railspire Dispatch | 1.0 | Logistics | No | Clean |
+| Glyphsmith | 1.1 | Word | No | Clean |
+| Solar Loom | 1.0 | Sandbox | No | Clean |
+| Atlas Below | 1.4 | Exploration | Yes | Clean |
+| Aetherstead Colony | 2.0 | City Builder | Yes | Clean |
+| Prism Duel | 1.1 | Multiplayer | No | Clean |
+| Crownline Tactics | 1.0 | Tactical | No | Clean |
+| Echo Bazaar | 1.1 | Economy | No | Clean |
+| Lumen Relay | 1.1 | Logic | No | Clean |
+| Starweaver Drift | 1.1 | Space | Yes | Clean |
+| Pulse Archive | 1.1 | Rhythm | No | Clean |
+| Verdant Circuit | 1.0 | Ecology | No | Clean |
+| Quiet Protocol | 1.0 | Stealth | Yes | Clean |
+| Forgeflow | 1.0 | Automation | No | Clean |
+| Cloudforge Pinball | 1.1 | Pinball | Yes | Clean |
+| Mosslight Vale | 1.8 | RPG | Yes | Clean |
+| Gravity Foundry | 1.0 | Physics | No | Clean |
+| Hexbound Tactics | 1.0 | Card | No | Clean |
+| Harbor Pulse | 1.0 | Simulation | No | Clean |
+| Rift Relay | 1.1 | Co-op | Yes | Clean |
+| Skyhook Sprint | 1.0 | Platformer | Yes | Clean |
+| Neon Stack | 1.1 | Puzzle | Yes | Clean |
+| Circuit Rush | 2.1 | Racing | Yes | Clean |
+| Bastion Bloom | 1.5 | Tower Defense | Yes | Clean |
+| Emberfield Survival | 1.0 | Survival | Yes | Clean |
+| Vector League | 1.0 | Sports | Yes | Clean |
+| Orbit Breaker | 1.0 | Space | Yes | Clean |
+| Rune Depths | 2.1 | Dungeon | Yes | Clean |
 
 ## Scope boundary
 
-This audit proves boot/runtime cleanliness, representative interaction, direct checks for identified edge cases, and targeted visual/code review of the weakest-looking legacy titles. It does not claim exhaustive human mastery of every possible level/path or every gamepad/browser/OS combination.
-
-## v28 follow-up — 2026-10-01
-
-The v28 release re-ran the isolated Chromium catalog audit after adding Fluxward Conclave and rebuilding Circuit Rush. **66/66 registered games loaded without page/runtime errors**. Generic input produced observable state changes in 63 titles; Atlas Below, Lumen Relay, and Forgeflow remain geometry/mechanic-specific generic-input exceptions with direct regressions retained from v27.
-
-- **Fluxward Conclave — New v28:** direct pointer expansion, pulse conversion, keyboard remapping, Local Multiplayer handoff, campaign milestones, mobile width, boot/runtime, HTTP delivery, cache registration, and cover/catalog integration all pass.
-- **Circuit Rush — Improved v28 / version 2.0:** direct ordered-checkpoint traversal, three AI rivals, steering/throttle, pause/resume, boost behavior, three-lap completion, win/completion events, boot/runtime, HTTP delivery, and catalog integration all pass.
-
-This follow-up supplements the v27 per-game ledger rather than rewriting its historical findings.
-
-## v29 long-form follow-up
-
-The v27 catalog-wide audit established that the registered games were functional and coherent at representative interaction depth. v29 follows that work by completing legitimate long-form paths rather than relying on boot checks for campaign-oriented releases.
-
-- **Aetherstead Colony 2.0:** upgraded and completed through a legal three-charter / 36-turn campaign, including save/reload and persistent legacy state.
-- **Mosslight Vale 1.8:** completed through all six regions, both campaign bosses, milestone autosaves, final campaign event, and completed-save reload.
-- **Rune Depths:** promoted to deep-validated in v31 after three complete pure-relic mastery runs plus save/meta recovery coverage.
-- **Emberdeck Pilgrim, Atlas Below, Ashfall Caravan, Bastion Bloom, and Fluxward Conclave:** remain the principal campaign titles for future route/build/contract-specific deep runs.
-
-See `LONGFORM_AUDIT.md` for the detailed campaign-depth evidence and next targets.
-
-## v30 controls and Pulsevine follow-up
-
-Pulsevine Parkour received a full depth expansion from one circuit to five courses. All five were validated through the real movement/collision/checkpoint loop after respawn and hazard placement were tuned from playtest findings.
-
-The platform also added a universal exact-key presentation layer. Every registered game retains its authored control list; remappable games additionally expose the active key profile and defaults so labels such as Primary or Secondary no longer require player inference.
+The runtime audit proves clean loading and representative interaction, not exhaustive completion of every seed, route, build, physical controller, browser, or operating system. The six v32 additions retain focused mechanic tests; Verdant Echoes now also has a dedicated v35 campaign-depth suite, while other long-form titles retain their deeper regression coverage.

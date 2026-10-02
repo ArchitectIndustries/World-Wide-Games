@@ -1,4 +1,4 @@
-const CACHE='wwg-v31';
+const CACHE='wwg-v35';
 const ASSETS=[
   "./",
   "./index.html",
@@ -10,6 +10,18 @@ const ASSETS=[
   "./js/app.js",
   "./js/game-page.js",
   "./manifest.webmanifest",
+  "./covers/neon-serpent.svg",
+  "./games/neon-serpent/index.html",
+  "./covers/ironlight-breach.svg",
+  "./games/ironlight-breach/index.html",
+  "./covers/verdant-echoes.svg",
+  "./games/verdant-echoes/index.html",
+  "./covers/ashen-covenant.svg",
+  "./games/ashen-covenant/index.html",
+  "./covers/astral-menagerie.svg",
+  "./games/astral-menagerie/index.html",
+  "./covers/polyforge-studio.svg",
+  "./games/polyforge-studio/index.html",
   "./covers/fluxward-conclave.svg",
   "./games/fluxward-conclave/index.html",
   "./covers/strata-cipher.svg",
