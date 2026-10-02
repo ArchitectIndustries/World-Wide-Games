@@ -1,10 +1,12 @@
-# WorldWideGames Long-Form Game Audit
-
-**v36 continuity note — 2026-10-02:** Astral Menagerie 2.0 is now a campaign-scale creature-collection title rather than a short three-Warden loop. A deterministic Chromium path validates a four-Astral party plus reserve, mid-battle switching, five elemental techniques/status effects, twelve-species Codex mastery, two-wild-win field requirements, all three two-Astral trainer gauntlets, all three habitat quests, all three Wardens, active autosave, lifetime meta progression, standardized completion events, and final Atlas completion.
-
-The v35 Verdant Echoes, v34 Ironlight Breach, v33 Polyforge Studio, Rune Depths, Aetherstead Colony, Mosslight Vale, Fluxward Conclave, Circuit Rush, v27 correctness, remapping, and score-direction regressions remain green.
+**v37 continuity note — 2026-10-02:** Ashen Covenant 2.0 expands beyond its original three boss arenas into a full three-path pilgrimage. A deterministic Chromium path validates mixed traversal enemies, three Ember Sigils and the Lord-gate requirement, Blade/Pike weapon identities, persistent weapon forging, deliberate death-mark recovery through three mastery recoveries, distinct Bell/Cross/Sun Lord patterns, final pilgrimage completion, save/meta persistence, and 390×844 layout. v36 Astral Menagerie, v35 Verdant Echoes, v34 Ironlight, v33 Polyforge, Rune Depths, Aetherstead Colony, Mosslight Vale, Fluxward Conclave, Circuit Rush, the v27 correctness suite, and score-direction regressions remain green.
 
 ---
+
+**v36 continuity note — 2026-10-02:** Astral Menagerie 2.0 is now a proper three-habitat party RPG campaign rather than a short capture loop. A deterministic Chromium path validates four-member party plus reserve management, mid-battle switching, all five elemental techniques/status effects, 15-species Codex architecture, two-opponent trainer gauntlets in all three habitats, field-quest gating before each Warden, Atlas completion, autosave/meta progression, and 390×844 layout. v35 Verdant Echoes, v34 Ironlight, v33 Polyforge, Rune Depths, Aetherstead Colony, Mosslight Vale, Fluxward Conclave, Circuit Rush, the v27 correctness suite, and score-direction regressions remain green.
+
+---
+
+# WorldWideGames Long-Form Game Audit
 
 **v35 continuity note — 2026-10-02:** Verdant Echoes 2.0 is now a genuine two-area campaign rather than a short Grove-only adventure. A deterministic Chromium path validates the two-relic Rootvault gate, Rootkeeper Mira quest, all three Moon Seeds, Barkguard and Moonsteel equipment progression, Hollow Stag/Rootsigil, Thorn Regent availability, autosave/meta progression, and final campaign completion. v34 Ironlight, v33 Polyforge, Rune Depths, Aetherstead Colony, Mosslight Vale, Fluxward Conclave, Circuit Rush, the v27 correctness suite, and score-direction regressions remain green.
 
@@ -32,6 +34,7 @@ This pass evaluated the catalog titles intended to sustain play beyond a short a
 | Bastion Bloom | Ten-wave tower-defense campaign, three tower classes, upgrades, four enemy archetypes, bosses on waves 5 and 10 | Retained; campaign arc and upgrade pressure are coherent and complete |
 | Fluxward Conclave | Three-arena tactical campaign plus local duel mode, persistent campaign/win records | Retained; multi-arena progression and replay modes are sufficient for its strategy scope |
 | Verdant Echoes | Two connected action-adventure regions, four Echo Relics, Rootkeeper quest, Moon Seeds, equipment, two bosses, active autosave/meta | **v35 deep-validated** — complete Rootvault quest/equipment/boss chain plus finale gating, autosave/meta, and mobile layout |
+| Ashen Covenant | Three traversal paths plus three Covenant Lord arenas, dual weapon builds, forging, sigil gates, persistent Ash/upgrades/death marks | **v37 deep-validated** — complete traversal gate, forging, death-recovery mastery, all Lord patterns, pilgrimage completion, save/meta, and mobile layout |
 
 ## Aetherstead Colony 2.0 — deep validation
 

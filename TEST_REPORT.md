@@ -1,33 +1,51 @@
-# WorldWideGames Test Report
+# WorldWideGames Validation Report
 
 Date: 2026-10-02
-Release candidate: **v36 — Astral Menagerie 2.0**
-Owner/operator: Architect Industries
+Release: **v37 — Ashen Covenant 2.0**
 
-## Release gate
+## v37 focused validation
 
-- PASS — `python3 tests/v36_astral.py`: 15 species; four-member party + reserve; reserve swap; mid-battle switch; Scorch/Snare/Mend/Static/Guard techniques; capture compatibility; Codex mastery event; three trainer gauntlets; three habitat field quests; three Wardens; autosave; lifetime meta; 390×844 overflow.
-- PASS — `python3 tests/v36_static.py`: 72 games, 120 genre tags, 104 achievements, 46 remappable titles, Astral featured/PWA metadata, `wwg-v36` cache, 152 public files scanned for prohibited internal branding.
-- PASS — `python3 tests/v32_catalog_audit.py`: 72/72 games runtime-clean in isolated Chromium. Generic representative input changed state in 68 titles; Astral Menagerie is intentionally starter-gated and has dedicated v36 coverage; Atlas Below, Lumen Relay, and Forgeflow retain direct mechanic tests.
-- PASS — `node tests/smoke.js`: all 72 registered game boots plus homepage and game-detail shell.
-- PASS — `python3 tests/v32_http.py`: 151/151 local HTTP paths returned 200. A post-response client-reset traceback from Python's development server did not alter the completed 151/151 result.
-- PASS — `python3 tests/v32_controls_browser.py`: 72/72 detail pages expose authored controls; 46/46 remappable releases expose active/default profiles.
-- PASS — `python3 tests/v32_remap.py`: custom I/J/K/L/F/H mapping works across the flagship/remappable regression set.
-- PASS — `python3 tests/v32_new_games.py`: six flagship boot/mechanic regression suite, including Astral Menagerie's starter/battle/capture compatibility path.
-- PASS — `python3 tests/v35_verdant.py`: Verdant Echoes 2.0 campaign regression.
-- PASS — `python3 tests/v34_ironlight.py`: Ironlight Breach 2.0 campaign/mechanic regression.
-- PASS — `python3 tests/v33_polyforge.py`: Polyforge Studio 2.0 certification regression.
-- PASS — `python3 tests/v31_rune_depths.py`: Rune Depths mastery/save/meta regression.
-- PASS — `python3 tests/v29_longform.py`: Aetherstead Colony + Mosslight Vale deep campaigns.
-- PASS — `python3 tests/v28_game.py`, `tests/v28_circuit.py`, `tests/v27_fixes.py`: prior release correctness remains green.
-- PASS — `node tests/v26_direction.js`: low-score and high-score semantics unchanged.
+### Ashen Covenant 2.0
 
-The first attempt to run every long-form browser regression in one shell exceeded the execution window after the v32 suite; remaining tests were then rerun in smaller batches and each passed.
+`python3 tests/v37_ashen.py`
 
-## Visual QA
+- Three authored path definitions load cleanly: Charred Causeway, Cinder Cloister, and Dawnless Court.
+- Hound, Pilgrim, and Ash Archer path-enemy archetypes are present; later paths retain scaled enemy HP while preserving type-specific speed/range/cooldown behavior.
+- Emberblade and Ash Pike expose distinct light-attack range/damage/stamina profiles, and weapon switching works.
+- Ember Shrine forging spends Ash and persists a higher weapon tier.
+- All three Charred Causeway Ember Sigils bind through the real interaction path; after traversal foes are cleared, the Lord gate advances to the Bell Widow arena.
+- Bell Widow falls through actual weapon attack resolution and advances the pilgrimage to Cinder Cloister.
+- Death drops current Ash into a durable death mark; respawn plus deliberate leave-and-return recovers it. Three recoveries emit `recovery-mastery`.
+- Second and third Lord encounters expose authored Cross and Sun patterns; all three Lord defeats emit normal events and the final kill emits `pilgrimage-complete`.
+- Durable meta records clears, best score, Lord victories, recoveries, and upgrades; the v2 active save retains weapon-tier/progression data.
+- 390×844 layout has no horizontal overflow.
 
-Astral Menagerie 2.0 was rendered at desktop and 390×844 mobile widths. The mobile pass exposed excess vertical separation above the canvas; the responsive canvas position was tightened to 38% and the dedicated mobile-overflow regression was rerun green.
+## Release-wide gates
 
-## Production-origin status
+- `python3 tests/v37_static.py`: **72 games / 120 genre tags / 106 achievements / 46 remappable releases**, sole featured Ashen Covenant 2.0, `wwg-v37`, manifest/release-history/public-source checks green.
+- `python3 tests/v32_catalog_audit.py`: **72/72 games runtime-clean** in isolated Chromium. Generic interaction observes state change in 68 titles; campaign/starter gates retain dedicated deep tests.
+- `node tests/smoke.js`: **72/72 registered games** boot; platform homepage and reusable game-detail shell pass.
+- `python3 tests/v32_http.py`: **151/151** local-origin pages/assets returned HTTP 200.
+- `python3 tests/v32_controls_browser.py`: **72/72** detail pages expose controls and **46/46** remappable titles expose exact current/default mappings.
+- `python3 tests/v32_remap.py`: custom I/J/K/L/F/H mappings pass across all six v32 flagship releases.
+- `python3 tests/v32_new_games.py`: all six original flagship mechanic paths pass, including the legacy Ashen stamina and deliberate-death-recovery contract.
 
-Local/source validation is complete. Vercel deployment inspection remains blocked by connector visibility: deployment listing returns 403, project lookup exposes a connector/backend schema mismatch, and deployment fetch cannot see the established project. No duplicate project was created and this report does not claim v36 is production-deployed.
+## Prior deep/regression gates rerun
+
+- `python3 tests/v36_astral.py` — party/reserve, trainer/quest/Warden, Codex, autosave/meta remain green.
+- `python3 tests/v35_verdant.py` — two-area quest/equipment/boss campaign remains green.
+- `python3 tests/v34_ironlight.py` — three sectors, two weapons, gates/secrets/enemy classes/persistence remain green.
+- `python3 tests/v33_polyforge.py` — materials, snap, transforms, history, autosave, five briefs remain green.
+- `python3 tests/v31_rune_depths.py` — exact autosave/resume, all three pure mastery paths, cleanup and corrupt-save recovery remain green.
+- `python3 tests/v29_longform.py` — Aetherstead three-charter campaign and Mosslight six-region/final-boss campaign remain green.
+- `python3 tests/v28_game.py` and `tests/v28_circuit.py` — Fluxward mechanics/mobile and Circuit Rush checkpoints/rivals/boost/podium remain green.
+- `python3 tests/v27_fixes.py` — catalog correctness regression remains green.
+- `node tests/v26_direction.js` — all six lower-is-better score titles and high-score semantics remain green.
+
+## Visual inspection
+
+Headless Chromium screenshots at 1280×820 and 390×844 were inspected with a mocked local-storage origin after rendering the new Charred Causeway. The HUD, Ember Shrine, three sigil sites, mixed path enemies, Lord gate, stamina bar, Architect Industries branding, and control panels are legible. Mobile has no horizontal overflow; the smaller canvas remains readable without hiding the persistent HUD/control information.
+
+## Production-origin verification
+
+Production-origin validation remains blocked by current Vercel authorization/visibility: deployment enumeration returns 403, project lookup hits the connector argument/schema mismatch, the Vercel-authenticated fetch is denied at the deployment alias endpoint, and ordinary web fetch cannot access the origin. No live-production claims are made for v37.

@@ -1,14 +1,14 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v36** with **72 games across 120 genre tags**, **104 achievements**, and **46 remappable releases**.
+WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v37** with **72 games across 120 genre tags**, **106 achievements**, and **46 remappable releases**.
 
-## v36 — Astral Menagerie 2.0
+## v37 — Ashen Covenant 2.0
 
-Astral Menagerie is now a deeper creature-collection campaign. The roster expands from ten to **fifteen original Astral species**, captured creatures fill a four-member field party and then move into a persistent reserve, and players can switch active party members during battle. Each elemental family now has a distinct technique — Scorch, Snare, Mend, Static, or Guard — adding status, recovery, and defensive decisions to the turn loop.
+Ashen Covenant grows from a three-arena boss rush into a longer stamina-action RPG pilgrimage. Each Covenant Lord now has an authored traversal path before its arena: bind three **Ember Sigils**, survive Hounds, Pilgrims, and ranged Ash Archers, and then open the Lord gate. The game supports two distinct weapon identities — the fast **Emberblade** and longer-range **Ash Pike** — with separate stamina/damage profiles, weapon switching, heavy attacks, and persistent three-tier forging.
 
-Each of the three habitats now has a proper field quest: earn two wild victories, defeat a named trainer's two-Astral gauntlet, then challenge the habitat Warden. Active expedition progress autosaves locally; lifetime records track Atlas clears, best score, trainer victories, and Codex mastery. The platform adds **Trainer Constellation** and **Living Atlas** achievements, promotes Astral Menagerie to featured/PWA-shortcut status, and advances offline caching to `wwg-v36`.
+Ash can now be spent at Ember Shrines to forge weapons or bind more maximum Vigor. Path progress, upgrades, Ash, sigils, defeated path foes, and lifetime records persist locally. Death still drops carried Ash, but the recovery system now coexists with traversal/checkpoint progression instead of resetting the whole pilgrimage. The three Lords use distinct Bell, Cross, and Sun pressure patterns. The platform adds **Covenant Pilgrim** and **Ash Reclaimer** achievements, promotes Ashen Covenant to featured/PWA-shortcut status, adds it to Long Campaigns, and advances offline caching to `wwg-v37`.
 
-The v35 **Verdant Echoes 2.0**, v34 **Ironlight Breach 2.0**, and v33 **Polyforge Studio 2.0** depth passes remain intact and regression-tested.
+The v36 **Astral Menagerie 2.0**, v35 **Verdant Echoes 2.0**, v34 **Ironlight Breach 2.0**, v33 **Polyforge Studio 2.0**, and other established campaign depth passes remain regression-tested.
 
 ## Run locally
 

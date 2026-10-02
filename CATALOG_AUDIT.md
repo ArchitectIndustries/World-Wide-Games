@@ -1,29 +1,17 @@
 # WorldWideGames Full Catalog Quality Audit
 
 Date: 2026-10-02
-Release: **v36 — Astral Menagerie 2.0**
+Release: **v37 — Ashen Covenant 2.0**
 Owner/operator: Architect Industries
 
-## v36 release result
+## Current release result
 
 - **72/72 games** loaded without page/runtime errors in isolated Chromium.
+- Generic interaction produced observable state change in **68** titles; Ashen Covenant 2.0 is covered by a dedicated v37 pilgrimage regression, while Astral Menagerie retains its starter-gated v36 full-campaign regression and Atlas Below, Lumen Relay, and Forgeflow retain direct mechanic-specific coverage.
+- Six v32 flagship releases remain runtime-clean. Ashen Covenant 2.0 now has dedicated full-pilgrimage coverage for three traversal paths, Ember Sigils, three field-enemy archetypes, Blade/Pike weapon identities, persistent forging, deliberate death-mark recovery, three distinct Covenant Lord patterns, campaign completion, autosave/meta, and mobile-width overflow.
 - **151/151** local-origin platform/game/cover paths returned HTTP 200.
-- **72/72** detail pages expose authored controls; **46/46** remappable releases expose current/default key profiles.
-- Catalog totals remain **72 games / 120 genre tags**, with **104 achievements** after adding Trainer Constellation and Living Atlas.
-- Astral Menagerie 2.0 received dedicated regression coverage for 15 species, four-member party + reserve, battle switching, five elemental techniques/status effects, three trainer gauntlets, three field quests, three Wardens, autosave/meta persistence, and 390×844 mobile overflow.
-- Generic catalog interaction shows observable state change in 68 titles; Astral Menagerie starts behind an intentional starter-choice gate, while Atlas Below, Lumen Relay, and Forgeflow retain direct mechanic-specific regressions.
-- v35 Verdant Echoes, v34 Ironlight, v33 Polyforge, Rune Depths, Aetherstead/Mosslight, Fluxward/Circuit, v27 correctness, remapping, controls, HTTP, and score-direction regressions remain green.
-
-## v36 flagship
-
-| Game | Version | Primary identity | Focused validation |
-|---|---:|---|---|
-| Astral Menagerie | 2.0 | Creature-collection RPG | 15 species, party/reserve, switching, five techniques, trainers, habitat quests, Wardens, autosave/meta, mobile |
-| Verdant Echoes | 2.0 | Action adventure | Rootvault campaign, equipment, quest and bosses |
-| Ironlight Breach | 2.0 | FPS | weapons, sealed doors, secrets, sentinels |
-| Polyforge Studio | 2.0 | 3D design | materials, transforms, undo/redo, certification briefs |
-
----
+- **72/72** game detail pages expose authored controls and **46/46** remappable releases expose the current/default keyboard profile.
+- Prior deep regressions remain green for Rune Depths, Aetherstead Colony, Mosslight Vale, Fluxward Conclave, Circuit Rush, the v27 defect-fix set, and score-direction semantics.
 
 ## v32 flagship additions
 
@@ -31,8 +19,8 @@ Owner/operator: Architect Industries
 |---|---|---|
 | Ironlight Breach | Original software-raycast FPS | Rifle/scattergun combat, keycard doors, secret caches, three sentinel classes, reachable three-core sectors, runtime render |
 | Verdant Echoes | Original top-down fantasy action-adventure | v35: two-area Rootvault campaign, Mira quest, three Moon Seeds, Barkguard/Moonsteel progression, Wisp projectiles, Hollow Stag + Thorn Regent gating, autosave/meta, mobile layout |
-| Ashen Covenant | Original stamina/action-RPG boss pilgrimage | stamina-spending attack, death drop, leave-and-return Ash recovery |
-| Astral Menagerie | Original creature-collection RPG | starter choice, battle damage, deterministic capture path |
+| Ashen Covenant | Original stamina/action-RPG pilgrimage | v37: three traversal paths, Ember Sigils, Hound/Pilgrim/Archer enemies, Blade/Pike builds, persistent forging, deliberate Ash recovery, three Lord patterns, campaign persistence |
+| Astral Menagerie | Original creature-collection RPG | v36: 15 species, party/reserve management, party switching, five type techniques/status, three trainer gauntlets, habitat quests, Warden progression, autosave/meta |
 | Polyforge Studio | Original 3D construction/design game | v33: five materials, snap levels, rotate/scale, undo/redo, autosave, and legitimate completion of all five certification briefs |
 | Neon Serpent: Gridfall | Original three-contract serpent arcade | steering, contract 2 hazards, persistent contract architecture |
 
@@ -42,8 +30,8 @@ Owner/operator: Architect Industries
 |---|---:|---|:---:|---|
 | Ironlight Breach | 2.0 | FPS | Yes | Clean |
 | Verdant Echoes | 2.0 | Action Adventure | Yes | Clean |
-| Ashen Covenant | 1.0 | Soulslike | Yes | Clean |
-| Astral Menagerie | 1.0 | Creature Collection | Yes | Clean |
+| Ashen Covenant | 2.0 | Soulslike | Yes | Clean |
+| Astral Menagerie | 2.0 | Creature Collection | Yes | Clean |
 | Polyforge Studio | 2.0 | 3D Design | Yes | Clean |
 | Neon Serpent: Gridfall | 1.0 | Snake | Yes | Clean |
 | Fluxward Conclave | 1.0 | Territory | Yes | Clean |
@@ -115,4 +103,4 @@ Owner/operator: Architect Industries
 
 ## Scope boundary
 
-The runtime audit proves clean loading and representative interaction, not exhaustive completion of every seed, route, build, physical controller, browser, or operating system. The six v32 additions retain focused mechanic tests; Verdant Echoes now also has a dedicated v35 campaign-depth suite, while other long-form titles retain their deeper regression coverage.
+The runtime audit proves clean loading and representative interaction, not exhaustive completion of every seed, route, build, physical controller, browser, or operating system. The six v32 additions retain focused mechanic tests; Ashen Covenant now has a dedicated v37 traversal/pilgrimage suite, alongside v36 Astral Menagerie, v35 Verdant Echoes, v34 Ironlight, v33 Polyforge, v31 Rune Depths, and other long-form regression coverage.

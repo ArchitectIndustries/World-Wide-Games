@@ -15,9 +15,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Astral Menagerie",
-      "short_name": "Astral",
-      "url": "game.html?id=astral-menagerie",
+      "name": "Ashen Covenant",
+      "short_name": "Ashen",
+      "url": "game.html?id=ashen-covenant",
       "icons": [
         {
           "src": "assets/app-icon.svg",
