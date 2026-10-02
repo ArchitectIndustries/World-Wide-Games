@@ -1,5 +1,15 @@
 # WorldWideGames Release Notes
 
+## v36 — Astral Menagerie 2.0 — 2026-10-02
+
+Astral Menagerie becomes a substantially deeper creature-collection RPG while preserving the original three-habitat identity. The roster expands to fifteen original Astral species; captures fill a four-member party and then persistent reserve; party members can be switched during battle; and elemental families gain Scorch, Snare, Mend, Static, or Guard techniques with cooldown/status behavior.
+
+Each habitat now has a field quest that requires two wild victories and a named trainer's two-Astral gauntlet before its Warden unlocks. All three trainers, habitat quests, and Wardens feed durable autosave/meta progression. Lifetime records track clears, best Atlas score, trainer victories, and Codex mastery. Two platform achievements—Trainer Constellation and Living Atlas—bring the catalog to 104 achievements.
+
+The release refreshes Astral cover art, featured/PWA placement, catalog metadata, release history, and offline cache `wwg-v36`. Dedicated v36 regression coverage validates the party/reserve loop, mid-battle switching, five techniques, capture compatibility, twelve-species Codex mastery, all trainer/quest/Warden progression, autosave/meta, standardized events, and a 390×844 mobile layout. The broader gate remains 72/72 runtime-clean games, 72/72 boot, 151/151 HTTP paths, 72/72 detail pages with controls, and 46/46 remappable profiles.
+
+---
+
 ## v35 — Verdant Echoes 2.0
 
 v35 keeps the catalog at **72 games / 120 genre tags**, raises achievements to **102**, and spends the release on a deeper connected action-adventure campaign rather than another shallow catalog addition.

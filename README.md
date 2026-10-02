@@ -1,12 +1,14 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v35** with **72 games across 120 genre tags**, **102 achievements**, and **46 remappable releases**.
+WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v36** with **72 games across 120 genre tags**, **104 achievements**, and **46 remappable releases**.
 
-## v35 — Verdant Echoes 2.0
+## v36 — Astral Menagerie 2.0
 
-v35 turns **Verdant Echoes** into a substantially deeper two-area action-adventure campaign. Echo Grove now leads into the **Rootvault** dungeon after two relics, where Rootkeeper Mira's Moon Seed quest, ranged Wisps, the Barkguard Charm, the Hollow Stag boss, and the Rootsigil build toward a forged **Moonsteel** blade and the final Thorn Regent encounter. Active campaign state autosaves locally, durable meta tracks clears/best score/Rootvault progress, and deaths resume inside the current area while retaining progression.
+Astral Menagerie is now a deeper creature-collection campaign. The roster expands from ten to **fifteen original Astral species**, captured creatures fill a four-member field party and then move into a persistent reserve, and players can switch active party members during battle. Each elemental family now has a distinct technique — Scorch, Snare, Mend, Static, or Guard — adding status, recovery, and defensive decisions to the turn loop.
 
-The platform also adds **Rootvault Warden** and **Moonsteel Oath** achievements, promotes Verdant Echoes to featured/PWA-shortcut status, and advances offline caching to `wwg-v35`. The v34 **Ironlight Breach 2.0** and v33 **Polyforge Studio 2.0** depth passes remain intact and fully regression-tested.
+Each of the three habitats now has a proper field quest: earn two wild victories, defeat a named trainer's two-Astral gauntlet, then challenge the habitat Warden. Active expedition progress autosaves locally; lifetime records track Atlas clears, best score, trainer victories, and Codex mastery. The platform adds **Trainer Constellation** and **Living Atlas** achievements, promotes Astral Menagerie to featured/PWA-shortcut status, and advances offline caching to `wwg-v36`.
+
+The v35 **Verdant Echoes 2.0**, v34 **Ironlight Breach 2.0**, and v33 **Polyforge Studio 2.0** depth passes remain intact and regression-tested.
 
 ## Run locally
 

@@ -1,5 +1,11 @@
 # WorldWideGames Long-Form Game Audit
 
+**v36 continuity note — 2026-10-02:** Astral Menagerie 2.0 is now a campaign-scale creature-collection title rather than a short three-Warden loop. A deterministic Chromium path validates a four-Astral party plus reserve, mid-battle switching, five elemental techniques/status effects, twelve-species Codex mastery, two-wild-win field requirements, all three two-Astral trainer gauntlets, all three habitat quests, all three Wardens, active autosave, lifetime meta progression, standardized completion events, and final Atlas completion.
+
+The v35 Verdant Echoes, v34 Ironlight Breach, v33 Polyforge Studio, Rune Depths, Aetherstead Colony, Mosslight Vale, Fluxward Conclave, Circuit Rush, v27 correctness, remapping, and score-direction regressions remain green.
+
+---
+
 **v35 continuity note — 2026-10-02:** Verdant Echoes 2.0 is now a genuine two-area campaign rather than a short Grove-only adventure. A deterministic Chromium path validates the two-relic Rootvault gate, Rootkeeper Mira quest, all three Moon Seeds, Barkguard and Moonsteel equipment progression, Hollow Stag/Rootsigil, Thorn Regent availability, autosave/meta progression, and final campaign completion. v34 Ironlight, v33 Polyforge, Rune Depths, Aetherstead Colony, Mosslight Vale, Fluxward Conclave, Circuit Rush, the v27 correctness suite, and score-direction regressions remain green.
 
 ---

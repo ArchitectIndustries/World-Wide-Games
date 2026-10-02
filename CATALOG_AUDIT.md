@@ -1,17 +1,29 @@
 # WorldWideGames Full Catalog Quality Audit
 
 Date: 2026-10-02
-Release: **v35 — Verdant Echoes 2.0**
+Release: **v36 — Astral Menagerie 2.0**
 Owner/operator: Architect Industries
 
-## Current release result
+## v36 release result
 
 - **72/72 games** loaded without page/runtime errors in isolated Chromium.
-- Generic interaction produced observable state change in **69** titles; Atlas Below, Lumen Relay, and Forgeflow retain direct mechanic-specific regression coverage.
-- Six v32 flagship releases remain runtime-clean. Verdant Echoes 2.0 received a complete two-area quest/equipment/boss regression covering Rootvault gating, Mira's Moon Seed quest, Wisp projectiles, Barkguard/Moonsteel, Hollow Stag/Rootsigil, Thorn Regent availability, autosave/meta, and mobile-width overflow.
 - **151/151** local-origin platform/game/cover paths returned HTTP 200.
-- **72/72** game detail pages expose authored controls and **46/46** remappable releases expose the current/default keyboard profile.
-- Prior deep regressions remain green for Rune Depths, Aetherstead Colony, Mosslight Vale, Fluxward Conclave, Circuit Rush, the v27 defect-fix set, and score-direction semantics.
+- **72/72** detail pages expose authored controls; **46/46** remappable releases expose current/default key profiles.
+- Catalog totals remain **72 games / 120 genre tags**, with **104 achievements** after adding Trainer Constellation and Living Atlas.
+- Astral Menagerie 2.0 received dedicated regression coverage for 15 species, four-member party + reserve, battle switching, five elemental techniques/status effects, three trainer gauntlets, three field quests, three Wardens, autosave/meta persistence, and 390×844 mobile overflow.
+- Generic catalog interaction shows observable state change in 68 titles; Astral Menagerie starts behind an intentional starter-choice gate, while Atlas Below, Lumen Relay, and Forgeflow retain direct mechanic-specific regressions.
+- v35 Verdant Echoes, v34 Ironlight, v33 Polyforge, Rune Depths, Aetherstead/Mosslight, Fluxward/Circuit, v27 correctness, remapping, controls, HTTP, and score-direction regressions remain green.
+
+## v36 flagship
+
+| Game | Version | Primary identity | Focused validation |
+|---|---:|---|---|
+| Astral Menagerie | 2.0 | Creature-collection RPG | 15 species, party/reserve, switching, five techniques, trainers, habitat quests, Wardens, autosave/meta, mobile |
+| Verdant Echoes | 2.0 | Action adventure | Rootvault campaign, equipment, quest and bosses |
+| Ironlight Breach | 2.0 | FPS | weapons, sealed doors, secrets, sentinels |
+| Polyforge Studio | 2.0 | 3D design | materials, transforms, undo/redo, certification briefs |
+
+---
 
 ## v32 flagship additions
 

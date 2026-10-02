@@ -15,9 +15,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Verdant Echoes",
-      "short_name": "Verdant",
-      "url": "game.html?id=verdant-echoes",
+      "name": "Astral Menagerie",
+      "short_name": "Astral",
+      "url": "game.html?id=astral-menagerie",
       "icons": [
         {
           "src": "assets/app-icon.svg",

@@ -1,51 +1,33 @@
-# WorldWideGames Validation Report
+# WorldWideGames Test Report
 
 Date: 2026-10-02
-Release: **v35 — Verdant Echoes 2.0**
+Release candidate: **v36 — Astral Menagerie 2.0**
+Owner/operator: Architect Industries
 
-## v35 focused validation
+## Release gate
 
-### Verdant Echoes 2.0
+- PASS — `python3 tests/v36_astral.py`: 15 species; four-member party + reserve; reserve swap; mid-battle switch; Scorch/Snare/Mend/Static/Guard techniques; capture compatibility; Codex mastery event; three trainer gauntlets; three habitat field quests; three Wardens; autosave; lifetime meta; 390×844 overflow.
+- PASS — `python3 tests/v36_static.py`: 72 games, 120 genre tags, 104 achievements, 46 remappable titles, Astral featured/PWA metadata, `wwg-v36` cache, 152 public files scanned for prohibited internal branding.
+- PASS — `python3 tests/v32_catalog_audit.py`: 72/72 games runtime-clean in isolated Chromium. Generic representative input changed state in 68 titles; Astral Menagerie is intentionally starter-gated and has dedicated v36 coverage; Atlas Below, Lumen Relay, and Forgeflow retain direct mechanic tests.
+- PASS — `node tests/smoke.js`: all 72 registered game boots plus homepage and game-detail shell.
+- PASS — `python3 tests/v32_http.py`: 151/151 local HTTP paths returned 200. A post-response client-reset traceback from Python's development server did not alter the completed 151/151 result.
+- PASS — `python3 tests/v32_controls_browser.py`: 72/72 detail pages expose authored controls; 46/46 remappable releases expose active/default profiles.
+- PASS — `python3 tests/v32_remap.py`: custom I/J/K/L/F/H mapping works across the flagship/remappable regression set.
+- PASS — `python3 tests/v32_new_games.py`: six flagship boot/mechanic regression suite, including Astral Menagerie's starter/battle/capture compatibility path.
+- PASS — `python3 tests/v35_verdant.py`: Verdant Echoes 2.0 campaign regression.
+- PASS — `python3 tests/v34_ironlight.py`: Ironlight Breach 2.0 campaign/mechanic regression.
+- PASS — `python3 tests/v33_polyforge.py`: Polyforge Studio 2.0 certification regression.
+- PASS — `python3 tests/v31_rune_depths.py`: Rune Depths mastery/save/meta regression.
+- PASS — `python3 tests/v29_longform.py`: Aetherstead Colony + Mosslight Vale deep campaigns.
+- PASS — `python3 tests/v28_game.py`, `tests/v28_circuit.py`, `tests/v27_fixes.py`: prior release correctness remains green.
+- PASS — `node tests/v26_direction.js`: low-score and high-score semantics unchanged.
 
-`python3 tests/v35_verdant.py`
+The first attempt to run every long-form browser regression in one shell exceeded the execution window after the v32 suite; remaining tests were then rerun in smaller batches and each passed.
 
-- Legacy sword/dash/bomb behavior remains functional, including destructible cracked stone.
-- Rootkeeper Mira quest state starts through real interaction and persists through the campaign save.
-- Two Echo Relics legitimately unlock the Rootvault portal.
-- Rootvault validates ranged Wisp projectile creation and Barkguard maximum-health progression.
-- All three Moon Seeds are collected through the authored state path; the sanctum opens only after the third seed.
-- Hollow Stag is defeated through the boss damage path, grants the Rootsigil, and emits `rootvault-cleared`.
-- Returning to Mira after all three seeds forges Moonsteel and emits `moonsteel-forged`.
-- The active autosave contains area, player, relic, seed, quest, equipment, boss, and score state and is reloadable.
-- The remaining Grove relics plus Rootsigil unlock the Thorn Regent finale.
-- Moonsteel directly validates double sword damage versus Reedblade.
-- Campaign completion updates durable clear/best-score meta and emits the standardized `campaign-complete` event.
-- 390×844 layout passes without horizontal overflow.
+## Visual QA
 
-## Release-wide gates
+Astral Menagerie 2.0 was rendered at desktop and 390×844 mobile widths. The mobile pass exposed excess vertical separation above the canvas; the responsive canvas position was tightened to 38% and the dedicated mobile-overflow regression was rerun green.
 
-- `python3 tests/v35_static.py`: **72 games / 120 genre tags / 102 achievements / 46 remappable releases**, sole featured Verdant Echoes 2.0, `wwg-v35`, manifest/release-history/public-source checks green.
-- `python3 tests/v32_catalog_audit.py`: **72/72 games runtime-clean** in isolated Chromium; generic interaction changed state in 69 titles and geometry-specific outliers retain direct tests.
-- `node tests/smoke.js`: **72/72 registered games** boot; platform homepage and reusable game-detail shell pass.
-- `python3 tests/v32_http.py`: **151/151** local-origin pages/assets returned HTTP 200.
-- `python3 tests/v32_controls_browser.py`: **72/72** detail pages expose controls and **46/46** remappable titles expose exact current/default mappings.
-- `python3 tests/v32_remap.py`: custom I/J/K/L/F/H mappings pass across all six v32 flagship releases.
-- `python3 tests/v32_new_games.py`: all six flagship mechanic paths pass. Its inherited Ironlight ammo assertion was updated to support the v34 rifle/scattergun ammo object instead of assuming a single numeric ammo scalar.
+## Production-origin status
 
-## Prior deep/regression gates rerun
-
-- `python3 tests/v34_ironlight.py` — three expanded sectors, two weapons, keycard gates, secrets, pickups, Guard/Brute/Drone roster, retry semantics, persistence/events, and mobile layout remain green.
-- `python3 tests/v33_polyforge.py` — five materials, three snap levels, transform history, autosave, all five briefs, mastery meta/event, and mobile layout remain green.
-- `python3 tests/v31_rune_depths.py` — exact autosave/resume and all three pure five-depth mastery paths remain green.
-- `python3 tests/v29_longform.py` — Aetherstead three-charter campaign and Mosslight six-region/finale path remain green.
-- `python3 tests/v28_game.py` / `tests/v28_circuit.py` — Fluxward and Circuit Rush direct mechanics remain green.
-- `python3 tests/v27_fixes.py` — all six v27 correctness fixes and direct interaction checks remain green.
-- `node tests/v26_direction.js` — lower-is-better and higher-is-better score semantics remain correct.
-
-## Execution note
-
-One combined regression command exceeded its outer command timeout after the v28 Circuit Rush test had already passed; the remaining v27 correctness and v26 score-direction suites were rerun separately and both passed. No test failure remains open from that timeout.
-
-## Verification boundary
-
-The evidence above is local/self-contained Chromium, static/source, and local HTTP validation. It is not represented as production-origin verification. Fresh Vercel connector checks and a direct web-origin fetch remain unable to inspect the established production project, so v35 is not claimed deployed live.
+Local/source validation is complete. Vercel deployment inspection remains blocked by connector visibility: deployment listing returns 403, project lookup exposes a connector/backend schema mismatch, and deployment fetch cannot see the established project. No duplicate project was created and this report does not claim v36 is production-deployed.
