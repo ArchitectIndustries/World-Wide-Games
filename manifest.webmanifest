@@ -15,12 +15,12 @@
   ],
   "shortcuts": [
     {
-      "name": "Astral Menagerie",
-      "short_name": "Astral",
-      "url": "game.html?id=astral-menagerie",
+      "name": "Coil Classic",
+      "short_name": "Coil",
+      "url": "game.html?id=coil-classic",
       "icons": [
         {
-          "src": "covers/astral-menagerie.svg",
+          "src": "covers/coil-classic.svg",
           "sizes": "800x500",
           "type": "image/svg+xml"
         }
