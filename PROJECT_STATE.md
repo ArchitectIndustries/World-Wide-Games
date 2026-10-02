@@ -2,63 +2,69 @@
 
 Last updated: 2026-10-02
 Owner/operator: Architect Industries
-Current verified source release: **v36 — Astral Menagerie 2.0**
-Catalog: **72 games / 120 genre tags / 104 achievements / 46 remappable releases**
+Current verified source release: **v40 — Astral Menagerie 3.0**
+Release-gate status: **source QA green; GitHub `main` promotion blocked by the current connector safety path**
+Status: **72-game** static browser-gaming platform with **120 genre tags**, **113 unique achievements**, **46 remappable releases**, persistent local player data, PWA/offline support, full-catalog Chromium QA, and deep campaign regressions.
 
-## v36 production work
+## v40 production work — Astral Menagerie 3.0
 
-Astral Menagerie has been expanded from its original compact three-Warden loop into a deeper creature-collection campaign while preserving backwards-compatible battle/capture behavior.
+Astral Menagerie advances from its v36 three-habitat Atlas into a replayable post-campaign mastery RPG while preserving the original party, reserve, capture, type, trainer, and Warden systems:
 
-- Roster expanded from 10 to **15 original Astral species** across Grove Reach, Tidelume Basin, and Emberfall Ridge.
-- Captures fill a **four-creature field party** first and then persistent reserve slots.
-- Added explicit **mid-battle switching** and reserve-to-party swaps outside battle.
-- Added five elemental techniques with cooldown/status behavior: **Scorch, Snare, Mend, Static, Guard**.
-- Added named two-Astral trainer gauntlets: Scout Lyra, Tidekeeper Orrin, Ridge Guide Sera.
-- Each habitat now requires **two wild field wins + trainer defeat** before its Warden unlocks.
-- Added active expedition autosave, legacy v1 save migration, lifetime clear/best/trainer/Codex meta, party wipe recovery, standardized progression events, updated touch UI, and mobile layout refinement.
-- Platform integration: Astral Menagerie is featured/PWA shortcut; release history advances to v36; achievements increase from 102 to **104** with Trainer Constellation and Living Atlas; service-worker cache advances to `wwg-v36`.
+- Added one visible **field-study node per habitat**: Canopy Well, Lumen Pool, and Cinder Lens. Each can be attuned once per expedition and grants a distinct reward: party restoration/capsules, technique refresh/XP insight, or permanent +2 maximum HP for the current party.
+- Completing all three studies emits durable **Habitat Scholar** mastery and contributes to Atlas score.
+- Completing the first Atlas now unlocks **Atlas Mastery Trials** rather than ending replay depth.
+- Added three **Constellation trainer rematches**. Each is a three-opponent gauntlet using the habitat trainer team plus its Warden, at higher levels than the original campaign.
+- Clearing a trainer rematch unlocks that habitat's **Ascendant Warden** trial.
+- Trainer rematches award 2 persistent Starlight; Ascendant Wardens award 3. Lifetime Starlight contributes to the score and persists independently of an expedition reset.
+- Clearing all trainer rematches emits `mastery-triad`; clearing all three Ascendant Wardens emits `constellation-master` and records permanent mastery.
+- Added v3 save/meta keys with compatible migration from v2 expedition/meta records, including nested defaults for new attunement/rematch/Ascendant structures.
+- Added E habitat-study and T Atlas-Trials keyboard paths, panel controls, visible study markers, Starlight HUD, and mastery-aware battle presentation.
+- Added three platform achievements: **Habitat Scholar**, **Constellation Challenger**, and **Ascendant Atlas**.
+- Astral Menagerie becomes the sole featured release and first PWA shortcut; offline cache advances to `wwg-v40`.
+- Long Campaigns now explicitly includes Astral Menagerie.
 
-## Verification
+## Validation
 
-Executed release gate:
-- PASS: `tests/v36_astral.py`
-- PASS: `tests/v36_static.py`
-- PASS: 72/72 isolated-Chromium runtime-clean catalog
-- PASS: 72/72 game boots plus homepage/detail shell
-- PASS: 151/151 local HTTP paths
-- PASS: 72/72 authored control pages; 46/46 remappable profiles
-- PASS: shared remapping regression
-- PASS: six flagship compatibility regression
-- PASS: Verdant Echoes 2.0, Ironlight Breach 2.0, Polyforge Studio 2.0, Rune Depths, Aetherstead/Mosslight, Fluxward/Circuit, v27 correctness, and score-direction regressions
-- PASS: 390×844 Astral mobile overflow after responsive refinement
+Focused and release-wide checks executed on the final v40 runtime source:
 
-The first attempt to run every long-form browser regression in one shell exceeded the execution window after the v32 suite; remaining tests were rerun in smaller batches and each passed.
+- `python3 tests/v40_astral.py`: v2→v3 migration, three authored study nodes/rewards, original trainer/Warden Atlas loop, three trainer rematches, three Ascendant Wardens, Starlight totals/persistence, mastery events, autosave, and 390×844 no-overflow validation pass.
+- `python3 tests/v40_static.py`: **72 games / 120 genres / 113 unique achievements / 46 remappable games**, sole featured Astral Menagerie 3.0, `wwg-v40`, release history, PWA shortcut, cover, public-branding and asset-path checks pass.
+- `python3 tests/v36_astral.py`: original fifteen-species party/reserve, switching, five techniques/statuses, capture, trainer gauntlets, quests, Wardens, autosave/meta, and mobile layout remain green on v3.
+- `python3 tests/v39_ironlight.py`: five-sector Ironlight campaign, three weapons, sentry projectiles, ciphers/vaults, and checkpoint semantics remain green.
+- `python3 tests/v38_polyforge.py`: grouped assemblies, gizmo drag, scene code, seven briefs, 80-step history, legacy mastery, and mobile layout remain green.
+- `python3 tests/v37_ashen.py`: three Ashen paths, enemies, weapons, sigils, forging, death recovery, three Lord patterns, persistence, and mobile layout remain green.
+- `python3 tests/v35_verdant.py`: two-area Verdant quest/equipment/boss campaign remains green.
+- `python3 tests/v31_rune_depths.py`: Rune Depths pure-path mastery and persistence remains green.
+- `python3 tests/v32_catalog_audit.py`: **72/72 games runtime-clean** in isolated Chromium; representative interaction observes state change in 68 titles, with Astral and other gated titles covered by dedicated tests.
+- `node tests/smoke.js`: **72/72 registered games boot**, plus homepage and reusable detail shell.
+- `python3 tests/v32_http.py`: **151/151** local-origin pages/assets returned HTTP 200.
+- `python3 tests/v32_controls_browser.py`: **72/72** detail pages expose controls; **46/46** remappable releases expose explicit current/default keyboard profiles.
+- `python3 tests/v32_remap.py`: custom remap and six-new-game remap compatibility pass.
+- `python3 tests/v27_fixes.py`, `node tests/v26_direction.js`, `python3 tests/v28_circuit.py`, `python3 tests/v28_game.py`, and `python3 tests/v30_pulsevine.py`: carried-forward correctness, score-direction, racing/strategy, and platformer regressions pass.
+- The comprehensive batch reached the execution timeout only after the catalog/boot/HTTP/control gates had already printed green results; remaining targeted regressions were then run separately. A legacy `v31_static.py` count assertion is obsolete against the 72-game catalog and is not a current release gate.
 
-## GitHub release gate
+## GitHub continuity
 
-Canonical repository: `ArchitectIndustries/World-Wide-Games`
-Default branch: `main`
-Prior verified main: v35 commit `118cdf67b6d4d1163939fe1ea2fb46ac7f1c3246`
-v36 source release commit: **`9c5b055c77021d5258a2fba226581f299139a9eb`**
+Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `main`.
 
-The v36 source tree was built from verified v35 main on an isolated staging branch and contains the complete v36 delta before main promotion. The final release commit adds this state record on top of the source release commit. Main must only be fast-forwarded after confirming it has not changed concurrently.
+- GitHub `main` was re-inspected before work and remains coherent at verified v36 release-state commit **`b8a1b15ad43139942b325b469eaaf6ddb2246da7`**.
+- `automation/v37-release` remains one commit ahead / zero behind `main` with the complete verified v37 delta. `automation/v38-release` and the pre-existing `automation/v40-release` currently mirror that same v37 delta; `automation/v40-sync` is identical to `main`.
+- Before creating v40, the run attempted the mandatory catch-up path: a non-force fast-forward of `main` to the verified v37 commit and a fallback pull request. Both authorized mutations were blocked by the current connector safety layer before any write completed.
+- The complete v36→v40 file delta has been prepared for atomic Git-tree staging. If non-default branch Git-object writes are accepted later in this run, the staged commit/branch will be recorded below; default-branch promotion must still pass an immediate `main` re-read and non-force update.
+- No partial default-branch update has been made. v40 must **not** be described as fully shipped to GitHub `main` until that release gate completes.
 
-## Library continuity
+## Production deployment
 
-The verified v36 source/package is derived from durable v35 Library state. The run should persist `WorldWideGames_v36.zip` and `WorldWideGames_v36_records.zip` to `/WorldWideGames`. Loose top-level Library markdown files may lag packaged release records and should not supersede a newer versioned archive.
+- Canonical Vercel project ID: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`; intended team: `team_wwOmTAdrfPwvTGNSLU1VarOy`; domain: `https://worldwidegames.vercel.app`.
+- Fresh 2026-10-02 deployment enumeration returns **403 Forbidden** for the exact project/team pair.
+- Project lookup still encounters the connector/backend argument mismatch, and authenticated Vercel fetch reports that the connected account cannot access the deployment's protection-bypass metadata.
+- Direct web-origin access also reports the production URL inaccessible from the current web environment. This is treated as an authorization/visibility limitation, not evidence the project is absent.
+- No duplicate Vercel project is created and no v40 production deployment is claimed.
 
-## Vercel production
+## Next high-value priorities
 
-Established production project:
-- Project: `worldwidegames`
-- Project ID: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`
-- Team: `team_wwOmTAdrfPwvTGNSLU1VarOy`
-- Domain: `https://worldwidegames.vercel.app`
-
-Current connector status remains blocked: deployment listing returns 403 Forbidden; project lookup exposes a connector/backend argument mismatch; authenticated Vercel fetch cannot access the deployment. This is treated as authorization/visibility failure, not evidence the project is absent. No duplicate project was created and v36 is not claimed as deployed until production-origin verification succeeds.
-
-## Next priorities
-
-1. Restore Vercel project/team authorization, deploy the newest verified GitHub release to the existing project, and perform production-origin smoke tests.
-2. Continue flagship-depth work; prioritize another underdeveloped campaign/system title rather than increasing catalog count for its own sake.
-3. Keep GitHub synchronization as a mandatory same-run release gate for every subsequent version.
+1. **GitHub release catch-up first:** promote the newest complete verified source to `main` as soon as the connector safety/write path permits it.
+2. Add optional post-pilgrimage mastery contracts/rematches to **Ashen Covenant** without invalidating v2 saves.
+3. Add optional mastery rematches and grove challenge contracts to **Verdant Echoes** while preserving its v2 campaign migration.
+4. Deep-validate **Emberdeck Pilgrim** route mastery and **Ashfall Caravan** contract/end-state variants through legitimate state transitions.
+5. Deploy the newest GitHub-verified release to the established Vercel project when project-scoped authorization becomes available.

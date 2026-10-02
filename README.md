@@ -1,14 +1,14 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v36** with **72 games across 120 genre tags**, **104 achievements**, and **46 remappable releases**.
+WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v39** with **72 games across 120 genre tags**, **110 unique achievements**, and **46 remappable releases**.
 
-## v36 — Astral Menagerie 2.0
+## v39 — Ironlight Breach 3.0
 
-Astral Menagerie is now a deeper creature-collection campaign. The roster expands from ten to **fifteen original Astral species**, captured creatures fill a four-member field party and then move into a persistent reserve, and players can switch active party members during battle. Each elemental family now has a distinct technique — Scorch, Snare, Mend, Static, or Guard — adding status, recovery, and defensive decisions to the turn loop.
+Ironlight Breach is now a five-sector software-raycast FPS campaign. The original rifle/scattergun loop gains the **Arc Lance**, a long-range piercing weapon that can hit up to three aligned targets and temporarily disrupt drones and ranged sentries. A new Sentry enemy fires visible world-space projectiles, making cover, corridor geometry, and line-of-sight management matter during combat.
 
-Each of the three habitats now has a proper field quest: earn two wild victories, defeat a named trainer's two-Astral gauntlet, then challenge the habitat Warden. Active expedition progress autosaves locally; lifetime records track Atlas clears, best score, trainer victories, and Codex mastery. The platform adds **Trainer Constellation** and **Living Atlas** achievements, promotes Astral Menagerie to featured/PWA-shortcut status, and advances offline caching to `wwg-v36`.
+Secrets now change route structure instead of only awarding score. Sector four contains a cipher route requiring three cumulative secrets; sector five requires five. Each optional route protects a high-value cipher vault, and opening both in one campaign records vault mastery. Sector retries restore an explicit checkpoint snapshot for score, secrets, vaults, weapon unlocks, ammo, and active weapon, preventing failed-attempt farming while preserving completed-sector progression.
 
-The v35 **Verdant Echoes 2.0**, v34 **Ironlight Breach 2.0**, and v33 **Polyforge Studio 2.0** depth passes remain intact and regression-tested.
+The platform adds **Arc Lancer** and **Cipher Diver** achievements, fixes a duplicate achievement identifier, promotes Ironlight to the featured/PWA shortcut position, refreshes cover art, and advances offline caching to `wwg-v39`. The full 72-game runtime/boot/HTTP/control gates and the established flagship campaign regressions remain green.
 
 ## Run locally
 

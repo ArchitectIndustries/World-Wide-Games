@@ -20,10 +20,9 @@
       "url": "game.html?id=astral-menagerie",
       "icons": [
         {
-          "src": "assets/app-icon.svg",
-          "sizes": "any",
-          "type": "image/svg+xml",
-          "purpose": "any"
+          "src": "covers/astral-menagerie.svg",
+          "sizes": "800x500",
+          "type": "image/svg+xml"
         }
       ]
     }

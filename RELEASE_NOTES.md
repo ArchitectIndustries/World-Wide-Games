@@ -1,14 +1,113 @@
+# WorldWideGames v40 — Astral Menagerie 3.0
+
+Released 2026-10-02 by Architect Industries.
+
+Astral Menagerie now continues after the first Atlas clear. Every habitat gains a visible field-study node with a distinct one-time attunement reward. Completing the Atlas unlocks Constellation trainer rematches; clearing a trainer rematch unlocks that habitat's higher-level Ascendant Warden. Rematches and Ascendants award persistent Starlight, and complete mastery emits durable achievement events.
+
+The v3 save/meta schema migrates compatible v2 records, preserves the four-creature party/reserve system and five elemental techniques, and adds persistent habitat-study, rematch, Ascendant, Starlight, and mastery records. Three platform achievements—Habitat Scholar, Constellation Challenger, and Ascendant Atlas—bring the platform to 113 unique achievements. Astral Menagerie becomes the featured release/PWA shortcut and offline caching advances to `wwg-v40`.
+
+Validation includes a deterministic full Atlas + post-Atlas mastery path, v2 migration, all three habitat study rewards, all three trainer rematches, all three Ascendant Wardens, Starlight persistence, mobile-width layout, plus the carried-forward full-catalog runtime/boot/HTTP/control gates.
+
+---
+
 # WorldWideGames Release Notes
+
+## v39 — Ironlight Breach 3.0
+
+WorldWideGames v39 keeps the catalog at **72 games / 120 genre tags / 46 remappable releases** and raises achievement coverage to **110 unique achievements** while rebuilding the software-raycast FPS flagship.
+
+- Expanded Ironlight Breach from three to **five authored sectors**.
+- Added the **Arc Lance**, a third limited-ammo weapon with long-range three-target piercing and electronic disruption.
+- Added ranged **Sentry** enemies and world-space projectile pressure.
+- Added cumulative-secret **cipher doors** and two optional cipher vault routes.
+- Added complete retry checkpoints covering score, secrets, vaults, arsenal and ammo.
+- Added v3 durable discovery records with backwards v2 meta read compatibility.
+- Added visible first-person weapon silhouettes and muzzle flash.
+- Added **Arc Lancer** and **Cipher Diver** achievements and corrected the duplicate Ashen achievement id.
+- Featured/PWA shortcut moves to Ironlight Breach; offline cache advances to `wwg-v39`.
+- Full release QA remains green: 72/72 runtime-clean, 72/72 boot, 151/151 HTTP paths, 72/72 control pages, 46/46 remappable profiles, plus deep campaign regressions.
+- GitHub `main` synchronization remains blocked by the current connector safety path; v39 is packaged but not claimed fully shipped to `main`.
+
+## v38 — Polyforge Studio 3.0
+
+v38 keeps the catalog at **72 games / 120 genre tags / 46 remappable releases**, raises achievement coverage to **108**, and substantially deepens the 3D-design flagship instead of adding a shallow catalog entry.
+
+### Polyforge Studio 3.0
+
+- Added true multi-selection with Shift-click and group-aware selection behavior.
+- Added persistent grouped assemblies plus Group/Ungroup controls and group-preserving duplication.
+- Added Move, Rotate, and Scale gizmo modes with direct pointer-drag transforms on selected objects or assemblies.
+- Selection-wide keyboard/touch transforms now move the entire active assembly while preserving snap behavior.
+- Added portable scene-code Export/Import with validation, full scene/group/progression state, and undoable imports.
+- Doubled undo/redo history from 40 to **80 edits**.
+- Added v2 scene/meta migration into the v3 persistence keys.
+- Expanded the authored certification campaign from five to **seven briefs** with **Modular Gate** and **Constellation Pavilion**.
+- Preserved the original five-brief `studio-mastered` milestone and added the new seven-brief `studio-architect` completion event.
+- Refreshed local cover art, featured placement, PWA shortcut, and offline cache `wwg-v38`.
+
+### Platform
+
+- Added **Polyforge Architect** and **Assembly Theory** achievements for **108 total**.
+- Catalog/remapping counts remain **72 games / 120 genre tags / 46 remappable releases**.
+
+### QA
+
+- New `tests/v38_polyforge.py` validates grouping, selection-wide transforms, real pointer-drag gizmo movement, scene-code round-trip, 80-step history cap, all seven authored briefs, compatibility with the original five-brief mastery milestone, persistence/meta, and mobile layout.
+- New `tests/v38_static.py` validates catalog totals, featured/version metadata, achievement totals, cache/manifest/release-history state, cover metadata, and public-branding hygiene.
+- 72/72 runtime-clean, 72/72 smoke boot, 151/151 local HTTP paths, 72/72 detail control pages, and 46/46 remappable profiles remain green.
+- Ashen Covenant, Astral Menagerie, Verdant Echoes, Ironlight Breach, Rune Depths, Aetherstead/Mosslight, Fluxward/Circuit, correctness, and score-direction regressions remain green.
+
+## v37 — Ashen Covenant 2.0
+
+v37 keeps the catalog at **72 games / 120 genre tags** and spends the release on turning Ashen Covenant from a short boss rush into a longer traversal-and-boss action RPG.
+
+### Ashen Covenant 2.0
+
+- Three pre-boss traversal paths: **Charred Causeway**, **Cinder Cloister**, and **Dawnless Court**.
+- Three Ember Sigils per path plus a clear-all-path-foes requirement before the Lord gate opens.
+- Three non-boss enemy classes: Hounds, Pilgrims, and ranged Ash Archers.
+- Dual weapon loop: fast Emberblade and long-range Ash Pike, each with light/heavy stamina, reach, and damage identities.
+- Ember Shrine progression with persistent three-tier weapon forging and maximum-Vigor binding.
+- Distinct Bell, Cross, and Sun Covenant Lord attack patterns.
+- Active pilgrimage autosave for stage/phase/Ash/weapon/tiers/Vigor/sigils/defeated foes.
+- Durable lifetime meta for clears, best score, Lords defeated, death-mark recoveries, and upgrades.
+- Death marks retain the original deliberate leave-and-return recovery identity without erasing path progression.
+- Refreshed cover art, featured placement, Long Campaigns inclusion, PWA shortcut, and offline cache `wwg-v37`.
+
+### Platform
+
+- Added **Covenant Pilgrim** and **Ash Reclaimer** achievements for **106 total**.
+- Catalog/remapping counts remain **72 games / 120 genre tags / 46 remappable releases**.
+
+### QA
+
+- New deterministic Ashen regression validates traversal gating, all three enemy archetypes, Blade/Pike identities, forging, all three Lord patterns, death-mark recovery mastery, persistence, complete pilgrimage events/meta, and mobile overflow.
+- 72/72 runtime-clean, 72/72 smoke boot, 151/151 local HTTP paths, 72/72 detail control pages, and 46/46 remappable profiles remain green.
+- Astral Menagerie, Verdant Echoes, Ironlight Breach, Polyforge Studio, Rune Depths, Aetherstead/Mosslight, Fluxward/Circuit, v27 correctness, and score-direction regressions remain green.
 
 ## v36 — Astral Menagerie 2.0 — 2026-10-02
 
-Astral Menagerie becomes a substantially deeper creature-collection RPG while preserving the original three-habitat identity. The roster expands to fifteen original Astral species; captures fill a four-member party and then persistent reserve; party members can be switched during battle; and elemental families gain Scorch, Snare, Mend, Static, or Guard techniques with cooldown/status behavior.
+WorldWideGames v36 keeps the catalog at **72 games / 120 genre tags / 46 remappable releases** and raises achievement coverage to **104** while substantially deepening Astral Menagerie.
 
-Each habitat now has a field quest that requires two wild victories and a named trainer's two-Astral gauntlet before its Warden unlocks. All three trainers, habitat quests, and Wardens feed durable autosave/meta progression. Lifetime records track clears, best Atlas score, trainer victories, and Codex mastery. Two platform achievements—Trainer Constellation and Living Atlas—bring the catalog to 104 achievements.
+### Astral Menagerie 2.0
 
-The release refreshes Astral cover art, featured/PWA placement, catalog metadata, release history, and offline cache `wwg-v36`. Dedicated v36 regression coverage validates the party/reserve loop, mid-battle switching, five techniques, capture compatibility, twelve-species Codex mastery, all trainer/quest/Warden progression, autosave/meta, standardized events, and a 390×844 mobile layout. The broader gate remains 72/72 runtime-clean games, 72/72 boot, 151/151 HTTP paths, 72/72 detail pages with controls, and 46/46 remappable profiles.
+- Expanded the original ten-species roster to **15 original Astral species** across Ember, Grove, Tide, Storm, and Stone families.
+- Added a four-creature field party plus persistent reserve captures and out-of-battle reserve swapping.
+- Added explicit **mid-battle party switching** with automatic healthy-party fallback after a knockout.
+- Added five type techniques: **Scorch**, **Snare**, **Mend**, **Static**, and **Guard**, including persistent turn effects, healing, interruption, and damage mitigation.
+- Added one named two-Astral **trainer gauntlet per habitat**.
+- Added habitat field quests requiring two wild resolutions plus the trainer victory before each Warden unlocks.
+- Added v1-save migration into the v2 autosave schema plus durable lifetime clears, best score, trainer victories, and Codex mastery.
+- Added standardized `trainer-defeated`, `trainer-triad`, `habitat-quest-complete`, `habitat-mastered`, `codex-master`, and existing Atlas/capture events.
+- Added **Trainer Constellation** and **Living Atlas** achievements.
+- Promoted Astral Menagerie to the featured release and PWA shortcut; offline cache advances to `wwg-v36`.
+- Refreshed local vector cover art for the 2.0 party-quest identity.
 
----
+### QA
+
+- Dedicated `tests/v36_astral.py` validates 15-species architecture, party/reserve behavior, switching, Scorch and Mend technique behavior, v1 capture compatibility, Codex mastery, all three trainer gauntlets, all three habitat quests, all three Wardens, Atlas completion, autosave/meta, and 390×844 overflow.
+- `tests/v36_static.py` validates 72 games, 120 genres, 104 achievements, 46 remappable releases, sole featured Astral Menagerie 2.0, `wwg-v36`, manifest shortcut, release history, cover metadata, and public-branding hygiene.
+- Full catalog/runtime/HTTP/control/remapping gates plus Verdant, Ironlight, Polyforge, Rune Depths, long-form, Fluxward/Circuit, v27 correctness, and score-direction regressions remain green.
 
 ## v35 — Verdant Echoes 2.0
 

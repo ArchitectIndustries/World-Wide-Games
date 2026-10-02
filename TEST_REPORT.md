@@ -1,33 +1,60 @@
-# WorldWideGames Test Report
+# WorldWideGames v40 Test Report
 
 Date: 2026-10-02
-Release candidate: **v36 — Astral Menagerie 2.0**
 Owner/operator: Architect Industries
+Release: **v40 — Astral Menagerie 3.0**
+Overall source QA: **PASS**
+GitHub release gate: **BLOCKED — default branch remains v36 due connector safety rejection**
+Production deployment verification: **BLOCKED — Vercel project deployment read remains 403**
 
-## Release gate
+## Focused v40 validation
 
-- PASS — `python3 tests/v36_astral.py`: 15 species; four-member party + reserve; reserve swap; mid-battle switch; Scorch/Snare/Mend/Static/Guard techniques; capture compatibility; Codex mastery event; three trainer gauntlets; three habitat field quests; three Wardens; autosave; lifetime meta; 390×844 overflow.
-- PASS — `python3 tests/v36_static.py`: 72 games, 120 genre tags, 104 achievements, 46 remappable titles, Astral featured/PWA metadata, `wwg-v36` cache, 152 public files scanned for prohibited internal branding.
-- PASS — `python3 tests/v32_catalog_audit.py`: 72/72 games runtime-clean in isolated Chromium. Generic representative input changed state in 68 titles; Astral Menagerie is intentionally starter-gated and has dedicated v36 coverage; Atlas Below, Lumen Relay, and Forgeflow retain direct mechanic tests.
-- PASS — `node tests/smoke.js`: all 72 registered game boots plus homepage and game-detail shell.
-- PASS — `python3 tests/v32_http.py`: 151/151 local HTTP paths returned 200. A post-response client-reset traceback from Python's development server did not alter the completed 151/151 result.
-- PASS — `python3 tests/v32_controls_browser.py`: 72/72 detail pages expose authored controls; 46/46 remappable releases expose active/default profiles.
-- PASS — `python3 tests/v32_remap.py`: custom I/J/K/L/F/H mapping works across the flagship/remappable regression set.
-- PASS — `python3 tests/v32_new_games.py`: six flagship boot/mechanic regression suite, including Astral Menagerie's starter/battle/capture compatibility path.
-- PASS — `python3 tests/v35_verdant.py`: Verdant Echoes 2.0 campaign regression.
-- PASS — `python3 tests/v34_ironlight.py`: Ironlight Breach 2.0 campaign/mechanic regression.
-- PASS — `python3 tests/v33_polyforge.py`: Polyforge Studio 2.0 certification regression.
-- PASS — `python3 tests/v31_rune_depths.py`: Rune Depths mastery/save/meta regression.
-- PASS — `python3 tests/v29_longform.py`: Aetherstead Colony + Mosslight Vale deep campaigns.
-- PASS — `python3 tests/v28_game.py`, `tests/v28_circuit.py`, `tests/v27_fixes.py`: prior release correctness remains green.
-- PASS — `node tests/v26_direction.js`: low-score and high-score semantics unchanged.
+- `tests/v40_astral.py` — PASS
+  - 15-species architecture retained.
+  - Three habitat study nodes and all three distinct rewards validated.
+  - Habitat Scholar event validated.
+  - Original three trainer gauntlets / three Warden Atlas progression validated.
+  - Three post-Atlas Constellation trainer rematches validated.
+  - Rematch gating of three Ascendant Wardens validated.
+  - Persistent Starlight total after one full study/rematch/Ascendant mastery path: 18.
+  - `mastery-triad`, `ascendant-warden`, and `constellation-master` events validated.
+  - v2 expedition/meta records migrate into v3 keys without losing campaign progression.
+  - v3 autosave/meta persistence validated.
+  - 390×844 layout has no horizontal overflow and no page errors.
 
-The first attempt to run every long-form browser regression in one shell exceeded the execution window after the v32 suite; remaining tests were then rerun in smaller batches and each passed.
+- `tests/v40_static.py` — PASS
+  - 72 unique games.
+  - 120 genre tags.
+  - 113 unique achievements.
+  - 46 remappable games.
+  - Astral Menagerie is sole featured release, version 3.0.
+  - `wwg-v40` service-worker cache.
+  - First PWA shortcut targets Astral Menagerie.
+  - Cover, release history, public-branding, and registered asset paths validated.
 
-## Visual QA
+## Full-catalog / platform gates
 
-Astral Menagerie 2.0 was rendered at desktop and 390×844 mobile widths. The mobile pass exposed excess vertical separation above the canvas; the responsive canvas position was tightened to 38% and the dedicated mobile-overflow regression was rerun green.
+- `tests/v32_catalog_audit.py` — PASS: **72/72 runtime-clean** in isolated Chromium; 68 generic interaction state changes observed, with gated titles covered by dedicated suites.
+- `tests/smoke.js` — PASS: **72/72 games boot**, homepage boots, reusable detail page boots.
+- `tests/v32_http.py` — PASS: **151/151** local-origin pages/assets return HTTP 200.
+- `tests/v32_controls_browser.py` — PASS: **72/72** game detail pages expose authored controls; **46/46** remappable releases expose explicit current/default mappings.
+- `tests/v32_remap.py` — PASS: shared keyboard remapping and current expansion compatibility.
 
-## Production-origin status
+## Carried-forward deep regressions
 
-Local/source validation is complete. Vercel deployment inspection remains blocked by connector visibility: deployment listing returns 403, project lookup exposes a connector/backend schema mismatch, and deployment fetch cannot see the established project. No duplicate project was created and this report does not claim v36 is production-deployed.
+- `tests/v36_astral.py` — PASS: party/reserve, switching, five elemental techniques, capture, trainers, quests, Wardens, persistence, mobile layout.
+- `tests/v39_ironlight.py` — PASS: five sectors, rifle/scattergun/Arc Lance, cipher routes/vaults, sentry projectiles, checkpoint retry.
+- `tests/v38_polyforge.py` — PASS: grouping, pointer gizmo drag, scene-code roundtrip, seven briefs, 80-step history, legacy mastery, mobile layout.
+- `tests/v37_ashen.py` — PASS: three traversal paths, enemy classes, weapon identities, sigils, forging, death recovery, Lord patterns, persistence.
+- `tests/v35_verdant.py` — PASS: Rootvault quest/equipment/boss campaign and autosave.
+- `tests/v31_rune_depths.py` — PASS: pure-path mastery, autosave/resume, death/completion semantics, corrupt-save recovery.
+- `tests/v27_fixes.py` — PASS: six historical correctness fixes plus direct state-change checks.
+- `tests/v26_direction.js` — PASS: six lower-is-better score-direction titles and high-score semantics.
+- `tests/v28_circuit.py` / `tests/v28_game.py` — PASS: Circuit Rush and Fluxward campaign/input regressions.
+- `tests/v30_pulsevine.py` — PASS: five-course platformer movement/reachability.
+
+## Notes
+
+The large regression batch reached the runner timeout after the catalog-runtime, boot, HTTP, and browser-controls tests had already completed successfully. The remaining targeted tests above were then executed separately. `tests/v31_static.py` still asserts the historical 66-game v31 catalog and therefore fails by design against the current 72-game catalog; `tests/v40_static.py` is the current static release gate.
+
+The Vercel checks are not production gameplay tests: deployment enumeration returns 403, project lookup still hits a connector schema/backend mismatch, authenticated deployment fetch cannot access protection-bypass metadata, and the ordinary web origin is inaccessible from the available web environment. No production success claim is made.
