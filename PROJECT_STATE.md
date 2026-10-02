@@ -2,67 +2,63 @@
 
 Last updated: 2026-10-02
 Owner/operator: Architect Industries
-Current verified source release: **v35**
-Status: **72-game** static browser-gaming platform with **120 genre tags**, **102 achievements**, **46 remappable releases**, persistent local player data, PWA/offline support, full-catalog Chromium QA, and deep regression coverage for established campaign titles.
+Current verified source release: **v36 — Astral Menagerie 2.0**
+Catalog: **72 games / 120 genre tags / 104 achievements / 46 remappable releases**
 
-## v35 production work — Verdant Echoes 2.0
+## v36 production work
 
-Verdant Echoes advances from 1.0 to **2.0** as a substantially deeper two-area action-adventure campaign:
+Astral Menagerie has been expanded from its original compact three-Warden loop into a deeper creature-collection campaign while preserving backwards-compatible battle/capture behavior.
 
-- Added the connected **Rootvault** dungeon beyond Echo Grove, unlocked after two Echo Relics.
-- Added **Rootkeeper Mira**, a quest chain around three Moon Seeds, Rootvault exploration, and equipment forging.
-- Added permanent equipment progression: the **Moonsteel** blade doubles sword damage and the **Barkguard Charm** raises maximum health from 5 to 7.
-- Enemy roster now includes Briars, tougher Crawlers, and ranged Wisps with projectile pressure.
-- Added the **Hollow Stag** Rootvault boss and Rootsigil prerequisite before the existing Thorn Regent finale.
-- Bombs retain cracked-wall utility and now also damage enemies and bosses.
-- Added active-campaign autosave/resume plus durable best score, campaign clears, Rootvault clears, and quest-completion meta.
-- Death now respawns inside the current campaign area while preserving progression instead of discarding the run.
-- Added standardized quest, seed, Rootvault, forging, equipment, relic, and campaign events.
-- Verdant Echoes becomes the sole featured release and PWA shortcut; the offline cache advances to `wwg-v35`.
-- Added two achievements: **Rootvault Warden** and **Moonsteel Oath**.
+- Roster expanded from 10 to **15 original Astral species** across Grove Reach, Tidelume Basin, and Emberfall Ridge.
+- Captures fill a **four-creature field party** first and then persistent reserve slots.
+- Added explicit **mid-battle switching** and reserve-to-party swaps outside battle.
+- Added five elemental techniques with cooldown/status behavior: **Scorch, Snare, Mend, Static, Guard**.
+- Added named two-Astral trainer gauntlets: Scout Lyra, Tidekeeper Orrin, Ridge Guide Sera.
+- Each habitat now requires **two wild field wins + trainer defeat** before its Warden unlocks.
+- Added active expedition autosave, legacy v1 save migration, lifetime clear/best/trainer/Codex meta, party wipe recovery, standardized progression events, updated touch UI, and mobile layout refinement.
+- Platform integration: Astral Menagerie is featured/PWA shortcut; release history advances to v36; achievements increase from 102 to **104** with Trainer Constellation and Living Atlas; service-worker cache advances to `wwg-v36`.
 
-## Validation
+## Verification
 
-- `python3 tests/v35_verdant.py`: two-area traversal, Mira quest, 2-relic Rootvault gate, ranged Wisp projectiles, Barkguard health increase, all three Moon Seeds, sanctum opening, Hollow Stag defeat/Rootsigil, Moonsteel forging, autosave contents, remaining relics, Thorn Regent availability, double Moonsteel damage, campaign completion/meta, legacy bomb/dash behavior, and 390×844 layout all pass.
-- `python3 tests/v35_static.py`: 72 games, 120 genres, 102 achievements, 46 remappable games, Verdant Echoes 2.0 metadata, sole featured release, `wwg-v35`, manifest/history/public-source checks.
-- `python3 tests/v32_catalog_audit.py`: **72/72 games runtime-clean** in isolated Chromium.
-- `node tests/smoke.js`: **72/72 registered games** boot; platform homepage/detail shell pass.
-- `python3 tests/v32_http.py`: **151/151** local-origin pages/assets HTTP 200.
-- `python3 tests/v32_controls_browser.py`: **72/72** detail pages expose controls; **46/46** remappable titles expose explicit current/default keyboard profiles.
-- `python3 tests/v32_remap.py`: custom I/J/K/L/F/H mappings pass across the six v32 flagship releases.
-- `python3 tests/v32_new_games.py`: all six flagship mechanic paths remain green after hardening its Ironlight ammunition assertion for the v34 two-weapon ammo object.
-- v34 Ironlight, v33 Polyforge, v31 Rune Depths, v29 Aetherstead/Mosslight, v28 Fluxward/Circuit, v27 correctness, and v26 score-direction regressions remain green.
+Executed release gate:
+- PASS: `tests/v36_astral.py`
+- PASS: `tests/v36_static.py`
+- PASS: 72/72 isolated-Chromium runtime-clean catalog
+- PASS: 72/72 game boots plus homepage/detail shell
+- PASS: 151/151 local HTTP paths
+- PASS: 72/72 authored control pages; 46/46 remappable profiles
+- PASS: shared remapping regression
+- PASS: six flagship compatibility regression
+- PASS: Verdant Echoes 2.0, Ironlight Breach 2.0, Polyforge Studio 2.0, Rune Depths, Aetherstead/Mosslight, Fluxward/Circuit, v27 correctness, and score-direction regressions
+- PASS: 390×844 Astral mobile overflow after responsive refinement
 
-## GitHub continuity
+The first attempt to run every long-form browser regression in one shell exceeded the execution window after the v32 suite; remaining tests were rerun in smaller batches and each passed.
 
-Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `main`.
+## GitHub release gate
 
-- GitHub `main` was re-inspected at the start of this session and remained at verified v31 commit `68059dd5ac9a9bf10c7e6acc4cb9e663d32e69c8`; no newer concurrent user commit was found.
-- The existing `automation/v34-sync` branch was verified identical to `main` before v35 synchronization, so it is safe as an isolated staging branch.
-- v35 is synchronized only after the release gate is green. The complete staged source is verified before `main` is advanced; no force update is permitted.
-- GitHub staging branch `automation/v34-sync` is intentionally **not merged** because the complete release could not be transferred through the current connector in this session. It is eight commits ahead of `main` and contains only a verified subset: `README.md`, the Ashen/Astral/Ironlight/Verdant covers, `js/games.js`, the discovery-collection portion of `js/app.js`, and the manifest shortcut. The connector intermittently rejected later write calls before the full 36-file v31→v35 delta could be staged.
-- `main` therefore remains safely at verified v31 commit `68059dd5ac9a9bf10c7e6acc4cb9e663d32e69c8`; no knowingly partial release was merged. Future runs should continue or rebuild the isolated staging sync from the complete v35 package, verify the branch against the package, and only then fast-forward `main`.
+Canonical repository: `ArchitectIndustries/World-Wide-Games`
+Default branch: `main`
+Prior verified main: v35 commit `118cdf67b6d4d1163939fe1ea2fb46ac7f1c3246`
+v36 source release commit: **`9c5b055c77021d5258a2fba226581f299139a9eb`**
 
-## Production deployment
+The v36 source tree was built from verified v35 main on an isolated staging branch and contains the complete v36 delta before main promotion. The final release commit adds this state record on top of the source release commit. Main must only be fast-forwarded after confirming it has not changed concurrently.
 
-- Canonical Vercel project ID: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`.
-- Intended Architect Industries team: `team_wwOmTAdrfPwvTGNSLU1VarOy`.
-- Production domain: `https://worldwidegames.vercel.app`.
-- Fresh connector checks still return **403 Forbidden** for deployment enumeration; project lookup still exposes the connector/schema mismatch, and the Vercel fetch path still cannot see the project through the current authorization.
-- A direct web-origin check on 2026-10-02 also could not access the production URL from the available web fetch environment.
-- These are treated as authorization/visibility limitations, not evidence the project is absent. No duplicate Vercel project is created and v35 is not claimed live until production-origin verification succeeds.
+## Library continuity
 
-## Persistence and recovery
+The verified v36 source/package is derived from durable v35 Library state. The run should persist `WorldWideGames_v36.zip` and `WorldWideGames_v36_records.zip` to `/WorldWideGames`. Loose top-level Library markdown files may lag packaged release records and should not supersede a newer versioned archive.
 
-- `/WorldWideGames/WorldWideGames_v35.zip` and `/WorldWideGames/WorldWideGames_v35_records.zip` were successfully uploaded after the verified artifacts were exported into the active file-service session, so v35 is now the newest durable packaged release in the Library.
-- The older top-level mutable Library copies of `PROJECT_STATE.md`, `TEST_REPORT.md`, and companion docs could not be canonically replaced in this run because that shared-file replacement call was blocked by the connector safety gate; future runs should prefer the v35 package/records over those stale loose copies until they are refreshed.
-- GitHub remains the desired durable complete-source mirror. The partial isolated staging branch is deliberately not treated as authoritative until all v35 files are present and reverified.
+## Vercel production
 
-## Next high-value priorities
+Established production project:
+- Project: `worldwidegames`
+- Project ID: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`
+- Team: `team_wwOmTAdrfPwvTGNSLU1VarOy`
+- Domain: `https://worldwidegames.vercel.app`
 
-1. Extend **Astral Menagerie** with party switching, status effects, more species, trainer encounters, and habitat quests.
-2. Expand **Ashen Covenant** beyond boss arenas with traversal areas, weapon/build choices, more enemy archetypes, and deeper death-recovery progression.
-3. Grow **Polyforge Studio** with grouping/multi-select, scene-code import/export, transform gizmos, and advanced briefs.
-4. Add further **Ironlight Breach** sectors, weapon archetypes, authored secret routes, and enemy projectile behavior while retaining deterministic reachability checks.
-5. Add additional Verdant Echoes NPC arcs, optional Rootvault rooms, equipment choices, and post-campaign mastery without invalidating v2 saves.
-6. Verify and deploy the newest release to the established Vercel project when project-scoped write access is available.
+Current connector status remains blocked: deployment listing returns 403 Forbidden; project lookup exposes a connector/backend argument mismatch; authenticated Vercel fetch cannot access the deployment. This is treated as authorization/visibility failure, not evidence the project is absent. No duplicate project was created and v36 is not claimed as deployed until production-origin verification succeeds.
+
+## Next priorities
+
+1. Restore Vercel project/team authorization, deploy the newest verified GitHub release to the existing project, and perform production-origin smoke tests.
+2. Continue flagship-depth work; prioritize another underdeveloped campaign/system title rather than increasing catalog count for its own sake.
+3. Keep GitHub synchronization as a mandatory same-run release gate for every subsequent version.
