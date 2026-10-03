@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Vector Shatter — Architect Industries</title>
+<style>
+:root{color-scheme:dark;--bg:#050816;--panel:#0b1123;--line:#1e2b4a;--cyan:#67e8f9;--violet:#a78bfa;--amber:#fbbf24;--rose:#fb7185;--green:#6ee7b7}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at top,#101b3d 0,#050816 48%,#03050c 100%);color:#eef6ff;font:15px/1.35 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}body{display:flex;justify-content:center;padding:14px}.shell{width:min(1080px,100%);display:grid;gap:10px}.top{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px 12px;background:#081020d9;border:1px solid var(--line);border-radius:16px}.brand{display:flex;gap:10px;align-items:center}.mark{width:34px;height:34px;border:1px solid #2a3f68;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#13213d,#0c1020);color:var(--cyan);font-weight:800;box-shadow:0 0 24px #22d3ee2d}.title{font-size:18px;font-weight:800;letter-spacing:.02em}.sub{color:#9eb0ce;font-size:12px}.hud{display:flex;gap:8px;flex-wrap:wrap}.pill{min-width:88px;padding:7px 9px;border:1px solid #23365d;border-radius:10px;background:#0c1529}.pill b{display:block;font-size:16px}.pill span{color:#8fa2c2;font-size:11px;text-transform:uppercase;letter-spacing:.08em}.stage{position:relative;border:1px solid #22365f;border-radius:18px;overflow:hidden;background:#030610;box-shadow:0 24px 60px #0008}.stage canvas{display:block;width:100%;height:auto;aspect-ratio:3/2;touch-action:none}.overlay{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(#040817cc,#030610ef);padding:22px;text-align:center}.overlay[hidden]{display:none}.card{max-width:590px;padding:22px;border:1px solid #28436e;border-radius:18px;background:#0a1326e8;box-shadow:0 18px 50px #0009}.card h1{margin:0 0 8px;font-size:clamp(28px,5vw,52px);line-height:1}.card p{color:#b5c5df}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;text-align:left;margin:16px 0}.grid div{padding:9px;border:1px solid #22385d;border-radius:10px;background:#091224}.grid strong{display:block;color:#dbeafe}.buttons{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.btn,button{border:1px solid #31528a;border-radius:10px;background:#122341;color:#eef6ff;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer}.btn.primary,button.primary{background:linear-gradient(135deg,#0e7490,#4f46e5);border-color:#67e8f9}.btn:hover,button:hover{filter:brightness(1.12)}.lower{display:grid;grid-template-columns:1fr 320px;gap:10px}.panel{padding:12px;border:1px solid var(--line);border-radius:14px;background:#081020d9}.panel h2{font-size:14px;margin:0 0 8px;color:#dce8fb}.panel p{margin:5px 0;color:#9fb0cc}.power-row{display:flex;gap:8px;flex-wrap:wrap}.power{padding:7px 9px;border:1px solid #26395d;border-radius:10px;background:#0a1326;color:#aebed7}.power.active{border-color:#67e8f9;color:#ecfeff;box-shadow:0 0 16px #22d3ee28}.touch{display:none;grid-template-columns:1fr 1fr 1fr;gap:8px}.touch button{min-height:52px;touch-action:none}.live{position:absolute;left:-9999px}.small{font-size:12px;color:#8698b7}@media(max-width:760px){body{padding:6px}.lower{grid-template-columns:1fr}.top{padding:8px}.pill{min-width:72px;padding:6px}.touch{display:grid}.grid{grid-template-columns:1fr}.panel.desktop-help{display:none}.stage{border-radius:14px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="top">
+    <div class="brand"><div class="mark">VS</div><div><div class="title">Vector Shatter</div><div class="sub">Architect Industries · Brick-breaker campaign</div></div></div>
+    <div class="hud">
+      <div class="pill"><span>Sector</span><b id="sectorHud">1 / 5</b></div>
+      <div class="pill"><span>Score</span><b id="scoreHud">0</b></div>
+      <div class="pill"><span>Lives</span><b id="livesHud">3</b></div>
+      <div class="pill"><span>Combo</span><b id="comboHud">x1</b></div>
+    </div>
+  </header>
+  <main class="stage" id="stage">
+    <canvas id="game" width="960" height="640" aria-label="Vector Shatter game field"></canvas>
+    <div class="overlay" id="overlay">
+      <section class="card">
+        <h1 id="overlayTitle">VECTOR SHATTER</h1>
+        <p id="overlayText">Break every volatile panel across five increasingly complex sectors. Bank rebounds, harvest prism powerups, and protect the recovery shield until the final lattice collapses.</p>
+        <div class="grid" id="introGrid">
+          <div><strong>Move</strong>Arrow keys / A-D / custom remap</div>
+          <div><strong>Launch</strong>Space / Primary / tap field</div>
+          <div><strong>Campaign</strong>5 authored brick sectors</div>
+          <div><strong>Powerups</strong>Wide · Multi · Slow · Guard · Pierce</div>
+        </div>
+        <div class="buttons"><button class="primary" id="launch">Launch Sector 1</button><button id="resume" hidden>Resume</button></div>
+        <p class="small" id="recordLine"></p>
+      </section>
+    </div>
+    <div class="live" aria-live="polite" id="live"></div>
+  </main>
+  <section class="lower">
+    <div class="panel desktop-help"><h2>Objective</h2><p>Clear every breakable panel in all five sectors. Armored panels require multiple hits; prism panels release powerups. Losing every ball costs a life. Clear sector 5 to complete the campaign.</p><p><b>P</b> pauses · <b>R</b> restarts the current sector · <b>1–5</b> selects an unlocked sector.</p></div>
+    <div class="panel"><h2>Active systems</h2><div class="power-row" id="powerRow"><span class="power" data-power="wide">Wide</span><span class="power" data-power="multi">Multi</span><span class="power" data-power="slow">Slow</span><span class="power" data-power="guard">Guard</span><span class="power" data-power="pierce">Pierce</span></div><p id="status">Ready for deployment.</p></div>
+  </section>
+  <section class="touch" aria-label="Touch controls"><button data-hold="left">◀ LEFT</button><button class="primary" id="touchLaunch">LAUNCH</button><button data-hold="right">RIGHT ▶</button></section>
+</div>
+<script src="../../assets/wwg-input.js"></script>
+<script>
+(()=>{
+'use strict';
+const C=document.getElementById('game'),ctx=C.getContext('2d'),W=C.width,H=C.height;
+const $=id=>document.getElementById(id);
+const overlay=$('overlay'),launch=$('launch'),resume=$('resume'),statusEl=$('status'),live=$('live');
+const META_KEY='wwg:vector-shatter:meta-v1';
+const readMeta=()=>{try{return {...{best:0,clears:0,bestSector:1,powerups:0},...JSON.parse(localStorage.getItem(META_KEY)||'{}')}}catch{return{best:0,clears:0,bestSector:1,powerups:0}}};
+let meta=readMeta();
+const post=(event,score)=>{try{parent.postMessage({type:'wwg:game-event',gameId:'vector-shatter',event,score:Number(score)||0},'*')}catch{}};
+const announce=s=>{live.textContent='';requestAnimationFrame(()=>live.textContent=s)};
+const LEVELS=[
+  ['111111111111','11P11111P111','111111111111','...111111...'],
