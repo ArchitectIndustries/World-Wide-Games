@@ -1,0 +1,25 @@
+const fs=require('fs'),vm=require('vm'),path=require('path');
+const root=path.resolve(__dirname,'..'),ctx={window:{}};vm.createContext(ctx);vm.runInContext(fs.readFileSync(path.join(root,'js/games.js'),'utf8'),ctx);
+const games=ctx.window.WWG_GAMES,assert=(ok,msg)=>{if(!ok)throw new Error(msg)};
+assert(games.length===75,`expected 75 games, got ${games.length}`);
+assert(new Set(games.map(g=>g.id)).size===75,'duplicate game id');
+assert(new Set(games.flatMap(g=>g.genres)).size===122,'genre total mismatch');
+assert(games.filter(g=>g.remappable).length===48,'remappable total mismatch');
+assert(JSON.stringify(games.filter(g=>g.featured).map(g=>g.id))===JSON.stringify(['vector-shatter']),'featured mismatch');
+const vector=games.find(g=>g.id==='vector-shatter');
+assert(vector&&vector.version==='1.0'&&vector.genres.includes('Brick Breaker'),'Vector metadata missing');
+assert(vector.scoreMeta?.direction==='high','Vector score metadata missing');
+for(const g of games){assert(fs.existsSync(path.join(root,g.path)),`missing game path: ${g.id}`);assert(fs.existsSync(path.join(root,g.cover)),`missing cover: ${g.id}`)}
+const app=fs.readFileSync(path.join(root,'js/app.js'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8'),manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.webmanifest'),'utf8'));
+const ab=app.slice(app.indexOf('const achievements = ['),app.indexOf('];',app.indexOf('const achievements = ['))+2),ids=[...ab.matchAll(/\{id:'([^']+)'/g)].map(m=>m[1]);
+assert(ids.length===120&&new Set(ids).size===120,'achievement total mismatch');
+assert(ids.includes('shatter-crown')&&ids.includes('prism-harvester'),'Vector achievements missing');
+assert(app.includes("'vector-shatter':'Brick Breaker'"),'classic archetype missing');
+assert(app.includes("{version:'v45',title:'Vector Shatter'"),'v45 release history missing');
+assert(sw.includes("wwg-v45"),'cache version mismatch');
+assert(sw.includes('./games/vector-shatter/index.html')&&sw.includes('./covers/vector-shatter.svg'),'Vector assets not cached');
+const shortcuts=(manifest.shortcuts||[]).map(x=>x.url).slice(0,3);
+assert(JSON.stringify(shortcuts)===JSON.stringify(['game.html?id=vector-shatter','game.html?id=vanta-frontline','game.html?id=neon-stack']),'PWA shortcut mismatch');
+assert(fs.readFileSync(path.join(root,'games/vector-shatter/index.html'),'utf8').toUpperCase().includes('ARCHITECT INDUSTRIES'),'Vector branding missing');
+assert(fs.readFileSync(path.join(root,'covers/vector-shatter.svg'),'utf8').toUpperCase().includes('ARCHITECT INDUSTRIES'),'Vector cover branding missing');
+console.log(JSON.stringify({games:75,genres:122,achievements:120,remappable:48,featured:'vector-shatter',cache:'wwg-v45',pwaShortcut:'vector-shatter'}));

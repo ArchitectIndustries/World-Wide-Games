@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Vector Shatter — Architect Industries</title>
+<style>
+:root{color-scheme:dark;--bg:#050816;--panel:#0b1123;--line:#1e2b4a;--cyan:#67e8f9;--violet:#a78bfa;--amber:#fbbf24;--rose:#fb7185;--green:#6ee7b7}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at top,#101b3d 0,#050816 48%,#03050c 100%);color:#eef6ff;font:15px/1.35 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}body{display:flex;justify-content:center;padding:14px}.shell{width:min(1080px,100%);display:grid;gap:10px}.top{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px 12px;background:#081020d9;border:1px solid var(--line);border-radius:16px}.brand{display:flex;gap:10px;align-items:center}.mark{width:34px;height:34px;border:1px solid #2a3f68;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,#13213d,#0c1020);color:var(--cyan);font-weight:800;box-shadow:0 0 24px #22d3ee2d}.title{font-size:18px;font-weight:800;letter-spacing:.02em}.sub{color:#9eb0ce;font-size:12px}.hud{display:flex;gap:8px;flex-wrap:wrap}.pill{min-width:88px;padding:7px 9px;border:1px solid #23365d;border-radius:10px;background:#0c1529}.pill b{display:block;font-size:16px}.pill span{color:#8fa2c2;font-size:11px;text-transform:uppercase;letter-spacing:.08em}.stage{position:relative;border:1px solid #22365f;border-radius:18px;overflow:hidden;background:#030610;box-shadow:0 24px 60px #0008}.stage canvas{display:block;width:100%;height:auto;aspect-ratio:3/2;touch-action:none}.overlay{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(#040817cc,#030610ef);padding:22px;text-align:center}.overlay[hidden]{display:none}.card{max-width:590px;padding:22px;border:1px solid #28436e;border-radius:18px;background:#0a1326e8;box-shadow:0 18px 50px #0009}.card h1{margin:0 0 8px;font-size:clamp(28px,5vw,52px);line-height:1}.card p{color:#b5c5df}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;text-align:left;margin:16px 0}.grid div{padding:9px;border:1px solid #22385d;border-radius:10px;background:#091224}.grid strong{display:block;color:#dbeafe}.buttons{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.btn,button{border:1px solid #31528a;border-radius:10px;background:#122341;color:#eef6ff;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer}.btn.primary,button.primary{background:linear-gradient(135deg,#0e7490,#4f46e5);border-color:#67e8f9}.btn:hover,button:hover{filter:brightness(1.12)}.lower{display:grid;grid-template-columns:1fr 320px;gap:10px}.panel{padding:12px;border:1px solid var(--line);border-radius:14px;background:#081020d9}.panel h2{font-size:14px;margin:0 0 8px;color:#dce8fb}.panel p{margin:5px 0;color:#9fb0cc}.power-row{display:flex;gap:8px;flex-wrap:wrap}.power{padding:7px 9px;border:1px solid #26395d;border-radius:10px;background:#0a1326;color:#aebed7}.power.active{border-color:#67e8f9;color:#ecfeff;box-shadow:0 0 16px #22d3ee28}.touch{display:none;grid-template-columns:1fr 1fr 1fr;gap:8px}.touch button{min-height:52px;touch-action:none}.live{position:absolute;left:-9999px}.small{font-size:12px;color:#8698b7}@media(max-width:760px){body{padding:6px}.lower{grid-template-columns:1fr}.top{padding:8px}.pill{min-width:72px;padding:6px}.touch{display:grid}.grid{grid-template-columns:1fr}.panel.desktop-help{display:none}.stage{border-radius:14px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="top">
+    <div class="brand"><div class="mark">VS</div><div><div class="title">Vector Shatter</div><div class="sub">Architect Industries · Brick-breaker campaign</div></div></div>
+    <div class="hud">
+      <div class="pill"><span>Sector</span><b id="sectorHud">1 / 5</b></div>
+      <div class="pill"><span>Score</span><b id="scoreHud">0</b></div>
+      <div class="pill"><span>Lives</span><b id="livesHud">3</b></div>
+      <div class="pill"><span>Combo</span><b id="comboHud">x1</b></div>
+    </div>
+  </header>
+  <main class="stage" id="stage">
+    <canvas id="game" width="960" height="640" aria-label="Vector Shatter game field"></canvas>
+    <div class="overlay" id="overlay">
+      <section class="card">
+        <h1 id="overlayTitle">VECTOR SHATTER</h1>
+        <p id="overlayText">Break every volatile panel across five increasingly complex sectors. Bank rebounds, harvest prism powerups, and protect the recovery shield until the final lattice collapses.</p>
+        <div class="grid" id="introGrid">
+          <div><strong>Move</strong>Arrow keys / A-D / custom remap</div>
+          <div><strong>Launch</strong>Space / Primary / tap field</div>
+          <div><strong>Campaign</strong>5 authored brick sectors</div>
+          <div><strong>Powerups</strong>Wide · Multi · Slow · Guard · Pierce</div>
+        </div>
+        <div class="buttons"><button class="primary" id="launch">Launch Sector 1</button><button id="resume" hidden>Resume</button></div>
+        <p class="small" id="recordLine"></p>
+      </section>
+    </div>
+    <div class="live" aria-live="polite" id="live"></div>
+  </main>
+  <section class="lower">
+    <div class="panel desktop-help"><h2>Objective</h2><p>Clear every breakable panel in all five sectors. Armored panels require multiple hits; prism panels release powerups. Losing every ball costs a life. Clear sector 5 to complete the campaign.</p><p><b>P</b> pauses · <b>R</b> restarts the current sector · <b>1–5</b> selects an unlocked sector.</p></div>
+    <div class="panel"><h2>Active systems</h2><div class="power-row" id="powerRow"><span class="power" data-power="wide">Wide</span><span class="power" data-power="multi">Multi</span><span class="power" data-power="slow">Slow</span><span class="power" data-power="guard">Guard</span><span class="power" data-power="pierce">Pierce</span></div><p id="status">Ready for deployment.</p></div>
+  </section>
+  <section class="touch" aria-label="Touch controls"><button data-hold="left">◀ LEFT</button><button class="primary" id="touchLaunch">LAUNCH</button><button data-hold="right">RIGHT ▶</button></section>
+</div>
+<script src="../../assets/wwg-input.js"></script>
+<script>
+(()=>{
+'use strict';
+const C=document.getElementById('game'),ctx=C.getContext('2d'),W=C.width,H=C.height;
+const $=id=>document.getElementById(id);
+const overlay=$('overlay'),launch=$('launch'),resume=$('resume'),statusEl=$('status'),live=$('live');
+const META_KEY='wwg:vector-shatter:meta-v1';
+const readMeta=()=>{try{return {...{best:0,clears:0,bestSector:1,powerups:0},...JSON.parse(localStorage.getItem(META_KEY)||'{}')}}catch{return{best:0,clears:0,bestSector:1,powerups:0}}};
+let meta=readMeta();
+const post=(event,score)=>{try{parent.postMessage({type:'wwg:game-event',gameId:'vector-shatter',event,score:Number(score)||0},'*')}catch{}};
+const announce=s=>{live.textContent='';requestAnimationFrame(()=>live.textContent=s)};
+const LEVELS=[
+  ['111111111111','11P11111P111','111111111111','...111111...'],
+  ['222222222222','2P11111111P2','211..22..112','111111111111','..11111111..'],
+  ['1P1P1P1P1P1P','222222222222','111..33..111','221111111122','..P111111P..'],
+  ['333333333333','2P21221212P2','112211221122','221P1111P122','111122221111','..22222222..'],
+  ['3P33333333P3','333222222333','221111111122','2P11333311P2','221111111122','333222222333','3P33333333P3']
+];
+const palette={1:'#60a5fa',2:'#a78bfa',3:'#f59e0b',P:'#67e8f9'};
+let sector=0,score=0,sectorStartScore=0,lives=3,combo=1,paused=false,active=false,finished=false,served=true,keys={left:false,right:false},pointerX=null,last=performance.now();
+let paddle={x:W/2,y:H-42,w:138,h:16,speed:650},gpAxis=0;
+let balls=[],bricks=[],drops=[],particles=[],guard=0,power={wide:0,slow:0,pierce:0};
+let audio=null;
+function tone(freq=440,dur=.04,vol=.03){try{audio=audio||new (AudioContext||webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;o.type='triangle';g.gain.value=vol;o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+dur)}catch{}}
+function buildLevel(i){bricks=[];drops=[];particles=[];guard=0;power={wide:0,slow:0,pierce:0};combo=1;paddle.w=138;paddle.x=W/2;const rows=LEVELS[i],cols=Math.max(...rows.map(r=>r.length)),gap=6,bw=(W-96-(cols-1)*gap)/cols,bh=27,top=86;rows.forEach((row,r)=>[...row].forEach((ch,c)=>{if(ch==='.')return;const hp=ch==='P'?1:Number(ch);bricks.push({x:48+c*(bw+gap),y:top+r*(bh+gap),w:bw,h:bh,hp,max:hp,kind:ch,alive:true,flash:0})}));balls=[makeBall()];served=true;updateHud();}
+function makeBall(x=paddle.x,y=paddle.y-16,vx=240,vy=-390){return{x,y,vx,vy,r:7,alive:true}};
+function resetSector(full=true){if(full){score=sectorStartScore;lives=3;}active=true;finished=false;paused=false;overlay.hidden=true;buildLevel(sector);statusEl.textContent='Sector '+(sector+1)+' armed.';last=performance.now();}
+function start(){sector=Math.min(sector,Math.max(0,meta.bestSector-1));score=0;sectorStartScore=0;lives=3;active=true;finished=false;paused=false;overlay.hidden=true;buildLevel(sector);statusEl.textContent='Launch the recovery sphere.';announce('Sector '+(sector+1)+' started');}
+function launchBall(){if(!active||paused||finished)return;if(served){served=false;for(const b of balls){b.vx=(Math.random()-.5)*220||130;b.vy=-420}tone(660)}}
+function brickCount(){return bricks.filter(b=>b.alive).length}
+function spawnParticles(x,y,color,n=8){for(let i=0;i<n;i++)particles.push({x,y,vx:(Math.random()-.5)*240,vy:(Math.random()-.7)*220,t:.5+Math.random()*.35,color})}
+const powerKinds=['wide','multi','slow','guard','pierce'];let powerSeq=0;
+function spawnDrop(b){const kind=powerKinds[(sector*3+powerSeq++)%powerKinds.length];drops.push({x:b.x+b.w/2,y:b.y+b.h/2,vy:120,kind,r:12})}
+function applyPower(kind){meta.powerups++;localStorage.setItem(META_KEY,JSON.stringify(meta));post('powerup-collected',score);tone(880,.08,.04);if(kind==='wide'){power.wide=9;paddle.w=205}else if(kind==='multi'){const seed=balls.find(b=>b.alive);if(seed){balls.push(makeBall(seed.x,seed.y,-Math.max(180,Math.abs(seed.vx)),seed.vy*.94),makeBall(seed.x,seed.y,Math.max(180,Math.abs(seed.vx)),seed.vy*.94))}}else if(kind==='slow'){power.slow=7}else if(kind==='guard'){guard=Math.min(2,guard+1)}else if(kind==='pierce'){power.pierce=8}statusEl.textContent=kind==='guard'?'Recovery guard charged.':kind[0].toUpperCase()+kind.slice(1)+' system online.';announce(statusEl.textContent);updatePowerUI()}
+function hitBrick(b,ball){b.hp--;b.flash=.12;score+=100*combo;combo=Math.min(12,combo+.2);spawnParticles(ball.x,ball.y,palette[b.kind]||'#fff',6);tone(260+b.max*90,.035,.02);if(b.hp<=0){b.alive=false;score+=50*b.max;if(b.kind==='P')spawnDrop(b)}updateHud();if(brickCount()===0)sectorClear()}
+function sectorClear(){if(finished)return;finished=true;active=false;served=true;const bonus=lives*750+Math.round(combo*180);score+=bonus;meta.best=Math.max(meta.best,score);meta.bestSector=Math.max(meta.bestSector,sector+1);localStorage.setItem(META_KEY,JSON.stringify(meta));post('sector-complete',score);tone(1040,.16,.05);$('overlayTitle').textContent=sector===LEVELS.length-1?'LATTICE SHATTERED':'SECTOR '+(sector+1)+' CLEAR';if(sector===LEVELS.length-1){meta.clears++;meta.bestSector=LEVELS.length;localStorage.setItem(META_KEY,JSON.stringify(meta));post('campaign-complete',score);$('overlayText').textContent='All five vectors collapsed. Final score: '+score.toLocaleString()+'.';launch.textContent='Run Campaign Again';launch.onclick=()=>{sector=0;score=0;sectorStartScore=0;lives=3;start()}}else{$('overlayText').textContent='Sector bonus '+bonus.toLocaleString()+'. Prepare the next lattice.';launch.textContent='Continue to Sector '+(sector+2);launch.onclick=()=>{sector++;sectorStartScore=score;lives=Math.min(4,lives+1);resetSector(false)}}overlay.hidden=false;updateHud();record()}
+function fail(){finished=true;active=false;meta.best=Math.max(meta.best,score);localStorage.setItem(META_KEY,JSON.stringify(meta));post('run-ended',score);$('overlayTitle').textContent='VECTOR LOST';$('overlayText').textContent='The recovery sphere collapsed before the lattice was cleared. Your sector checkpoint is preserved.';launch.textContent='Retry Sector '+(sector+1);launch.onclick=()=>resetSector(true);overlay.hidden=false;record()}
+function record(){meta=readMeta();$('recordLine').textContent=`Best ${meta.best.toLocaleString()} · Campaign clears ${meta.clears} · Furthest sector ${meta.bestSector}/5 · Powerups ${meta.powerups}`}
+function updateHud(){$('sectorHud').textContent=(sector+1)+' / '+LEVELS.length;$('scoreHud').textContent=Math.round(score).toLocaleString();$('livesHud').textContent=lives+(guard?' +'+guard+' guard':'');$('comboHud').textContent='x'+combo.toFixed(1);updatePowerUI()}
+function updatePowerUI(){document.querySelectorAll('.power').forEach(el=>{const k=el.dataset.power;let on=k==='multi'?balls.length>1:k==='guard'?guard>0:power[k]>0;el.classList.toggle('active',on)})}
+function pause(toggle=true){if(!active||finished)return;paused=toggle?!paused:false;overlay.hidden=!paused;if(paused){$('overlayTitle').textContent='PAUSED';$('overlayText').textContent='Vector Shatter is paused.';launch.hidden=true;resume.hidden=false}else{overlay.hidden=true;launch.hidden=false;resume.hidden=true;last=performance.now()}}
+resume.onclick=()=>pause(true);
+launch.onclick=start;$('touchLaunch').onclick=launchBall;
+function collideBallRect(ball,r){const cx=Math.max(r.x,Math.min(ball.x,r.x+r.w)),cy=Math.max(r.y,Math.min(ball.y,r.y+r.h)),dx=ball.x-cx,dy=ball.y-cy;return dx*dx+dy*dy<=ball.r*ball.r}
+function update(dt){if(!active||paused||finished)return;dt=Math.min(.033,dt);const scale=power.slow>0?.72:1,step=dt*scale;for(const k of ['wide','slow','pierce'])if(power[k]>0)power[k]=Math.max(0,power[k]-dt);if(power.wide<=0)paddle.w=138;const dir=Math.max(-1,Math.min(1,(keys.right?1:0)-(keys.left?1:0)+gpAxis));if(pointerX!=null)paddle.x+=(pointerX-paddle.x)*Math.min(1,dt*12);else paddle.x+=dir*paddle.speed*dt;paddle.x=Math.max(paddle.w/2+8,Math.min(W-paddle.w/2-8,paddle.x));if(served){for(const b of balls){b.x=paddle.x;b.y=paddle.y-16}}
+for(const ball of balls){if(!ball.alive||served)continue;const ox=ball.x,oy=ball.y;ball.x+=ball.vx*step;ball.y+=ball.vy*step;if(ball.x<ball.r){ball.x=ball.r;ball.vx=Math.abs(ball.vx);tone(170)}if(ball.x>W-ball.r){ball.x=W-ball.r;ball.vx=-Math.abs(ball.vx);tone(170)}if(ball.y<ball.r){ball.y=ball.r;ball.vy=Math.abs(ball.vy);tone(190)}
+ if(ball.vy>0&&collideBallRect(ball,{x:paddle.x-paddle.w/2,y:paddle.y-paddle.h/2,w:paddle.w,h:paddle.h})){ball.y=paddle.y-paddle.h/2-ball.r;const rel=(ball.x-paddle.x)/(paddle.w/2),speed=Math.max(420,Math.hypot(ball.vx,ball.vy)*1.01);const ang=rel*1.05;ball.vx=Math.sin(ang)*speed;ball.vy=-Math.cos(ang)*speed;combo=1;tone(360)}
+ for(const br of bricks){if(!br.alive||!collideBallRect(ball,br))continue;hitBrick(br,ball);if(power.pierce<=0){const px=ox< br.x?br.x:ox>br.x+br.w?br.x+br.w:ox,py=oy< br.y?br.y:oy>br.y+br.h?br.y+br.h:oy;const dx=Math.abs(ox-px),dy=Math.abs(oy-py);if(dx>dy)ball.vx*=-1;else ball.vy*=-1;}break}
+ if(ball.y>H+30)ball.alive=false;}
+ balls=balls.filter(b=>b.alive);if(!balls.length&&!served){if(guard>0){guard--;balls=[makeBall()];served=true;statusEl.textContent='Guard recovered the sphere.';announce(statusEl.textContent);tone(520,.09,.04)}else{lives--;combo=1;if(lives<=0){fail();return}else{balls=[makeBall()];served=true;statusEl.textContent='Sphere lost. '+lives+' '+(lives===1?'life':'lives')+' remain.';announce(statusEl.textContent);tone(120,.16,.05)}}updateHud()}
+ for(const d of drops){d.y+=d.vy*dt;if(d.y>H+20)d.dead=true;const r={x:paddle.x-paddle.w/2,y:paddle.y-paddle.h/2,w:paddle.w,h:paddle.h};if(!d.dead&&d.x>r.x&&d.x<r.x+r.w&&d.y+d.r>r.y&&d.y-d.r<r.y+r.h){d.dead=true;applyPower(d.kind)}}drops=drops.filter(d=>!d.dead);
+ for(const p of particles){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=420*dt;p.t-=dt}particles=particles.filter(p=>p.t>0);updateHud()}
+function draw(){ctx.clearRect(0,0,W,H);const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#071126');g.addColorStop(.55,'#050a16');g.addColorStop(1,'#02040a');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.globalAlpha=.18;ctx.strokeStyle='#24385f';for(let x=0;x<W;x+=48){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}for(let y=0;y<H;y+=48){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}ctx.globalAlpha=1;
+ ctx.fillStyle='#0e1b33';ctx.fillRect(26,54,W-52,2);ctx.fillStyle='#92a9cb';ctx.font='12px system-ui';ctx.fillText('SECTOR '+(sector+1)+' · '+brickCount()+' PANELS REMAIN',48,42);
+ for(const b of bricks){if(!b.alive)continue;b.flash=Math.max(0,b.flash-.016);ctx.save();ctx.shadowBlur=b.kind==='P'?18:8;ctx.shadowColor=palette[b.kind]||'#fff';ctx.fillStyle=b.flash?'#ffffff':palette[b.kind]||'#60a5fa';ctx.globalAlpha=.45+.17*b.hp;ctx.fillRect(b.x,b.y,b.w,b.h);ctx.globalAlpha=1;ctx.strokeStyle=b.kind==='P'?'#ecfeff':'#dbeafe66';ctx.strokeRect(b.x+.5,b.y+.5,b.w-1,b.h-1);if(b.max>1){ctx.fillStyle='#020617aa';ctx.fillRect(b.x+5,b.y+5,18,14);ctx.fillStyle='#fff';ctx.font='10px system-ui';ctx.fillText(String(b.hp),b.x+11,b.y+16)}ctx.restore()}
+ for(const d of drops){ctx.save();ctx.translate(d.x,d.y);ctx.shadowBlur=18;ctx.shadowColor='#67e8f9';ctx.fillStyle={wide:'#6ee7b7',multi:'#a78bfa',slow:'#60a5fa',guard:'#fbbf24',pierce:'#fb7185'}[d.kind];ctx.beginPath();ctx.arc(0,0,d.r,0,Math.PI*2);ctx.fill();ctx.fillStyle='#07101f';ctx.font='bold 11px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(d.kind[0].toUpperCase(),0,1);ctx.restore()}
+ ctx.save();ctx.shadowBlur=20;ctx.shadowColor='#67e8f9';ctx.fillStyle='#bff7ff';ctx.fillRect(paddle.x-paddle.w/2,paddle.y-paddle.h/2,paddle.w,paddle.h);ctx.fillStyle='#155e75';ctx.fillRect(paddle.x-paddle.w*.28,paddle.y-paddle.h/2+3,paddle.w*.56,paddle.h-6);ctx.restore();
+ if(guard){ctx.strokeStyle='#fbbf24';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(36,H-16);ctx.lineTo(W-36,H-16);ctx.stroke()}
+ for(const ball of balls){ctx.save();ctx.shadowBlur=18;ctx.shadowColor=power.pierce>0?'#fb7185':'#67e8f9';ctx.fillStyle=power.pierce>0?'#fecdd3':'#ecfeff';ctx.beginPath();ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2);ctx.fill();ctx.restore()}
+ for(const p of particles){ctx.globalAlpha=Math.max(0,p.t*1.6);ctx.fillStyle=p.color;ctx.fillRect(p.x,p.y,3,3)}ctx.globalAlpha=1;if(served&&active&&!paused){ctx.fillStyle='#dbeafe';ctx.font='bold 13px system-ui';ctx.textAlign='center';ctx.fillText('PRIMARY / SPACE / TAP TO LAUNCH',W/2,H-76);ctx.textAlign='left'}}
+function frame(t){const dt=(t-last)/1000;last=t;update(dt);draw();requestAnimationFrame(frame)}requestAnimationFrame(frame);
+addEventListener('keydown',e=>{if(WG(e,'left')){keys.left=true;e.preventDefault()}if(WG(e,'right')){keys.right=true;e.preventDefault()}if(WG(e,'primary')){launchBall();e.preventDefault()}if(e.code==='KeyP'){pause(true);e.preventDefault()}if(e.code==='KeyR'){if(active||finished)resetSector(true);e.preventDefault()}if(/^Digit[1-5]$/.test(e.code)){const n=Number(e.code.slice(-1))-1;if(n<meta.bestSector){sector=n;sectorStartScore=0;score=0;lives=3;resetSector(false)}}});
+addEventListener('keyup',e=>{if(WG(e,'left'))keys.left=false;if(WG(e,'right'))keys.right=false});function WG(e,a){return window.WWGInput?WWGInput.is(e,a):false}
+C.addEventListener('pointermove',e=>{const r=C.getBoundingClientRect();pointerX=(e.clientX-r.left)/r.width*W});C.addEventListener('pointerdown',e=>{const r=C.getBoundingClientRect();pointerX=(e.clientX-r.left)/r.width*W;launchBall()});C.addEventListener('pointerleave',()=>pointerX=null);
+document.querySelectorAll('[data-hold]').forEach(btn=>{const k=btn.dataset.hold;const on=e=>{e.preventDefault();keys[k]=true;pointerX=null},off=e=>{e.preventDefault();keys[k]=false};btn.addEventListener('pointerdown',on);btn.addEventListener('pointerup',off);btn.addEventListener('pointercancel',off);btn.addEventListener('pointerleave',off)});
+let gpLatch={a:false,start:false};function gamepad(){const gp=navigator.getGamepads?.()[0];if(!gp)return;const ax=gp.axes?.[0]||0;gpAxis=Math.abs(ax)>.18?ax:0;if(gpAxis)pointerX=null;const a=!!gp.buttons?.[0]?.pressed,startBtn=!!gp.buttons?.[9]?.pressed;if(a&&!gpLatch.a)launchBall();if(startBtn&&!gpLatch.start)pause(true);gpLatch={a,start:startBtn}}setInterval(gamepad,50);
+window.__vectorShatter={state:()=>({sector,score,lives,combo,paused,active,finished,served,brickCount:brickCount(),balls:balls.length,guard,paddleX:paddle.x,paddleW:paddle.w,power:{...power},meta:readMeta()}),start,launch:launchBall,reset:()=>resetSector(true),step:update,applyPower,forceClear:()=>{for(const b of bricks)b.alive=false;sectorClear()},setSector:i=>{sector=Math.max(0,Math.min(4,i));sectorStartScore=score;resetSector(false)},setScore:n=>{score=Number(n)||0;updateHud()},dropBall:()=>{for(const b of balls)b.alive=false;served=false;update(.016)},paddle};
+record();buildLevel(0);draw();
+})();
+</script>
+</body>
+</html>
