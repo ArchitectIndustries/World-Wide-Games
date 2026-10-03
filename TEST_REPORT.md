@@ -93,7 +93,7 @@ The failure was reproduced and fixed at two concrete input boundaries:
 - Astral Menagerie **3.1**, Neon Serpent **2.0**, Pulse Maze **1.0**.
 - `Classics, Reimagined` collection/home shelf present.
 - PWA shortcuts: Pulse Maze, Neon Serpent, Ironlight Breach.
-- Offline cache: `wwg-v41`.
+- Offline cache: `wwg-v42`.
 - All catalog game/cover asset paths exist.
 - Public-facing source scan remains clear of prohibited internal branding/tool references.
 
@@ -113,7 +113,7 @@ The failure was reproduced and fixed at two concrete input boundaries:
 
 ## Deep regressions retained
 
-The following suites remain green on the v41 source:
+The following suites remain green on the v42 source:
 
 - `python3 tests/v39_ironlight.py` — five-sector retro FPS, three weapons, projectile sentries, cipher/vault routes, checkpoint semantics.
 - `python3 tests/v38_polyforge.py` — grouped assemblies, drag gizmos, scene codes, history and seven certification briefs.
@@ -132,4 +132,4 @@ The `agent-browser` CLI required by the preferred dev-server verification workfl
 
 ## GitHub/Vercel
 
-GitHub `main` was inspected at v40 commit `c624574a2fac9cc08f1b451a72e9841bdb0f4709` before v41 work. The complete verified v41 source was committed as **`18e7dfecbaaba5fae1e65eee0e15f0fb1bcb5b26`**, `main` was re-read immediately before promotion, then advanced by a **non-force fast-forward**. Release-state documentation was finalized at **`8ded69db99ad6d99b6bb0d17693d0b3d1d461460`**, and `main` was re-verified there. Fresh Vercel deployment enumeration remains **403 Forbidden**; authenticated production fetch is also denied and project lookup retains the connector/schema mismatch, so no v41 production deployment is claimed.
+GitHub `main` was inspected at finalized v41 commit **`8ded69db99ad6d99b6bb0d17693d0b3d1d461460`** before v42 promotion. The complete verified v42 source was committed as **`f9d27674227fb04173fe7459aa129645673c1d95`**; `main` was re-read immediately before promotion, then advanced by a **non-force fast-forward** and re-verified at that commit. Fresh Vercel deployment enumeration remains **403 Forbidden**; authenticated production fetch is also denied and project lookup retains the connector/schema mismatch, so no v42 production deployment is claimed.

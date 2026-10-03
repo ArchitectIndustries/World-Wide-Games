@@ -3,7 +3,7 @@
 Last updated: 2026-10-02
 Owner/operator: Architect Industries
 Current verified source release: **v42 — Reliability Sweep**
-Release-gate status: **source QA green; GitHub synchronization pending v42 release gate**
+Release-gate status: **source QA green; GitHub `main` synchronized to the complete verified v42 source release**
 Status: **73-game** static browser-gaming platform with **121 genre tags**, **115 unique achievements**, **47 remappable releases**, persistent local player data, PWA/offline support, explicit per-game objectives, universal Arrow/WASD movement for shared-input games, a dedicated classic-archetype discovery shelf, full-catalog Chromium QA, and deep campaign regressions.
 
 
@@ -107,7 +107,7 @@ Direct play feedback exposed a false-loss rule in Orbit Breaker: every asteroid 
 - New achievements: **Classic Serpent** and **Pulse Maze Master**.
 - Pulse Maze becomes the sole featured release.
 - PWA shortcuts surface Pulse Maze, Neon Serpent, and Ironlight Breach.
-- Offline cache advances to `wwg-v41`.
+- Offline cache advances to `wwg-v42`.
 - Local-origin release path count rises to **153**.
 
 ## Validation
@@ -132,11 +132,10 @@ The requested `agent-browser` executable is unavailable in the current runtime, 
 
 Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `main`.
 
-- Baseline inspected before v41 work: v40 `main` commit **`c624574a2fac9cc08f1b451a72e9841bdb0f4709`**.
-- v41 source release commit: **`18e7dfecbaaba5fae1e65eee0e15f0fb1bcb5b26`**.
-- `main` was re-read immediately before source promotion, still pointed at verified v40, and advanced by a **non-force fast-forward**.
-- Release-state documentation was then finalized on `main` at **`8ded69db99ad6d99b6bb0d17693d0b3d1d461460`**.
-- Post-write verification confirmed `main` points at that finalized v41 release-state commit.
+- v42 baseline was the finalized v41 `main` commit **`8ded69db99ad6d99b6bb0d17693d0b3d1d461460`**.
+- Complete verified v42 source release commit: **`f9d27674227fb04173fe7459aa129645673c1d95`**.
+- `main` was re-read immediately before promotion, still pointed at the verified v41 parent, and advanced by a **non-force fast-forward**.
+- Post-write verification confirmed `main` points at the complete v42 source commit before release-state documentation finalization.
 
 ## Production deployment
 
@@ -144,7 +143,7 @@ Canonical Vercel project: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`, Architect Industri
 
 - Fresh post-GitHub checks remain blocked by connector authorization: deployment enumeration returns **403 Forbidden**, authenticated production fetch is denied at protection-bypass metadata, and `get_project` still hits the known connector/schema mismatch.
 - This is treated as an authorization/visibility limitation, not evidence that the established project is absent.
-- No duplicate Vercel project was created and no v41 production deployment is claimed.
+- No duplicate Vercel project was created and no v42 production deployment is claimed.
 
 ## Next high-value priorities
 
