@@ -1,7 +1,13 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v43 — Neon Stack 2.0**, with **73 games across 121 genre tags**, **116 unique achievements**, and **47 remappable releases**.
+WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current candidate source release is **v44 — Aetherglass Breaker**, with **74 games across 122 genre tags**, **118 unique achievements**, and **48 remappable releases**. Source QA is green; GitHub synchronization remains the release gate before v44 is described as fully shipped.
 
+
+## v44 — Aetherglass Breaker
+
+v44 adds **Aetherglass Breaker**, an original six-chamber brick-breaking campaign built for instant browser play. The campaign layers classic paddle-and-ball readability with armored crystals, moving glass formations, three-hit Aether Core targets, combo scoring, a rechargeable Focus slow-time mechanic, and three temporary relics: Wide Paddle, Multiball, and Safety Shield.
+
+Aetherglass Breaker supports universal Arrow/A-D movement, remapped controls, keyboard, touch, and gamepad play; persistent best score, furthest chamber, and campaign-clear records; unlocked chamber practice; pause/restart; explicit objectives; and standard game events for stage clears, campaign completion, and eight-hit combo mastery. It becomes the featured release and first PWA shortcut. **Aetherglass Sealer** and **Prism Chain** raise the platform to **118 unique achievements**, the Classics, Reimagined collection grows to 16 archetypes with **Brick Breaker**, and the offline cache advances to `wwg-v44`.
 
 ## v43 — Neon Stack 2.0
 

@@ -1,12 +1,25 @@
 # WorldWideGames Validation Report
 
-Date: 2026-10-02
-Release: **v43 — Neon Stack 2.0**
+Date: 2026-10-03
+Release candidate: **v44 — Aetherglass Breaker**
 
 ## Release result
 
 **PASS — source QA gate green.** GitHub and production deployment are tracked as separate release-management gates.
 
+
+## v44 Aetherglass Breaker
+
+**PASS — local/source QA gate green.** GitHub synchronization and production deployment remain separate release-management gates until promoted.
+
+- `python3 tests/v44_breaker.py`: PASS for six authored chambers, initial 40-brick field, universal Arrow movement under a custom remap, saved custom movement, Primary launch, Focus slow-time/drain, Wide Paddle / Multiball / Safety Shield, 8× combo mastery event, moving glass, three-hit Aether Core, real six-stage campaign completion, persistence, pause/restart, touch controls, and 390×844 mobile layout.
+- `python3 tests/v44_static.py`: PASS on the tested package for **74 games / 122 genre tags / 118 achievements / 48 remappable releases**, sole featured Aetherglass Breaker, first PWA shortcut, Brick Breaker Classics mapping, `wwg-v44` cache, asset existence, and public-source hygiene.
+- `node tests/smoke.js`: **74/74** registered games boot plus platform shells.
+- `python3 tests/v41_controls_browser.py`: **74/74** detail pages expose objectives/controls and **48/48** remappable games expose current keyboard profiles.
+- `python3 tests/v32_http.py`: **155/155** local-origin paths return HTTP 200.
+- `python3 tests/v42_reliability.py`, `tests/v41_classics.py`, and `tests/v41_orbit_breaker.py`: PASS.
+- Representative deep regressions pass for Ironlight, Astral Menagerie, Polyforge, Ashen Covenant, Verdant Echoes, Rune Depths, Circuit Rush, Pulsevine Parkour, and score-direction semantics.
+- `tests/v41_catalog_audit.py` was attempted twice but exceeded the execution window before completion, so no v44 full-catalog interaction-pass claim is made from that harness.
 
 ## v43 Neon Stack 2.0
 

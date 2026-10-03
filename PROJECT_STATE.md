@@ -1,11 +1,34 @@
 # WorldWideGames Project State
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 Owner/operator: Architect Industries
-Current verified source release: **v43 — Neon Stack 2.0**
-Release-gate status: **source QA green; v43 GitHub synchronization pending release-gate promotion**
-Status: **73-game** static browser-gaming platform with **121 genre tags**, **116 unique achievements**, **47 remappable releases**, persistent local player data, PWA/offline support, explicit per-game objectives, universal Arrow/WASD movement for shared-input games, a dedicated classic-archetype discovery shelf, full-catalog Chromium QA, and deep campaign regressions.
+Current candidate source release: **v44 — Aetherglass Breaker**
+Release-gate status: **v44 source QA green; GitHub synchronization pending atomic promotion**
+Status: **74-game** static browser-gaming platform with **122 genre tags**, **118 unique achievements**, **48 remappable releases**, persistent local player data, PWA/offline support, explicit per-game objectives, universal Arrow/WASD movement for shared-input games, Classics Reimagined discovery, and deep regression coverage.
 
+
+## v44 production work — Aetherglass Breaker
+
+Aetherglass Breaker 1.0 adds a six-chamber original brick-breaking campaign with one-, two-, and three-hit crystal classes, moving glass formations, combo scoring, a rechargeable Focus slow-time resource, Wide Paddle / Multiball / Safety Shield relics, stage-safe restarts, practice unlocks, persistent records, touch controls, gamepad input, and universal Arrow/A-D movement.
+
+Platform integration raises the catalog to **74 games / 122 genre tags / 118 achievements / 48 remappable releases**. Aetherglass Breaker becomes the sole featured release and first PWA shortcut, Classics Reimagined gains the Brick Breaker archetype, and the offline cache advances to `wwg-v44`.
+
+### v44 validation
+
+- `python3 tests/v44_breaker.py`: six chambers, universal + remapped movement, launch, Focus timing, relics, 8× combo event, campaign completion, pause/restart, touch handlers, and 390×844 mobile width pass.
+- `python3 tests/v44_static.py`: catalog totals, feature/PWA/cache metadata, asset paths, achievements, Classics mapping, and public-source invariants pass in the tested package.
+- `node tests/smoke.js`: **74/74** registered games boot plus homepage/detail shells.
+- `python3 tests/v41_controls_browser.py`: **74/74** detail objective/control pages and **48/48** remappable profiles pass.
+- `python3 tests/v32_http.py`: **155/155** local-origin paths return HTTP 200.
+- v42 reliability, v41 Classics/Orbit Breaker, and representative Ironlight/Astral/Polyforge/Ashen/Verdant/Rune Depths/Circuit/Pulsevine/score-direction regressions pass.
+- The long full-catalog interaction audit exceeded the execution window twice and is not counted as completed release evidence.
+
+### v44 release gate
+
+- Baseline GitHub `main`: **d807faa1666434f76d095a512c2b3aa08391f03f** (complete verified v43 source).
+- v44 source commit: **pending atomic branch/PR promotion**.
+- The v43 documentation-only child commit could not be promoted with a direct ref update because that connector operation was safety-blocked; the prior source commit on `main` remained unchanged.
+- Vercel deployment enumeration returns **403 Forbidden** and project lookup still hits the known connector/schema mismatch. No duplicate project is created.
 
 ## v43 production work — Neon Stack 2.0
 

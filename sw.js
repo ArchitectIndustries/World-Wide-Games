@@ -1,4 +1,4 @@
-const CACHE='wwg-v43';
+const CACHE='wwg-v44';
 const ASSETS=[
   "./",
   "./index.html",
@@ -10,6 +10,8 @@ const ASSETS=[
   "./js/app.js",
   "./js/game-page.js",
   "./manifest.webmanifest",
+  "./covers/aetherglass-breaker.svg",
+  "./games/aetherglass-breaker/index.html",
   "./covers/pulse-maze.svg",
   "./games/pulse-maze/index.html",
   "./covers/neon-serpent.svg",

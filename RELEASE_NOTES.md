@@ -1,5 +1,18 @@
 # WorldWideGames Release Notes
 
+## v44 — Aetherglass Breaker (2026-10-03)
+
+- Added **Aetherglass Breaker 1.0**, an original six-chamber brick-breaking campaign with armored crystals, drifting formations, three-hit Aether Core targets, combo scoring, Focus slow-time, and Wide Paddle / Multiball / Safety Shield relics.
+- Added persistent best score, furthest-chamber and campaign-clear records, stage-entry-safe restart semantics, unlocked chamber practice, pause, objective guide, live announcements, touch controls, gamepad support, and universal Arrow/A-D movement alongside saved custom remaps.
+- Added `stage-complete`, `campaign-complete`, `combo-master`, and `run-complete` event semantics.
+- Added **Aetherglass Sealer** and **Prism Chain**, bringing WorldWideGames to **118 unique achievements**.
+- Expanded **Classics, Reimagined** to include the Brick Breaker archetype, featured Aetherglass Breaker, and moved it to the first PWA shortcut.
+- Catalog advances to **74 games / 122 genre tags / 118 achievements / 48 remappable releases**; offline cache advances to `wwg-v44`.
+- Dedicated browser QA passed six-chamber progression, armor/core and moving-brick logic, Focus timing, all relics, eight-hit combo event, remapped and universal movement, pause/restart, persistence, touch handlers, and 390×844 mobile width.
+- Regression QA passed 74/74 boot checks, 74/74 objective/control pages, 48/48 remappable profiles, 155/155 local HTTP paths, v42 reliability, Classics, Orbit Breaker, and representative deep campaigns. The long full-catalog Chromium interaction audit exceeded this run's execution window before completion and is not counted as release evidence.
+- GitHub synchronization is the mandatory v44 release gate. The prior v43 source remains safe on `main` until v44 is promoted atomically.
+- Vercel project inspection remains blocked by the established connector authorization/schema limitations; no duplicate project was created and no v44 production deployment is claimed.
+
 ## v43 — Neon Stack 2.0 (2026-10-03)
 
 - Rebuilt Neon Stack as a substantially deeper falling-block release with a fair seven-piece bag, hold slot, next preview, ghost piece, wall-kick rotation, combo scoring, and persistent records.
