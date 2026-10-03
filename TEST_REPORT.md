@@ -114,4 +114,4 @@ The `agent-browser` CLI required by the preferred dev-server verification workfl
 
 ## GitHub/Vercel
 
-GitHub `main` was inspected at v40 commit `c624574a2fac9cc08f1b451a72e9841bdb0f4709` before v41 work. The v41 source must pass the mandatory atomic GitHub synchronization gate before being called fully shipped. Vercel status is checked separately after GitHub promotion.
+GitHub `main` was inspected at v40 commit `c624574a2fac9cc08f1b451a72e9841bdb0f4709` before v41 work. The complete verified v41 source was committed as **`18e7dfecbaaba5fae1e65eee0e15f0fb1bcb5b26`**, `main` was re-read immediately before promotion, then advanced by a **non-force fast-forward** and re-verified at that commit. Vercel status is checked separately after GitHub promotion.

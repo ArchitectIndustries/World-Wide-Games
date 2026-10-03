@@ -3,7 +3,7 @@
 Last updated: 2026-10-02
 Owner/operator: Architect Industries
 Current verified source release: **v41 — Playability & Classic Vault**
-Release-gate status: **source QA green; GitHub synchronization pending this release gate**
+Release-gate status: **source QA green; GitHub `main` synchronized to the complete verified v41 source release**
 Status: **73-game** static browser-gaming platform with **121 genre tags**, **115 unique achievements**, **47 remappable releases**, persistent local player data, PWA/offline support, explicit per-game objectives, universal Arrow/WASD movement for shared-input games, a dedicated classic-archetype discovery shelf, full-catalog Chromium QA, and deep campaign regressions.
 
 ## v41 production work — Playability & Classic Vault
