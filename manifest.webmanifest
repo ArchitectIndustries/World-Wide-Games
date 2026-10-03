@@ -15,6 +15,18 @@
   ],
   "shortcuts": [
     {
+      "name": "Neon Stack 2.0",
+      "short_name": "Falling Blocks",
+      "url": "game.html?id=neon-stack",
+      "icons": [
+        {
+          "src": "covers/neon-stack.svg",
+          "sizes": "800x500",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
       "name": "Pulse Maze",
       "short_name": "Maze Chase",
       "url": "game.html?id=pulse-maze",
@@ -33,18 +45,6 @@
       "icons": [
         {
           "src": "covers/neon-serpent.svg",
-          "sizes": "800x500",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Ironlight Breach",
-      "short_name": "Retro FPS",
-      "url": "game.html?id=ironlight-breach",
-      "icons": [
-        {
-          "src": "covers/ironlight-breach.svg",
           "sizes": "800x500",
           "type": "image/svg+xml"
         }

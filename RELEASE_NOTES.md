@@ -1,5 +1,16 @@
 # WorldWideGames Release Notes
 
+## v43 — Neon Stack 2.0 (2026-10-03)
+
+- Rebuilt Neon Stack as a substantially deeper falling-block release with a fair seven-piece bag, hold slot, next preview, ghost piece, wall-kick rotation, combo scoring, and persistent records.
+- Added three explicit contracts: **Classic 40** (40 lines), **Prism Sprint** (20-line time attack), and **Ascension** (reach level 12).
+- Expanded controls to universal Arrow/WASD movement, dual-direction rotation, hard drop, hold, pause/restart, gamepad, and seven-button mobile touch controls.
+- Added `classic-complete`, `sprint-complete`, `ascension-complete`, and `run-ended` event semantics plus score metadata.
+- Added the **Prism Stack Master** achievement for 116 total achievements.
+- Featured Neon Stack 2.0 and moved it to the first PWA shortcut; cache advances to `wwg-v43`.
+- Ran dedicated v43 browser/static release checks; full catalog boot, objective/control, runtime, HTTP, reliability, classics, and representative deep-campaign regressions remain green.
+- Vercel production synchronization remains blocked by the known connector permission/schema issue; the established project is preserved and no duplicate was created.
+
 ## v42 — Reliability Sweep
 
 v42 keeps the platform at **73 games / 121 genre tags / 115 achievements / 47 remappable releases** and focuses on correctness discovered through deeper rule-level QA.

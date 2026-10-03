@@ -1,12 +1,20 @@
 # WorldWideGames Validation Report
 
 Date: 2026-10-02
-Release: **v42 — Reliability Sweep**
+Release: **v43 — Neon Stack 2.0**
 
 ## Release result
 
 **PASS — source QA gate green.** GitHub and production deployment are tracked as separate release-management gates.
 
+
+## v43 Neon Stack 2.0
+
+Neon Stack 2.0 passed the release checks for its seven-piece bag, hold lock, wall-kick rotation, universal movement, pause/restart flow, three contract completion paths, persistent records, and 390×844 mobile layout.
+
+Catalog validation remains green at **73 games / 121 genre tags / 116 achievements / 47 remappable releases**. The sole featured release is Neon Stack, the offline cache is `wwg-v43`, and the first PWA shortcut opens Neon Stack.
+
+Regression coverage remains green: 73/73 game boots, 73/73 objective/control pages, 47/47 remappable profiles, 73/73 runtime-clean catalog entries, 153/153 local-origin paths, the v42 reliability fixes, the v41 classics and Orbit Breaker checks, and the retained deep campaign suites.
 
 ## v42 reliability sweep
 

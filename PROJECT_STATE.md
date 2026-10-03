@@ -2,10 +2,38 @@
 
 Last updated: 2026-10-02
 Owner/operator: Architect Industries
-Current verified source release: **v42 — Reliability Sweep**
-Release-gate status: **source QA green; GitHub `main` synchronized to the complete verified v42 source release**
-Status: **73-game** static browser-gaming platform with **121 genre tags**, **115 unique achievements**, **47 remappable releases**, persistent local player data, PWA/offline support, explicit per-game objectives, universal Arrow/WASD movement for shared-input games, a dedicated classic-archetype discovery shelf, full-catalog Chromium QA, and deep campaign regressions.
+Current verified source release: **v43 — Neon Stack 2.0**
+Release-gate status: **source QA green; v43 GitHub synchronization pending release-gate promotion**
+Status: **73-game** static browser-gaming platform with **121 genre tags**, **116 unique achievements**, **47 remappable releases**, persistent local player data, PWA/offline support, explicit per-game objectives, universal Arrow/WASD movement for shared-input games, a dedicated classic-archetype discovery shelf, full-catalog Chromium QA, and deep campaign regressions.
 
+
+## v43 production work — Neon Stack 2.0
+
+The falling-block classic has been rebuilt from a short endless loop into a polished three-contract release while preserving the original WorldWideGames identity and no-install browser delivery.
+
+- **Fair seven-piece bag:** every cycle contains one of each prism before reshuffling, reducing extreme droughts while keeping runs unpredictable.
+- **Hold + preview:** players can bank one prism per deployed piece and see the next piece before committing.
+- **Wall-kick rotation:** clockwise/counter-clockwise turns test compact horizontal and upward kick offsets near walls and stacked cells instead of failing immediately.
+- **Three contracts:** Classic 40 (clear 40 lines), Prism Sprint (clear 20 lines quickly), and Ascension (survive to level 12).
+- **Scoring depth:** soft/hard-drop bonuses, multi-row scoring, combo bonuses, persistent best score/lines, sprint best time, and contract-clear records.
+- **Input/accessibility:** Arrow/WASD universal movement, Up/W/X/Z rotations, Space hard drop, C/Shift hold, pause/restart, gamepad, touch controls, explicit objective/record HUD, and live announcements.
+- **Platform integration:** Neon Stack 2.0 becomes the featured release and first PWA shortcut; a new **Prism Stack Master** achievement raises the catalog to **116 achievements**; offline cache advances to `wwg-v43`.
+
+### v43 validation
+
+- Pre-release Neon Stack contract harness: seven-bag integrity, hold lock, wall kicks, universal movement under a saved custom remap, pause/restart, all three legitimate completion events, persistence, and 390×844 mobile width pass.
+- Static release assertions: **73 games / 121 genres / 116 achievements / 47 remappable releases**, featured Neon Stack, v43 cache/PWA shortcut, source invariants, asset paths, and public-branding scan pass.
+- `node tests/smoke.js`: **73/73 registered games boot** plus homepage/detail shells.
+- `python3 tests/v41_controls_browser.py`: **73/73** detail pages retain explicit objectives/controls and **47/47** remappable profiles.
+- `python3 tests/v41_catalog_audit.py`: **73/73 runtime-clean** in isolated Chromium.
+- v42 reliability, v41 classics/Orbit Breaker, and deep Ironlight/Astral/Polyforge/Ashen/Verdant/Rune Depths/Circuit/Fluxward/Pulsevine/score-direction regressions remain green.
+- `python3 tests/v32_http.py`: **153/153** local-origin release paths return HTTP 200.
+
+### v43 release gate
+
+- GitHub baseline at run start: `main` = `0393a86790cbe3b5cfc32161d27e8e1d08c6b0c7` (v42 release state).
+- v43 source commit: **pending release-gate synchronization**.
+- Vercel remains blocked by the known connector authorization/schema limitation; no duplicate project will be created.
 
 ## v42 production work — Reliability Sweep
 

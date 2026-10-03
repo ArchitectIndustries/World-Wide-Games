@@ -1,7 +1,13 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v42 — Reliability Sweep**, with **73 games across 121 genre tags**, **115 unique achievements**, and **47 remappable releases**.
+WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v43 — Neon Stack 2.0**, with **73 games across 121 genre tags**, **116 unique achievements**, and **47 remappable releases**.
 
+
+## v43 — Neon Stack 2.0
+
+v43 turns **Neon Stack** into a full falling-block classic rather than a minimal endless loop. Version 2.0 adds a fair seven-piece bag, hold slot, next preview, ghost placement, wall-kick rotation, combo/drop scoring, persistent records, and three distinct contracts: **Classic 40**, **Prism Sprint**, and **Ascension**. Arrow/WASD movement, touch controls, gamepad support, pause/restart, and clear contract objectives are built in.
+
+Neon Stack is now the featured release and first PWA shortcut. The new **Prism Stack Master** achievement raises WorldWideGames to **116 unique achievements**, and the offline cache advances to `wwg-v43`.
 
 ## v42 — Reliability Sweep
 
