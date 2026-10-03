@@ -1,16 +1,16 @@
 # WorldWideGames Full Catalog Quality Audit
 
 Date: 2026-10-02
-Release: **v39 — Ironlight Breach 3.0**
+Release: **v41 — Playability & Classic Vault**
 Owner/operator: Architect Industries
 
 ## Current release result
 
-- **72/72 games** loaded without page/runtime errors in isolated Chromium.
-- Generic interaction produced observable state change in **68** titles; Ironlight Breach 3.0 and Polyforge Studio 3.0 have dedicated deep regressions, while Ashen Covenant and Astral Menagerie retain their complete campaign regressions and Atlas Below, Lumen Relay, and Forgeflow retain direct mechanic-specific coverage.
+- **73/73 games** loaded without page/runtime errors in isolated Chromium.
+- Generic interaction produced observable state change in **70** titles; Ironlight Breach 3.0 and Polyforge Studio 3.0 have dedicated deep regressions, while Ashen Covenant and Astral Menagerie retain their complete campaign regressions and Atlas Below, Lumen Relay, and Forgeflow retain direct mechanic-specific coverage.
 - Six v32 flagship releases remain runtime-clean. Polyforge Studio 3.0 now has dedicated coverage for grouped assemblies, selection-wide transforms, real drag-gizmo input, portable scene-code round-tripping, 80-step history, all seven certification briefs, legacy five-brief mastery compatibility, persistence/meta, and mobile-width overflow.
-- **151/151** local-origin platform/game/cover paths returned HTTP 200.
-- **72/72** game detail pages expose authored controls and **46/46** remappable releases expose the current/default keyboard profile.
+- **153/153** local-origin platform/game/cover paths returned HTTP 200.
+- **73/73** game detail pages expose authored controls and **47/47** remappable releases expose the current/default keyboard profile.
 - Prior deep regressions remain green for Rune Depths, Aetherstead Colony, Mosslight Vale, Fluxward Conclave, Circuit Rush, the v27 defect-fix set, and score-direction semantics.
 
 ## v32 flagship additions
@@ -22,7 +22,7 @@ Owner/operator: Architect Industries
 | Ashen Covenant | Original stamina/action-RPG pilgrimage | v37: three traversal paths, Ember Sigils, Hound/Pilgrim/Archer enemies, Blade/Pike builds, persistent forging, deliberate Ash recovery, three Lord patterns, campaign persistence |
 | Astral Menagerie | Original creature-collection RPG | v40: 15 species, party/reserve management, five type techniques/status, three habitat study nodes, trainer gauntlets, Wardens, post-Atlas rematches, Ascendant trials, Starlight mastery |
 | Polyforge Studio | Original 3D construction/design game | **v38:** grouped multi-select assemblies, Move/Rotate/Scale drag gizmos, portable scene codes, 80-step history, v2 migration, and legitimate completion of all seven certification briefs |
-| Neon Serpent: Gridfall | Original three-contract serpent arcade | steering, contract 2 hazards, persistent contract architecture |
+| Neon Serpent: Gridfall | Original four-contract serpent arcade with a pure Classic Snake opener | steering, contract 2 hazards, persistent contract architecture |
 
 ## Per-game release ledger
 
@@ -31,9 +31,10 @@ Owner/operator: Architect Industries
 | Ironlight Breach | 3.0 | FPS | Yes | Clean |
 | Verdant Echoes | 2.0 | Action Adventure | Yes | Clean |
 | Ashen Covenant | 2.0 | Soulslike | Yes | Clean |
-| Astral Menagerie | 3.0 | Creature Collection | Yes | Clean |
+| Astral Menagerie | 3.1 | Creature Collection | Yes | Clean |
 | Polyforge Studio | 3.0 | 3D Design | Yes | Clean |
-| Neon Serpent: Gridfall | 1.0 | Snake | Yes | Clean |
+| Neon Serpent: Gridfall | 2.0 | Snake | Yes | Clean |
+| Pulse Maze | 1.0 | Maze Chase | Yes | Clean |
 | Fluxward Conclave | 1.0 | Territory | Yes | Clean |
 | Strata Cipher | 1.0 | Archaeology | Yes | Clean |
 | Echofall Caverns | 1.0 | Echolocation | Yes | Clean |
@@ -98,7 +99,7 @@ Owner/operator: Architect Industries
 | Bastion Bloom | 1.5 | Tower Defense | Yes | Clean |
 | Emberfield Survival | 1.0 | Survival | Yes | Clean |
 | Vector League | 1.0 | Sports | Yes | Clean |
-| Orbit Breaker | 1.0 | Space | Yes | Clean |
+| Orbit Breaker | 1.1 | Space | Yes | Clean |
 | Rune Depths | 2.1 | Dungeon | Yes | Clean |
 
 ## Scope boundary

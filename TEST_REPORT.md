@@ -1,60 +1,117 @@
-# WorldWideGames v40 Test Report
+# WorldWideGames Validation Report
 
 Date: 2026-10-02
-Owner/operator: Architect Industries
-Release: **v40 — Astral Menagerie 3.0**
-Overall source QA: **PASS**
-GitHub release gate: **BLOCKED — default branch remains v36 due connector safety rejection**
-Production deployment verification: **BLOCKED — Vercel project deployment read remains 403**
+Release: **v41 — Playability & Classic Vault**
 
-## Focused v40 validation
+## Release result
 
-- `tests/v40_astral.py` — PASS
-  - 15-species architecture retained.
-  - Three habitat study nodes and all three distinct rewards validated.
-  - Habitat Scholar event validated.
-  - Original three trainer gauntlets / three Warden Atlas progression validated.
-  - Three post-Atlas Constellation trainer rematches validated.
-  - Rematch gating of three Ascendant Wardens validated.
-  - Persistent Starlight total after one full study/rematch/Ascendant mastery path: 18.
-  - `mastery-triad`, `ascendant-warden`, and `constellation-master` events validated.
-  - v2 expedition/meta records migrate into v3 keys without losing campaign progression.
-  - v3 autosave/meta persistence validated.
-  - 390×844 layout has no horizontal overflow and no page errors.
+**PASS — source QA gate green.** GitHub and production deployment are tracked as separate release-management gates.
 
-- `tests/v40_static.py` — PASS
-  - 72 unique games.
-  - 120 genre tags.
-  - 113 unique achievements.
-  - 46 remappable games.
-  - Astral Menagerie is sole featured release, version 3.0.
-  - `wwg-v40` service-worker cache.
-  - First PWA shortcut targets Astral Menagerie.
-  - Cover, release history, public-branding, and registered asset paths validated.
+## User-reported Astral Menagerie issue
 
-## Full-catalog / platform gates
+`python3 tests/v41_astral_controls.py`
 
-- `tests/v32_catalog_audit.py` — PASS: **72/72 runtime-clean** in isolated Chromium; 68 generic interaction state changes observed, with gated titles covered by dedicated suites.
-- `tests/smoke.js` — PASS: **72/72 games boot**, homepage boots, reusable detail page boots.
-- `tests/v32_http.py` — PASS: **151/151** local-origin pages/assets return HTTP 200.
-- `tests/v32_controls_browser.py` — PASS: **72/72** game detail pages expose authored controls; **46/46** remappable releases expose explicit current/default mappings.
-- `tests/v32_remap.py` — PASS: shared keyboard remapping and current expansion compatibility.
+The failure was reproduced and fixed at two concrete input boundaries:
 
-## Carried-forward deep regressions
+- With a stored custom `wwg:keymap` of I/J/K/L/F/H, Astral previously ignored normal Arrow/WASD movement. v41 proves **ArrowRight**, **D**, and the custom **L** mapping all move the same player in the same saved-remap session.
+- E previously collided with the platform's default Secondary action before habitat Study could execute. v41 places contextual out-of-battle Study first; the regression positions the player on the authored Canopy Well and verifies **KeyE attunes the node**.
+- The live objective HUD is verified to progress from remaining wild battles → trainer gauntlet → Warden.
+- The objective guide explicitly describes the three-habitat campaign and universal Arrow/WASD movement.
+- 390×844 layout has no horizontal overflow.
 
-- `tests/v36_astral.py` — PASS: party/reserve, switching, five elemental techniques, capture, trainers, quests, Wardens, persistence, mobile layout.
-- `tests/v39_ironlight.py` — PASS: five sectors, rifle/scattergun/Arc Lance, cipher routes/vaults, sentry projectiles, checkpoint retry.
-- `tests/v38_polyforge.py` — PASS: grouping, pointer gizmo drag, scene-code roundtrip, seven briefs, 80-step history, legacy mastery, mobile layout.
-- `tests/v37_ashen.py` — PASS: three traversal paths, enemy classes, weapon identities, sigils, forging, death recovery, Lord patterns, persistence.
-- `tests/v35_verdant.py` — PASS: Rootvault quest/equipment/boss campaign and autosave.
-- `tests/v31_rune_depths.py` — PASS: pure-path mastery, autosave/resume, death/completion semantics, corrupt-save recovery.
-- `tests/v27_fixes.py` — PASS: six historical correctness fixes plus direct state-change checks.
-- `tests/v26_direction.js` — PASS: six lower-is-better score-direction titles and high-score semantics.
-- `tests/v28_circuit.py` / `tests/v28_game.py` — PASS: Circuit Rush and Fluxward campaign/input regressions.
-- `tests/v30_pulsevine.py` — PASS: five-course platformer movement/reachability.
+`python3 tests/v40_astral.py` also remains green on v41, covering the complete original v3 field studies, trainer/Warden campaign, post-Atlas rematches, Ascendant Wardens, Starlight mastery, persistence, and v2→v3 migration.
 
-## Notes
+## Classic-game validation
 
-The large regression batch reached the runner timeout after the catalog-runtime, boot, HTTP, and browser-controls tests had already completed successfully. The remaining targeted tests above were then executed separately. `tests/v31_static.py` still asserts the historical 66-game v31 catalog and therefore fails by design against the current 72-game catalog; `tests/v40_static.py` is the current static release gate.
+`python3 tests/v41_classics.py`
 
-The Vercel checks are not production gameplay tests: deployment enumeration returns 403, project lookup still hits a connector schema/backend mismatch, authenticated deployment fetch cannot access protection-bypass metadata, and the ordinary web origin is inaccessible from the available web environment. No production success claim is made.
+### Neon Serpent 2.0
+
+- Four contracts exist.
+- Contract 1 is exactly **Classic Snake** with **0 drones / 0 gates**.
+- Arrow/WASD movement remains active with a saved custom remap.
+- Classic completion emits `classic-cleared`.
+- Mobile-width layout passes.
+
+### Pulse Maze 1.0
+
+- Initial state now exists before the render loop; a pre-release `player undefined` boot/render error was detected and fixed.
+- Maze starts with a populated shard field.
+- Universal Arrow/WASD movement works with custom remap data present.
+- A powered player/hunter collision defeats the hunter without consuming a life.
+- Deterministic release-gate progression clears all **three authored mazes** through the real tick/end logic.
+- At least three `maze-complete` events and a final `campaign-complete` event emit.
+- Persistent clear count is written.
+- 390×844 layout passes.
+
+## Orbit Breaker false-loss regression
+
+`python3 tests/v41_orbit_breaker.py`
+
+- Reproduces the reported failure condition with an asteroid already below the playfield and verifies **zero shield damage**.
+- Verifies a direct asteroid/ship overlap removes **exactly one** shield point.
+- Verifies the post-hit invulnerability window prevents immediate chain damage from another overlapping asteroid.
+- Verifies collision distance is wrap-aware across the left/right screen seam.
+- Verifies the in-game objective text states that off-screen missed asteroids do not damage the ship.
+
+## Objective and control presentation
+
+`python3 tests/v41_controls_browser.py`
+
+- **73/73 game-detail pages** render at least three authored control lines.
+- **73/73 game-detail pages** render a non-empty explicit `How to win` objective.
+- **47/47 remappable games** display current mappings and the universal Arrow/WASD movement rule.
+- Representative legacy control expansion remains green.
+
+## Static/release checks
+
+`python3 tests/v41_static.py`
+
+- **73** unique game IDs.
+- **121** genre tags.
+- **115** unique achievements.
+- **47** remappable releases.
+- Sole featured game: **Pulse Maze**.
+- Astral Menagerie **3.1**, Neon Serpent **2.0**, Pulse Maze **1.0**.
+- `Classics, Reimagined` collection/home shelf present.
+- PWA shortcuts: Pulse Maze, Neon Serpent, Ironlight Breach.
+- Offline cache: `wwg-v41`.
+- All catalog game/cover asset paths exist.
+- Public-facing source scan remains clear of prohibited internal branding/tool references.
+
+## Full-catalog browser audit
+
+`python3 tests/v41_catalog_audit.py`
+
+- **73/73 games runtime-clean** in isolated Chromium.
+- Generic interaction generated observable state change in **70** titles.
+- Atlas Below, Lumen Relay, and Forgeflow retain direct mechanic-specific coverage.
+
+## Boot and HTTP delivery
+
+- `node tests/smoke.js`: **73/73 registered games boot**; homepage and reusable detail shell boot.
+- `python3 tests/v32_http.py`: **153/153** local-origin paths return HTTP 200.
+- `python3 tests/v32_remap.py`: custom I/J/K/L/F/H regression remains green.
+
+## Deep regressions retained
+
+The following suites remain green on the v41 source:
+
+- `python3 tests/v39_ironlight.py` — five-sector retro FPS, three weapons, projectile sentries, cipher/vault routes, checkpoint semantics.
+- `python3 tests/v38_polyforge.py` — grouped assemblies, drag gizmos, scene codes, history and seven certification briefs.
+- `python3 tests/v37_ashen.py` — three pilgrimage paths, weapons, forging, death recovery, Lord patterns and persistence.
+- `python3 tests/v35_verdant.py` — connected two-area quest/equipment/boss campaign.
+- `python3 tests/v31_rune_depths.py` — Heart/Edge/Flask mastery and persistence.
+- `python3 tests/v27_fixes.py` — catalog correctness fixes.
+- `node tests/v26_direction.js` — score-direction semantics.
+- `python3 tests/v28_circuit.py` — ordered racing checkpoints/rivals/boost/podium.
+- `python3 tests/v28_game.py` — Fluxward tactical interactions and events.
+- `python3 tests/v30_pulsevine.py` — five-course physics reachability and controls.
+
+## Browser evidence limitation
+
+The `agent-browser` CLI required by the preferred dev-server verification workflow is not installed in this execution environment. Direct Playwright navigation to localhost is also blocked by the runtime administrator. Browser evidence therefore comes from the established self-contained Chromium/Playwright page harness, while HTTP-origin evidence comes from the project's local HTTP path test. Neither is represented as production-origin verification.
+
+## GitHub/Vercel
+
+GitHub `main` was inspected at v40 commit `c624574a2fac9cc08f1b451a72e9841bdb0f4709` before v41 work. The v41 source must pass the mandatory atomic GitHub synchronization gate before being called fully shipped. Vercel status is checked separately after GitHub promotion.

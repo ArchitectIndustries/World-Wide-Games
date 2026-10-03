@@ -1,3 +1,64 @@
+# WorldWideGames Release Notes
+
+## v41 — Playability & Classic Vault
+
+v41 directly addresses player feedback around Astral Menagerie controls, objective clarity, and classic-game discoverability while expanding the catalog to **73 games / 121 genre tags / 115 achievements / 47 remappable releases**.
+
+### Astral Menagerie 3.1
+
+- Fixed saved keyboard remaps disabling ordinary Arrow/WASD movement. Arrow keys and W/A/S/D are now permanent directional aliases; custom directional remaps remain additive.
+- Fixed E Study being consumed by the default Secondary binding outside battle. E now studies the current habitat node outside combat and remains capture/Secondary in combat.
+- Added a live Next Objective HUD and objective guide describing wild wins, trainer, Warden, Atlas completion, and mastery trials.
+- Existing 3.0 study/rematch/Ascendant progression and v2 migration remain green.
+
+### Objective clarity everywhere
+
+- Every game detail page now renders a dedicated **How to win** objective separate from controls.
+- Full-size game cards include a visible **Goal** line.
+- Legacy objective copy was strengthened where old control text could be mistaken for the goal.
+- All 73 detail pages are browser-regression checked for objective presentation.
+
+### Universal movement
+
+- Shared remappable games now always accept Arrow Up/Down/Left/Right and W/A/S/D movement even when a saved custom remap exists.
+- Custom movement keys still work concurrently.
+- The keyboard-profile UI explains the universal movement contract explicitly.
+
+### Classics, Reimagined
+
+- New dedicated homepage shelf and discovery collection surfaces 15 familiar high-level archetypes through original WorldWideGames games.
+- Directly highlighted: Ironlight Breach (retro corridor FPS), Neon Serpent (classic snake), Pulse Maze (maze chase), Neon Stack (falling blocks), Orbit Breaker (space-rock shooter), and Cloudforge Pinball.
+- Additional labeled archetypes include top-down adventure, creature collection RPG, platformer, arcade racing, tower defense, arena survival, stealth maze, arcade duel, and rhythm arcade.
+
+### Neon Serpent 2.0
+
+- Contract 1 is a clean **Classic Snake** mode with no drones and no relay gates.
+- Three progressively harder remix contracts add hazards afterward.
+- Expanded to four contracts with objective guide, pause flow, 1–4 selection, persistent unlocks/bests, and `classic-cleared` event.
+
+### Orbit Breaker 1.1
+
+- Fixed a false-loss defect where any asteroid that traveled below the screen removed one shield point even without touching the ship.
+- Added real ship/asteroid collision detection with horizontal wrap-aware distance.
+- Added a short post-hit invulnerability window so stacked asteroids cannot erase multiple shields in one instant.
+- Missed asteroids now leave the playfield harmlessly.
+- Updated objective/help copy to state the rule clearly and added a persistent local-best HUD.
+
+### New game — Pulse Maze
+
+- Three original maze layouts, full shard-clear objectives, four Prism Hunter pursuit styles, four pulse-power nodes, fruit bonus, lives, escalating speed, persistent best/clear records, touch, keyboard and gamepad support.
+- Emits per-maze and full-campaign events.
+- A release-gate boot/render defect found before shipping was corrected by initializing the maze state before the first animation frame.
+
+### QA
+
+- 73/73 runtime-clean.
+- 73/73 registered games boot.
+- 153/153 local HTTP paths return 200.
+- 73/73 game pages show explicit objectives and controls.
+- 47/47 remappable games expose the universal/current keyboard profile.
+- Astral saved-remap, E Study, Neon classic mode, Pulse Maze campaign, and all established deep flagship regressions pass.
+
 # WorldWideGames v40 — Astral Menagerie 3.0
 
 Released 2026-10-02 by Architect Industries.

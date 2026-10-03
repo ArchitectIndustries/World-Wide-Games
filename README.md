@@ -1,14 +1,19 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v39** with **72 games across 120 genre tags**, **110 unique achievements**, and **46 remappable releases**.
+WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v41 — Playability & Classic Vault**, with **73 games across 121 genre tags**, **115 unique achievements**, and **47 remappable releases**.
 
-## v39 — Ironlight Breach 3.0
+## v41 — Playability & Classic Vault
 
-Ironlight Breach is now a five-sector software-raycast FPS campaign. The original rifle/scattergun loop gains the **Arc Lance**, a long-range piercing weapon that can hit up to three aligned targets and temporarily disrupt drones and ranged sentries. A new Sentry enemy fires visible world-space projectiles, making cover, corridor geometry, and line-of-sight management matter during combat.
+v41 is a usability-and-classics release driven by direct play feedback.
 
-Secrets now change route structure instead of only awarding score. Sector four contains a cipher route requiring three cumulative secrets; sector five requires five. Each optional route protects a high-value cipher vault, and opening both in one campaign records vault mastery. Sector retries restore an explicit checkpoint snapshot for score, secrets, vaults, weapon unlocks, ammo, and active weapon, preventing failed-attempt farming while preserving completed-sector progression.
-
-The platform adds **Arc Lancer** and **Cipher Diver** achievements, fixes a duplicate achievement identifier, promotes Ironlight to the featured/PWA shortcut position, refreshes cover art, and advances offline caching to `wwg-v39`. The full 72-game runtime/boot/HTTP/control gates and the established flagship campaign regressions remain green.
+- **Astral Menagerie 3.1** fixes two input defects: Arrow/WASD movement now remains available even after a custom keyboard remap is saved, and **E** correctly studies habitat nodes outside battle instead of being consumed as the Secondary action. Astral also gains a live **Next Objective** HUD and an in-game objective guide.
+- Shared remappable movement now treats **Arrow keys and W/A/S/D as permanent universal movement aliases**. A custom directional remap is additive instead of replacing those familiar movement keys.
+- Every game detail page now has a separate **How to win** objective card, and full-size discovery cards show a concise **Goal** line.
+- The homepage adds **Classics, Reimagined**, which makes familiar game archetypes easy to find without copying protected franchises: retro corridor FPS, classic snake, maze chase, falling blocks, space-rock shooter, pinball, top-down adventure, creature collection RPG, platformer, arcade racing, tower defense, arena survival, stealth maze, arcade duel, and rhythm arcade.
+- **Neon Serpent 2.0** begins with a clean hazard-free **Classic Snake** contract before unlocking three progressively more complex remix contracts.
+- **Orbit Breaker 1.1** fixes false shield loss: only direct asteroid collisions can damage the ship, missed asteroids are harmless, and post-hit invulnerability prevents multi-hit chains.
+- New game **Pulse Maze 1.0** is an original three-maze chase arcade campaign with signal shards, four distinct Prism Hunter behaviors, power-pulse reversals, fruit bonuses, lives, escalating speed, touch/gamepad input, and persistent best/clear records.
+- Pulse Maze is the featured release; the PWA shortcuts now surface **Maze Chase**, **Snake**, and the **Retro FPS** directly.
 
 ## Run locally
 
@@ -20,11 +25,11 @@ Then open `http://localhost:8080/` in a modern browser. No package installation,
 
 ## Project structure
 
-- `index.html` — discovery/home experience
-- `game.html` — reusable game-detail shell
+- `index.html` — discovery/home experience and Classics, Reimagined shelf
+- `game.html` — reusable game-detail shell with explicit objective and controls
 - `js/games.js` — data-driven game catalog
-- `js/app.js` — discovery/profile/achievement logic
-- `assets/wwg-input.js` — shared keyboard-remapping helper
+- `js/app.js` — discovery/profile/achievement/classics logic
+- `assets/wwg-input.js` — shared universal movement + keyboard-remapping layer
 - `games/` — self-contained game releases
 - `covers/` — local cover artwork
 - `tests/` — release gates and regression coverage

@@ -15,12 +15,36 @@
   ],
   "shortcuts": [
     {
-      "name": "Astral Menagerie",
-      "short_name": "Astral",
-      "url": "game.html?id=astral-menagerie",
+      "name": "Pulse Maze",
+      "short_name": "Maze Chase",
+      "url": "game.html?id=pulse-maze",
       "icons": [
         {
-          "src": "covers/astral-menagerie.svg",
+          "src": "covers/pulse-maze.svg",
+          "sizes": "800x500",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Neon Serpent: Classic Snake",
+      "short_name": "Snake",
+      "url": "game.html?id=neon-serpent",
+      "icons": [
+        {
+          "src": "covers/neon-serpent.svg",
+          "sizes": "800x500",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Ironlight Breach",
+      "short_name": "Retro FPS",
+      "url": "game.html?id=ironlight-breach",
+      "icons": [
+        {
+          "src": "covers/ironlight-breach.svg",
           "sizes": "800x500",
           "type": "image/svg+xml"
         }

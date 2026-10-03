@@ -2,69 +2,130 @@
 
 Last updated: 2026-10-02
 Owner/operator: Architect Industries
-Current verified source release: **v40 — Astral Menagerie 3.0**
-Release-gate status: **source QA green; GitHub `main` promotion blocked by the current connector safety path**
-Status: **72-game** static browser-gaming platform with **120 genre tags**, **113 unique achievements**, **46 remappable releases**, persistent local player data, PWA/offline support, full-catalog Chromium QA, and deep campaign regressions.
+Current verified source release: **v41 — Playability & Classic Vault**
+Release-gate status: **source QA green; GitHub synchronization pending this release gate**
+Status: **73-game** static browser-gaming platform with **121 genre tags**, **115 unique achievements**, **47 remappable releases**, persistent local player data, PWA/offline support, explicit per-game objectives, universal Arrow/WASD movement for shared-input games, a dedicated classic-archetype discovery shelf, full-catalog Chromium QA, and deep campaign regressions.
 
-## v40 production work — Astral Menagerie 3.0
+## v41 production work — Playability & Classic Vault
 
-Astral Menagerie advances from its v36 three-habitat Atlas into a replayable post-campaign mastery RPG while preserving the original party, reserve, capture, type, trainer, and Warden systems:
+### Astral Menagerie 3.1 reliability fix
 
-- Added one visible **field-study node per habitat**: Canopy Well, Lumen Pool, and Cinder Lens. Each can be attuned once per expedition and grants a distinct reward: party restoration/capsules, technique refresh/XP insight, or permanent +2 maximum HP for the current party.
-- Completing all three studies emits durable **Habitat Scholar** mastery and contributes to Atlas score.
-- Completing the first Atlas now unlocks **Atlas Mastery Trials** rather than ending replay depth.
-- Added three **Constellation trainer rematches**. Each is a three-opponent gauntlet using the habitat trainer team plus its Warden, at higher levels than the original campaign.
-- Clearing a trainer rematch unlocks that habitat's **Ascendant Warden** trial.
-- Trainer rematches award 2 persistent Starlight; Ascendant Wardens award 3. Lifetime Starlight contributes to the score and persists independently of an expedition reset.
-- Clearing all trainer rematches emits `mastery-triad`; clearing all three Ascendant Wardens emits `constellation-master` and records permanent mastery.
-- Added v3 save/meta keys with compatible migration from v2 expedition/meta records, including nested defaults for new attunement/rematch/Ascendant structures.
-- Added E habitat-study and T Atlas-Trials keyboard paths, panel controls, visible study markers, Starlight HUD, and mastery-aware battle presentation.
-- Added three platform achievements: **Habitat Scholar**, **Constellation Challenger**, and **Ascendant Atlas**.
-- Astral Menagerie becomes the sole featured release and first PWA shortcut; offline cache advances to `wwg-v40`.
-- Long Campaigns now explicitly includes Astral Menagerie.
+Direct reproduction found two concrete input defects behind the reported playability problem:
+
+1. When a player already had a custom `wwg:keymap`, the shared input layer stopped accepting normal Arrow/WASD fallbacks. Astral therefore appeared unresponsive unless the player remembered the custom keys.
+2. Astral used **E** for habitat Study while the platform also used E as the default Secondary action. The generic input handler consumed E before Study could execute outside battle.
+
+v41 fixes both paths. Arrow keys and W/A/S/D are permanent directional aliases even with a custom remap; custom movement keys remain additional aliases. Astral handles contextual **E = Study** before generic Secondary input when not in battle, while E/Secondary continues to capture weakened wild Astrals during battle. A live `Next` objective HUD and `? · Objective` guide now state the immediate and campaign-level goals.
+
+### Clear objectives platform-wide
+
+- `game.html` now has a dedicated **Objective** section separate from About and Controls.
+- `js/game-page.js` renders `How to win:` for every catalog entry using authored `objective` metadata first and a goal-aware fallback otherwise.
+- Full-size discovery cards show a visible `Goal:` line.
+- Weak/ambiguous legacy objectives were explicitly upgraded for Quiet Protocol, Hushwave Operator, Runelight Locksmith, Tidal Foundry, Terrace Keeper, Railspire Dispatch, and Pulsevine Parkour.
+- All **73/73** game detail pages are regression-tested for non-empty objective presentation.
+
+### Universal movement controls
+
+- `assets/wwg-input.js` now keeps **Arrow Up/Down/Left/Right and W/A/S/D** active for shared directional movement regardless of saved custom remapping.
+- Custom I/J/K/L-style mappings remain valid at the same time.
+- The detail-page keyboard profile explicitly explains that custom movement mappings are additive.
+- Shared-action bindings such as Primary/Secondary retain the selected remap behavior.
+
+### Classics, Reimagined
+
+A new discovery collection exposes familiar high-level game archetypes using original WorldWideGames identities and original code/assets. The collection currently labels **15 archetypes**, including:
+
+- Ironlight Breach — Retro Corridor FPS
+- Neon Serpent — Classic Snake
+- Pulse Maze — Maze Chase
+- Neon Stack — Falling Blocks
+- Orbit Breaker — Space-Rock Shooter
+- Cloudforge Pinball — Pinball
+- Verdant Echoes — Top-Down Adventure
+- Astral Menagerie — Creature Collection RPG
+- Skyhook Sprint — Platformer
+- Circuit Rush — Arcade Racing
+- Bastion Bloom — Tower Defense
+- Emberfield Survival — Arena Survival
+- Quiet Protocol — Stealth Maze
+- Prism Duel — Arcade Duel
+- Pulse Archive — Rhythm Arcade
+
+The homepage highlights six of these immediately, and the full discovery filter exposes the complete collection.
+
+### Neon Serpent 2.0
+
+- Contract 1 is now **Classic Snake**: no drones and no relay gates; eat cyan sparks, grow, and avoid the serpent body.
+- Three additional contracts progressively add drones, relay gates, faster cadence, and higher growth targets.
+- Expanded from three to **four** contracts with persistent unlocks/bests.
+- Added objective guide, pause flow, number-key selection 1–4, and standardized `classic-cleared` event.
+
+### Orbit Breaker 1.1 collision fix
+
+Direct play feedback exposed a false-loss rule in Orbit Breaker: every asteroid that simply passed below the screen removed one shield point, even when it never touched the ship. The game had no ship/asteroid collision test at all. v41 corrects that contract:
+
+- Shield now decreases **only on a physical asteroid/ship collision**.
+- Asteroids that leave the bottom of the playfield are removed without damaging the player.
+- Horizontal wrap-aware collision math prevents edge-of-screen misses.
+- A 1.05-second post-hit invulnerability window prevents overlapping asteroids from draining multiple shields in one instant.
+- The objective/help copy explicitly explains the survival rule, and a persistent local best is now displayed.
+
+### New game — Pulse Maze 1.0
+
+- Three original 21×21 maze layouts.
+- Collect-all-shards maze-chase loop with four Prism Hunters using distinct pursuit targets.
+- Four pulse nodes per maze temporarily reverse the hunt and allow hunter defeats for combo score.
+- Fruit bonus, three lives, escalating stage speed, persistent best score/unlocked stage/clear records.
+- Keyboard, touch, and gamepad movement; permanent Arrow/WASD aliases.
+- Standard `maze-complete` and `campaign-complete` events.
+- A pre-release QA pass caught and fixed an initialization defect where the first render could run before a player state existed.
+
+### Platform/release changes
+
+- Catalog: **73 games / 121 genres / 115 unique achievements / 47 remappable releases**.
+- New achievements: **Classic Serpent** and **Pulse Maze Master**.
+- Pulse Maze becomes the sole featured release.
+- PWA shortcuts surface Pulse Maze, Neon Serpent, and Ironlight Breach.
+- Offline cache advances to `wwg-v41`.
+- Local-origin release path count rises to **153**.
 
 ## Validation
 
-Focused and release-wide checks executed on the final v40 runtime source:
+Executed on the final v41 runtime source:
 
-- `python3 tests/v40_astral.py`: v2→v3 migration, three authored study nodes/rewards, original trainer/Warden Atlas loop, three trainer rematches, three Ascendant Wardens, Starlight totals/persistence, mastery events, autosave, and 390×844 no-overflow validation pass.
-- `python3 tests/v40_static.py`: **72 games / 120 genres / 113 unique achievements / 46 remappable games**, sole featured Astral Menagerie 3.0, `wwg-v40`, release history, PWA shortcut, cover, public-branding and asset-path checks pass.
-- `python3 tests/v36_astral.py`: original fifteen-species party/reserve, switching, five techniques/statuses, capture, trainer gauntlets, quests, Wardens, autosave/meta, and mobile layout remain green on v3.
-- `python3 tests/v39_ironlight.py`: five-sector Ironlight campaign, three weapons, sentry projectiles, ciphers/vaults, and checkpoint semantics remain green.
-- `python3 tests/v38_polyforge.py`: grouped assemblies, gizmo drag, scene code, seven briefs, 80-step history, legacy mastery, and mobile layout remain green.
-- `python3 tests/v37_ashen.py`: three Ashen paths, enemies, weapons, sigils, forging, death recovery, three Lord patterns, persistence, and mobile layout remain green.
-- `python3 tests/v35_verdant.py`: two-area Verdant quest/equipment/boss campaign remains green.
-- `python3 tests/v31_rune_depths.py`: Rune Depths pure-path mastery and persistence remains green.
-- `python3 tests/v32_catalog_audit.py`: **72/72 games runtime-clean** in isolated Chromium; representative interaction observes state change in 68 titles, with Astral and other gated titles covered by dedicated tests.
-- `node tests/smoke.js`: **72/72 registered games boot**, plus homepage and reusable detail shell.
-- `python3 tests/v32_http.py`: **151/151** local-origin pages/assets returned HTTP 200.
-- `python3 tests/v32_controls_browser.py`: **72/72** detail pages expose controls; **46/46** remappable releases expose explicit current/default keyboard profiles.
-- `python3 tests/v32_remap.py`: custom remap and six-new-game remap compatibility pass.
-- `python3 tests/v27_fixes.py`, `node tests/v26_direction.js`, `python3 tests/v28_circuit.py`, `python3 tests/v28_game.py`, and `python3 tests/v30_pulsevine.py`: carried-forward correctness, score-direction, racing/strategy, and platformer regressions pass.
-- The comprehensive batch reached the execution timeout only after the catalog/boot/HTTP/control gates had already printed green results; remaining targeted regressions were then run separately. A legacy `v31_static.py` count assertion is obsolete against the 72-game catalog and is not a current release gate.
+- `python3 tests/v41_astral_controls.py`: reproduces a stored I/J/K/L/F/H remap and proves ArrowRight, D, and the custom L mapping all move; verifies E Study conflict is fixed, live objectives advance, guide text renders, and 390×844 layout has no horizontal overflow.
+- `python3 tests/v40_astral.py`: complete Astral 3.0 study/trainer/rematch/Ascendant/Starlight campaign and v2 migration remain green on 3.1.
+- `python3 tests/v41_classics.py`: Neon Serpent Classic contract is hazard-free, universal movement works under custom remap, `classic-cleared` emits, Pulse Maze power collision works, and all three maze completion/campaign events persist.
+- `python3 tests/v41_orbit_breaker.py`: missed asteroids cause zero shield damage, direct collisions remove exactly one shield, post-hit invulnerability blocks chain damage, and wrap-edge collision math is correct.
+- `python3 tests/v41_static.py`: **73 games / 121 genres / 115 unique achievements / 47 remappable games**, sole featured Pulse Maze, classic discovery/PWA paths, v41 cache, objective UI, universal movement source, asset paths, and public-branding scan pass.
+- `python3 tests/v41_controls_browser.py`: **73/73** detail pages expose controls plus a `How to win` objective; **47/47** remappable releases expose the universal/current keyboard profile.
+- `python3 tests/v41_catalog_audit.py`: **73/73 runtime-clean** in isolated Chromium; generic interaction changes state in 70 titles, with Atlas Below, Lumen Relay, and Forgeflow retaining dedicated mechanic coverage.
+- `node tests/smoke.js`: **73/73 registered games boot**, plus homepage and detail shell.
+- `python3 tests/v32_http.py`: **153/153** local-origin pages/assets return HTTP 200.
+- `python3 tests/v32_remap.py`: legacy custom remap regression remains green.
+- Deep regressions remain green for Ironlight 3.0, Polyforge 3.0, Ashen Covenant 2.0, Verdant Echoes 2.0, Rune Depths, v27 correctness, score-direction semantics, Circuit Rush, Fluxward Conclave, and Pulsevine Parkour.
+
+The requested `agent-browser` executable is unavailable in the current runtime, and direct Playwright navigation to localhost is administratively blocked. Browser validation therefore uses the project's established self-contained Chromium/Playwright harness plus local HTTP delivery tests; those evidence types are recorded separately rather than represented as production-origin testing.
 
 ## GitHub continuity
 
 Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `main`.
 
-- GitHub `main` was re-inspected before work and remains coherent at verified v36 release-state commit **`b8a1b15ad43139942b325b469eaaf6ddb2246da7`**.
-- `automation/v37-release` remains one commit ahead / zero behind `main` with the complete verified v37 delta. `automation/v38-release` and the pre-existing `automation/v40-release` currently mirror that same v37 delta; `automation/v40-sync` is identical to `main`.
-- Before creating v40, the run attempted the mandatory catch-up path: a non-force fast-forward of `main` to the verified v37 commit and a fallback pull request. Both authorized mutations were blocked by the current connector safety layer before any write completed.
-- The complete v36→v40 file delta has been prepared for atomic Git-tree staging. If non-default branch Git-object writes are accepted later in this run, the staged commit/branch will be recorded below; default-branch promotion must still pass an immediate `main` re-read and non-force update.
-- No partial default-branch update has been made. v40 must **not** be described as fully shipped to GitHub `main` until that release gate completes.
+- Baseline inspected before v41 work: v40 `main` commit **`c624574a2fac9cc08f1b451a72e9841bdb0f4709`**.
+- v41 GitHub synchronization is a mandatory release gate and must atomically transfer the complete verified source before this release is described as fully shipped.
+- The final release commit SHA and post-write verification are recorded here after promotion.
 
 ## Production deployment
 
-- Canonical Vercel project ID: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`; intended team: `team_wwOmTAdrfPwvTGNSLU1VarOy`; domain: `https://worldwidegames.vercel.app`.
-- Fresh 2026-10-02 deployment enumeration returns **403 Forbidden** for the exact project/team pair.
-- Project lookup still encounters the connector/backend argument mismatch, and authenticated Vercel fetch reports that the connected account cannot access the deployment's protection-bypass metadata.
-- Direct web-origin access also reports the production URL inaccessible from the current web environment. This is treated as an authorization/visibility limitation, not evidence the project is absent.
-- No duplicate Vercel project is created and no v40 production deployment is claimed.
+Canonical Vercel project: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`, Architect Industries team `team_wwOmTAdrfPwvTGNSLU1VarOy`, production domain `https://worldwidegames.vercel.app`.
+
+- Production access/deployment is rechecked after the GitHub release gate.
+- No duplicate Vercel project is permitted as a workaround for connector visibility issues.
 
 ## Next high-value priorities
 
-1. **GitHub release catch-up first:** promote the newest complete verified source to `main` as soon as the connector safety/write path permits it.
-2. Add optional post-pilgrimage mastery contracts/rematches to **Ashen Covenant** without invalidating v2 saves.
-3. Add optional mastery rematches and grove challenge contracts to **Verdant Echoes** while preserving its v2 campaign migration.
-4. Deep-validate **Emberdeck Pilgrim** route mastery and **Ashfall Caravan** contract/end-state variants through legitimate state transitions.
-5. Deploy the newest GitHub-verified release to the established Vercel project when project-scoped authorization becomes available.
+1. Continue expanding **Classics, Reimagined** with original high-quality archetypes where the catalog still has a real mechanical gap rather than duplicating an existing game.
+2. Deep-play the new Pulse Maze difficulty curves with longer non-deterministic human-like runs and tune hunter speed/maze pressure if needed.
+3. Continue objective-copy review for older concise games using direct player comprehension as the criterion.
+4. Deploy the newest GitHub-verified release to the established Vercel project when project-scoped authorization permits it.
