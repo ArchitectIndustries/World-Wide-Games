@@ -20,7 +20,7 @@ Status: **75-game** static browser-gaming platform with **122 genre tags**, **12
 
 - `python3 tests/v45_lumenfall.py`: **PASS** — runtime boot, keyboard movement/jump, all three rune unlocks, three progression gates, dash, double jump, rune bolt, shrine checkpoint persistence, death/revival rollback, legitimate Bell-Warden completion, campaign/meta persistence, required events, and 390×844 mobile width.
 - `python3 tests/v45_static.py`: **PASS** — **75 games / 122 genres / 120 achievements / 47 remappable releases**, sole featured Lumenfall Citadel, `wwg-v45` PWA/cache wiring, asset paths, release history, and public-branding hygiene.
-- `python3 tests/v45_catalog_audit.py`: **PASS — 75/75 runtime-clean** in isolated Chromium; generic interaction changes state in 72 titles. Atlas Below, Lumen Relay, and Forgeflow remain the known generic-harness exceptions with dedicated mechanic coverage.
+- Full-catalog isolated Chromium release harness: **PASS — 75/75 runtime-clean** in isolated Chromium; generic interaction changes state in 72 titles. Atlas Below, Lumen Relay, and Forgeflow remain the known generic-harness exceptions with dedicated mechanic coverage.
 - `node tests/smoke.js`: **75/75 registered games boot** plus homepage and game-detail shells.
 - `python3 tests/v41_controls_browser.py`: **75/75** game-detail pages expose objectives/controls; **47/47** remappable releases expose the universal/current key profile.
 - `python3 tests/v32_http.py`: **157/157** local-origin release paths return HTTP 200.
@@ -29,7 +29,7 @@ Status: **75-game** static browser-gaming platform with **122 genre tags**, **12
 ### v45 release gate
 
 - GitHub baseline at run start: `main` = **`adf3bcf88f033885e56ff4fc7ba36e5cea8632a9`** (finalized v44 release state).
-- Complete verified v45 source commit: **`__V45_SOURCE_SHA__`**.
+- Complete verified v45 source commit: **`713aae06f55e86e4dfd756b771a59cfdc3dd8a4f`**.
 - The release-state documentation commit is built as a child of the complete source commit and promoted to `main` only after a final concurrency check using a non-force fast-forward.
 - Production deployment to the established Vercel project remains blocked by project/team authorization; the existing project is preserved and no duplicate project is created.
 

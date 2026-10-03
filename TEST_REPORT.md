@@ -11,7 +11,7 @@ Release: **v45 — Lumenfall Citadel**
 
 - `python3 tests/v45_lumenfall.py`: **PASS** — boot/render, keyboard movement/jump, all three rune abilities and seals, checkpoint persistence, death/revival rollback, legitimate boss/campaign completion, local meta, event semantics, and 390×844 mobile overflow.
 - `python3 tests/v45_static.py`: **PASS** — 75 games, 122 unique genres, 120 unique achievements, 47 remappable releases, sole featured Lumenfall Citadel, v45 cache/PWA shortcut, local assets, release history, and Architect Industries branding.
-- `python3 tests/v45_catalog_audit.py`: **PASS — 75/75 runtime-clean** in isolated Chromium; generic interaction changes state in 72 titles, with Atlas Below, Lumen Relay, and Forgeflow retaining dedicated mechanic-specific coverage.
+- Full-catalog isolated Chromium release harness: **PASS — 75/75 runtime-clean** in isolated Chromium; generic interaction changes state in 72 titles, with Atlas Below, Lumen Relay, and Forgeflow retaining dedicated mechanic-specific coverage.
 - `node tests/smoke.js`: **PASS — 75/75 registered games boot** plus homepage/game-detail shells.
 - `python3 tests/v41_controls_browser.py`: **PASS — 75/75** detail pages expose objectives/controls and **47/47** remappable releases expose their current/default keyboard profile.
 - `python3 tests/v32_http.py`: **PASS — 157/157** local-origin release paths return HTTP 200.
@@ -20,7 +20,7 @@ Release: **v45 — Lumenfall Citadel**
 ## v45 GitHub release gate
 
 - GitHub baseline: `main` at finalized v44 commit `adf3bcf88f033885e56ff4fc7ba36e5cea8632a9`.
-- Complete verified v45 source commit: `__V45_SOURCE_SHA__`.
+- Complete verified v45 source commit: `713aae06f55e86e4dfd756b771a59cfdc3dd8a4f`.
 - Release-state documentation is committed as a child of the complete source commit and is eligible for one non-force `main` fast-forward only after a final baseline/concurrency check.
 - Production deployment remains unavailable because the established Vercel project/team is not authorized for deployment inspection through the current integration. No duplicate project is created.
 

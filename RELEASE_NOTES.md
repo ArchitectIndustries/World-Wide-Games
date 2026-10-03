@@ -6,7 +6,7 @@ Lumenfall Citadel adds an original side-scrolling action-exploration campaign bu
 
 The campaign includes score-safe checkpoint recovery, persistent clears/best-time/best-score/rune records, keyboard/touch/gamepad input, mobile-responsive HUD and objective guidance, and explicit milestone events. Platform integration adds Lumenfall Citadel to Flagship Worlds and Long Campaigns, adds the **Citadel Restored** and **Threefold Rune** achievements, makes Lumenfall the featured release and first PWA shortcut, and advances offline caching to `wwg-v45`.
 
-Release verification: **75/75** registered games boot, **75/75** runtime-clean in the isolated Chromium catalog audit, **75/75** game-detail objective/control pages, **47/47** remappable profiles, and **157/157** local-origin paths pass. Complete verified v45 source commit: `__V45_SOURCE_SHA__`.
+Release verification: **75/75** registered games boot, **75/75** runtime-clean in the isolated Chromium catalog audit, **75/75** game-detail objective/control pages, **47/47** remappable profiles, and **157/157** local-origin paths pass. Complete verified v45 source commit: `713aae06f55e86e4dfd756b771a59cfdc3dd8a4f`.
 
 ---
 
