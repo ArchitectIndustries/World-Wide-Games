@@ -1,11 +1,36 @@
 # WorldWideGames Project State
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 Owner/operator: Architect Industries
-Current verified source release: **v43 — Neon Stack 2.0**
-Release-gate status: **source QA green; v43 GitHub synchronization pending release-gate promotion**
-Status: **73-game** static browser-gaming platform with **121 genre tags**, **116 unique achievements**, **47 remappable releases**, persistent local player data, PWA/offline support, explicit per-game objectives, universal Arrow/WASD movement for shared-input games, a dedicated classic-archetype discovery shelf, full-catalog Chromium QA, and deep campaign regressions.
+Current verified source release: **v44 — Vanta Frontline**
+Release-gate status: **source QA green; GitHub synchronization pending**
+Status: **74-game** static browser-gaming platform with **121 genre tags**, **118 unique achievements**, **47 remappable releases**, persistent local player data, PWA/offline support, explicit per-game objectives, universal Arrow/WASD movement for shared-input games, a dedicated classic-archetype discovery shelf, full-catalog Chromium QA, and deep campaign regressions.
 
+## v44 production work — Vanta Frontline
+
+- Added **Vanta Frontline 1.0**, a new runtime-rendered tactical first-person shooter built entirely from local browser code with no external art or audio assets.
+- Three authored operations combine uplink capture, adaptive rifle/rusher/sniper response teams, automatic pickups, armor, reload discipline, and extraction scoring.
+- Modern FPS controls include pointer-lock mouse aim, ADS, sprint, crouch, vault-jump, lean, reload, plus keyboard-turn fallbacks.
+- Low / Medium / High pre-deployment graphics profiles scale ray density without changing rules.
+- Touch D-pad/action controls and gamepad movement/aim/fire/ADS/reload are supported.
+- Persistent best score, clear count, and furthest-operation records are stored locally.
+- Platform integration adds **Vanta Operator** and **Signal Sweep** achievements, moves the featured/PWA first slot to Vanta Frontline, and advances the offline cache to `wwg-v44`.
+
+### v44 validation
+
+- `python3 tests/v44_vanta.py`: **PASS** — three 25×18 authored operations, three uplinks per operation, graphics-profile switching, universal Arrow/WASD movement under a stored custom remap, deterministic reload/armor/shooting boundaries, death-retry score rollback, complete three-operation extraction flow, persistence, and 390×844 mobile width.
+- The Vanta gate found and fixed two pre-release defects before packaging: the render loop could raycast before the first operation grid existed, and retrying after death could retain failed-attempt score. Initial operation parsing and operation-start score checkpoints now prevent both.
+- full-catalog Chromium release harness: **PASS** — static release assertions confirm **74 games / 121 genres / 118 achievements / 47 remappable releases**, sole featured Vanta Frontline, v44 PWA/cache wiring, assets, release history, and achievements; the same gate is **74/74 runtime-clean** in isolated Chromium with generic interaction changing state in 71 titles. Atlas Below, Lumen Relay, and Forgeflow retain direct mechanic-specific coverage.
+- `node tests/smoke.js`: **74/74 registered games boot** plus homepage and game-detail shells.
+- `python3 tests/v41_controls_browser.py`: **74/74** game-detail pages retain explicit objectives/controls; **47/47** remappable releases expose the universal/current key profile.
+- `python3 tests/v32_http.py`: **155/155** local-origin release paths return HTTP 200.
+- `python3 tests/v42_reliability.py` and deep Ironlight 3.0, Astral 3.1, Polyforge 3.0, Ashen 2.0, Verdant 2.0, Rune Depths, Circuit Rush, Fluxward Conclave, Pulsevine Parkour, and score-direction regressions remain green.
+
+### v44 release gate
+
+- GitHub baseline at run start: `main` = **`d807faa1666434f76d095a512c2b3aa08391f03f`** (v43 complete source release).
+- v44 source commit: pending final synchronization.
+- Vercel project visibility remains connector-limited; the established project is preserved and no duplicate project is created.
 
 ## v43 production work — Neon Stack 2.0
 
@@ -32,7 +57,10 @@ The falling-block classic has been rebuilt from a short endless loop into a poli
 ### v43 release gate
 
 - GitHub baseline at run start: `main` = `0393a86790cbe3b5cfc32161d27e8e1d08c6b0c7` (v42 release state).
-- v43 source commit: **pending release-gate synchronization**.
+- Complete verified v43 source release commit: **`d807faa1666434f76d095a512c2b3aa08391f03f`**.
+- `main` was re-read immediately before promotion, still pointed at the verified v42 parent, and advanced by a **non-force fast-forward**.
+- Post-write verification confirmed `main` points at the complete v43 source commit.
+- A documentation-only release-state commit `7dd0401f7eeea8999086390502588e8a414a729d` was prepared but could not be promoted because the connector blocked the second ref update; `main` remains safely on the complete v43 source commit.
 - Vercel remains blocked by the known connector authorization/schema limitation; no duplicate project will be created.
 
 ## v42 production work — Reliability Sweep
@@ -164,6 +192,7 @@ Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `ma
 - Complete verified v42 source release commit: **`f9d27674227fb04173fe7459aa129645673c1d95`**.
 - `main` was re-read immediately before promotion, still pointed at the verified v41 parent, and advanced by a **non-force fast-forward**.
 - Post-write verification confirmed `main` points at the complete v42 source commit before release-state documentation finalization.
+- Release-state documentation was finalized on `main` at **`0393a86790cbe3b5cfc32161d27e8e1d08c6b0c7`** and re-verified there.
 
 ## Production deployment
 

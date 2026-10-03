@@ -1,3 +1,13 @@
+# WorldWideGames v44 — Vanta Frontline
+
+Released 2026-10-03 by Architect Industries.
+
+Vanta Frontline expands WorldWideGames with a new runtime-rendered tactical browser FPS built from local code and runtime-generated visuals/audio. Three original operations combine encrypted uplink capture, extraction objectives, rifle/rusher/sniper enemy roles, armor, ammunition management, trauma and munition pickups, pointer-lock aiming, ADS, sprint/crouch/jump/lean movement, graphics profiles, touch controls, gamepad support, and persistent records.
+
+Platform integration adds Vanta Frontline to Flagship Worlds and Long Campaigns, makes it the featured release and first PWA shortcut, adds Vanta Operator and Signal Sweep achievements, and advances the offline cache to `wwg-v44`.
+
+---
+
 # WorldWideGames Release Notes
 
 ## v43 — Neon Stack 2.0 (2026-10-03)
@@ -10,6 +20,7 @@
 - Featured Neon Stack 2.0 and moved it to the first PWA shortcut; cache advances to `wwg-v43`.
 - Ran dedicated v43 browser/static release checks; full catalog boot, objective/control, runtime, HTTP, reliability, classics, and representative deep-campaign regressions remain green.
 - Vercel production synchronization remains blocked by the known connector permission/schema issue; the established project is preserved and no duplicate was created.
+
 
 ## v42 — Reliability Sweep
 

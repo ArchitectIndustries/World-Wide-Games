@@ -1,3 +1,7 @@
+**v44 continuity note — 2026-10-03:** Vanta Frontline 1.0 adds a three-operation tactical FPS campaign with operation-start retry checkpoints, persistent clear/best records, uplink-and-extraction objectives, graphics profiles, and mixed response roles. The deterministic Chromium gate validates the complete three-operation extraction path, retry-score rollback, firing/reload/armor boundaries, custom-remap plus universal movement, persistence, and mobile width. Full 74-game runtime/boot/objective/HTTP gates and retained flagship regressions remain green.
+
+---
+
 **v42 continuity note — 2026-10-02:** a catalog-wide reliability sweep corrected four rule/state defects outside the flagship campaigns: Skyhook Sprint void checkpoints, Crownline Tactics dead-unit targeting, Vector League post-whistle simulation, and Windward Cargo contradictory terminal events. Dedicated regressions reproduce and lock each correction; all flagship/deep regressions remain green.
 
 **v41 continuity note — 2026-10-02:** Astral Menagerie 3.1 fixes the saved-remap movement regression and E Study/Secondary collision without changing the v3 campaign/save schema. The complete v40 Astral study/trainer/Warden/rematch/Ascendant/Starlight regression remains green. v41 also adds platform-wide explicit objective presentation and universal Arrow/WASD aliases for shared movement controls; Ironlight Breach, Polyforge Studio, Ashen Covenant, Verdant Echoes, Rune Depths, Aetherstead Colony, Mosslight Vale, Fluxward Conclave, Circuit Rush, the v27 correctness suite, and score-direction regressions remain green.
@@ -39,6 +43,7 @@ This pass evaluated the catalog titles intended to sustain play beyond a short a
 
 | Game | Existing depth | v29 disposition |
 |---|---|---|
+| Vanta Frontline | Three authored tactical FPS operations, nine uplinks, extraction objectives, mixed response roles, persistent campaign records | **v44 deep-validated** — complete campaign, retry checkpoint integrity, persistence, combat/resource boundaries, input aliases, and mobile layout |
 | Mosslight Vale | Six linked regions, NPC quest arcs, combat, collectibles, persistent quest state | **Substantially upgraded** — added milestone autosaves, post-restoration Starshade finale, durable campaign completion, meta clears/best score, and reload-safe ending state |
 | Aetherstead Colony | One 16-turn colony scenario with six structures | **Rebuilt into 2.0** — persistent three-charter / 36-turn campaign with policies, crises, adjacency systems, structure upgrades, charter seals, autosave/resume, legacy bonuses, and real campaign completion |
 | Rune Depths | Five-depth dungeon campaign, four sigils per floor, three enemy archetypes, autosaved active delves, persistent best score/clears, three pure relic mastery paths | v31 deep-validated: full Heart, Edge, and Flask mastery clears completed against the authored enemy populations; reload/failure/corrupt-save boundaries verified |

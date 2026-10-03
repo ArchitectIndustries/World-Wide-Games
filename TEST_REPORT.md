@@ -1,20 +1,72 @@
 # WorldWideGames Validation Report
 
-Date: 2026-10-02
-Release: **v43 — Neon Stack 2.0**
+Date: 2026-10-03
+Release: **v44 — Vanta Frontline**
 
 ## Release result
 
-**PASS — source QA gate green.** GitHub and production deployment are tracked as separate release-management gates.
+**PASS — source QA gate green. GitHub synchronization and production deployment are tracked as separate release-management gates.**
 
+## v44 tactical FPS validation
+
+`python3 tests/v44_vanta.py`
+
+- Validates all three 25×18 operations, exactly three encrypted uplinks per operation, extraction endpoints, mixed rifle/rusher/sniper response teams, and health/ammo pickups.
+- Validates Low/Medium/High graphics-profile switching and 390×844 mobile layout without horizontal overflow.
+- With a stored I/J/K/L/F/H custom keymap, ArrowRight and W still move through the shared universal movement layer.
+- Reload transfer, armor absorption, line-of-sight rifle damage, and one-round ammunition consumption pass deterministic boundary checks.
+- A pre-release initial-render defect was reproduced: the animation loop could raycast an empty grid before deployment. The release now parses operation 1 before the first frame; the browser harness is page-error clean.
+- A second pre-release defect was reproduced: a failed attempt could carry its earned score into retry. Operation-start score checkpoints now restore the pre-attempt score on death, preventing retry farming.
+- The real extraction rule clears all three operations, emits three `operation-complete` events plus `campaign-complete`, and persists clear/best-operation/best-score records.
+
+full-catalog Chromium release harness
+
+- Static release assertions confirm **74** unique games / **121** genre tags / **118** unique achievements / **47** remappable releases.
+- Sole featured release: **Vanta Frontline 1.0**; first PWA shortcut targets Vanta Frontline and cache is `wwg-v44`.
+- Vanta Operator + Signal Sweep achievements, v44 release-history wiring, and all catalog game/cover paths are present.
+- **74/74 runtime-clean** in isolated Chromium.
+- Generic interaction produced observable state change in **71** titles.
+- Atlas Below, Lumen Relay, and Forgeflow remain the three known generic-harness no-change cases with direct mechanic-specific coverage.
+
+
+
+## Platform and retained regressions
+
+- `node tests/smoke.js`: **74/74** registered games boot; homepage and reusable game-detail shell boot.
+- `python3 tests/v41_controls_browser.py`: **74/74** detail pages show explicit objectives/controls; **47/47** remappable releases expose the current/universal keyboard profile.
+- `python3 tests/v32_http.py`: **155/155** local-origin release paths return HTTP 200.
+- `python3 tests/v42_reliability.py`: Skyhook safe checkpoints, Crownline living-target AI, Vector final-whistle freeze, and Windward single-terminal-event semantics remain green.
+- Deep regressions remain green for Ironlight 3.0, Astral Menagerie 3.1, Polyforge Studio 3.0, Ashen Covenant 2.0, Verdant Echoes 2.0, Rune Depths, Circuit Rush, Fluxward Conclave, Pulsevine Parkour, and score-direction semantics.
 
 ## v43 Neon Stack 2.0
 
-Neon Stack 2.0 passed the release checks for its seven-piece bag, hold lock, wall-kick rotation, universal movement, pause/restart flow, three contract completion paths, persistent records, and 390×844 mobile layout.
+Pre-release Neon Stack contract harness
 
-Catalog validation remains green at **73 games / 121 genre tags / 116 achievements / 47 remappable releases**. The sole featured release is Neon Stack, the offline cache is `wwg-v43`, and the first PWA shortcut opens Neon Stack.
+- Active piece + next queue + remaining bag form one complete seven-piece set before the next shuffle cycle.
+- ArrowRight and D remain valid movement aliases with a stored I/J/K/L/F/H custom keymap.
+- Hold stores the active prism and cannot be reused until the next prism deploys.
+- Rotation near the right boundary succeeds through wall-kick resolution.
+- Pause/resume and restart paths remain functional.
+- Classic 40, Prism Sprint, and Ascension all complete through the real merge/line-clear/goal path and emit their standard events.
+- Ascension clear persistence and sprint record persistence write successfully.
+- 390×844 layout has no horizontal overflow.
 
-Regression coverage remains green: 73/73 game boots, 73/73 objective/control pages, 47/47 remappable profiles, 73/73 runtime-clean catalog entries, 153/153 local-origin paths, the v42 reliability fixes, the v41 classics and Orbit Breaker checks, and the retained deep campaign suites.
+Static v43 release assertions
+
+- 73 unique game IDs / 121 genre tags / 116 unique achievements / 47 remappable releases.
+- Neon Stack metadata is version 2.0 with an explicit contract objective and high-score semantics.
+- Sole featured game is Neon Stack; PWA first shortcut targets Neon Stack; cache is `wwg-v43`.
+- Seven-bag, hold, wall-kick, sprint, and Ascension source invariants are present.
+- Public-facing source remains clear of prohibited internal tooling references.
+
+## v43 catalog regression
+
+- `node tests/smoke.js`: 73/73 game boot checks pass; homepage and game-detail shells pass.
+- `python3 tests/v41_controls_browser.py`: 73/73 objective/control pages and 47/47 remappable profiles pass.
+- `python3 tests/v41_catalog_audit.py`: 73/73 runtime-clean; 70 titles show generic state change and the same three mechanic-specific exceptions remain covered separately.
+- `python3 tests/v42_reliability.py`, `tests/v41_classics.py`, and `tests/v41_orbit_breaker.py` remain green.
+- Deep regressions remain green for Ironlight 3.0, Astral Menagerie 3.1, Polyforge 3.0, Ashen Covenant 2.0, Verdant Echoes 2.0, Rune Depths, Circuit Rush, Fluxward Conclave, Pulsevine Parkour, and score-direction semantics.
+- `python3 tests/v32_http.py`: 153/153 local-origin pages/assets return HTTP 200. The local test server logged benign client-disconnect `BrokenPipeError` messages after successful responses; the asserted delivery result remained 153/153.
 
 ## v42 reliability sweep
 
@@ -140,4 +192,4 @@ The `agent-browser` CLI required by the preferred dev-server verification workfl
 
 ## GitHub/Vercel
 
-GitHub `main` was inspected at finalized v41 commit **`8ded69db99ad6d99b6bb0d17693d0b3d1d461460`** before v42 promotion. The complete verified v42 source was committed as **`f9d27674227fb04173fe7459aa129645673c1d95`**; `main` was re-read immediately before promotion, then advanced by a **non-force fast-forward** and re-verified at that commit. Fresh Vercel deployment enumeration remains **403 Forbidden**; authenticated production fetch is also denied and project lookup retains the connector/schema mismatch, so no v42 production deployment is claimed.
+GitHub `main` was inspected at finalized v41 commit **`8ded69db99ad6d99b6bb0d17693d0b3d1d461460`** before v42 promotion. The complete verified v42 source was committed as **`f9d27674227fb04173fe7459aa129645673c1d95`**; `main` was re-read immediately before promotion, then advanced by a **non-force fast-forward** and re-verified at that commit. Release-state documentation was then finalized at **`0393a86790cbe3b5cfc32161d27e8e1d08c6b0c7`** and `main` was re-verified there. Fresh Vercel deployment enumeration remains **403 Forbidden**; authenticated production fetch is also denied and project lookup retains the connector/schema mismatch, so no v42 production deployment is claimed.

@@ -15,6 +15,18 @@
   ],
   "shortcuts": [
     {
+      "name": "Vanta Frontline",
+      "short_name": "Tactical FPS",
+      "url": "game.html?id=vanta-frontline",
+      "icons": [
+        {
+          "src": "covers/vanta-frontline.svg",
+          "sizes": "800x500",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
       "name": "Neon Stack 2.0",
       "short_name": "Falling Blocks",
       "url": "game.html?id=neon-stack",
@@ -33,18 +45,6 @@
       "icons": [
         {
           "src": "covers/pulse-maze.svg",
-          "sizes": "800x500",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Neon Serpent: Classic Snake",
-      "short_name": "Snake",
-      "url": "game.html?id=neon-serpent",
-      "icons": [
-        {
-          "src": "covers/neon-serpent.svg",
           "sizes": "800x500",
           "type": "image/svg+xml"
         }

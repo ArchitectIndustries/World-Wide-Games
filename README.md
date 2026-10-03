@@ -1,17 +1,22 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v43 — Neon Stack 2.0**, with **73 games across 121 genre tags**, **116 unique achievements**, and **47 remappable releases**.
+WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v44 — Vanta Frontline**, with **74 games across 121 genre tags**, **118 unique achievements**, and **47 remappable releases**.
+
+## v44 — Vanta Frontline
+
+WorldWideGames adds a new runtime-rendered tactical FPS with three original operations, pre-deployment graphics profiles, pointer-lock aiming, ADS, sprint/crouch/jump/lean movement, three enemy roles, armor and pickups, uplink objectives, extraction scoring, touch/gamepad support, and persistent campaign records. Vanta Frontline is the featured release and first PWA shortcut; the catalog is now **74 games / 121 genre tags / 118 achievements / 47 remappable releases** and the offline cache is `wwg-v44`.
+
 
 
 ## v43 — Neon Stack 2.0
 
 v43 turns **Neon Stack** into a full falling-block classic rather than a minimal endless loop. Version 2.0 adds a fair seven-piece bag, hold slot, next preview, ghost placement, wall-kick rotation, combo/drop scoring, persistent records, and three distinct contracts: **Classic 40**, **Prism Sprint**, and **Ascension**. Arrow/WASD movement, touch controls, gamepad support, pause/restart, and clear contract objectives are built in.
 
-Neon Stack is now the featured release and first PWA shortcut. The new **Prism Stack Master** achievement raises WorldWideGames to **116 unique achievements**, and the offline cache advances to `wwg-v43`.
+Neon Stack is now the featured release and first PWA shortcut. The new **Prism Stack Master** achievement raised WorldWideGames to **116 unique achievements**, and the offline cache advanced to `wwg-v43`.
 
 ## v42 — Reliability Sweep
 
-v42 is a catalog-wide gameplay-correctness release. It keeps the catalog at **73 games / 121 genre tags / 115 achievements / 47 remappable releases** while correcting four reproducible state/logic defects found beyond the Orbit Breaker fix:
+v42 is a catalog-wide gameplay-correctness release. It kept the catalog at **73 games / 121 genre tags / 115 achievements / 47 remappable releases** while correcting four reproducible state/logic defects found beyond the Orbit Breaker fix:
 
 - **Skyhook Sprint 1.1:** checkpoints can no longer land inside a void and trap the player in an endless respawn fall.
 - **Crownline Tactics 1.1:** Wardens retarget living operatives instead of wasting attacks on squad members killed earlier in the same enemy turn.

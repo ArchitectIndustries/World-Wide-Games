@@ -1,21 +1,21 @@
 # WorldWideGames Full Catalog Quality Audit
 
-Date: 2026-10-02
-Release: **v42 — Reliability Sweep**
+Date: 2026-10-03
+Release: **v44 — Vanta Frontline**
 Owner/operator: Architect Industries
 
 
-## v42 rule-level reliability findings
+## v44 current-release findings
 
-The v42 audit extends beyond boot/runtime cleanliness and checks terminal-state, checkpoint, and AI-target invariants. Four reproducible defects were corrected: Skyhook Sprint void checkpoints, Crownline Tactics dead-target AI, Vector League post-whistle simulation, and Windward Cargo dual terminal events. `tests/v42_reliability.py` locks each behavior.
+The v44 audit adds Vanta Frontline and reruns the complete isolated-Chromium catalog against the 74-game source tree. The new FPS gate caught and fixed two defects before release: raycasting before operation initialization and retry-score carryover after death. The earlier v42 terminal-state/checkpoint/AI reliability corrections remain locked by `tests/v42_reliability.py`.
 
 ## Current release result
 
-- **73/73 games** loaded without page/runtime errors in isolated Chromium.
-- Generic interaction produced observable state change in **70** titles; Ironlight Breach 3.0 and Polyforge Studio 3.0 have dedicated deep regressions, while Ashen Covenant and Astral Menagerie retain their complete campaign regressions and Atlas Below, Lumen Relay, and Forgeflow retain direct mechanic-specific coverage.
+- **74/74 games** loaded without page/runtime errors in isolated Chromium.
+- Generic interaction produced observable state change in **71** titles; Ironlight Breach 3.0 and Polyforge Studio 3.0 have dedicated deep regressions, while Ashen Covenant and Astral Menagerie retain their complete campaign regressions and Atlas Below, Lumen Relay, and Forgeflow retain direct mechanic-specific coverage.
 - Six v32 flagship releases remain runtime-clean. Polyforge Studio 3.0 now has dedicated coverage for grouped assemblies, selection-wide transforms, real drag-gizmo input, portable scene-code round-tripping, 80-step history, all seven certification briefs, legacy five-brief mastery compatibility, persistence/meta, and mobile-width overflow.
-- **153/153** local-origin platform/game/cover paths returned HTTP 200.
-- **73/73** game detail pages expose authored controls and **47/47** remappable releases expose the current/default keyboard profile.
+- **155/155** local-origin platform/game/cover paths returned HTTP 200.
+- **74/74** game detail pages expose authored controls and **47/47** remappable releases expose the current/default keyboard profile.
 - Prior deep regressions remain green for Rune Depths, Aetherstead Colony, Mosslight Vale, Fluxward Conclave, Circuit Rush, the v27 defect-fix set, and score-direction semantics.
 
 ## v32 flagship additions
@@ -33,6 +33,7 @@ The v42 audit extends beyond boot/runtime cleanliness and checks terminal-state,
 
 | Game | Version | Primary genre | Remappable | Runtime |
 |---|---:|---|:---:|---|
+| Vanta Frontline | 1.0 | FPS | No | Clean |
 | Ironlight Breach | 3.0 | FPS | Yes | Clean |
 | Verdant Echoes | 2.0 | Action Adventure | Yes | Clean |
 | Ashen Covenant | 2.0 | Soulslike | Yes | Clean |
