@@ -1,4 +1,4 @@
-const CACHE='wwg-v44';
+const CACHE='wwg-v45';
 const ASSETS=[
   "./",
   "./index.html",
@@ -10,6 +10,8 @@ const ASSETS=[
   "./js/app.js",
   "./js/game-page.js",
   "./manifest.webmanifest",
+  "./covers/lumenfall-citadel.svg",
+  "./games/lumenfall-citadel/index.html",
   "./covers/vanta-frontline.svg",
   "./games/vanta-frontline/index.html",
   "./covers/pulse-maze.svg",

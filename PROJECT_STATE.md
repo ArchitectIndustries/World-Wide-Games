@@ -2,9 +2,37 @@
 
 Last updated: 2026-10-03
 Owner/operator: Architect Industries
-Current verified source release: **v44 — Vanta Frontline**
-Release-gate status: **source QA green; GitHub `main` synchronized to the complete verified v44 release state**
-Status: **74-game** static browser-gaming platform with **121 genre tags**, **118 unique achievements**, **47 remappable releases**, persistent local player data, PWA/offline support, explicit per-game objectives, universal Arrow/WASD movement for shared-input games, a dedicated classic-archetype discovery shelf, full-catalog Chromium QA, and deep campaign regressions.
+Current verified source release: **v45 — Lumenfall Citadel**
+Release-gate status: **source QA green; GitHub release candidate prepared for atomic promotion**
+Status: **75-game** static browser-gaming platform with **122 genre tags**, **120 unique achievements**, **47 remappable releases**, persistent local player data, PWA/offline support, explicit per-game objectives, universal Arrow/WASD movement for shared-input games, a dedicated classic-archetype discovery shelf, full-catalog Chromium QA, and deep campaign regressions.
+
+## v45 production work — Lumenfall Citadel
+
+- Added **Lumenfall Citadel 1.0**, an original side-scrolling action-exploration campaign with a continuous multi-area citadel, platforming, melee/ranged combat, gated progression, checkpoints, and a final boss.
+- Three ability runes reshape traversal and combat: **Dawn Rune** unlocks dash, **Veil Rune** unlocks a second jump, and **Ember Rune** unlocks a ranged rune bolt. Three matching seals require deliberate backtracking/progression before the Bell-Warden can be challenged.
+- Four Lumen Shrines act as persistent checkpoints, restore Vigor, and checkpoint score so a death/revival cannot be exploited for score farming.
+- Enemy pressure mixes melee guards, airborne wisps, projectiles, pits, and the 14-Vigor **Bell-Warden** finale.
+- Keyboard, touch, and gamepad controls are included, with pause/new-run flow, readable live objectives, and a narrow-screen layout validated at 390×844.
+- Durable local records track clears, best completion time, best score, and maximum runes claimed.
+- Platform integration adds **Citadel Restored** and **Threefold Rune** achievements, adds Lumenfall to Flagship Worlds and Long Campaigns, makes it the featured/PWA-first release, and advances the offline cache to `wwg-v45`.
+
+### v45 validation
+
+- `python3 tests/v45_lumenfall.py`: **PASS** — runtime boot, keyboard movement/jump, all three rune unlocks, three progression gates, dash, double jump, rune bolt, shrine checkpoint persistence, death/revival rollback, legitimate Bell-Warden completion, campaign/meta persistence, required events, and 390×844 mobile width.
+- `python3 tests/v45_static.py`: **PASS** — **75 games / 122 genres / 120 achievements / 47 remappable releases**, sole featured Lumenfall Citadel, `wwg-v45` PWA/cache wiring, asset paths, release history, and public-branding hygiene.
+- `python3 tests/v45_catalog_audit.py`: **PASS — 75/75 runtime-clean** in isolated Chromium; generic interaction changes state in 72 titles. Atlas Below, Lumen Relay, and Forgeflow remain the known generic-harness exceptions with dedicated mechanic coverage.
+- `node tests/smoke.js`: **75/75 registered games boot** plus homepage and game-detail shells.
+- `python3 tests/v41_controls_browser.py`: **75/75** game-detail pages expose objectives/controls; **47/47** remappable releases expose the universal/current key profile.
+- `python3 tests/v32_http.py`: **157/157** local-origin release paths return HTTP 200.
+- v42 reliability, Vanta Frontline, Astral Menagerie, Ironlight Breach, Polyforge Studio, Ashen Covenant, Verdant Echoes, Rune Depths, Aetherstead Colony/Mosslight Vale, classics/Orbit Breaker, and retained score-direction regressions remain green.
+
+### v45 release gate
+
+- GitHub baseline at run start: `main` = **`adf3bcf88f033885e56ff4fc7ba36e5cea8632a9`** (finalized v44 release state).
+- Complete verified v45 source commit: **`__V45_SOURCE_SHA__`**.
+- The release-state documentation commit is built as a child of the complete source commit and promoted to `main` only after a final concurrency check using a non-force fast-forward.
+- Production deployment to the established Vercel project remains blocked by project/team authorization; the existing project is preserved and no duplicate project is created.
+
 
 ## v44 production work — Vanta Frontline
 

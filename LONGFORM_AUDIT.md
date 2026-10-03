@@ -1,3 +1,7 @@
+**v45 continuity note — 2026-10-03:** Lumenfall Citadel 1.0 adds a complete side-scrolling action-exploration campaign with a continuous multi-area fortress, three ability runes, three traversal seals, four persistent Lumen Shrines, melee/ranged combat, enemy projectiles, platform hazards, and the Bell-Warden finale. The deterministic Chromium gate validates real keyboard movement/jump, rune progression, dash/double-jump/bolt abilities, checkpoint/death rollback, legitimate boss completion, campaign/meta persistence, event semantics, and 390×844 mobile width. Full 75-game runtime/boot/objective/HTTP gates and retained flagship regressions remain green.
+
+---
+
 **v44 continuity note — 2026-10-03:** Vanta Frontline 1.0 adds a three-operation tactical FPS campaign with operation-start retry checkpoints, persistent clear/best records, uplink-and-extraction objectives, graphics profiles, and mixed response roles. The deterministic Chromium gate validates the complete three-operation extraction path, retry-score rollback, firing/reload/armor boundaries, custom-remap plus universal movement, persistence, and mobile width. Full 74-game runtime/boot/objective/HTTP gates and retained flagship regressions remain green.
 
 ---

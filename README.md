@@ -1,6 +1,12 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v44 — Vanta Frontline**, with **74 games across 121 genre tags**, **118 unique achievements**, and **47 remappable releases**.
+WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v45 — Lumenfall Citadel**, with **75 games across 122 genre tags**, **120 unique achievements**, and **47 remappable releases**.
+
+## v45 — Lumenfall Citadel
+
+WorldWideGames adds **Lumenfall Citadel 1.0**, an original side-scrolling action-exploration campaign with a continuous multi-area fortress, three ability-granting runes, gated seals, four persistent recovery shrines, melee and ranged combat, enemy projectiles, pits/platforming, and a Bell-Warden finale. Dawn unlocks dash, Veil unlocks a second jump, and Ember unlocks a ranged rune bolt.
+
+Lumenfall includes keyboard, touch, and gamepad controls; persistent clears/best-time/best-score/rune records; score-safe death recovery; mobile-responsive objectives/HUD; and dedicated deterministic campaign QA. It is the featured release and first PWA shortcut. The catalog is now **75 games / 122 genre tags / 120 achievements / 47 remappable releases**, and the offline cache is `wwg-v45`.
 
 ## v44 — Vanta Frontline
 

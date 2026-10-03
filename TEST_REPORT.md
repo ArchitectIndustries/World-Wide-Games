@@ -1,19 +1,35 @@
 # WorldWideGames Validation Report
 
 Date: 2026-10-03
-Release: **v44 — Vanta Frontline**
+Release: **v45 — Lumenfall Citadel**
 
 ## Release result
 
-**PASS — source QA and GitHub source-release gates green. Production deployment remains a separate gate.**
+**PASS — v45 source QA is green; GitHub atomic release promotion is the source-release gate. Production deployment remains a separate gate.**
 
+## v45 focused validation
+
+- `python3 tests/v45_lumenfall.py`: **PASS** — boot/render, keyboard movement/jump, all three rune abilities and seals, checkpoint persistence, death/revival rollback, legitimate boss/campaign completion, local meta, event semantics, and 390×844 mobile overflow.
+- `python3 tests/v45_static.py`: **PASS** — 75 games, 122 unique genres, 120 unique achievements, 47 remappable releases, sole featured Lumenfall Citadel, v45 cache/PWA shortcut, local assets, release history, and Architect Industries branding.
+- `python3 tests/v45_catalog_audit.py`: **PASS — 75/75 runtime-clean** in isolated Chromium; generic interaction changes state in 72 titles, with Atlas Below, Lumen Relay, and Forgeflow retaining dedicated mechanic-specific coverage.
+- `node tests/smoke.js`: **PASS — 75/75 registered games boot** plus homepage/game-detail shells.
+- `python3 tests/v41_controls_browser.py`: **PASS — 75/75** detail pages expose objectives/controls and **47/47** remappable releases expose their current/default keyboard profile.
+- `python3 tests/v32_http.py`: **PASS — 157/157** local-origin release paths return HTTP 200.
+- Retained regression suites for v42 reliability, Vanta Frontline, Astral Menagerie, Ironlight Breach, Polyforge Studio, Ashen Covenant, Verdant Echoes, Rune Depths, Aetherstead Colony/Mosslight Vale, classics, and Orbit Breaker remain green.
+
+## v45 GitHub release gate
+
+- GitHub baseline: `main` at finalized v44 commit `adf3bcf88f033885e56ff4fc7ba36e5cea8632a9`.
+- Complete verified v45 source commit: `__V45_SOURCE_SHA__`.
+- Release-state documentation is committed as a child of the complete source commit and is eligible for one non-force `main` fast-forward only after a final baseline/concurrency check.
+- Production deployment remains unavailable because the established Vercel project/team is not authorized for deployment inspection through the current integration. No duplicate project is created.
 
 ## v44 GitHub release gate
 
 - GitHub baseline: `main` at v43 commit `d807faa1666434f76d095a512c2b3aa08391f03f`.
 - Complete verified v44 source commit: `4904150ea55c0fd9db5537a65babb178db601310`.
 - Release-state documentation is finalized as a child of that source commit; `main` is advanced only after re-reading the baseline and confirming there was no concurrent change.
-- Vercel remains connector-blocked: deployment enumeration returns 403 Forbidden and `get_project` hits the connector's `idOrName`/schema mismatch, so no production deployment is claimed and no duplicate project is created.
+- Vercel production access was unavailable for v44, so no production deployment was claimed and no duplicate project was created.
 
 ## v44 tactical FPS validation
 
@@ -200,4 +216,4 @@ The `agent-browser` CLI required by the preferred dev-server verification workfl
 
 ## GitHub/Vercel
 
-GitHub `main` was inspected at finalized v41 commit **`8ded69db99ad6d99b6bb0d17693d0b3d1d461460`** before v42 promotion. The complete verified v42 source was committed as **`f9d27674227fb04173fe7459aa129645673c1d95`**; `main` was re-read immediately before promotion, then advanced by a **non-force fast-forward** and re-verified at that commit. Release-state documentation was then finalized at **`0393a86790cbe3b5cfc32161d27e8e1d08c6b0c7`** and `main` was re-verified there. Fresh Vercel deployment enumeration remains **403 Forbidden**; authenticated production fetch is also denied and project lookup retains the connector/schema mismatch, so no v42 production deployment is claimed.
+GitHub `main` was inspected at finalized v41 commit **`8ded69db99ad6d99b6bb0d17693d0b3d1d461460`** before v42 promotion. The complete verified v42 source was committed as **`f9d27674227fb04173fe7459aa129645673c1d95`**; `main` was re-read immediately before promotion, then advanced by a **non-force fast-forward** and re-verified at that commit. Release-state documentation was then finalized at **`0393a86790cbe3b5cfc32161d27e8e1d08c6b0c7`** and `main` was re-verified there. Fresh Vercel deployment access remained unavailable for v42, so no v42 production deployment was claimed.

@@ -1,22 +1,23 @@
 # WorldWideGames Full Catalog Quality Audit
 
 Date: 2026-10-03
-Release: **v44 — Vanta Frontline**
+Release: **v45 — Lumenfall Citadel**
 Owner/operator: Architect Industries
 
 
-## v44 current-release findings
+## v45 current-release findings
 
-The v44 audit adds Vanta Frontline and reruns the complete isolated-Chromium catalog against the 74-game source tree. The new FPS gate caught and fixed two defects before release: raycasting before operation initialization and retry-score carryover after death. The earlier v42 terminal-state/checkpoint/AI reliability corrections remain locked by `tests/v42_reliability.py`.
+The v45 audit adds Lumenfall Citadel and reruns the complete isolated-Chromium catalog against the 75-game source tree. Lumenfall receives a dedicated full-campaign deterministic gate covering movement, rune progression, traversal seals, checkpoints, death/revival, boss completion, persistence, events, and mobile layout. The earlier v42 terminal-state/checkpoint/AI reliability corrections remain locked by `tests/v42_reliability.py`.
 
 ## Current release result
 
-- **74/74 games** loaded without page/runtime errors in isolated Chromium.
-- Generic interaction produced observable state change in **71** titles; Ironlight Breach 3.0 and Polyforge Studio 3.0 have dedicated deep regressions, while Ashen Covenant and Astral Menagerie retain their complete campaign regressions and Atlas Below, Lumen Relay, and Forgeflow retain direct mechanic-specific coverage.
-- Six v32 flagship releases remain runtime-clean. Polyforge Studio 3.0 now has dedicated coverage for grouped assemblies, selection-wide transforms, real drag-gizmo input, portable scene-code round-tripping, 80-step history, all seven certification briefs, legacy five-brief mastery compatibility, persistence/meta, and mobile-width overflow.
-- **155/155** local-origin platform/game/cover paths returned HTTP 200.
-- **74/74** game detail pages expose authored controls and **47/47** remappable releases expose the current/default keyboard profile.
-- Prior deep regressions remain green for Rune Depths, Aetherstead Colony, Mosslight Vale, Fluxward Conclave, Circuit Rush, the v27 defect-fix set, and score-direction semantics.
+- **75/75 games** loaded without page/runtime errors in isolated Chromium.
+- Generic interaction produced observable state change in **72** titles; Atlas Below, Lumen Relay, and Forgeflow remain the three generic-harness exceptions and retain direct mechanic-specific coverage.
+- Lumenfall Citadel's dedicated gate validates all three rune abilities, all three seals, four shrine/checkpoint semantics, real Bell-Warden completion, persistence/meta, and mobile-width overflow.
+- Six v32 flagship releases remain runtime-clean and retain their dedicated deep regressions.
+- **157/157** local-origin platform/game/cover paths returned HTTP 200.
+- **75/75** game detail pages expose authored controls/objectives and **47/47** remappable releases expose the current/default keyboard profile.
+- Prior deep regressions remain green for Vanta Frontline, Astral Menagerie, Ironlight Breach, Polyforge Studio, Ashen Covenant, Verdant Echoes, Rune Depths, Aetherstead Colony, Mosslight Vale, Fluxward Conclave, Circuit Rush, the v42 reliability set, classics/Orbit Breaker, and score-direction semantics.
 
 ## v32 flagship additions
 
@@ -33,6 +34,7 @@ The v44 audit adds Vanta Frontline and reruns the complete isolated-Chromium cat
 
 | Game | Version | Primary genre | Remappable | Runtime |
 |---|---:|---|:---:|---|
+| Lumenfall Citadel | 1.0 | Metroidvania | No | Clean |
 | Vanta Frontline | 1.0 | FPS | No | Clean |
 | Ironlight Breach | 3.0 | FPS | Yes | Clean |
 | Verdant Echoes | 2.0 | Action Adventure | Yes | Clean |

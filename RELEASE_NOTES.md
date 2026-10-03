@@ -1,3 +1,15 @@
+# WorldWideGames v45 — Lumenfall Citadel
+
+Released 2026-10-03 by Architect Industries.
+
+Lumenfall Citadel adds an original side-scrolling action-exploration campaign built entirely from local browser code. Explore a continuous ruined citadel, defeat guards and wisps, attune four recovery shrines, and recover three traversal/combat runes: Dawn grants a dash, Veil grants a second jump, and Ember grants a ranged rune bolt. Three matching seals gate deeper traversal before the 14-Vigor Bell-Warden finale.
+
+The campaign includes score-safe checkpoint recovery, persistent clears/best-time/best-score/rune records, keyboard/touch/gamepad input, mobile-responsive HUD and objective guidance, and explicit milestone events. Platform integration adds Lumenfall Citadel to Flagship Worlds and Long Campaigns, adds the **Citadel Restored** and **Threefold Rune** achievements, makes Lumenfall the featured release and first PWA shortcut, and advances offline caching to `wwg-v45`.
+
+Release verification: **75/75** registered games boot, **75/75** runtime-clean in the isolated Chromium catalog audit, **75/75** game-detail objective/control pages, **47/47** remappable profiles, and **157/157** local-origin paths pass. Complete verified v45 source commit: `__V45_SOURCE_SHA__`.
+
+---
+
 # WorldWideGames v44 — Vanta Frontline
 
 Released 2026-10-03 by Architect Industries.
@@ -21,7 +33,7 @@ Release verification: 74/74 registered games boot, 74/74 runtime-clean in the is
 - Added the **Prism Stack Master** achievement for 116 total achievements.
 - Featured Neon Stack 2.0 and moved it to the first PWA shortcut; cache advances to `wwg-v43`.
 - Ran dedicated v43 browser/static release checks; full catalog boot, objective/control, runtime, HTTP, reliability, classics, and representative deep-campaign regressions remain green.
-- Vercel production synchronization remains blocked by the known connector permission/schema issue; the established project is preserved and no duplicate was created.
+- Production synchronization was unavailable for that release; the established deployment target was preserved and no duplicate project was created.
 
 
 ## v42 — Reliability Sweep
@@ -130,7 +142,7 @@ WorldWideGames v39 keeps the catalog at **72 games / 120 genre tags / 46 remappa
 - Added **Arc Lancer** and **Cipher Diver** achievements and corrected the duplicate Ashen achievement id.
 - Featured/PWA shortcut moves to Ironlight Breach; offline cache advances to `wwg-v39`.
 - Full release QA remains green: 72/72 runtime-clean, 72/72 boot, 151/151 HTTP paths, 72/72 control pages, 46/46 remappable profiles, plus deep campaign regressions.
-- GitHub `main` synchronization remains blocked by the current connector safety path; v39 is packaged but not claimed fully shipped to `main`.
+- GitHub `main` synchronization remained unavailable for v39; that package was not described as fully shipped to `main`.
 
 ## v38 — Polyforge Studio 3.0
 

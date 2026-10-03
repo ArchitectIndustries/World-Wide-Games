@@ -15,6 +15,18 @@
   ],
   "shortcuts": [
     {
+      "name": "Lumenfall Citadel",
+      "short_name": "Action Exploration",
+      "url": "game.html?id=lumenfall-citadel",
+      "icons": [
+        {
+          "src": "covers/lumenfall-citadel.svg",
+          "sizes": "800x500",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
       "name": "Vanta Frontline",
       "short_name": "Tactical FPS",
       "url": "game.html?id=vanta-frontline",
@@ -33,18 +45,6 @@
       "icons": [
         {
           "src": "covers/neon-stack.svg",
-          "sizes": "800x500",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Pulse Maze",
-      "short_name": "Maze Chase",
-      "url": "game.html?id=pulse-maze",
-      "icons": [
-        {
-          "src": "covers/pulse-maze.svg",
           "sizes": "800x500",
           "type": "image/svg+xml"
         }
