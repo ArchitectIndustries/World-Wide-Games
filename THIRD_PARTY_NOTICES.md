@@ -1,5 +1,7 @@
 # Third-Party Notices
 
-WorldWideGames v42 is built from original Architect Industries code and locally generated vector/canvas assets. The v42 Skyhook Sprint, Crownline Tactics, Vector League, and Windward Cargo reliability fixes add no external runtime libraries, third-party game assets, franchise characters, copied maps, music, logos, or externally hosted dependencies. The v41 Astral/Pulse Maze/Neon Serpent/objective/universal-movement work remains original Architect Industries code and local assets.
+WorldWideGames v45 is owned and operated by Architect Industries.
 
-Existing notices from prior releases remain applicable to any unchanged third-party material already documented in repository history.
+Vector Shatter's code, interface, cover art, gameplay layouts, and runtime-generated visual/audio effects are original project assets. No new third-party runtime libraries, paid APIs, external art packs, music tracks, fonts, or remote game-engine dependencies were added for v45.
+
+Existing third-party or permissively licensed materials, where present elsewhere in the repository, remain subject to their previously recorded notices and license terms.
