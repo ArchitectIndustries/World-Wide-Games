@@ -6,6 +6,8 @@ Vanta Frontline expands WorldWideGames with a new runtime-rendered tactical brow
 
 Platform integration adds Vanta Frontline to Flagship Worlds and Long Campaigns, makes it the featured release and first PWA shortcut, adds Vanta Operator and Signal Sweep achievements, and advances the offline cache to `wwg-v44`.
 
+Release verification: 74/74 registered games boot, 74/74 runtime-clean in the isolated Chromium release audit, 74/74 game-detail objective/control pages, 47/47 remappable profiles, and 155/155 local-origin paths pass. Complete verified v44 source commit: `4904150ea55c0fd9db5537a65babb178db601310`.
+
 ---
 
 # WorldWideGames Release Notes

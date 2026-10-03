@@ -3,7 +3,7 @@
 Last updated: 2026-10-03
 Owner/operator: Architect Industries
 Current verified source release: **v44 — Vanta Frontline**
-Release-gate status: **source QA green; GitHub synchronization pending**
+Release-gate status: **source QA green; GitHub `main` synchronized to the complete verified v44 release state**
 Status: **74-game** static browser-gaming platform with **121 genre tags**, **118 unique achievements**, **47 remappable releases**, persistent local player data, PWA/offline support, explicit per-game objectives, universal Arrow/WASD movement for shared-input games, a dedicated classic-archetype discovery shelf, full-catalog Chromium QA, and deep campaign regressions.
 
 ## v44 production work — Vanta Frontline
@@ -29,7 +29,8 @@ Status: **74-game** static browser-gaming platform with **121 genre tags**, **11
 ### v44 release gate
 
 - GitHub baseline at run start: `main` = **`d807faa1666434f76d095a512c2b3aa08391f03f`** (v43 complete source release).
-- v44 source commit: pending final synchronization.
+- Complete verified v44 source commit: **`4904150ea55c0fd9db5537a65babb178db601310`**.
+- The final release-state commit is a documentation-only child of that source commit; `main` is promoted to that child only after a last concurrency check and a non-force fast-forward.
 - Vercel project visibility remains connector-limited; the established project is preserved and no duplicate project is created.
 
 ## v43 production work — Neon Stack 2.0

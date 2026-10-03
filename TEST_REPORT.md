@@ -5,7 +5,15 @@ Release: **v44 — Vanta Frontline**
 
 ## Release result
 
-**PASS — source QA gate green. GitHub synchronization and production deployment are tracked as separate release-management gates.**
+**PASS — source QA and GitHub source-release gates green. Production deployment remains a separate gate.**
+
+
+## v44 GitHub release gate
+
+- GitHub baseline: `main` at v43 commit `d807faa1666434f76d095a512c2b3aa08391f03f`.
+- Complete verified v44 source commit: `4904150ea55c0fd9db5537a65babb178db601310`.
+- Release-state documentation is finalized as a child of that source commit; `main` is advanced only after re-reading the baseline and confirming there was no concurrent change.
+- Vercel remains connector-blocked: deployment enumeration returns 403 Forbidden and `get_project` hits the connector's `idOrName`/schema mismatch, so no production deployment is claimed and no duplicate project is created.
 
 ## v44 tactical FPS validation
 
