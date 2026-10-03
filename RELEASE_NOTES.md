@@ -1,5 +1,24 @@
 # WorldWideGames Release Notes
 
+## v42 — Reliability Sweep
+
+v42 keeps the platform at **73 games / 121 genre tags / 115 achievements / 47 remappable releases** and focuses on correctness discovered through deeper rule-level QA.
+
+### Fixed
+
+- **Skyhook Sprint 1.1:** safe-segment checkpoint calculation prevents respawns inside skyline gaps.
+- **Crownline Tactics 1.1:** enemy AI filters out 0-HP operatives before every target selection.
+- **Vector League 1.1:** match termination now returns before additional same-frame simulation can alter the scoreboard.
+- **Windward Cargo 1.2:** resource failure is resolved before delivery scoring, preventing simultaneous `route-complete` and `route-ended` events.
+
+### QA
+
+- New `tests/v42_reliability.py` reproduces each prior defect and verifies the corrected behavior.
+- New `tests/v42_static.py` validates release/cache/version metadata and fix invariants.
+- 73/73 runtime-clean and 73/73 boot remain green.
+- 73/73 game pages retain explicit objectives and controls; 47/47 remappable games retain universal Arrow/WASD behavior.
+- Orbit Breaker, Astral Menagerie, Snake/Pulse Maze, Ironlight, Polyforge, Ashen Covenant, Verdant Echoes, Rune Depths, Circuit Rush, Fluxward, Pulsevine, v27 correctness, and score-direction regressions remain green.
+
 ## v41 — Playability & Classic Vault
 
 v41 directly addresses player feedback around Astral Menagerie controls, objective clarity, and classic-game discoverability while expanding the catalog to **73 games / 121 genre tags / 115 achievements / 47 remappable releases**.

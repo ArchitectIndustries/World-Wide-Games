@@ -1,8 +1,13 @@
 # WorldWideGames Full Catalog Quality Audit
 
 Date: 2026-10-02
-Release: **v41 — Playability & Classic Vault**
+Release: **v42 — Reliability Sweep**
 Owner/operator: Architect Industries
+
+
+## v42 rule-level reliability findings
+
+The v42 audit extends beyond boot/runtime cleanliness and checks terminal-state, checkpoint, and AI-target invariants. Four reproducible defects were corrected: Skyhook Sprint void checkpoints, Crownline Tactics dead-target AI, Vector League post-whistle simulation, and Windward Cargo dual terminal events. `tests/v42_reliability.py` locks each behavior.
 
 ## Current release result
 
@@ -67,7 +72,7 @@ Owner/operator: Architect Industries
 | Ashfall Caravan | 2.0 | Narrative | Yes | Clean |
 | Twinforge Expedition | 1.0 | Co-op | No | Clean |
 | Mothlight Museum | 1.0 | Hidden Object | No | Clean |
-| Windward Cargo | 1.1 | Flight | Yes | Clean |
+| Windward Cargo | 1.2 | Flight | Yes | Clean |
 | Cipher Court | 1.0 | Deduction | No | Clean |
 | Moonwake Angler | 1.0 | Fishing | No | Clean |
 | Deepwater Signal | 1.1 | Underwater | Yes | Clean |
@@ -79,7 +84,7 @@ Owner/operator: Architect Industries
 | Atlas Below | 1.4 | Exploration | Yes | Clean |
 | Aetherstead Colony | 2.0 | City Builder | Yes | Clean |
 | Prism Duel | 1.1 | Multiplayer | No | Clean |
-| Crownline Tactics | 1.0 | Tactical | No | Clean |
+| Crownline Tactics | 1.1 | Tactical | No | Clean |
 | Echo Bazaar | 1.1 | Economy | No | Clean |
 | Lumen Relay | 1.1 | Logic | No | Clean |
 | Starweaver Drift | 1.1 | Space | Yes | Clean |
@@ -93,12 +98,12 @@ Owner/operator: Architect Industries
 | Hexbound Tactics | 1.0 | Card | No | Clean |
 | Harbor Pulse | 1.0 | Simulation | No | Clean |
 | Rift Relay | 1.1 | Co-op | Yes | Clean |
-| Skyhook Sprint | 1.0 | Platformer | Yes | Clean |
+| Skyhook Sprint | 1.1 | Platformer | Yes | Clean |
 | Neon Stack | 1.1 | Puzzle | Yes | Clean |
 | Circuit Rush | 2.1 | Racing | Yes | Clean |
 | Bastion Bloom | 1.5 | Tower Defense | Yes | Clean |
 | Emberfield Survival | 1.0 | Survival | Yes | Clean |
-| Vector League | 1.0 | Sports | Yes | Clean |
+| Vector League | 1.1 | Sports | Yes | Clean |
 | Orbit Breaker | 1.1 | Space | Yes | Clean |
 | Rune Depths | 2.1 | Dungeon | Yes | Clean |
 

@@ -1,6 +1,17 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v41 — Playability & Classic Vault**, with **73 games across 121 genre tags**, **115 unique achievements**, and **47 remappable releases**.
+WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v42 — Reliability Sweep**, with **73 games across 121 genre tags**, **115 unique achievements**, and **47 remappable releases**.
+
+
+## v42 — Reliability Sweep
+
+v42 is a catalog-wide gameplay-correctness release. It keeps the catalog at **73 games / 121 genre tags / 115 achievements / 47 remappable releases** while correcting four reproducible state/logic defects found beyond the Orbit Breaker fix:
+
+- **Skyhook Sprint 1.1:** checkpoints can no longer land inside a void and trap the player in an endless respawn fall.
+- **Crownline Tactics 1.1:** Wardens retarget living operatives instead of wasting attacks on squad members killed earlier in the same enemy turn.
+- **Vector League 1.1:** the final whistle freezes simulation immediately, preventing a post-result goal from changing the visible score after the final event.
+- **Windward Cargo 1.2:** zero fuel/cargo and final delivery can no longer produce contradictory win + loss events in the same frame.
+- Offline cache advances to `wwg-v42`, and a dedicated `tests/v42_reliability.py` release gate locks all four fixes.
 
 ## v41 — Playability & Classic Vault
 

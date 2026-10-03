@@ -1,11 +1,29 @@
 # WorldWideGames Validation Report
 
 Date: 2026-10-02
-Release: **v41 — Playability & Classic Vault**
+Release: **v42 — Reliability Sweep**
 
 ## Release result
 
 **PASS — source QA gate green.** GitHub and production deployment are tracked as separate release-management gates.
+
+
+## v42 reliability sweep
+
+`python3 tests/v42_reliability.py`
+
+- Skyhook Sprint: an arithmetic checkpoint that previously resolved into the 760–920 void is clamped onto a safe ground segment; a subsequent fall respawns on valid ground.
+- Crownline Tactics: a Warden no longer attacks a 0-HP operative killed earlier in the same enemy turn; it retargets/moves toward a living operative.
+- Vector League: match expiry with a ball already crossing the goal line emits one final result and leaves the scoreline frozen at the whistle.
+- Windward Cargo: zero fuel on the final delivery frame produces only `route-ended`, not both completion and failure.
+
+`python3 tests/v42_static.py`
+
+- Cache is `wwg-v42`.
+- Skyhook Sprint and Crownline Tactics are v1.1; Vector League is v1.1; Windward Cargo is v1.2.
+- Fix-source invariants are present in the final release tree.
+
+The full v41 catalog, controls, classics, Orbit Breaker, deep flagship, correctness, and score-direction suites were rerun on the v42 source and remain green.
 
 ## User-reported Astral Menagerie issue
 
@@ -114,4 +132,4 @@ The `agent-browser` CLI required by the preferred dev-server verification workfl
 
 ## GitHub/Vercel
 
-GitHub `main` was inspected at v40 commit `c624574a2fac9cc08f1b451a72e9841bdb0f4709` before v41 work. The complete verified v41 source was committed as **`18e7dfecbaaba5fae1e65eee0e15f0fb1bcb5b26`**, `main` was re-read immediately before promotion, then advanced by a **non-force fast-forward** and re-verified at that commit. Vercel status is checked separately after GitHub promotion.
+GitHub `main` was inspected at v40 commit `c624574a2fac9cc08f1b451a72e9841bdb0f4709` before v41 work. The complete verified v41 source was committed as **`18e7dfecbaaba5fae1e65eee0e15f0fb1bcb5b26`**, `main` was re-read immediately before promotion, then advanced by a **non-force fast-forward**. Release-state documentation was finalized at **`8ded69db99ad6d99b6bb0d17693d0b3d1d461460`**, and `main` was re-verified there. Fresh Vercel deployment enumeration remains **403 Forbidden**; authenticated production fetch is also denied and project lookup retains the connector/schema mismatch, so no v41 production deployment is claimed.
