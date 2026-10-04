@@ -3,7 +3,7 @@
 Last updated: 2026-10-03
 Owner/operator: Architect Industries
 Current verified source candidate: **v48 — Parallax Accord**
-Release-gate status: **source QA green; complete v48 package persisted to Library; GitHub `main` promotion remains blocked by repository write-safety authorization**
+Release-gate status: **source QA green; complete v48 source synchronized and hash-verified on `release/v48-parallax-accord`; GitHub `main` promotion remains blocked by repository write-safety authorization**
 Status: **77 games / 125 genre tags / 124 achievements / 49 remappable releases**
 
 ## v48 — Parallax Accord
@@ -47,9 +47,11 @@ Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `ma
 
 - Verified `main` remains **v44 release state `adf3bcf88f033885e56ff4fc7ba36e5cea8632a9`**.
 - Verified v45 release-state branch `release/v45-vector-shatter-final` remains exactly two commits ahead and zero behind `main`, targeting **`3878589d1efabe308320543ed4909d585a7efb55`**.
-- At the start of this run, the required non-force `main` fast-forward was re-attempted after a fresh compare. The write was blocked by the connector safety layer before mutation, so `main` was left unchanged.
-- A staging branch, `release/v48-parallax-accord`, was created successfully from verified v45 release state `3878589d1efabe308320543ed4909d585a7efb55`. A post-create compare confirms it is still **identical** to v45; no partial v48 source was written to GitHub.
-- Because GitHub synchronization is a required release gate, **v48 is a verified release candidate, not a fully shipped release**, until the complete verified source is synchronized and `main` is re-verified.
+- At the start of this run, the required non-force `main` fast-forward to verified v45 state was re-attempted after a fresh compare. That write was blocked by the connector safety layer before mutation, so `main` remained unchanged.
+- The complete v48 source was then assembled as a Git tree on `release/v48-parallax-accord` from verified v45 release state `3878589d1efabe308320543ed4909d585a7efb55`, producing verified source commit **`cf38aa08c714797329a4710eb2b1aab2857818b3`**.
+- Branch verification shows v48 is exactly one commit ahead and zero behind verified v45. All **26 changed/added file blob SHAs** were independently compared against the final local release tree with **0 mismatches**.
+- Immediately before the final `main` promotion attempt, a fresh compare showed `main` at v44 `adf3bcf88f033885e56ff4fc7ba36e5cea8632a9` and the v48 branch exactly three commits ahead / zero behind. The non-force `main` update was blocked by the connector safety layer before mutation. A pull-request fallback was also blocked before creation.
+- Because `main` synchronization is a required release gate, **v48 remains a verified release candidate, not a fully shipped release**, even though the complete verified source is now safely present on the release branch.
 
 ## Library persistence
 
@@ -67,7 +69,7 @@ Canonical Vercel target: project `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`, project nam
 
 ## Next priorities
 
-1. Atomically synchronize the complete verified v48 source on the existing `release/v48-parallax-accord` staging branch and fast-forward `main` only after a final concurrency check.
+1. Fast-forward `main` to verified v48 commit `cf38aa08c714797329a4710eb2b1aab2857818b3` when the repository write-safety path permits it; re-read `main` immediately before the ref update and never force.
 2. Deploy that same GitHub-verified source to the established Vercel project when project-scoped authorization allows writes, then perform production-origin smoke tests.
 3. Deep-play Parallax Accord with longer varied drafts to tune AI preferences, low-cost Archive strategies, Architect scaling, and comeback-card balance.
 4. Continue targeted reliability audits and add mechanically distinct genres rather than low-depth clones.
