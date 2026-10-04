@@ -3,7 +3,7 @@
 Last updated: 2026-10-04
 Owner/operator: Architect Industries
 Current verified source candidate: **v49 — Procedural Worlds**
-Release-gate status: **source QA green; complete v49 source is hash-verified on `release/v49-procedural-worlds` and synchronized to canonical `main` at `8be1f4d846358a08a59f5069c7e1be4e7dc940eb`; final release-state documentation follows that source commit; Vercel production remains connector-limited**
+Release-gate status: **GitHub source/release-state gate complete; verified source `8be1f4d846358a08a59f5069c7e1be4e7dc940eb` and release-state `914de1e77cce32159b7725b4686284952d99a9bb` are on canonical `main`; final v49 archives are persisted in `/WorldWideGames`; Vercel Git status is successful, while independent live-origin smoke remains unavailable from this execution environment**
 Status: **79 games / 125 genre tags / 128 achievements / 51 remappable releases**
 
 ## v49 — Procedural Worlds
@@ -74,24 +74,27 @@ Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `ma
 - `release/v49-procedural-worlds` was re-read after creation and **21/21 changed blobs matched the tested local Git blob SHAs with zero mismatches**.
 - Immediately before promotion, canonical `main` was re-read at v44 `adf3bcf88f033885e56ff4fc7ba36e5cea8632a9`; comparison showed v49 exactly **5 commits ahead / 0 behind**.
 - A **non-force fast-forward succeeded**, placing complete verified v49 source commit **`8be1f4d846358a08a59f5069c7e1be4e7dc940eb`** on `main`.
-- The release-state documentation commit follows the source commit and is also promoted non-force before this run is called GitHub-complete.
+- Release-state commit **`914de1e77cce32159b7725b4686284952d99a9bb`** followed the source commit and was also promoted to `main` non-force after a fresh 1-ahead / 0-behind comparison.
+- Any later v49 commit in this run is documentation-only persistence/deployment-status bookkeeping; it does not change the verified release source.
 
 ## Library persistence
 
-- v48 remains the newest verified Library package at the start of this run.
-- Complete v49 source and records archives will be ZIP-integrity tested and persisted to `/WorldWideGames` after final release-state documentation is written.
+- Complete v49 source archive is persisted at `/WorldWideGames/WorldWideGames_v49.zip`.
+- v49 release records are persisted at `/WorldWideGames/WorldWideGames_v49_records.zip`.
+- Both exported snapshots were ZIP-integrity tested before persistence; final archive hashes are recorded with the exported artifacts rather than embedded in the source tree.
 
 ## Production deployment
 
 Canonical Vercel target: project `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`, project name `worldwidegames`, Architect Industries team `team_wwOmTAdrfPwvTGNSLU1VarOy`, domain `https://worldwidegames.vercel.app`.
 
-- Fresh v49 checks against the exact established project returned **404 Project not found** for project lookup in the connector context and **403 Forbidden** for deployment enumeration.
-- These are treated as connector authorization/visibility limitations, not evidence that the public project is absent.
-- No duplicate Vercel project was created. Deployment will target the established project only when project-scoped write access is available.
+- Fresh project-scoped connector checks returned **404 Project not found** for exact project lookup and **403 Forbidden** for deployment enumeration; the connected Vercel team context exposes no linked projects.
+- After the GitHub `main` fast-forward, GitHub commit status context **Vercel** reported **success** for both the v49 source commit and release-state commit, providing deployment-integration evidence despite the connector visibility failure.
+- Independent public-origin smoke could not be completed from this environment: the web fetch layer cache-missed the public domain and container networking could not resolve `worldwidegames.vercel.app`. This is an inspection limitation, not a claim that the public site is unavailable.
+- No duplicate Vercel project was created.
 
 ## Next priorities
 
-1. Persist the final v49 source and records packages in `/WorldWideGames`.
-2. Deploy the same GitHub-verified source to the established Vercel project when authorization allows, then perform production-origin smoke tests.
-3. Run GPU-capable WebGL2 visual/performance validation on production-class hardware.
-4. Extend the shared procedural 3D runtime into mechanically different genres such as aerial exploration, third-person action/adventure, 3D puzzle spaces, vehicle combat, survival, and simulation while keeping controls and performance accessible.
+1. Independently smoke-test the successful Vercel deployment from a browser/network path that can reach the public origin.
+2. Run GPU-capable WebGL2 visual/performance validation on production-class hardware.
+3. Extend the shared procedural 3D runtime into mechanically different genres such as aerial exploration, third-person action/adventure, 3D puzzle spaces, vehicle combat, survival, and simulation while keeping controls and performance accessible.
+4. Continue deepening Cinderline and Glasswild with additional content after production-origin WebGL validation.

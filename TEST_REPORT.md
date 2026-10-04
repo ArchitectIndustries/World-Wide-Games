@@ -56,4 +56,4 @@ Catalog/runtime tests use isolated/self-contained Chromium plus local-origin HTT
 
 ## Release-gate status
 
-Atomic source synchronization completed at `8be1f4d846358a08a59f5069c7e1be4e7dc940eb`: `release/v49-procedural-worlds` was verified against 21/21 expected local blob SHAs with zero mismatches, and canonical `main` accepted a non-force fast-forward after a fresh 5-ahead/0-behind comparison. Production Vercel status is recorded separately and is not inferred from local QA.
+Atomic source synchronization completed at `8be1f4d846358a08a59f5069c7e1be4e7dc940eb`: `release/v49-procedural-worlds` was verified against 21/21 expected local blob SHAs with zero mismatches, canonical `main` accepted the source fast-forward, and release-state commit `914de1e77cce32159b7725b4686284952d99a9bb` was then promoted non-force after a fresh 1-ahead/0-behind check. GitHub status context `Vercel` reports success for both commits. Independent production-origin smoke remains unverified because the available web fetch and container DNS paths cannot currently reach the public origin.

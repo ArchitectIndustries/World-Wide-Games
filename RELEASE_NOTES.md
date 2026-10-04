@@ -12,7 +12,7 @@ The release also strengthens test infrastructure: smoke testing now executes loc
 
 Release verification is green: **79/79 registered games boot, 79/79 runtime-clean, 79/79 objective/control pages, 51/51 remappable profiles, and 166/166 local-origin paths**, with the complete v48→v41 flagship/reliability regression chain retained.
 
-GitHub source synchronization is complete: verified source commit `8be1f4d846358a08a59f5069c7e1be4e7dc940eb` is on canonical `main` after a non-force fast-forward and a 21/21 blob-SHA verification. Vercel remains a separate connector-limited production gate and is recorded in `PROJECT_STATE.md`.
+GitHub synchronization is complete: verified source commit `8be1f4d846358a08a59f5069c7e1be4e7dc940eb` and release-state commit `914de1e77cce32159b7725b4686284952d99a9bb` are on canonical `main` through non-force fast-forwards after exact blob/tree verification. Final v49 source and records archives are persisted in `/WorldWideGames`. GitHub status context `Vercel` reports successful deployment integration for the v49 commits; independent public-origin smoke remains unavailable from the current execution network and that boundary is recorded in `PROJECT_STATE.md`.
 
 ---
 

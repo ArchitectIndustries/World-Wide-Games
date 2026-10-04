@@ -36,7 +36,7 @@ Open `http://localhost:8080/` in a modern browser. The bundled catalog requires 
 
 ## Release gate status
 
-v49 is source-QA green and complete verified source commit `8be1f4d846358a08a59f5069c7e1be4e7dc940eb` is synchronized to canonical GitHub `main`. The established Vercel production project remains a separate deployment gate; the current connector cannot enumerate it with project-scoped authorization. `PROJECT_STATE.md` records the exact verified state.
+v49 is source-QA green; verified source `8be1f4d846358a08a59f5069c7e1be4e7dc940eb` and release-state `914de1e77cce32159b7725b4686284952d99a9bb` are on canonical GitHub `main`, and the final source/records archives are persisted in `/WorldWideGames`. Vercel reports successful commit deployment status through GitHub integration, while independent public-origin smoke is still blocked by this execution environment's network/fetch path. `PROJECT_STATE.md` records the exact evidence boundary.
 
 ## Branding
 
