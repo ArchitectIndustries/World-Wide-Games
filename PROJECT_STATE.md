@@ -3,7 +3,7 @@
 Last updated: 2026-10-04
 Owner/operator: Architect Industries
 Current verified source candidate: **v49 — Procedural Worlds**
-Release-gate status: **source QA green; GitHub branch synchronization pending final atomic release-state write; canonical `main` and Vercel production remain separate mandatory gates**
+Release-gate status: **source QA green; complete v49 source is hash-verified on `release/v49-procedural-worlds` and synchronized to canonical `main` at `8be1f4d846358a08a59f5069c7e1be4e7dc940eb`; final release-state documentation follows that source commit; Vercel production remains connector-limited**
 Status: **79 games / 125 genre tags / 128 achievements / 51 remappable releases**
 
 ## v49 — Procedural Worlds
@@ -70,8 +70,11 @@ Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `ma
 
 - Fresh pre-release inspection confirmed canonical `main` still points at **v44 release state `adf3bcf88f033885e56ff4fc7ba36e5cea8632a9`**.
 - Verified v48 release branch `release/v48-parallax-accord` points at **`722a69588baaf26f27dd6b9313acd47605b51ad2`** and is the parent/base for the v49 atomic tree.
-- v49 will be synchronized atomically to `release/v49-procedural-worlds`; its exact verified source commit is recorded in the release-state documentation after the source commit is created.
-- `main` must be re-read immediately before any final non-force promotion. Until that succeeds, v49 remains a verified release candidate rather than a fully shipped release.
+- Complete v49 source commit: **`8be1f4d846358a08a59f5069c7e1be4e7dc940eb`**, created atomically from the verified v48 release-state tree.
+- `release/v49-procedural-worlds` was re-read after creation and **21/21 changed blobs matched the tested local Git blob SHAs with zero mismatches**.
+- Immediately before promotion, canonical `main` was re-read at v44 `adf3bcf88f033885e56ff4fc7ba36e5cea8632a9`; comparison showed v49 exactly **5 commits ahead / 0 behind**.
+- A **non-force fast-forward succeeded**, placing complete verified v49 source commit **`8be1f4d846358a08a59f5069c7e1be4e7dc940eb`** on `main`.
+- The release-state documentation commit follows the source commit and is also promoted non-force before this run is called GitHub-complete.
 
 ## Library persistence
 
@@ -82,12 +85,13 @@ Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `ma
 
 Canonical Vercel target: project `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`, project name `worldwidegames`, Architect Industries team `team_wwOmTAdrfPwvTGNSLU1VarOy`, domain `https://worldwidegames.vercel.app`.
 
-- Project/deployment visibility has remained connector-limited in recent runs, including 403 deployment-list responses.
-- No duplicate Vercel project will be created. Deployment will target the established project only when project-scoped write access is available.
+- Fresh v49 checks against the exact established project returned **404 Project not found** for project lookup in the connector context and **403 Forbidden** for deployment enumeration.
+- These are treated as connector authorization/visibility limitations, not evidence that the public project is absent.
+- No duplicate Vercel project was created. Deployment will target the established project only when project-scoped write access is available.
 
 ## Next priorities
 
-1. Complete the atomic v49 GitHub source/release-state branch and attempt a non-force `main` fast-forward after a fresh ref read.
-2. Persist the final v49 source and records packages in `/WorldWideGames`.
-3. Deploy the same GitHub-verified source to the established Vercel project when authorization allows, then perform production-origin smoke tests.
+1. Persist the final v49 source and records packages in `/WorldWideGames`.
+2. Deploy the same GitHub-verified source to the established Vercel project when authorization allows, then perform production-origin smoke tests.
+3. Run GPU-capable WebGL2 visual/performance validation on production-class hardware.
 4. Extend the shared procedural 3D runtime into mechanically different genres such as aerial exploration, third-person action/adventure, 3D puzzle spaces, vehicle combat, survival, and simulation while keeping controls and performance accessible.

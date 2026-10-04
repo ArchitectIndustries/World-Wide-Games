@@ -12,7 +12,7 @@ The release also strengthens test infrastructure: smoke testing now executes loc
 
 Release verification is green: **79/79 registered games boot, 79/79 runtime-clean, 79/79 objective/control pages, 51/51 remappable profiles, and 166/166 local-origin paths**, with the complete v48→v41 flagship/reliability regression chain retained.
 
-GitHub and Vercel release-gate status is recorded in `PROJECT_STATE.md`; v49 is not represented as fully shipped until canonical `main` is synchronized and the established production project can be verified/deployed.
+GitHub source synchronization is complete: verified source commit `8be1f4d846358a08a59f5069c7e1be4e7dc940eb` is on canonical `main` after a non-force fast-forward and a 21/21 blob-SHA verification. Vercel remains a separate connector-limited production gate and is recorded in `PROJECT_STATE.md`.
 
 ---
 

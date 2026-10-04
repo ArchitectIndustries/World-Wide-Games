@@ -36,7 +36,7 @@ Open `http://localhost:8080/` in a modern browser. The bundled catalog requires 
 
 ## Release gate status
 
-v49 is source-QA green. Canonical GitHub `main` and the established Vercel production project remain explicit release gates; `PROJECT_STATE.md` records their exact verified state. A version is not represented as fully shipped until those gates are satisfied or a concrete blocker is recorded.
+v49 is source-QA green and complete verified source commit `8be1f4d846358a08a59f5069c7e1be4e7dc940eb` is synchronized to canonical GitHub `main`. The established Vercel production project remains a separate deployment gate; the current connector cannot enumerate it with project-scoped authorization. `PROJECT_STATE.md` records the exact verified state.
 
 ## Branding
 
