@@ -15,6 +15,18 @@
   ],
   "shortcuts": [
     {
+      "name": "Aegis Verge",
+      "short_name": "3D Hover Combat",
+      "url": "game.html?id=aegis-verge",
+      "icons": [
+        {
+          "src": "covers/aegis-verge.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
       "name": "Skyvault Cartographer",
       "short_name": "3D Aerial Survey",
       "url": "game.html?id=skyvault-cartographer",
@@ -33,18 +45,6 @@
       "icons": [
         {
           "src": "covers/cinderline-velocity.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Glasswild Ascent",
-      "short_name": "3D Traversal",
-      "url": "game.html?id=glasswild-ascent",
-      "icons": [
-        {
-          "src": "covers/glasswild-ascent.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }
