@@ -1,5 +1,6 @@
 window.WWG_GAMES = [
-  {id:'aegis-verge',title:'Aegis Verge',tagline:'Secure the relays. Hold the frontier.',description:'A procedural 3D hover-combat campaign across three original frontier operations with vehicle handling, layered enemy archetypes, projectile combat, relay-control objectives, active shield-energy management, extraction gates, persistent records, touch controls, gamepad support, synthesized audio, and universal remapped movement.',objective:'Destroy the hostile patrol at each of three relays, hold the cleared relay perimeter to stabilize it, then drive through extraction. Clear all three operations while balancing hull integrity, cannon timing, and Aegis shield energy.',genres:['Vehicle Combat','3D','Action','Shooter','Tactical'],added:'2026-10-04',updated:'2026-10-04',version:'1.1',featured:true,basePopularity:675,cover:'covers/aegis-verge.svg',path:'games/aegis-verge/index.html',accent:'#67e8f9',remappable:true,scoreMeta:{unit:'pts',direction:'high',label:'Verge score'},controls:['Arrow keys or WASD always drive and steer; saved custom remaps remain valid','Primary / Space fires the pulse cannon','Secondary / E projects the Aegis shield while energy remains','Neutralize each relay wave before holding the beacon perimeter to stabilize it','P pauses and R restarts the current operation','Number keys 1-3 select unlocked operations','Touch drive, fire, shield, and reset controls support mobile play','Gamepad left stick drives; A fires and B shields','Secure all three relays and enter extraction in all three operations']},
+  {id:'aetherfoil-circuit',title:'Aetherfoil Circuit',tagline:'Read the distance. Catch the blade. Own the strip.',description:'A three-rival fencing campaign with stamina footwork, timed parries, ripostes, adaptive opponent styles, persistent progression, touch controls, gamepad support, remappable keyboard play, synthesized audio, and original runtime visuals.',objective:'Win three touches before each rival. Manage stamina, control distance, parry incoming lunges, and defeat all three circuit opponents.',genres:['Fencing','Fighting','Sports','Competitive','Action'],added:'2026-10-04',updated:'2026-10-04',version:'1.0',featured:false,basePopularity:688,cover:'covers/aetherfoil-circuit.svg',path:'games/aetherfoil-circuit/index.html',accent:'#67e8f9',remappable:true,scoreMeta:{unit:'pts',direction:'high',label:'Circuit score'},controls:['Arrow Left/Right or A/D always retreat and advance; saved custom remaps remain valid','Primary / Space thrusts when stamina permits','Secondary / E times a parry; successful parries open a short riposte window','Manage stamina and distance: attacks, parries, and fast footwork all consume energy','P pauses and R restarts the current bout','Number keys 1-3 select unlocked rivals','Touch retreat, advance, thrust, and parry controls support mobile play','Gamepad left stick moves; A thrusts and B parries','Score three touches before each rival and defeat all three opponents to win the Circuit']},
+  {id:'aegis-verge',title:'Aegis Verge',tagline:'Secure the relays. Salvage the field. Hold the frontier.',description:'A procedural 3D hover-combat campaign across three frontier operations with four enemy roles, projectile combat, three relay-control assaults per operation, continuous Aegis shielding, deterministic repair and energy salvage, extraction objectives, persistent v1-compatible campaign records, touch controls, gamepad support, synthesized audio, and universal remapped driving.',objective:'Neutralize the hostile patrol at each relay, recover field salvage when needed, hold the cleared beacon perimeter to stabilize it, then drive through extraction. Clear all three operations while balancing hull integrity, cannon timing, salvage routing, and Aegis shield energy.',genres:['Vehicle Combat','3D','Action','Shooter','Tactical'],added:'2026-10-04',updated:'2026-10-04',version:'1.2',featured:true,basePopularity:710,cover:'covers/aegis-verge.svg',path:'games/aegis-verge/index.html',accent:'#67e8f9',remappable:true,scoreMeta:{unit:'pts',direction:'high',label:'Verge score'},controls:['Arrow keys or WASD always drive and steer; saved custom remaps remain valid','Primary / Space fires the pulse cannon','Hold Secondary / E to project the Aegis shield while energy remains','Aegis Pulse remains available through the game API for close-range defense and accessibility/test compatibility','Neutralize each relay wave before holding the beacon perimeter to stabilize it','Destroyed hostiles can drop green repair salvage or violet Aegis-energy salvage','Drive through salvage to restore hull or shield energy before the next relay','P pauses and R restarts the current operation','Number keys 1-3 select unlocked operations','Touch drive, fire, and hold-shield controls support mobile play','Gamepad left stick drives; A fires and B holds the Aegis shield','Secure all three relays and enter extraction in all three operations']},
   {id:'skyvault-cartographer',title:'Skyvault Cartographer',tagline:'Map the impossible sky.',description:'A procedural WebGL2 aerial exploration campaign across three sky regions with continuous-flight handling, ordered survey beacons, scan mechanics, boost energy, thermal updrafts, collision recovery, generated cloud-vault terrain, persistent route records, touch controls, gamepad support, and universal remapped movement.',objective:'Survey all five ordered beacons in each region by flying into scan range and holding Scan, use thermals to restore boost energy, avoid terrain impacts, then pass through the extraction gate. Clear all three routes to complete the atlas.',genres:['Flight','3D','Exploration','Simulation','Adventure'],added:'2026-10-04',updated:'2026-10-04',version:'1.0',featured:false,basePopularity:630,cover:'covers/skyvault-cartographer.svg',path:'games/skyvault-cartographer/index.html',accent:'#7dd3fc',remappable:true,scoreMeta:{unit:'pts',direction:'high',label:'Survey score'},controls:['Arrow keys or WASD always bank and pitch; saved custom remaps remain valid','Primary / Space boosts while energy remains','Secondary / E scans the next ordered beacon while inside survey range','Thermal columns restore boost energy faster','P pauses and R restarts the current route','Number keys 1-3 select unlocked survey regions','Touch flight, boost, scan, and reset controls support mobile play','Gamepad left stick flies; A boosts and B scans','Survey five beacons and reach extraction across all three regions; lower route times are recorded locally']},
   {id:'cinderline-velocity',title:'Cinderline Velocity',tagline:'Hold the line. Spend the boost. Own the furnace.',description:'A procedural WebGL2 hover-racing campaign with three original 3D circuits, live rival craft, drift-built boost, reactor gates, generated industrial scenery, dynamic chase camera, runtime audio, persistent best times, touch controls, gamepad support, and universal remapped movement.',objective:'Complete two laps through all three ordered reactor gates on each circuit, then clear all three Cinderline courses. Stay on the road, drift to rebuild boost, and chase faster persistent times.',genres:['Racing','3D','Vehicle Simulation','Arcade','Time Trial'],added:'2026-10-04',updated:'2026-10-04',version:'1.0',featured:false,basePopularity:610,cover:'covers/cinderline-velocity.svg',path:'games/cinderline-velocity/index.html',accent:'#67e8f9',remappable:true,scoreMeta:{unit:'pts',direction:'high',label:'Velocity score'},controls:['Arrow keys or WASD always steer/thrust/brake; saved custom remaps remain valid','Primary / Space spends boost while charge remains','Secondary / E or Shift drifts; high-speed drifting rebuilds boost','P pauses and R restarts the current circuit','Number keys 1-3 select unlocked circuits','Touch steering, thrust, brake, drift, boost, and reset controls support mobile play','Gamepad left stick drives; A boosts and B drifts','Complete two laps on all three circuits; lower circuit times are recorded locally']},
   {id:'glasswild-ascent',title:'Glasswild Ascent',tagline:'Climb the floating wilds. Recover the echoes. Reach the crown.',description:'A procedural WebGL2 third-person traversal campaign across three floating ecosystems with momentum movement, coyote-time jumps, air dashes, moving platforms, memory echoes, safe checkpoints, runtime vegetation and atmosphere, synthesized audio, persistent best times, touch controls, and gamepad support.',objective:'Recover all four memory echoes in each expedition, use jumps and air dashes to cross the floating route, then reach the summit beacon. Clear all three expeditions to complete the ascent.',genres:['Platformer','3D','Traversal','Adventure','Exploration'],added:'2026-10-04',updated:'2026-10-04',version:'1.0',featured:false,basePopularity:590,cover:'covers/glasswild-ascent.svg',path:'games/glasswild-ascent/index.html',accent:'#86efac',remappable:true,scoreMeta:{unit:'pts',direction:'high',label:'Ascent score'},controls:['Arrow keys or WASD always move; saved custom movement remaps remain valid','Primary / Space jumps with coyote-time forgiveness','Secondary / E air-dashes; one air dash refreshes on landing','Z / X or pointer drag rotates the chase camera','P pauses and R restarts the current expedition','Number keys 1-3 select unlocked expeditions','Touch movement, jump, dash, camera, and reset controls support mobile play','Gamepad left stick moves, right stick turns camera, A jumps, and B dashes','Recover four echoes and reach the summit across all three expeditions']},
@@ -90,7 +91,7 @@ window.WWG_GAMES = [
   {
     id: 'mirrormesh-relay', title: 'Mirrormesh Relay', tagline: 'Turn the light. Close the mesh.',
     description: 'A six-relay optics puzzle about rotating mirrors, touching every beacon, and steering a live beam into its receiver with as few turns as possible.',
-    genres: ['Optics', 'Logic', 'Puzzle', 'Physics'], added: '2026-09-30', featured: false, basePopularity: 204,
+    genres: ['Optics', 'Logic', 'Puzzle', 'Physics'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 204,
     cover: 'covers/mirrormesh-relay.svg', path: 'games/mirrormesh-relay/index.html', accent: '#67e8f9', remappable: true,
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Relay score' },
     controls: ['Remappable directions move the cursor', 'Primary / Space rotates the selected mirror', 'Tap or click a mirror to rotate it', 'R resets the current relay']
@@ -140,7 +141,7 @@ window.WWG_GAMES = [
   {
     id: 'stoneveil-ascent', title: 'Stoneveil Ascent', tagline: 'Read the wall. Spend your grip. Earn the summit.',
     description: 'A five-route climbing and route-finding game about reachable holds, stamina budgeting, chalk timing, fall recovery, and efficient summit lines. Supports remappable keyboard controls, pointer/touch play, and gamepad input.',
-    genres: ['Climbing', 'Mountaineering', 'Sports', 'Precision'], added: '2026-09-30', featured: false, basePopularity: 204,
+    genres: ['Climbing', 'Mountaineering', 'Sports', 'Precision'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 204,
     cover: 'covers/stoneveil-ascent.svg', path: 'games/stoneveil-ascent/index.html', accent: '#67e8f9', remappable: true,
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Ascent score' },
     controls: ['Click or tap a glowing reachable hold to climb directly', 'Remappable Left / Right cycles safe holds', 'Remappable Up chooses the highest safe hold', 'Primary commits the selected climb', 'Secondary uses one chalk refill per route', 'Gamepad stick + A/B supported', 'R returns to the belay with a fall penalty']
@@ -149,7 +150,7 @@ window.WWG_GAMES = [
     id: 'tidal-foundry', title: 'Tidal Foundry', tagline: 'Restore pressure one channel at a time.',
     description: 'A six-commission hydraulic routing puzzle. Rotate channel plates, trace pressure from source to receiver, diagnose breaks, and commission the foundry efficiently with keyboard, pointer, or touch controls.',
     objective: 'Restore all six foundry commissions by rotating channel plates until pressure can flow continuously from each source to its receiver.',
-    genres: ['Hydraulics', 'Engineering', 'Logic', 'Puzzle'], added: '2026-09-30', featured: false, basePopularity: 190,
+    genres: ['Hydraulics', 'Engineering', 'Logic', 'Puzzle'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 190,
     cover: 'covers/tidal-foundry.svg', path: 'games/tidal-foundry/index.html', accent: '#5eead4', remappable: true,
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Foundry score' },
     controls: ['Tap or click a channel plate to rotate it', 'Remappable directions move the keyboard cursor', 'Primary rotates the selected plate', 'Secondary tests pressure flow', 'R resets the current commission', 'Restore all six commissions efficiently']
@@ -157,7 +158,7 @@ window.WWG_GAMES = [
   {
     id: 'riftwake-regatta', title: 'Riftwake Regatta', tagline: 'Read the wind. Trim the sail. Beat the harbor rival.',
     description: 'A wind-driven sailing race through seven harbor gates with sail-trim efficiency, shifting wind, rock hazards, a moving rival boat, touch controls, gamepad support, remappable steering, and lower-is-better adjusted time.',
-    genres: ['Sailing', 'Racing', 'Sports', 'Simulation'], added: '2026-09-30', featured: false, basePopularity: 196,
+    genres: ['Sailing', 'Racing', 'Sports', 'Simulation'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 196,
     cover: 'covers/riftwake-regatta.svg', path: 'games/riftwake-regatta/index.html', accent: '#67e8f9', remappable: true,
     scoreMeta: { unit: 'sec', direction: 'low', label: 'Regatta time' },
     controls: ['Remappable Left / Right steers the hull', 'Remappable Up / Down adjusts sail trim', 'Primary / Space performs a quick tack', 'Gamepad left stick + A supported', 'Touch controls on mobile', 'Clear all seven gates in order; lower adjusted time is better']
@@ -165,7 +166,7 @@ window.WWG_GAMES = [
   {
     id: 'archive-alchemist', title: 'Archive Alchemist', tagline: 'Every failed brew is evidence.',
     description: 'A six-commission crafting deduction game. Combine exactly two reagents, match four target properties, use failed mixtures as notebook evidence, and restore the archive with as few mistakes as possible.',
-    genres: ['Alchemy', 'Crafting', 'Logic', 'Puzzle'], added: '2026-09-30', featured: false, basePopularity: 184,
+    genres: ['Alchemy', 'Crafting', 'Logic', 'Puzzle'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 184,
     cover: 'covers/archive-alchemist.svg', path: 'games/archive-alchemist/index.html', accent: '#c4b5fd',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Archive score' },
     controls: ['Tap or click two reagent vials', 'Keys 1-6 toggle reagents', 'Enter brews the selected pair', 'Failed mixtures remain in the notebook as evidence', 'R restarts the archive']
@@ -173,7 +174,7 @@ window.WWG_GAMES = [
   {
     id: 'driftglass-links', title: 'Driftglass Links', tagline: 'Read the bank. Trust the roll.',
     description: 'A six-hole precision golf and physics game with drag-to-shoot aiming, ricochet walls, sand, water hazards, gamepad support, and lower-is-better stroke scoring.',
-    genres: ['Golf', 'Sports', 'Physics', 'Precision'], added: '2026-09-30', featured: false, basePopularity: 188,
+    genres: ['Golf', 'Sports', 'Physics', 'Precision'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 188,
     cover: 'covers/driftglass-links.svg', path: 'games/driftglass-links/index.html', accent: '#5eead4',
     scoreMeta: { unit: 'strokes', direction: 'low', label: 'Course strokes' },
     controls: ['Drag from the ball to aim and set shot power', 'Arrow Left / Right adjusts aim and Up / Down adjusts power', 'Space takes the shot', 'Gamepad left stick aims, triggers change power, and A shoots', 'Touch and pointer play supported', 'R restarts the course', 'Lower stroke totals are better']
@@ -181,7 +182,7 @@ window.WWG_GAMES = [
   {
     id: 'tideglass-surveyor', title: 'Tideglass Surveyor', tagline: 'Three lighthouses. One hidden coordinate.',
     description: 'A six-chart cartography logic game. Triangulate hidden waymarks from three Manhattan-distance lighthouse readings, manage a four-probe budget, and seal the atlas efficiently.',
-    genres: ['Cartography', 'Logic', 'Puzzle', 'Exploration'], added: '2026-09-30', featured: false, basePopularity: 178,
+    genres: ['Cartography', 'Logic', 'Puzzle', 'Exploration'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 178,
     cover: 'covers/tideglass-surveyor.svg', path: 'games/tideglass-surveyor/index.html', accent: '#7dd3fc',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Survey score' },
     controls: ['Click or tap any grid sector to move the survey cursor', 'Arrow keys move the cursor one sector', 'Enter / Space probes the selected sector', 'Use all three lighthouse distance readings to triangulate the hidden waymark', 'R resets the current chart']
@@ -189,7 +190,7 @@ window.WWG_GAMES = [
   {
     id: 'spanwright', title: 'Spanwright', tagline: 'Build the load path. Prove the span.',
     description: 'A five-blueprint construction and engineering puzzle about budgeting beams, creating load-bearing triangles, connecting banks, and certifying each structure with a moving convoy test.',
-    genres: ['Construction', 'Engineering', 'Physics', 'Puzzle'], added: '2026-09-30', featured: false, basePopularity: 181,
+    genres: ['Construction', 'Engineering', 'Physics', 'Puzzle'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 181,
     cover: 'covers/spanwright.svg', path: 'games/spanwright/index.html', accent: '#2dd4bf',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Engineering score' },
     controls: ['Tap or click one joint and then another to place a beam', 'T or Space tests the current span', 'Backspace removes the last beam', 'R resets the blueprint', 'Build connected, well-braced structures without exceeding the budget']
@@ -197,7 +198,7 @@ window.WWG_GAMES = [
   {
     id: 'lantern-line', title: 'Lantern Line', tagline: 'Smooth stops. Quiet streets. Zero excuses.',
     description: 'A city-loop vehicle simulation about throttle, braking, passenger comfort, schedule discipline, and six precise station stops. Finish the route with the lowest total service delay.',
-    genres: ['Vehicle Simulation', 'Transit', 'Logistics', 'Simulation'], added: '2026-09-30', featured: false, basePopularity: 174,
+    genres: ['Vehicle Simulation', 'Transit', 'Logistics', 'Simulation'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 174,
     cover: 'covers/lantern-line.svg', path: 'games/lantern-line/index.html', accent: '#fb7185', remappable: true,
     scoreMeta: { unit: 'sec', direction: 'low', label: 'Service delay' },
     controls: ['Remappable Up accelerates and Down brakes', 'Primary / Space opens doors when stopped at a platform', 'R restarts the shift', 'Gamepad triggers + A supported', 'Touch throttle, brake, and doors controls on mobile', 'Lower service-delay scores are better']
@@ -205,7 +206,7 @@ window.WWG_GAMES = [
   {
     id: 'frostline-rescue', title: 'Frostline Rescue', tagline: 'Contain the fire. Bring everyone home.',
     description: 'A real-time emergency rescue game with spreading fire, stranded residents, water management, a safe-zone escort loop, procedural audio, touch controls, gamepad support, and remappable keyboard movement.',
-    genres: ['Rescue', 'Emergency', 'Action', 'Strategy'], added: '2026-09-30', featured: false, basePopularity: 178,
+    genres: ['Rescue', 'Emergency', 'Action', 'Strategy'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 178,
     cover: 'covers/frostline-rescue.svg', path: 'games/frostline-rescue/index.html', accent: '#22d3ee', remappable: true,
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Rescue score' },
     controls: ['Move with remappable directional keys or Arrow keys before customization', 'Primary sprays water at nearby fire', 'Secondary / Enter escorts a nearby resident or secures them at the safe zone', 'Refill water near the blue hydrant', 'Gamepad left stick + A/B supported', 'Touch controls on mobile']
@@ -222,7 +223,7 @@ window.WWG_GAMES = [
     id: 'terrace-keeper', title: 'Terrace Keeper', tagline: 'Plant carefully. Let the weather work.',
     description: 'A twelve-day farming and management simulation. Plant three crop types, water terraces, harvest for profit, react to frost and rain, and invest in a cistern or windglass to fulfill the seasonal contract.',
     objective: 'Complete the twelve-day seasonal contract by planting, watering, harvesting, weather-proofing, and investing well enough to finish with a profitable terrace farm.',
-    genres: ['Farming', 'Agriculture', 'Management', 'Relaxing'], added: '2026-09-30', featured: false, basePopularity: 158,
+    genres: ['Farming', 'Agriculture', 'Management', 'Relaxing'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 158,
     cover: 'covers/terrace-keeper.svg', path: 'games/terrace-keeper/index.html', accent: '#86efac',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Terrace score' },
     controls: ['Tap or click a seed type, then an empty terrace to plant', 'Tap planted crops to water them or harvest when ready', 'End Day advances crop growth and weather', 'Optional cistern and windglass upgrades change the season economy']
@@ -230,7 +231,7 @@ window.WWG_GAMES = [
   {
     id: 'chronofold-courier', title: 'Chronofold Courier', tagline: 'Cooperate with the route you already took.',
     description: 'A five-fold time-loop puzzle where every sealed route becomes an echo that repeats your moves. Coordinate past versions of yourself across pressure plates, walls, and phase-locked exits.',
-    genres: ['Time Loop', 'Puzzle', 'Strategy', 'Experimental'], added: '2026-09-30', featured: false, basePopularity: 166,
+    genres: ['Time Loop', 'Puzzle', 'Strategy', 'Experimental'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 166,
     cover: 'covers/chronofold-courier.svg', path: 'games/chronofold-courier/index.html', accent: '#c4b5fd', remappable: true,
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Archive score' },
     controls: ['WASD / Arrow keys move one grid step', 'Space seals the current route into a replaying echo', 'X / Period waits one step for synchronization', 'R restarts the full archive', 'Touch direction, wait, and loop controls on mobile']
@@ -238,7 +239,7 @@ window.WWG_GAMES = [
   {
     id: 'hearthline-kitchen', title: 'Hearthline Kitchen', tagline: 'Read the rail. Hit the heat. Keep service moving.',
     description: 'A seventy-five second cooking and time-management rush. Assemble four recipes, stop the heat meter at the right moment, protect your combo, and serve as many accurate plates as possible.',
-    genres: ['Cooking', 'Time Management', 'Management', 'Arcade'], added: '2026-09-30', featured: false, basePopularity: 157,
+    genres: ['Cooking', 'Time Management', 'Management', 'Arcade'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 157,
     cover: 'covers/hearthline-kitchen.svg', path: 'games/hearthline-kitchen/index.html', accent: '#fb923c',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Service score' },
     controls: ['Keys 1-6 or touch ingredient stations add ingredients', 'C cooks the prepared bowl', 'Enter serves the plate', 'X / Backspace clears the bowl', 'R restarts after service closes']
@@ -246,7 +247,7 @@ window.WWG_GAMES = [
   {
     id: 'spectra-safari', title: 'Spectra Safari', tagline: 'Track the wild. Frame the moment.',
     description: 'A relaxing wildlife-photography expedition with six species, rarity scoring, framing and distance bonuses, twelve shots of film, roaming creatures, procedural audio, touch controls, and gamepad support.',
-    genres: ['Photography', 'Nature', 'Exploration', 'Relaxing'], added: '2026-09-30', featured: false, basePopularity: 153,
+    genres: ['Photography', 'Nature', 'Exploration', 'Relaxing'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 153,
     cover: 'covers/spectra-safari.svg', path: 'games/spectra-safari/index.html', accent: '#86efac',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Survey score' },
     controls: ['WASD / Arrow keys pan the field camera', 'Space takes a photograph', 'Frame wildlife near the center reticle for stronger scores', 'Gamepad left stick + A supported', 'Touch movement and PHOTO controls on mobile']
@@ -262,7 +263,7 @@ window.WWG_GAMES = [
   {
     id: 'twinforge-expedition', title: 'Twinforge Expedition', tagline: 'Two pilots. One forge. Three sectors.',
     description: 'A same-device cooperative expedition for two players. Gather shared ore and crystal, evade moving hazards, manage one energy reserve, and dock together to build three forge relays.',
-    genres: ['Co-op', 'Multiplayer', 'Exploration', 'Survival'], added: '2026-09-30', featured: false, basePopularity: 151,
+    genres: ['Co-op', 'Multiplayer', 'Exploration', 'Survival'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 151,
     cover: 'covers/twinforge-expedition.svg', path: 'games/twinforge-expedition/index.html', accent: '#67e8f9',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Team score' },
     controls: ['Player 1: WASD + F to build', 'Player 2: Arrow keys + / to build', 'Dual touch controls are available on mobile', 'Two gamepads supported when connected', 'Both players must dock and hold build together']
@@ -270,7 +271,7 @@ window.WWG_GAMES = [
   {
     id: 'mothlight-museum', title: 'Mothlight Museum', tagline: 'Find what the archive forgot.',
     description: 'A three-room hidden-object investigation with fifteen hand-placed exhibits, hint penalties, room-clear bonuses, touch/pointer play, and a final case score based on speed and observation.',
-    genres: ['Hidden Object', 'Mystery', 'Puzzle', 'Observation'], added: '2026-09-30', featured: false, basePopularity: 146,
+    genres: ['Hidden Object', 'Mystery', 'Puzzle', 'Observation'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 146,
     cover: 'covers/mothlight-museum.svg', path: 'games/mothlight-museum/index.html', accent: '#c4b5fd',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Case score' },
     controls: ['Click or tap listed exhibits in each gallery', 'H or the Hint button reveals one target for a score penalty', 'R restarts the investigation']
@@ -292,7 +293,7 @@ window.WWG_GAMES = [
     tagline: 'Every clue narrows the room.',
     description: 'A four-case deduction game. Compare suspect traits against evidence, reveal extra clues at a score cost, avoid false accusations, and close the full docket with the strongest possible reasoning score.',
     genres: ['Deduction', 'Mystery', 'Logic', 'Puzzle'],
-    added: '2026-09-30', featured: false, basePopularity: 136,
+    added: '2026-09-30', version: '1.0', featured: false, basePopularity: 136,
     cover: 'covers/cipher-court.svg', path: 'games/cipher-court/index.html', accent: '#c084fc',
     controls: ['Click or tap a suspect to select them', 'Accuse selected suspect when the evidence fits', 'Reveal another clue costs score', 'Enter accuses / Space reveals another clue', 'R restarts the docket'], scoreMeta:{unit:'pts',direction:'high',label:'deduction score'}
   },
@@ -302,7 +303,7 @@ window.WWG_GAMES = [
     tagline: 'Cast by moonlight. Read the tension.',
     description: 'A relaxed fishing game with bite timing, line-tension management, five fish species, species values, a 90-second night haul, procedural audio, touch input, and gamepad support.',
     genres: ['Fishing', 'Relaxing', 'Simulation'],
-    added: '2026-09-30', featured: false, basePopularity: 132,
+    added: '2026-09-30', version: '1.0', featured: false, basePopularity: 132,
     cover: 'covers/moonwake-angler.svg', path: 'games/moonwake-angler/index.html', accent: '#93c5fd',
     controls: ['Space / CAST throws the line', 'Reel when the float flashes', 'Hold and release REEL to keep tension below the red zone', 'R restarts the night haul', 'Touch controls on mobile', 'Gamepad A supported'], scoreMeta:{unit:'pts',direction:'high',label:'haul score'}
   },
@@ -325,7 +326,7 @@ window.WWG_GAMES = [
   {
     id: 'command-bloom', title: 'Command Bloom', tagline: 'Program the garden one instruction at a time.',
     description: 'A six-stage programming logic puzzle about building short command queues, rotating a drone, navigating root walls, pulsing energy cores, and reaching each green gate efficiently.',
-    genres: ['Programming', 'Logic', 'Puzzle'], added: '2026-09-30', featured: false, basePopularity: 127,
+    genres: ['Programming', 'Logic', 'Puzzle'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 127,
     cover: 'covers/command-bloom.svg', path: 'games/command-bloom/index.html', accent: '#86efac',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Program score' },
     controls: ['F/L/R/P add Forward, Left, Right, and Pulse commands', 'Enter runs the queued program', 'Backspace removes the last instruction', 'Tap/click controls support touch and pointer play', 'Escape resets the current stage or restarts after completion']
@@ -337,7 +338,7 @@ window.WWG_GAMES = [
     description: 'A fast logistics-routing game about reading rail flow, toggling switches, matching colored trains to depots, and keeping a busy elevated network collision-free.',
     objective: 'Route each colored train to its matching depot while preventing collisions and wrong-depot strikes; three strikes end the shift.',
     genres: ['Logistics', 'Strategy', 'Puzzle'],
-    added: '2026-09-30', featured: false, basePopularity: 126,
+    added: '2026-09-30', version: '1.0', featured: false, basePopularity: 126,
     cover: 'covers/railspire-dispatch.svg', path: 'games/railspire-dispatch/index.html', accent: '#a7f3d0',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Dispatch score' },
     controls: ['Keys 1-4 toggle the four rail switches', 'Tap amber switches or on-screen switch buttons', 'Route each colored train to its matching depot', 'Avoid three strikes from wrong depots or collisions', 'R restarts the shift']
@@ -353,7 +354,7 @@ window.WWG_GAMES = [
   {
     id: 'solar-loom', title: 'Solar Loom', tagline: 'Build a stable little universe.',
     description: 'An experimental orbital sandbox about placing different world types, balancing gravitational mass, maximizing habitability, and shepherding a tiny solar system through eight epochs.',
-    genres: ['Sandbox', 'Experimental', 'Simulation', 'Strategy'], added: '2026-09-30', featured: false, basePopularity: 121,
+    genres: ['Sandbox', 'Experimental', 'Simulation', 'Strategy'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 121,
     cover: 'covers/solar-loom.svg', path: 'games/solar-loom/index.html', accent: '#93c5fd',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'System score' },
     controls: ['Tap or click an orbit to place the selected world', 'Buttons or keys 1-4 choose world types', 'Space advances an epoch', 'R restarts the system', 'Keep stability above 25 through eight epochs']
@@ -480,7 +481,7 @@ window.WWG_GAMES = [
     tagline: 'Design an ecosystem that can survive itself.',
     description: 'A turn-based ecology strategy game. Spend limited energy placing water, seeds, and mycelium, then simulate fourteen turns where neighboring species support or starve one another. Diversity and healthy connections drive the final score.',
     genres: ['Ecology', 'Strategy', 'Simulation', 'Board'],
-    added: '2026-09-30',
+    added: '2026-09-30', version: '1.0',
     featured: false,
     basePopularity: 106,
     cover: 'covers/verdant-circuit.svg',
@@ -495,7 +496,7 @@ window.WWG_GAMES = [
     description: 'A compact stealth-puzzle infiltration game. Slip through vision cones, disable security relays, use short-lived signal cloaks, and extract before the facility reaches full alert.',
     objective: 'Disable the required security relays and reach extraction without letting guard vision drive the facility to full alert.',
     genres: ['Stealth', 'Puzzle', 'Action'],
-    added: '2026-09-30',
+    added: '2026-09-30', version: '1.0',
     featured: false,
     basePopularity: 104,
     cover: 'covers/quiet-protocol.svg',
@@ -509,7 +510,7 @@ window.WWG_GAMES = [
     tagline: 'Turn the line. Feed the core. Waste nothing.',
     description: 'An automation-routing puzzle about rotating factory modules to move ore through processors and into the reactor. Build efficient chains, manage heat, and beat each quota before the shift ends.',
     genres: ['Automation', 'Strategy', 'Simulation', 'Puzzle'],
-    added: '2026-09-30',
+    added: '2026-09-30', version: '1.0',
     featured: false,
     basePopularity: 102,
     cover: 'covers/forgeflow.svg',
@@ -551,7 +552,7 @@ window.WWG_GAMES = [
     tagline: 'Bend the orbit. Build the path.',
     description: 'A physics puzzle about launching a probe through gravitational fields. Sweep every energy core, avoid planetary collisions, and enter the stabilized gate using as few launches as possible.',
     genres: ['Physics', 'Puzzle', 'Simulation'],
-    added: '2026-09-30',
+    added: '2026-09-30', version: '1.0',
     featured: false,
     basePopularity: 98,
     cover: 'covers/gravity-foundry.svg',
@@ -565,7 +566,7 @@ window.WWG_GAMES = [
     tagline: 'Play the lane. Break the citadel.',
     description: 'A compact card-battle tactics game with three contested lanes, an energy economy, a rotating hand, simultaneous combat resolution, and an AI rival that builds its own board each turn.',
     genres: ['Card', 'Strategy', 'Board'],
-    added: '2026-09-30',
+    added: '2026-09-30', version: '1.0',
     featured: false,
     basePopularity: 97,
     cover: 'covers/hexbound-tactics.svg',
@@ -579,7 +580,7 @@ window.WWG_GAMES = [
     tagline: 'Route the fleet. Protect the harbor.',
     description: 'A real-time harbor-management simulation. Assign color-coded arrivals to matching berths, prevent collisions, keep ships from abandoning the harbor, and build the highest 90-second credit total.',
     genres: ['Simulation', 'Management', 'Arcade'],
-    added: '2026-09-30',
+    added: '2026-09-30', version: '1.0',
     featured: false,
     basePopularity: 96,
     cover: 'covers/harbor-pulse.svg',
@@ -664,7 +665,7 @@ window.WWG_GAMES = [
     tagline: 'Move, evolve, and keep the last ember alive.',
     description: 'A survival-arena run with automatic targeting, dash movement, escalating swarms, collectible embers, and mid-run upgrades that reshape your build.',
     genres: ['Survival', 'Action', 'Roguelite'],
-    added: '2026-09-29',
+    added: '2026-09-29', version: '1.0',
     featured: false,
     basePopularity: 91,
     cover: 'covers/emberfield-survival.svg',

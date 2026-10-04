@@ -47,4 +47,4 @@ with sync_playwright() as pw:
     assert meta['unlocked']==3 and meta['clears']>=3 and all(x>0 for x in meta['best']),meta
     assert not errs,errs
     browser.close()
-print(json.dumps({'renderer':renderer,'version':'1.1','operations':3,'relays':9,'v1SaveMigration':'pass','universalControls':'pass','customRemap':'pass','actionFallbacks':'pass','shield':'pass','campaign':'pass','persistence':'pass','legacyAchievementEvent':'pass','touchWidth390':'pass'}))
+print(json.dumps({'renderer':renderer,'version':'compat','operations':3,'relays':9,'v1SaveMigration':'pass','universalControls':'pass','customRemap':'pass','actionFallbacks':'pass','shield':'pass','campaign':'pass','persistence':'pass','legacyAchievementEvent':'pass','touchWidth390':'pass'}))

@@ -2,63 +2,72 @@
 
 Last updated: 2026-10-04
 Owner/operator: Architect Industries
-Current verified release candidate: **v51 — Aegis Verge**
-Status: **81 games / 126 genre tags / 132 achievements / 53 remappable releases**
+Current verified release candidate: **v54 — Aegis Relay Salvage**
+Release status: **source QA green; GitHub/Vercel promotion pending release gate**
+Catalog: **82 games / 128 genre tags / 138 achievements / 54 remappable releases**
 
-## v51 — Aegis Verge
+## v54 — Aegis Relay Salvage
 
-Aegis Verge extends the shared procedural 3D foundation into third-person vehicle combat. Three fortress operations combine hover driving, projectile combat, autonomous interceptor pressure, three shield pylons per zone, an exposed Bastion Core finale, hull damage, regenerating Aegis Pulse energy, touch controls, gamepad support, and local campaign records.
+WorldWideGames v54 reconciles the two verified Aegis Verge 1.1 development lines instead of discarding either one. The production/GitHub Relayfront line contributed relay assaults, four enemy roles, continuous shielding, extraction objectives, and v1 save continuity; the Library Salvage line contributed deterministic repair/energy drops and pickup telemetry. Aegis Verge 1.2 now combines both into one three-operation campaign.
 
-The game uses only local WorldWideGames runtime code and generated geometry/audio. Public-facing branding identifies Architect Industries. It adds no paid API or remote game-engine dependency.
+### Aegis Verge 1.2
 
-## Platform integration
+- Three operations with three stabilized relays per operation and an extraction gate.
+- Four hostile roles: skirmisher, lancer, bulwark, and warden.
+- Continuous Aegis shielding on Secondary/E with energy drain and shield-block telemetry.
+- Deterministic field salvage: repair pickups restore hull and energy pickups recharge the Aegis system; dropped salvage expires when ignored.
+- Preserves the `wwg:aegis-verge:meta-v1` save schema and legacy progression/event compatibility.
+- Keyboard, touch, gamepad, saved remaps, synthesized audio, procedural 3D geometry, and Canvas2D fallback remain local/self-contained.
 
-- Aegis Verge is the sole featured game and first PWA shortcut.
-- Skyvault Cartographer and Cinderline Velocity remain second and third PWA shortcuts.
-- Aegis Verge joins Flagship Worlds, Long Campaigns, 3D Worlds, Action, Shooter, Arcade, and Vehicle Combat discovery.
-- Added achievements **Verge Secured** and **Untouched Verge**.
-- Offline cache advances to `wwg-v51`.
-- Existing `game` / `gameId` telemetry compatibility is preserved.
+### Additional shipped work
+
+- Preserves **Aetherfoil Circuit 1.0**, the three-rival fencing campaign introduced in the verified v53 candidate, including stamina footwork, timed parries, ripostes, touch/gamepad support, persistence, and telemetry.
+- Keeps explicit semantic version metadata across all 82 catalog entries.
+- Adds achievements **Relay Reclaimer** and **Aegis Wall**.
+- Fixes a Skyvault Cartographer recovery defect where a checkpoint respawn could immediately trigger a second collision; recovery now has a short collision grace window.
+- Offline cache advances to `wwg-v54`; PWA shortcuts prioritize Aegis Verge, Aetherfoil Circuit, then Skyvault Cartographer.
 
 ## Verification
 
-Source QA is green:
+The verified source package passed:
 
-- `python3 tests/v51_aegis.py`: PASS — three operations, nine pylons, campaign unlock flow, movement, pulse, mobile-width layout, telemetry, persistent in-session records, and shared-renderer boot.
-- `node tests/v51_static.js`: PASS — 81 games, 126 genres, 132 achievements, 53 remappable releases, featured/PWA/cache/branding/source invariants.
-- `node tests/smoke.js`: PASS — 81/81 registered games boot plus homepage and reusable game-detail shell.
-- `python3 tests/v41_controls_browser.py`: PASS — 81/81 detail pages expose objectives/controls; 53/53 remappable releases expose current/default profiles.
-- `python3 tests/v41_catalog_audit.py`: PASS — 81/81 runtime-clean in isolated Chromium.
-- `python3 tests/v32_http.py`: PASS — 170/170 local-origin release paths returned HTTP 200.
-- `python3 tests/v50_skyvault.py`: PASS — v50 shared-3D regression remained green.
+- `node tests/v54_static.js` — 82 games, 128 genres, 138 achievements, 54 remappable releases, v54 cache/metadata/branding invariants.
+- `python3 tests/v54_aegis_relay_salvage.py` — relay campaign, four hostile roles, continuous shield, repair/energy salvage, save migration, telemetry, persistence, and 390px mobile layout.
+- `python3 tests/v52_aegis_relayfront.py` — production Relayfront compatibility regression.
+- `python3 tests/v52_aegis_salvage.py` — salvage-line compatibility regression.
+- `python3 tests/v51_aegis.py` — legacy Aegis campaign compatibility regression.
+- `python3 tests/v53_aetherfoil.py` — parry/riposte loop, three-bout campaign, persistence, telemetry, pause/restart, and mobile layout.
+- `python3 tests/v50_skyvault.py` — 3 routes / 15 beacons, control fallbacks, campaign, persistence, telemetry; includes the repeated-impact regression fix.
+- `python3 tests/v49_procedural_worlds.py` — Cinderline/Glasswild shared-3D regression.
+- `node tests/smoke.js` — 82/82 registered games boot plus homepage/detail shell.
+- `python3 tests/v41_controls_browser.py` — 82/82 objective/control pages; 54/54 remappable profiles.
+- `python3 tests/v41_catalog_audit.py` — 82/82 isolated Chromium runtime-clean.
+- `python3 tests/v32_http.py` — 172/172 local-origin release paths returned HTTP 200.
 
-The current Chromium environment exposes no WebGL/WebGL2 context, so dedicated browser QA exercised the shared Canvas2D compatibility renderer. WebGL2 code remains source/static validated; no claim is made that this run GPU-rendered the WebGL2 path.
+The current Chromium environment exposes the shared Canvas2D renderer, so browser campaign QA does not claim GPU-rendered WebGL2 validation.
 
-## GitHub release gate
+## Source-of-truth reconciliation
+
+At the start of this run, canonical GitHub `main` and Vercel production both pointed to v52 **Aegis Relayfront** commit `2543a3f2a21120c48f8edc100f9f6c1f8db82192`. The Library also contained a separately verified v52 **Aegis Salvage** package, while the conversation artifact contained verified v53 **Aetherfoil Circuit** work. v54 deliberately merges those useful verified lines rather than reverting current production or dropping v53 catalog work.
+
+## Release gate
 
 Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `main`.
 
-- This run first repaired continuity by safely fast-forwarding `main` from v49 `d739ea93269ecbced53e08a7957c5eb13369a560` to the previously verified v50 source commit `aea3caf44cb90347f16fef966c79c81c15abdd9d`.
-- v50 base tree for v51: `0beb438622e5d3392726b81cb299ea3e41a8a701`.
-- Verified v51 source commit: `7371080a69df9584189189d23ac4643d9be4e87e`.
-- v51 source tree: `13a677a6c5e4a0f0afbb5b7d866d4eb82a3f5223`.
-- Final concurrency verification showed the v51 release state exactly **2 commits ahead / 0 behind** canonical `main` at v50 `aea3caf44cb90347f16fef966c79c81c15abdd9d`.
-- Final promotion was attempted only after that check, but the repository write path blocked both the non-force `main` ref update and PR creation before GitHub accepted either mutation.
-- Complete v51 source/release state is preserved on `release/v51-aegis-verge`; canonical `main` remains the verified v50 commit and v51 must not be described as fully shipped until promotion succeeds.
+- Base/main observed before v54 synchronization: `2543a3f2a21120c48f8edc100f9f6c1f8db82192` (v52 Aegis Relayfront).
+- v54 verified source commit: `SOURCE_COMMIT_PENDING`.
+- Final canonical main release-state commit: `MAIN_COMMIT_PENDING`.
+- A release is not described as fully shipped until non-force GitHub synchronization succeeds and `main` is re-read at the v54 release state.
 
 ## Vercel production target
 
-Established target: project `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`, project name `worldwidegames`, Architect Industries team `team_wwOmTAdrfPwvTGNSLU1VarOy`, domain `https://worldwidegames.vercel.app`.
+Project: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq` (`worldwidegames`) under Architect Industries, domain `https://worldwidegames.vercel.app`.
 
-Connector inspection remains authorization-limited: exact project lookup returns 404 and deployment listing returns 403. These responses are treated as authorization limitations, not evidence that the established project is absent. No duplicate Vercel project was created.
-
-## Known release-management blocker
-
-The Library connector created `/WorldWideGames/_v51_transfer` but refused container-backed uploads with `container_session_unavailable`. The complete tested v51 archive is still generated in the working container for recovery/download; Library persistence is retried when connector/container bridging is available. GitHub remains the canonical synchronized source.
+Before v54 promotion, production deployment `dpl_69am1zSFShKSRwmgf7R76shQsFD3` was READY and built from canonical `main` commit `2543a3f2a21120c48f8edc100f9f6c1f8db82192` (v52 Aegis Relayfront). v54 production deployment status is recorded after the GitHub release gate.
 
 ## Next priorities
 
-1. Restore direct Library container upload and persist the tested v51 source/records archives under `/WorldWideGames`.
-2. Promote the already-verified v51 release branch to canonical `main` as the first release-management priority once repository mutation authorization succeeds.
-3. Restore Vercel project/deployment authorization and verify the production deployment for the exact v51 GitHub commit.
-4. Perform GPU-capable WebGL2 visual/performance validation and tune the shared renderer from measured frame timing.
+1. Synchronize the complete verified v54 tree atomically to GitHub and fast-forward `main` without force after a final concurrency check.
+2. Confirm or trigger the matching Vercel production deployment and smoke-test the public origin when reachable.
+3. Persist v53 and v54 source/record archives under `/WorldWideGames` while preserving earlier stable packages.
+4. Run GPU-capable WebGL2 visual/performance QA on production-class hardware.

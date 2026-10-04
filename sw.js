@@ -1,4 +1,4 @@
-const CACHE='wwg-v51';
+const CACHE='wwg-v54';
 const ASSETS=[
   "./",
   "./index.html",
@@ -11,6 +11,8 @@ const ASSETS=[
   "./js/app.js",
   "./js/game-page.js",
   "./manifest.webmanifest",
+  "./covers/aetherfoil-circuit.svg",
+  "./games/aetherfoil-circuit/index.html",
   "./covers/aegis-verge.svg",
   "./games/aegis-verge/index.html",
   "./covers/skyvault-cartographer.svg",

@@ -27,24 +27,24 @@
       ]
     },
     {
-      "name": "Skyvault Cartographer",
-      "short_name": "3D Aerial Survey",
-      "url": "game.html?id=skyvault-cartographer",
+      "name": "Aetherfoil Circuit",
+      "short_name": "Fencing Circuit",
+      "url": "game.html?id=aetherfoil-circuit",
       "icons": [
         {
-          "src": "covers/skyvault-cartographer.svg",
+          "src": "covers/aetherfoil-circuit.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }
       ]
     },
     {
-      "name": "Cinderline Velocity",
-      "short_name": "3D Hover Racing",
-      "url": "game.html?id=cinderline-velocity",
+      "name": "Skyvault Cartographer",
+      "short_name": "3D Aerial Survey",
+      "url": "game.html?id=skyvault-cartographer",
       "icons": [
         {
-          "src": "covers/cinderline-velocity.svg",
+          "src": "covers/skyvault-cartographer.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }

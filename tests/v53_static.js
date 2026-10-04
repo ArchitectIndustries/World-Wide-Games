@@ -1,0 +1,25 @@
+const fs=require('fs'),vm=require('vm'),path=require('path');
+const root=path.resolve(__dirname,'..'),ctx={window:{}};vm.createContext(ctx);vm.runInContext(fs.readFileSync(path.join(root,'js/games.js'),'utf8'),ctx);
+const games=ctx.window.WWG_GAMES,assert=(ok,msg)=>{if(!ok)throw new Error(msg)};
+assert(games.length>=82,'expected at least 82 games, got '+games.length);
+assert(new Set(games.map(g=>g.id)).size===games.length,'duplicate game id');
+assert(new Set(games.flatMap(g=>g.genres)).size>=128,'genre floor mismatch');
+assert(games.filter(g=>g.remappable).length>=54,'remappable floor mismatch');
+assert(games.find(g=>g.id==='aetherfoil-circuit'),'Aetherfoil missing from catalog');
+assert(games.every(g=>/^\d+\.\d+(?:\.\d+)?$/.test(String(g.version||''))),'every catalog game must have explicit semantic version metadata');
+const af=games.find(g=>g.id==='aetherfoil-circuit');
+assert(af&&af.version==='1.0'&&af.remappable&&af.genres.includes('Fencing')&&/parry|riposte/i.test(af.description+' '+af.controls.join(' ')),'Aetherfoil metadata missing');
+for(const g of games){assert(fs.existsSync(path.join(root,g.path)),'missing game path: '+g.id);assert(fs.existsSync(path.join(root,g.cover)),'missing cover: '+g.id)}
+const app=fs.readFileSync(path.join(root,'js/app.js'),'utf8'),gp=fs.readFileSync(path.join(root,'js/game-page.js'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8'),src=fs.readFileSync(path.join(root,'games/aetherfoil-circuit/index.html'),'utf8'),manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.webmanifest'),'utf8'));
+const ab=app.slice(app.indexOf('const achievements = ['),app.indexOf('];',app.indexOf('const achievements = ['))+2),ids=[...ab.matchAll(/\{id:'([^']+)'/g)].map(m=>m[1]);
+assert(ids.length>=136&&new Set(ids).size===ids.length,'achievement floor/duplicate mismatch '+ids.length);
+for(const id of ['circuit-foil','riposte-artist','field-technician','pulse-siphon'])assert(ids.includes(id),'achievement missing '+id);
+assert(app.includes("{version:'v53',title:'Aetherfoil Circuit'"),'v53 release history missing');
+assert(gp.includes('e.data.game||e.data.gameId'),'event compatibility gate missing');
+assert(/wwg-v5[34]/.test(sw),'cache version mismatch');
+assert(sw.includes('./covers/aetherfoil-circuit.svg')&&sw.includes('./games/aetherfoil-circuit/index.html'),'Aetherfoil offline assets missing');
+assert((manifest.shortcuts||[]).some(x=>x.url==='game.html?id=aetherfoil-circuit'),'Aetherfoil PWA shortcut continuity missing');
+for(const token of ['campaign-complete','bout-complete','perfect-bout','parry','window.__aetherfoil'])assert(src.includes(token),'Aetherfoil implementation missing '+token);
+assert(src.toUpperCase().includes('ARCHITECT INDUSTRIES'),'Aetherfoil public branding missing');
+for(const bad of ['ChatGPT','OpenAI'])assert(!src.includes(bad),'prohibited public branding: '+bad);
+console.log(JSON.stringify({games:82,genres:128,achievements:136,remappable:54,featured:'aetherfoil-circuit',cache:'wwg-v53',newGame:'aetherfoil-circuit',metadata:'explicit-version-all-games'}));

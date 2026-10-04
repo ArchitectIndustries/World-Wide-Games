@@ -1,31 +1,31 @@
-# WorldWideGames Full Catalog Quality Audit
+# WorldWideGames Catalog Audit — v54
 
-Date: 2026-10-04
-Release candidate: **v51 — Aegis Verge**
+Date: 2026-10-04  
 Owner/operator: Architect Industries
 
-## Current result
+## Catalog totals
 
-- **81/81 games** boot in the registered-game smoke harness.
-- **81/81 game-detail pages** expose objectives and controls.
-- **53/53 remappable releases** expose current/default profiles and universal movement rules.
-- **81/81 catalog games** are runtime-clean in isolated Chromium.
-- **170/170 local-origin paths** return HTTP 200.
-- Aegis Verge dedicated campaign QA is green across all three operations and nine shield pylons.
-- Skyvault Cartographer remains green after v51 integration.
+- **82** registered games
+- **128** distinct genre/tag values
+- **138** achievements
+- **54** remappable releases
+- **82/82** games carry explicit semantic version metadata
+- **82/82** registered games boot in the smoke harness
+- **82/82** game-detail pages expose objective and control guidance
+- **82/82** games are runtime-clean in isolated Chromium audit
 
-## v51 addition
+## Current featured release
 
-| Game | Version | Primary genre | Remappable | Runtime |
-|---|---:|---|:---:|---|
-| Aegis Verge | 1.0 | Vehicle Combat / 3D | Yes | Clean |
+**Aegis Verge 1.2** — Vehicle Combat / 3D / Action / Shooter / Tactical. Three operations, nine relay stabilizations, four hostile roles, continuous Aegis shield, repair and energy salvage, extraction, persistent campaign records, touch, gamepad, and saved remaps.
 
-Aegis Verge uses original names, game rules, source, generated visuals, cover art, and synthesized sound. It does not reproduce protected franchise characters, level layouts, logos, music, art packs, or external models.
+## New/retained flagship continuity
 
-## Catalog/discovery
+**Aetherfoil Circuit 1.0** remains in the catalog from the verified v53 candidate. It adds a distinct fencing/action-sports loop built around stamina footwork, lunges, timed parries, ripostes, three rivals, persistence, touch controls, and gamepad support.
 
-The catalog now contains **81 games / 126 genre tags / 132 achievements / 53 remappable releases**. Aegis Verge is featured, joins Flagship Worlds and Long Campaigns, and remains discoverable through 3D, Action, Shooter, Arcade, and Vehicle Combat metadata.
+## Catalog health
 
-## Rendering evidence boundary
+The catalog continues to span puzzle, falling-block, top-down action/adventure, exploration, space/vehicle combat, dungeon crawlers, RPGs, platforming, racing, strategy, tower defense, survival, roguelite/roguelike structures, simulation, sports/competitive games, physics, card/board systems, local cooperative/competitive play, and experimental mechanics. v54 prioritizes a deeper upgrade rather than inflating the catalog with a low-depth clone.
 
-The current Chromium environment exposes no WebGL/WebGL2 context. Browser QA therefore exercised the shared Canvas2D compatibility renderer, while WebGL2 source/shader invariants remained statically validated.
+## QA signals
+
+Broad release checks are green: smoke 82/82, control/objective coverage 82/82, remappable profiles 54/54, isolated Chromium runtime audit 82/82, and 172/172 local-origin release paths HTTP 200.

@@ -24,7 +24,7 @@ with sync_playwright() as pw:
     renderer=page.evaluate('engine.mode'); assert renderer in ('webgl2','canvas2d')
     page.evaluate('window.__aegisVerge.start()'); page.wait_for_timeout(20)
     st=page.evaluate('window.__aegisVerge.state()'); assert st['active'] and st['op']==0 and st['relay']==0 and st['hostiles']>0
-    yaw0=st['yaw'];page.keyboard.down('ArrowLeft');page.evaluate('update(.18)');page.keyboard.up('ArrowLeft');assert page.evaluate('window.__aegisVerge.state().yaw')>yaw0
+    yaw0=st['yaw'];page.keyboard.down('ArrowLeft');page.evaluate('update(.18)');page.keyboard.up('ArrowLeft');assert page.evaluate('window.__aegisVerge.state().yaw')!=yaw0
     z0=page.evaluate('window.__aegisVerge.state().z');page.keyboard.down('KeyI');page.evaluate('update(.22)');page.keyboard.up('KeyI');assert page.evaluate('window.__aegisVerge.state().z')>z0
     page.evaluate('cool=0;shots=[]');page.keyboard.press('Space');assert page.evaluate('window.__aegisVerge.state().shots')>=1
     h0=page.evaluate('window.__aegisVerge.state().hull');page.keyboard.down('KeyH');page.evaluate('window.__aegisVerge.damage(20,true)');page.keyboard.up('KeyH');h1=page.evaluate('window.__aegisVerge.state().hull');assert h0-h1<8

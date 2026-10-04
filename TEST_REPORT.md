@@ -1,33 +1,36 @@
-# WorldWideGames v51 Test Report
+# WorldWideGames Test Report — v54
 
-Date: 2026-10-04
-Owner/operator: Architect Industries
-Release: **v51 — Aegis Verge**
+Date: 2026-10-04  
+Owner/operator: Architect Industries  
+Candidate: **v54 — Aegis Relay Salvage**
 
 ## Result
 
-**PASS — source QA green.**
+**PASS — verified release candidate.** No known release-blocking local/source regression remains.
 
-- Aegis Verge dedicated Playwright campaign QA: PASS. Renderer observed in this environment: `canvas2d` compatibility mode.
-- v51 static/catalog integration: PASS — 81 games, 126 genre tags, 132 achievements, 53 remappable releases.
-- Registered-game smoke: **81/81 boot**.
-- Detail/objective/control coverage: **81/81**.
-- Remappable profiles: **53/53**.
-- Isolated Chromium catalog runtime: **81/81 clean**.
-- Local-origin HTTP paths: **170/170 status 200**.
-- Skyvault Cartographer v50 regression: PASS.
+| Test | Result | Coverage |
+|---|---|---|
+| `node tests/v54_static.js` | PASS | 82 games, 128 genres, 138 achievements, 54 remappable, feature/cache/PWA/branding invariants |
+| `python3 tests/v54_aegis_relay_salvage.py` | PASS | Aegis 1.2 relays, four enemy roles, continuous shield, repair/energy salvage, campaign, persistence, telemetry, 390px mobile |
+| `python3 tests/v52_aegis_relayfront.py` | PASS | Relayfront/v1 save/control/campaign compatibility |
+| `python3 tests/v52_aegis_salvage.py` | PASS | Salvage drop/collection compatibility |
+| `python3 tests/v51_aegis.py` | PASS | Legacy Aegis API/campaign compatibility |
+| `python3 tests/v53_aetherfoil.py` | PASS | Fencing parry/riposte, 3-bout campaign, persistence, telemetry, pause/restart, mobile |
+| `python3 tests/v50_skyvault.py` | PASS | 3 routes, 15 beacons, controls, collision recovery, campaign, persistence, telemetry |
+| `python3 tests/v49_procedural_worlds.py` | PASS | Shared procedural 3D Cinderline/Glasswild campaigns |
+| `node tests/smoke.js` | PASS | 82/82 game boots + homepage + detail shell |
+| `python3 tests/v41_controls_browser.py` | PASS | 82/82 objective/control pages; 54/54 remappable profiles |
+| `python3 tests/v41_catalog_audit.py` | PASS | 82/82 runtime-clean in isolated Chromium |
+| `python3 tests/v32_http.py` | PASS | 172/172 local HTTP paths returned 200 |
 
-## Aegis Verge coverage
+## Defect fixed during this run
 
-The dedicated release test starts the shared renderer, verifies a 390px mobile viewport, drives the craft, consumes Aegis Pulse energy, applies hull damage, disables all nine shield pylons across three operations, exposes/destroys all three Bastion Cores, verifies unlock/best-record progression and campaign telemetry, and rejects page/runtime errors.
+Skyvault Cartographer could register two impacts from one collision because a recovery checkpoint could still overlap collision geometry on the first animation frame after respawn. v54 adds a short recovery collision-grace interval, preventing chain damage while preserving normal boundary/terrain collision detection. The dedicated Skyvault regression is green after the fix.
 
-## Rendering boundary
+## Renderer evidence boundary
 
-Headless Chromium available here exposes no WebGL/WebGL2 context. Browser execution therefore used the engine's Canvas2D fallback. WebGL2 shader/runtime source invariants remain covered by static tests, but GPU-rendered WebGL2 output was not visually validated in this run.
+Browser QA in this environment used the shared Canvas2D compatibility renderer because Chromium did not expose WebGL/WebGL2. The WebGL2 source path remains statically covered and shared-3D regressions are green; GPU-rendered visual/performance verification remains a production-hardware follow-up.
 
-## Release evidence
+## Release-management verification
 
-Verified source commit: `7371080a69df9584189189d23ac4643d9be4e87e`
-Verified source tree: `13a677a6c5e4a0f0afbb5b7d866d4eb82a3f5223`
-
-Vercel connector inspection remains authorization-limited (project lookup 404; deployment listing 403), so no independent production-origin claim is made from those connector calls.
+At run start, GitHub `main` and Vercel production both matched v52 commit `2543a3f2a21120c48f8edc100f9f6c1f8db82192`. v54 promotion is recorded after the mandatory GitHub gate completes.
