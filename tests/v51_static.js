@@ -8,6 +8,7 @@ assert(games.filter(g=>g.remappable).length===53,'remappable total mismatch');
 assert(JSON.stringify(games.filter(g=>g.featured).map(g=>g.id))===JSON.stringify(['aegis-verge']),'featured mismatch');
 const av=games.find(g=>g.id==='aegis-verge'),sc=games.find(g=>g.id==='skyvault-cartographer'),cv=games.find(g=>g.id==='cinderline-velocity');
 assert(av&&av.version==='1.0'&&av.genres.includes('Vehicle Combat')&&av.genres.includes('3D')&&av.remappable,'Aegis metadata missing');
+assert(!/pickup/i.test(av.description+' '+av.controls.join(' ')),'Aegis catalog must not claim unimplemented pickups');
 assert(sc&&!sc.featured&&sc.version==='1.0','Skyvault continuity mismatch');assert(cv&&!cv.featured&&cv.version==='1.0','Cinderline continuity mismatch');
 for(const g of games){assert(fs.existsSync(path.join(root,g.path)),'missing game path: '+g.id);assert(fs.existsSync(path.join(root,g.cover)),'missing cover: '+g.id)}
 const app=fs.readFileSync(path.join(root,'js/app.js'),'utf8'),gp=fs.readFileSync(path.join(root,'js/game-page.js'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8'),engine=fs.readFileSync(path.join(root,'assets/wwg-webgl.js'),'utf8'),manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.webmanifest'),'utf8'));
