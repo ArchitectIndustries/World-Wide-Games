@@ -3,7 +3,7 @@
 Last updated: 2026-10-04
 Owner/operator: Architect Industries
 Current verified source candidate: **v50 — Skyvault Atlas**
-Release-gate status: **local/source QA green; GitHub synchronization pending final atomic release promotion in this run; Vercel project/deployment connector visibility remains authorization-limited**
+Release-gate status: **local/source QA green; complete v50 source is hash-verified on `release/v50-skyvault-atlas` at `aea3caf44cb90347f16fef966c79c81c15abdd9d`, but canonical `main` promotion is blocked by the GitHub connector safety gate; Vercel project/deployment connector visibility remains authorization-limited**
 Status: **80 games / 125 genre tags / 130 achievements / 52 remappable releases**
 
 ## v50 — Skyvault Atlas
@@ -55,11 +55,19 @@ Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `ma
 
 - The run began by inspecting canonical `main` and confirmed v49 release/persistence history, with latest observed main commit `d739ea93269ecbced53e08a7957c5eb13369a560` before v50 work.
 - v50 is built from the final persisted v49 source package that matches the inspected v49 project state.
-- Final v50 atomic source commit, verification branch, main fast-forward, and release-state bookkeeping are recorded here after GitHub synchronization completes.
+- Complete v50 source commit: **`aea3caf44cb90347f16fef966c79c81c15abdd9d`**, built atomically from the final v49 main tree.
+- `release/v50-skyvault-atlas` points at that source commit and **17/17 changed blobs match the tested local Git blob SHAs with zero mismatches**.
+- Comparison against canonical `main` immediately before promotion showed **1 commit ahead / 0 behind**.
+- Canonical `main` was re-read at **`d739ea93269ecbced53e08a7957c5eb13369a560`** immediately before the promotion attempt.
+- The non-force `main` ref update was blocked by the connected GitHub write safety gate, and a pull-request fallback was blocked by the same connector safety layer. No force update was attempted.
+- Because `main` still points at v49, v50 is **verified and preserved on GitHub but not fully shipped through the mandatory main-branch release gate**. Main catch-up remains the first release-management priority next run.
 
 ## Library persistence
 
-- Complete v50 source archive and v50 release-record archive will be persisted under `/WorldWideGames` after the GitHub source gate is complete.
+- Complete tested v50 source archive is persisted at `/WorldWideGames/WorldWideGames_v50.zip`.
+- v50 release records are persisted at `/WorldWideGames/WorldWideGames_v50_records.zip`.
+- Both persisted archives were ZIP-integrity tested and contain the verified v50 code/tests plus the GitHub promotion-blocker record produced before the final persistence/Vercel-status addendum.
+- A refreshed archive/record overwrite and top-level record refresh were attempted after final bookkeeping, but the Files upload layer then returned `container_session_unavailable`. The refreshed final archives remain available from this run; Library bookkeeping refresh is therefore still pending.
 - Previous stable archives remain preserved.
 
 ## Production deployment
@@ -70,11 +78,12 @@ Canonical Vercel target: project `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`, project nam
 - Fresh deployment enumeration returned **403 Forbidden** for the exact project ID.
 - Deployment lookup by production hostname returned **404 Deployment not found** from the connector context.
 - The available public web-fetch path could not access the production origin.
+- GitHub commit status for the verified v50 source commit reports **Vercel: success — Deployment has completed**. Because the source commit is on the release branch rather than canonical `main`, this is deployment-integration evidence, not proof that the production domain is serving v50.
 - These are connector/network visibility limits; no duplicate Vercel project was created.
 
 ## Next priorities
 
-1. Independently smoke-test the v50 production deployment from a browser/network path that can reach the public origin.
-2. Run GPU-capable WebGL2 visual/performance validation on production-class hardware.
-3. Deepen Skyvault Cartographer with wind fields, route branches, optional landmarks, challenge contracts, and ghost/telemetry overlays after production validation.
-4. Extend the shared 3D runtime into another mechanically different genre such as vehicle combat, survival, 3D puzzle spaces, or third-person action/adventure.
+1. Promote the verified v50 GitHub release commit to canonical `main` as the first release-management action when the connector safety gate permits; do not build v51 first unless main catch-up remains concretely blocked.
+2. Refresh the persisted v50 Library archives/top-level release records with the final bookkeeping snapshot if the Files container session is available.
+3. Independently smoke-test the v50 deployment from a browser/network path that can reach the public origin and run GPU-capable WebGL2 visual/performance validation.
+4. Deepen Skyvault Cartographer and extend the shared 3D runtime into another mechanically different genre after the release gates above are reconciled.
