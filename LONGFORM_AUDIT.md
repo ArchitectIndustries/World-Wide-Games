@@ -1,26 +1,23 @@
 # WorldWideGames Long-Form Audit
 
 Date: 2026-10-04
-Release candidate: **v49 — Procedural Worlds**
+Release candidate: **v50 — Skyvault Atlas**
 Owner/operator: Architect Industries
 
-## v49 continuity
+## v50 continuity
 
-Procedural Worlds deliberately launches the shared 3D runtime with two campaign structures rather than isolated tech demos.
+**Skyvault Cartographer** adds a third long-form campaign structure to the shared 3D foundation. Three survey regions carry persistent route unlocks, best times, campaign clears, and clean-flight milestones. Each route requires five ordered beacon scans before extraction, with navigation pressure from terrain, altitude/boundary constraints, boost-energy decisions, thermal recovery, and checkpoint-based impact recovery.
 
-**Cinderline Velocity** carries unlock progression and best-time/clean-run records across three circuits. Each circuit has two complete laps and ordered reactor gates, with rival pressure, drift/boost resource decisions, off-road handling consequences, and campaign completion state.
-
-**Glasswild Ascent** carries unlock progression and best-time/flawless records across three expeditions. Each expedition requires four memory echoes before the summit can resolve, with traversal checkpoints, moving platforms, momentum movement, air dash, and void recovery.
-
-Dedicated release tests complete all three circuits and all three expeditions through their real progression/persistence paths. The shared engine is deliberately genre-neutral so future long-form 3D games can add world/physics/gameplay layers without rebuilding rendering, deterministic utilities, audio preferences, or compatibility behavior from scratch.
+Dedicated release tests complete all three routes and all fifteen beacon scans through progression/persistence paths. The shared renderer is still genre-neutral, and the Canvas2D fallback now respects camera pitch so third-person scenes remain legible even without WebGL2.
 
 ## Retained long-form coverage
 
-Dedicated regressions remain green for Parallax Accord, Lattice Armada, Rift Relay 2.0, Vector Shatter, Vanta Frontline, Ironlight Breach, Astral Menagerie, Polyforge Studio, Ashen Covenant, Verdant Echoes, Rune Depths, Circuit Rush, Fluxward Conclave, and other previously validated campaigns.
+Dedicated regressions remain green for Cinderline Velocity, Glasswild Ascent, Parallax Accord, Lattice Armada, Rift Relay 2.0, Vector Shatter, Vanta Frontline, Ironlight Breach, Astral Menagerie, Polyforge Studio, Ashen Covenant, Verdant Echoes, Rune Depths, Circuit Rush, Fluxward Conclave, and other previously validated campaigns.
 
 ## Next depth targets
 
 1. Run WebGL2 visual/performance validation on a GPU-capable browser and tune draw budgets/shaders from actual frame timing.
-2. Expand Cinderline with additional track geometry, rival personalities, time-trial ghosts, and vehicle handling variants without weakening the readable two-lap campaign loop.
-3. Expand Glasswild with more vertical traversal language, environmental mechanisms, secret routes, and checkpoint-less mastery challenges.
-4. Reuse the shared 3D runtime for genres that demand different interaction models—3D puzzle exploration, aerial exploration, vehicle combat, survival, and third-person action/adventure—rather than duplicating racing/platforming mechanics.
+2. Expand Skyvault with optional landmarks, wind fields, route branches, challenge contracts, and advanced clean-flight medals.
+3. Expand Cinderline with additional track geometry, rival personalities, time-trial ghosts, and vehicle handling variants.
+4. Expand Glasswild with more vertical traversal language, environmental mechanisms, secret routes, and checkpoint-less mastery challenges.
+5. Reuse the shared 3D runtime for a mechanically different genre such as vehicle combat, survival, 3D puzzle exploration, or third-person action/adventure.

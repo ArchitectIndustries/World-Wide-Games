@@ -1,22 +1,29 @@
-# WorldWideGames v49 — Procedural Worlds
+# WorldWideGames v50 — Skyvault Atlas
 
 Prepared as a verified source candidate on 2026-10-04 by Architect Industries.
 
-Procedural Worlds establishes a reusable original 3D runtime for WorldWideGames and launches it with two different genres: **Cinderline Velocity 1.0**, a three-circuit hover-racing campaign, and **Glasswild Ascent 1.0**, a three-expedition traversal/platforming campaign. Both use locally generated geometry/visuals/audio, persistent progression, touch/gamepad input, universal plus remapped controls, and dual telemetry.
+Skyvault Atlas adds **Skyvault Cartographer 1.0**, an original three-region procedural 3D aerial exploration campaign. Players continuously fly a survey craft, scan five ordered beacons per region, manage boost energy, ride thermal columns, recover from terrain impacts at checkpoints, and reach extraction gates while building persistent route and campaign records.
 
-The shared `assets/wwg-webgl.js` engine attempts WebGL2 first and cleanly falls back to a Canvas2D compatibility renderer. The current CI Chromium environment does not expose a WebGL context, so campaign QA exercised the fallback while WebGL2 shader/source paths were statically validated. No GPU-rendered WebGL claim is made from this environment.
+The shared `assets/wwg-webgl.js` compatibility path now accounts for camera pitch during Canvas2D perspective projection, improving third-person framing when WebGL2 is unavailable. Cinderline Velocity and Glasswild Ascent dedicated campaign regressions remain green after the engine change.
 
-Platform integration expands WorldWideGames to **79 games / 125 genre tags / 128 achievements / 51 remappable releases**, adds four achievements, makes Cinderline Velocity the featured release/first PWA shortcut, adds both games to Flagship Worlds and Long Campaigns, and advances offline caching to `wwg-v49`.
+Platform integration expands WorldWideGames to **80 games / 125 genre tags / 130 achievements / 52 remappable releases**, adds **Skyvault Atlas** and **Clean Air** achievements, introduces the catalog-driven **3D Worlds** collection, makes Skyvault Cartographer the featured release/first PWA shortcut, and advances offline caching to `wwg-v50`.
 
-The release also strengthens test infrastructure: smoke testing now executes local script dependencies in document order; the full catalog audit is catalog-driven rather than hard-coded to a historical game total and inlines every local script dependency; local HTTP coverage includes the shared 3D engine.
+Release verification is green: **80/80 registered games boot, 80/80 runtime-clean, 80/80 objective/control pages, 52/52 remappable profiles, and 168/168 local-origin paths**. Dedicated v50 control/campaign/persistence/mobile QA passes, and the retained v49→v41 regression chain remains green.
 
-Release verification is green: **79/79 registered games boot, 79/79 runtime-clean, 79/79 objective/control pages, 51/51 remappable profiles, and 166/166 local-origin paths**, with the complete v48→v41 flagship/reliability regression chain retained.
-
-GitHub synchronization is complete: verified source commit `8be1f4d846358a08a59f5069c7e1be4e7dc940eb` and release-state commit `914de1e77cce32159b7725b4686284952d99a9bb` are on canonical `main` through non-force fast-forwards after exact blob/tree verification. Final v49 source and records archives are persisted in `/WorldWideGames`. GitHub status context `Vercel` reports successful deployment integration for the v49 commits; independent public-origin smoke remains unavailable from the current execution network and that boundary is recorded in `PROJECT_STATE.md`.
+GitHub synchronization, final archive persistence, and deployment-status evidence are recorded in `PROJECT_STATE.md` as the release gate completes. Vercel project/deployment connector visibility is currently authorization-limited; no duplicate project is created.
 
 ---
 
 # WorldWideGames Release Notes
+
+## v49 — Procedural Worlds — 2026-10-04
+
+Added the shared procedural WebGL2/Canvas2D 3D runtime plus Cinderline Velocity and Glasswild Ascent, with persistent campaigns, touch/gamepad support, remappable controls, local generated visuals/audio, strengthened script-aware smoke/catalog tests, and atomic GitHub synchronization.
+
+## v48 — Parallax Accord — 2026-10-04
+
+Added a three-delegation card-and-board strategy campaign with growing round energy, district laws, envoy abilities, adaptive rival drafting, persistent unlocks, touch/keyboard/gamepad play, and campaign score checkpoints.
+
 
 
 ## v47 — Lattice Armada — 2026-10-03

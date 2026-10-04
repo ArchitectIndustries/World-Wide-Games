@@ -15,6 +15,18 @@
   ],
   "shortcuts": [
     {
+      "name": "Skyvault Cartographer",
+      "short_name": "3D Aerial Survey",
+      "url": "game.html?id=skyvault-cartographer",
+      "icons": [
+        {
+          "src": "covers/skyvault-cartographer.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
       "name": "Cinderline Velocity",
       "short_name": "3D Hover Racing",
       "url": "game.html?id=cinderline-velocity",
@@ -33,18 +45,6 @@
       "icons": [
         {
           "src": "covers/glasswild-ascent.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Parallax Accord",
-      "short_name": "Card Strategy",
-      "url": "game.html?id=parallax-accord",
-      "icons": [
-        {
-          "src": "covers/parallax-accord.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }

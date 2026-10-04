@@ -2,99 +2,79 @@
 
 Last updated: 2026-10-04
 Owner/operator: Architect Industries
-Current verified source candidate: **v49 — Procedural Worlds**
-Release-gate status: **GitHub source/release-state gate complete; verified source `8be1f4d846358a08a59f5069c7e1be4e7dc940eb` and release-state `914de1e77cce32159b7725b4686284952d99a9bb` are on canonical `main`; final v49 archives are persisted in `/WorldWideGames`; Vercel Git status is successful, while independent live-origin smoke remains unavailable from this execution environment**
-Status: **79 games / 125 genre tags / 128 achievements / 51 remappable releases**
+Current verified source candidate: **v50 — Skyvault Atlas**
+Release-gate status: **local/source QA green; GitHub synchronization pending final atomic release promotion in this run; Vercel project/deployment connector visibility remains authorization-limited**
+Status: **80 games / 125 genre tags / 130 achievements / 52 remappable releases**
 
-## v49 — Procedural Worlds
+## v50 — Skyvault Atlas
 
-WorldWideGames begins a reusable high-fidelity 3D game line with an original shared procedural renderer and two mechanically distinct launch games rather than another one-off FPS clone.
+WorldWideGames extends the reusable procedural 3D line into a third interaction model: continuous aerial exploration and survey flight.
 
-### Shared procedural 3D runtime
+### New game — Skyvault Cartographer 1.0
 
-- New `assets/wwg-webgl.js` shared engine attempts **WebGL2** first and provides a Canvas2D compatibility renderer when a GPU context is unavailable.
-- The WebGL2 path uses local GLSL ES 3.00 shaders, procedural geometry, distance fog, directional lighting, world-position variation, deterministic seeded randomness, reusable matrices/buffers, and synthesized runtime audio.
-- The runtime has no remote game-engine, art-pack, model, texture, music, font, or paid-API dependency.
-- Both games share the same renderer contract, camera/matrix utilities, deterministic RNG, audio preference handling, and fallback strategy so future 3D genres can build on one maintained foundation.
+- Three original survey regions: Azure Shelf, Storm Needle, and Ember Archipelago.
+- Five ordered scan beacons per route plus a final extraction gate.
+- Continuous forward flight with bank/pitch handling, boost energy, faster thermal recovery, terrain/boundary impacts, and checkpoint recovery.
+- Generated terrain pillars, beacon structures, thermal columns, extraction gates, craft geometry, effects, atmospheric fog, and synthesized audio.
+- Persistent route unlocks, best times, campaign clears, impact records through telemetry, and clean-survey milestones.
+- Arrow/WASD remain permanent flight aliases alongside saved custom mappings; Space/Primary boosts and E/Secondary scans.
+- Keyboard, touch, and gamepad support with pause, restart, and unlocked-route selection.
 
-### New game — Cinderline Velocity 1.0
+### Shared 3D runtime improvement
 
-An original 3D hover-racing campaign through Foundry Ring, Ember Switchback, and Crown Furnace.
-
-- Two-lap circuits with three ordered reactor gates per lap.
-- Live rival craft, off-road grip/speed loss, drift-built charge, and boost management.
-- Chase camera, generated industrial structures, gate towers, exhaust particles, and synthesized vehicle/audio feedback.
-- Persistent circuit unlocks, best times, clean-run records, campaign clears, and score telemetry.
-- Arrow/WASD remain permanent steering aliases alongside saved custom mappings; Space/Primary boosts and E/Secondary/Shift drifts.
-- Keyboard, touch, and gamepad support with pause, restart, and unlocked-circuit selection.
-
-### New game — Glasswild Ascent 1.0
-
-An original 3D traversal/platforming expedition across Verdant Span, Prism Tangle, and Crown Canopy.
-
-- Four ordered memory echoes per expedition, moving platforms, floating terrain, checkpoints, and a summit beacon finale.
-- Momentum movement, coyote-time jumping, air dash, void recovery, and a rotatable third-person camera.
-- Generated vegetation/structures/atmosphere plus procedural runtime audio.
-- Persistent expedition unlocks, best times, flawless records, and campaign clears.
-- Arrow/WASD remain permanent movement aliases alongside saved custom mappings; Space/Primary jumps and E/Secondary dashes.
-- Keyboard, touch, and gamepad support.
+- `assets/wwg-webgl.js` keeps its WebGL2-first renderer and Canvas2D compatibility fallback.
+- The Canvas2D projection now accounts for camera pitch as well as yaw, fixing third-person framing in environments where WebGL/WebGL2 is unavailable.
+- Existing Cinderline Velocity and Glasswild Ascent dedicated regressions remain green after the projection change.
 
 ## Platform work
 
-- Catalog expands to **79 games / 125 genre tags / 128 achievements / 51 remappable releases**.
-- Added achievements **Cinderline Champion**, **Clean Line**, **Glasswild Ascendant**, and **Voidless Path**.
-- Cinderline Velocity becomes the sole featured release and first PWA shortcut; Glasswild Ascent is the second shortcut and Parallax Accord remains available as the third.
-- Both new games join **Flagship Worlds** and **Long Campaigns** while remaining discoverable through Racing/3D/Vehicle Simulation and Platformer/3D/Traversal/Adventure/Exploration metadata.
-- Offline cache advances to `wwg-v49` and includes the shared 3D runtime and both new game/cover paths.
-- `tests/smoke.js` now executes local `<script src>` dependencies in document order instead of testing only inline scripts.
-- `tests/v41_catalog_audit.py` is catalog-driven rather than hard-coding the previous game count and now inlines all local script dependencies for isolated Chromium runtime checks.
-- `tests/v32_http.py` now covers the shared 3D runtime path.
+- Catalog expands to **80 games / 125 genre tags / 130 achievements / 52 remappable releases**.
+- Added achievements **Skyvault Atlas** and **Clean Air**.
+- Added the **3D Worlds** discovery collection for catalog-driven 3D browsing.
+- Skyvault Cartographer becomes the sole featured release and first PWA shortcut; Cinderline Velocity and Glasswild Ascent remain the next shortcuts.
+- Skyvault Cartographer joins **Flagship Worlds** and **Long Campaigns** and is also discoverable through Flight, 3D, Exploration, Simulation, Adventure, Motion & Momentum, Air & Altitude, and Explore Worlds metadata.
+- Offline cache advances to `wwg-v50` and includes the new game/cover plus the shared 3D runtime.
 
 ## Verification
 
-- `python3 tests/v49_procedural_worlds.py`: **PASS** — three Cinderline circuits, ordered gates/laps, remapped plus universal controls, clean/campaign progression and persistence; three Glasswild expeditions, jump/dash/void-recovery/campaign progression and persistence; dual telemetry; touch/mobile width; renderer fallback behavior.
-- `node tests/v49_static.js`: **PASS** — 79 games, 125 genres, 128 achievements, 51 remappable releases, sole featured Cinderline Velocity, `wwg-v49`, PWA paths, public-branding/static source invariants, and shared WebGL2 engine presence.
-- `node tests/smoke.js`: **79/79 registered games boot** plus homepage and reusable game-detail shell with local script dependencies executed in order.
-- `python3 tests/v41_controls_browser.py`: **79/79** detail pages expose objectives/controls; **51/51** remappable releases expose the universal/current keyboard profile.
-- `python3 tests/v41_catalog_audit.py`: **79/79 runtime-clean** in isolated Chromium.
-- `python3 tests/v32_http.py`: **166/166** local-origin release paths return HTTP 200.
-- v48 Parallax Accord, v47 Lattice Armada, v46 Rift Relay/event bridge, v45 Vector Shatter, v44 Vanta Frontline, v42 reliability, v41 Classics, and Orbit Breaker regressions remain green.
+- `python3 tests/v50_skyvault.py`: **PASS** — three survey routes, 15 ordered beacons, universal Arrow/WASD plus saved custom controls, Space boost fallback, custom/E scan behavior, impacts, campaign progression, persistence, telemetry, and 390px mobile width.
+- `node tests/v50_static.js`: **PASS** — 80 games, 125 genres, 130 achievements, 52 remappable releases, sole featured Skyvault Cartographer, `wwg-v50`, PWA paths, branding/static invariants, and shared engine presence.
+- `node tests/smoke.js`: **80/80 registered games boot** plus homepage and reusable game-detail shell.
+- `python3 tests/v41_controls_browser.py`: **80/80** detail pages expose objectives/controls; **52/52** remappable releases expose current/default profiles.
+- `python3 tests/v41_catalog_audit.py`: **80/80 runtime-clean** in isolated Chromium.
+- `python3 tests/v32_http.py`: **168/168** local-origin release paths return HTTP 200.
+- v49 Procedural Worlds, v48 Parallax Accord, v47 Lattice Armada, v46 Rift Relay/event bridge, v45 Vector Shatter, v44 Vanta Frontline, v42 reliability, v41 Classics, and Orbit Breaker regressions remain green in this run.
 
 ### Rendering evidence boundary
 
-The current container's Chromium exposes neither WebGL nor WebGL2, including its available SwiftShader launch combinations. Therefore browser campaign/runtime QA exercised the shared engine's **Canvas2D compatibility renderer**. The WebGL2 engine/shader path is source- and syntax-validated in this environment, but no claim is made that this container GPU-rendered the GLSL path. Production-capable browsers will attempt WebGL2 first and fall back cleanly when unavailable.
+The current container Chromium exposes neither WebGL nor WebGL2, so dedicated 3D browser campaign QA exercised the Canvas2D compatibility renderer. The WebGL2 engine/shader path remains source-validated, but no GPU-rendered WebGL claim is made from this environment. A local visual spot-check confirmed the pitch-aware fallback keeps the player craft and forward survey scene framed on desktop.
 
 ## GitHub continuity and mandatory release gate
 
 Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `main`.
 
-- Fresh pre-release inspection confirmed canonical `main` still points at **v44 release state `adf3bcf88f033885e56ff4fc7ba36e5cea8632a9`**.
-- Verified v48 release branch `release/v48-parallax-accord` points at **`722a69588baaf26f27dd6b9313acd47605b51ad2`** and is the parent/base for the v49 atomic tree.
-- Complete v49 source commit: **`8be1f4d846358a08a59f5069c7e1be4e7dc940eb`**, created atomically from the verified v48 release-state tree.
-- `release/v49-procedural-worlds` was re-read after creation and **21/21 changed blobs matched the tested local Git blob SHAs with zero mismatches**.
-- Immediately before promotion, canonical `main` was re-read at v44 `adf3bcf88f033885e56ff4fc7ba36e5cea8632a9`; comparison showed v49 exactly **5 commits ahead / 0 behind**.
-- A **non-force fast-forward succeeded**, placing complete verified v49 source commit **`8be1f4d846358a08a59f5069c7e1be4e7dc940eb`** on `main`.
-- Release-state commit **`914de1e77cce32159b7725b4686284952d99a9bb`** followed the source commit and was also promoted to `main` non-force after a fresh 1-ahead / 0-behind comparison.
-- Any later v49 commit in this run is documentation-only persistence/deployment-status bookkeeping; it does not change the verified release source.
+- The run began by inspecting canonical `main` and confirmed v49 release/persistence history, with latest observed main commit `d739ea93269ecbced53e08a7957c5eb13369a560` before v50 work.
+- v50 is built from the final persisted v49 source package that matches the inspected v49 project state.
+- Final v50 atomic source commit, verification branch, main fast-forward, and release-state bookkeeping are recorded here after GitHub synchronization completes.
 
 ## Library persistence
 
-- Complete v49 source archive is persisted at `/WorldWideGames/WorldWideGames_v49.zip`.
-- v49 release records are persisted at `/WorldWideGames/WorldWideGames_v49_records.zip`.
-- Both exported snapshots were ZIP-integrity tested before persistence; final archive hashes are recorded with the exported artifacts rather than embedded in the source tree.
+- Complete v50 source archive and v50 release-record archive will be persisted under `/WorldWideGames` after the GitHub source gate is complete.
+- Previous stable archives remain preserved.
 
 ## Production deployment
 
 Canonical Vercel target: project `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`, project name `worldwidegames`, Architect Industries team `team_wwOmTAdrfPwvTGNSLU1VarOy`, domain `https://worldwidegames.vercel.app`.
 
-- Fresh project-scoped connector checks returned **404 Project not found** for exact project lookup and **403 Forbidden** for deployment enumeration; the connected Vercel team context exposes no linked projects.
-- After the GitHub `main` fast-forward, GitHub commit status context **Vercel** reported **success** for both the v49 source commit and release-state commit, providing deployment-integration evidence despite the connector visibility failure.
-- Independent public-origin smoke could not be completed from this environment: the web fetch layer cache-missed the public domain and container networking could not resolve `worldwidegames.vercel.app`. This is an inspection limitation, not a claim that the public site is unavailable.
-- No duplicate Vercel project was created.
+- Fresh project lookup returned **404 Project not found** in the connected Vercel context.
+- Fresh deployment enumeration returned **403 Forbidden** for the exact project ID.
+- Deployment lookup by production hostname returned **404 Deployment not found** from the connector context.
+- The available public web-fetch path could not access the production origin.
+- These are connector/network visibility limits; no duplicate Vercel project was created.
 
 ## Next priorities
 
-1. Independently smoke-test the successful Vercel deployment from a browser/network path that can reach the public origin.
+1. Independently smoke-test the v50 production deployment from a browser/network path that can reach the public origin.
 2. Run GPU-capable WebGL2 visual/performance validation on production-class hardware.
-3. Extend the shared procedural 3D runtime into mechanically different genres such as aerial exploration, third-person action/adventure, 3D puzzle spaces, vehicle combat, survival, and simulation while keeping controls and performance accessible.
-4. Continue deepening Cinderline and Glasswild with additional content after production-origin WebGL validation.
+3. Deepen Skyvault Cartographer with wind fields, route branches, optional landmarks, challenge contracts, and ghost/telemetry overlays after production validation.
+4. Extend the shared 3D runtime into another mechanically different genre such as vehicle combat, survival, 3D puzzle spaces, or third-person action/adventure.
