@@ -1,4 +1,4 @@
-const CACHE='wwg-v48';
+const CACHE='wwg-v49';
 const ASSETS=[
   "./",
   "./index.html",
@@ -6,10 +6,15 @@ const ASSETS=[
   "./assets/styles.css",
   "./assets/app-icon.svg",
   "./assets/wwg-input.js",
+  "./assets/wwg-webgl.js",
   "./js/games.js",
   "./js/app.js",
   "./js/game-page.js",
   "./manifest.webmanifest",
+  "./covers/cinderline-velocity.svg",
+  "./games/cinderline-velocity/index.html",
+  "./covers/glasswild-ascent.svg",
+  "./games/glasswild-ascent/index.html",
   "./covers/parallax-accord.svg",
   "./games/parallax-accord/index.html",
   "./covers/lattice-armada.svg",

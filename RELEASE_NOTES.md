@@ -1,18 +1,23 @@
-# WorldWideGames v48 — Parallax Accord
+# WorldWideGames v49 — Procedural Worlds
 
-Released as a verified source candidate on 2026-10-03 by Architect Industries.
+Prepared as a verified source candidate on 2026-10-04 by Architect Industries.
 
-Parallax Accord adds an original three-delegation card-and-board strategy campaign built around three simultaneous district laws, six envoy card archetypes, growing round energy, adaptive rival drafting, persistent unlocks, touch/keyboard/gamepad input, and score-checkpointed campaign progression.
+Procedural Worlds establishes a reusable original 3D runtime for WorldWideGames and launches it with two different genres: **Cinderline Velocity 1.0**, a three-circuit hover-racing campaign, and **Glasswild Ascent 1.0**, a three-expedition traversal/platforming campaign. Both use locally generated geometry/visuals/audio, persistent progression, touch/gamepad input, universal plus remapped controls, and dual telemetry.
 
-Platform integration expands WorldWideGames to **77 games / 125 genre tags / 124 achievements / 49 remappable releases**, adds **Accord Keeper** and **District Sweep**, makes Parallax Accord the featured release and first PWA shortcut, adds it to Long Campaigns, and advances offline caching to `wwg-v48`.
+The shared `assets/wwg-webgl.js` engine attempts WebGL2 first and cleanly falls back to a Canvas2D compatibility renderer. The current CI Chromium environment does not expose a WebGL context, so campaign QA exercised the fallback while WebGL2 shader/source paths were statically validated. No GPU-rendered WebGL claim is made from this environment.
 
-Release verification is green: 77/77 registered games boot, 77/77 runtime-clean in isolated Chromium, 77/77 game-detail objective/control pages, 49/49 remappable profiles, and 161/161 local-origin paths. Dedicated Parallax QA covers real energy/card commits, AI turns, retry checkpoints, the complete three-delegation campaign, telemetry, persistence, and mobile layout. A narrow-screen grid min-content overflow found during QA was fixed before packaging.
+Platform integration expands WorldWideGames to **79 games / 125 genre tags / 128 achievements / 51 remappable releases**, adds four achievements, makes Cinderline Velocity the featured release/first PWA shortcut, adds both games to Flagship Worlds and Long Campaigns, and advances offline caching to `wwg-v49`.
 
-GitHub `main` remains safely unchanged at v44 because the required non-force catch-up write is blocked by the connector safety layer. Vercel access remains connector-limited. v48 is therefore not represented as fully shipped production.
+The release also strengthens test infrastructure: smoke testing now executes local script dependencies in document order; the full catalog audit is catalog-driven rather than hard-coded to a historical game total and inlines every local script dependency; local HTTP coverage includes the shared 3D engine.
+
+Release verification is green: **79/79 registered games boot, 79/79 runtime-clean, 79/79 objective/control pages, 51/51 remappable profiles, and 166/166 local-origin paths**, with the complete v48→v41 flagship/reliability regression chain retained.
+
+GitHub and Vercel release-gate status is recorded in `PROJECT_STATE.md`; v49 is not represented as fully shipped until canonical `main` is synchronized and the established production project can be verified/deployed.
 
 ---
 
 # WorldWideGames Release Notes
+
 
 ## v47 — Lattice Armada — 2026-10-03
 

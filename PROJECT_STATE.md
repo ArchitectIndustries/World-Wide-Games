@@ -1,75 +1,93 @@
 # WorldWideGames Project State
 
-Last updated: 2026-10-03
+Last updated: 2026-10-04
 Owner/operator: Architect Industries
-Current verified source candidate: **v48 — Parallax Accord**
-Release-gate status: **source QA green; complete v48 source synchronized and hash-verified on `release/v48-parallax-accord`; GitHub `main` promotion remains blocked by repository write-safety authorization**
-Status: **77 games / 125 genre tags / 124 achievements / 49 remappable releases**
+Current verified source candidate: **v49 — Procedural Worlds**
+Release-gate status: **source QA green; GitHub branch synchronization pending final atomic release-state write; canonical `main` and Vercel production remain separate mandatory gates**
+Status: **79 games / 125 genre tags / 128 achievements / 51 remappable releases**
 
-## v48 — Parallax Accord
+## v49 — Procedural Worlds
 
-WorldWideGames adds **Parallax Accord 1.0**, an original turn-based card-and-board strategy campaign designed to deepen the Board & Tabletop and Strategy Desk catalog instead of repeating another action loop.
+WorldWideGames begins a reusable high-fidelity 3D game line with an original shared procedural renderer and two mechanically distinct launch games rather than another one-off FPS clone.
 
-- Three rival delegations: Steward Ilyr, Artificer Vey, and Curator Senn.
-- Three simultaneous districts with distinct laws: Harbor rewards the first commitment, Foundry rewards high-base-power envoys, and Archive rewards low-base-power envoys.
-- Six original envoy archetypes: Anchor, Envoy, Warden, Bloom, Prism, and Architect.
-- Growing round energy supports multi-card turns and six-round match planning.
-- Rival AI evaluates lane deficits, district laws, opponent-specific preferences, energy cost, and card synergies.
-- Campaign scoring carries between successful delegations; retry restores the delegation-start checkpoint.
-- Persistent best score, campaign clears, furthest delegation, and sweep records.
-- Pointer/touch play, compact keyboard shortcuts, and gamepad district/action support.
-- Dual `game` + `gameId` telemetry keeps compatibility with the v46 event bridge.
-- Original local HTML/CSS/SVG/runtime audio only; no paid service or external runtime asset dependency.
+### Shared procedural 3D runtime
+
+- New `assets/wwg-webgl.js` shared engine attempts **WebGL2** first and provides a Canvas2D compatibility renderer when a GPU context is unavailable.
+- The WebGL2 path uses local GLSL ES 3.00 shaders, procedural geometry, distance fog, directional lighting, world-position variation, deterministic seeded randomness, reusable matrices/buffers, and synthesized runtime audio.
+- The runtime has no remote game-engine, art-pack, model, texture, music, font, or paid-API dependency.
+- Both games share the same renderer contract, camera/matrix utilities, deterministic RNG, audio preference handling, and fallback strategy so future 3D genres can build on one maintained foundation.
+
+### New game — Cinderline Velocity 1.0
+
+An original 3D hover-racing campaign through Foundry Ring, Ember Switchback, and Crown Furnace.
+
+- Two-lap circuits with three ordered reactor gates per lap.
+- Live rival craft, off-road grip/speed loss, drift-built charge, and boost management.
+- Chase camera, generated industrial structures, gate towers, exhaust particles, and synthesized vehicle/audio feedback.
+- Persistent circuit unlocks, best times, clean-run records, campaign clears, and score telemetry.
+- Arrow/WASD remain permanent steering aliases alongside saved custom mappings; Space/Primary boosts and E/Secondary/Shift drifts.
+- Keyboard, touch, and gamepad support with pause, restart, and unlocked-circuit selection.
+
+### New game — Glasswild Ascent 1.0
+
+An original 3D traversal/platforming expedition across Verdant Span, Prism Tangle, and Crown Canopy.
+
+- Four ordered memory echoes per expedition, moving platforms, floating terrain, checkpoints, and a summit beacon finale.
+- Momentum movement, coyote-time jumping, air dash, void recovery, and a rotatable third-person camera.
+- Generated vegetation/structures/atmosphere plus procedural runtime audio.
+- Persistent expedition unlocks, best times, flawless records, and campaign clears.
+- Arrow/WASD remain permanent movement aliases alongside saved custom mappings; Space/Primary jumps and E/Secondary dashes.
+- Keyboard, touch, and gamepad support.
 
 ## Platform work
 
-- Catalog expands to **77 games / 125 genre tags / 124 achievements / 49 remappable releases**.
-- Added achievements **Accord Keeper** and **District Sweep**.
-- Parallax Accord becomes the sole featured release and first PWA shortcut.
-- Added Parallax Accord to **Long Campaigns** while it is automatically discoverable under **Strategy Desk** and **Board & Tabletop** from its genre metadata.
-- Offline cache advances to `wwg-v48`.
-- Retained the v47 canonical catalog cleanup and v46 `game`/`gameId` telemetry bridge.
+- Catalog expands to **79 games / 125 genre tags / 128 achievements / 51 remappable releases**.
+- Added achievements **Cinderline Champion**, **Clean Line**, **Glasswild Ascendant**, and **Voidless Path**.
+- Cinderline Velocity becomes the sole featured release and first PWA shortcut; Glasswild Ascent is the second shortcut and Parallax Accord remains available as the third.
+- Both new games join **Flagship Worlds** and **Long Campaigns** while remaining discoverable through Racing/3D/Vehicle Simulation and Platformer/3D/Traversal/Adventure/Exploration metadata.
+- Offline cache advances to `wwg-v49` and includes the shared 3D runtime and both new game/cover paths.
+- `tests/smoke.js` now executes local `<script src>` dependencies in document order instead of testing only inline scripts.
+- `tests/v41_catalog_audit.py` is catalog-driven rather than hard-coding the previous game count and now inlines all local script dependencies for isolated Chromium runtime checks.
+- `tests/v32_http.py` now covers the shared 3D runtime path.
 
 ## Verification
 
-- `python3 tests/v48_parallax_accord.py`: **PASS** — three delegations, three districts, six card types, keyboard district/card play, real energy-consuming commit, adaptive AI round, retry checkpoint, full three-match campaign, sweep/campaign telemetry, persistence, and 390x844 mobile width.
-- `node tests/v48_static.js`: **PASS** — 77 games, 125 genres, 124 achievements, 49 remappable releases, sole featured Parallax Accord, cache/PWA wiring, assets, release history, and public-branding checks.
-- Visual browser review: **PASS** — desktop 1180x820 and mobile 390x844 screenshots inspected; interface remains readable and responsive without root overflow.
-- `node tests/smoke.js`: **77/77 registered games boot** plus homepage and reusable game-detail shell.
-- `python3 tests/v41_controls_browser.py`: **77/77** detail pages expose objectives/controls; **49/49** remappable releases expose the universal/current keyboard profile.
-- `python3 tests/v41_catalog_audit.py`: **77/77 runtime-clean** in isolated Chromium.
-- `python3 tests/v32_http.py`: **161/161** local-origin release paths return HTTP 200. Benign client-disconnect BrokenPipe logs occurred after successful responses and did not alter assertions.
-- v47 Lattice Armada, v46 Rift Relay/event bridge, v45 Vector Shatter, v44 Vanta Frontline, v42 reliability, and v41 Classics regressions all remain green.
+- `python3 tests/v49_procedural_worlds.py`: **PASS** — three Cinderline circuits, ordered gates/laps, remapped plus universal controls, clean/campaign progression and persistence; three Glasswild expeditions, jump/dash/void-recovery/campaign progression and persistence; dual telemetry; touch/mobile width; renderer fallback behavior.
+- `node tests/v49_static.js`: **PASS** — 79 games, 125 genres, 128 achievements, 51 remappable releases, sole featured Cinderline Velocity, `wwg-v49`, PWA paths, public-branding/static source invariants, and shared WebGL2 engine presence.
+- `node tests/smoke.js`: **79/79 registered games boot** plus homepage and reusable game-detail shell with local script dependencies executed in order.
+- `python3 tests/v41_controls_browser.py`: **79/79** detail pages expose objectives/controls; **51/51** remappable releases expose the universal/current keyboard profile.
+- `python3 tests/v41_catalog_audit.py`: **79/79 runtime-clean** in isolated Chromium.
+- `python3 tests/v32_http.py`: **166/166** local-origin release paths return HTTP 200.
+- v48 Parallax Accord, v47 Lattice Armada, v46 Rift Relay/event bridge, v45 Vector Shatter, v44 Vanta Frontline, v42 reliability, v41 Classics, and Orbit Breaker regressions remain green.
+
+### Rendering evidence boundary
+
+The current container's Chromium exposes neither WebGL nor WebGL2, including its available SwiftShader launch combinations. Therefore browser campaign/runtime QA exercised the shared engine's **Canvas2D compatibility renderer**. The WebGL2 engine/shader path is source- and syntax-validated in this environment, but no claim is made that this container GPU-rendered the GLSL path. Production-capable browsers will attempt WebGL2 first and fall back cleanly when unavailable.
 
 ## GitHub continuity and mandatory release gate
 
 Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `main`.
 
-- Verified `main` remains **v44 release state `adf3bcf88f033885e56ff4fc7ba36e5cea8632a9`**.
-- Verified v45 release-state branch `release/v45-vector-shatter-final` remains exactly two commits ahead and zero behind `main`, targeting **`3878589d1efabe308320543ed4909d585a7efb55`**.
-- At the start of this run, the required non-force `main` fast-forward to verified v45 state was re-attempted after a fresh compare. That write was blocked by the connector safety layer before mutation, so `main` remained unchanged.
-- The complete v48 source was then assembled as a Git tree on `release/v48-parallax-accord` from verified v45 release state `3878589d1efabe308320543ed4909d585a7efb55`, producing verified source commit **`cf38aa08c714797329a4710eb2b1aab2857818b3`**.
-- Branch verification shows v48 is exactly one commit ahead and zero behind verified v45. All **26 changed/added file blob SHAs** were independently compared against the final local release tree with **0 mismatches**.
-- Immediately before the final `main` promotion attempt, a fresh compare showed `main` at v44 `adf3bcf88f033885e56ff4fc7ba36e5cea8632a9` and the v48 branch exactly three commits ahead / zero behind. The non-force `main` update was blocked by the connector safety layer before mutation. A pull-request fallback was also blocked before creation.
-- Because `main` synchronization is a required release gate, **v48 remains a verified release candidate, not a fully shipped release**, even though the complete verified source is now safely present on the release branch.
+- Fresh pre-release inspection confirmed canonical `main` still points at **v44 release state `adf3bcf88f033885e56ff4fc7ba36e5cea8632a9`**.
+- Verified v48 release branch `release/v48-parallax-accord` points at **`722a69588baaf26f27dd6b9313acd47605b51ad2`** and is the parent/base for the v49 atomic tree.
+- v49 will be synchronized atomically to `release/v49-procedural-worlds`; its exact verified source commit is recorded in the release-state documentation after the source commit is created.
+- `main` must be re-read immediately before any final non-force promotion. Until that succeeds, v49 remains a verified release candidate rather than a fully shipped release.
 
 ## Library persistence
 
-- The previously blocked v47 source and records archives were successfully persisted to `/WorldWideGames` during this run, restoring Library continuity through v47.
-- Complete v48 source and records ZIPs were built, ZIP-integrity tested, and successfully persisted to `/WorldWideGames`. v48 is now the newest verified Library package.
+- v48 remains the newest verified Library package at the start of this run.
+- Complete v49 source and records archives will be ZIP-integrity tested and persisted to `/WorldWideGames` after final release-state documentation is written.
 
 ## Production deployment
 
 Canonical Vercel target: project `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`, project name `worldwidegames`, Architect Industries team `team_wwOmTAdrfPwvTGNSLU1VarOy`, domain `https://worldwidegames.vercel.app`.
 
-- Exact project lookup still returns `404 Project not found` in the current connector context.
-- Deployment enumeration still returns `403 Forbidden` / insufficient permission.
-- These remain connector authorization/visibility limitations, not evidence the established project is absent.
-- No duplicate Vercel project was created and no v48 production deployment is claimed.
+- Project/deployment visibility has remained connector-limited in recent runs, including 403 deployment-list responses.
+- No duplicate Vercel project will be created. Deployment will target the established project only when project-scoped write access is available.
 
 ## Next priorities
 
-1. Fast-forward `main` to verified v48 commit `cf38aa08c714797329a4710eb2b1aab2857818b3` when the repository write-safety path permits it; re-read `main` immediately before the ref update and never force.
-2. Deploy that same GitHub-verified source to the established Vercel project when project-scoped authorization allows writes, then perform production-origin smoke tests.
-3. Deep-play Parallax Accord with longer varied drafts to tune AI preferences, low-cost Archive strategies, Architect scaling, and comeback-card balance.
-4. Continue targeted reliability audits and add mechanically distinct genres rather than low-depth clones.
+1. Complete the atomic v49 GitHub source/release-state branch and attempt a non-force `main` fast-forward after a fresh ref read.
+2. Persist the final v49 source and records packages in `/WorldWideGames`.
+3. Deploy the same GitHub-verified source to the established Vercel project when authorization allows, then perform production-origin smoke tests.
+4. Extend the shared procedural 3D runtime into mechanically different genres such as aerial exploration, third-person action/adventure, 3D puzzle spaces, vehicle combat, survival, and simulation while keeping controls and performance accessible.

@@ -1,12 +1,16 @@
 # WorldWideGames
 
-WorldWideGames is an **Architect Industries** browser-gaming platform for original instant-play games. The current tested source candidate is **v48 — Parallax Accord**, with **77 games across 125 genre tags**, **124 achievements**, and **49 remappable releases**.
+WorldWideGames is an **Architect Industries** browser-gaming platform for original instant-play games. The current tested source candidate is **v49 — Procedural Worlds**, with **79 games across 125 genre tags**, **128 achievements**, and **51 remappable releases**.
 
-## v48 — Parallax Accord
+## v49 — Procedural Worlds
 
-Parallax Accord is an original turn-based card-and-board strategy campaign built around three simultaneous districts, growing round energy, six envoy archetypes, district-specific scoring laws, and three rival delegations with distinct AI preferences. The six-round match structure supports comeback play, low-cost combo lines, high-power Foundry builds, persistent progression, campaign score checkpoints, touch controls, keyboard shortcuts, and gamepad district/action support.
+v49 establishes a reusable procedural 3D foundation for multiple genres instead of concentrating high-end browser rendering in a single FPS. The new local `assets/wwg-webgl.js` engine attempts WebGL2 first, provides a Canvas2D compatibility renderer when a GPU context is unavailable, generates its visuals/audio locally, and requires no remote game-engine or art service.
 
-Parallax Accord becomes the featured release and first PWA shortcut, joins Long Campaigns, and is automatically discoverable in Strategy Desk and Board & Tabletop. The offline cache advances to `wwg-v48`.
+**Cinderline Velocity** is a three-circuit 3D hover-racing campaign with rival craft, ordered gates, drift-built boost, off-road grip loss, touch/gamepad support, remappable controls, and persistent circuit records.
+
+**Glasswild Ascent** is a three-expedition 3D traversal/platforming campaign with memory echoes, moving platforms, momentum movement, coyote-time jumps, air dash, void recovery, checkpoints, touch/gamepad support, and persistent progression.
+
+Cinderline Velocity is the featured release and first PWA shortcut; Glasswild Ascent is the second. Both join Flagship Worlds and Long Campaigns. Offline caching advances to `wwg-v49`.
 
 ## Run locally
 
@@ -24,6 +28,7 @@ Open `http://localhost:8080/` in a modern browser. The bundled catalog requires 
 - `js/app.js` — discovery, profile, achievements, challenges, recommendations, and release history
 - `js/game-page.js` — reusable detail/runtime bridge accepting both `game` and `gameId` event identifiers
 - `assets/wwg-input.js` — universal movement and local keyboard-remapping layer
+- `assets/wwg-webgl.js` — shared procedural 3D renderer, deterministic utilities, audio helpers, and Canvas2D compatibility path
 - `games/` — self-contained game releases
 - `covers/` — local cover artwork
 - `tests/` — release gates and regression suites
@@ -31,7 +36,7 @@ Open `http://localhost:8080/` in a modern browser. The bundled catalog requires 
 
 ## Release gate status
 
-v48 is source-QA green. Canonical GitHub `main` promotion remains blocked by connector write-safety authorization and the established Vercel project remains unavailable for authenticated deployment/listing through the current connector context. v48 is therefore a **verified release candidate rather than a fully shipped production release** until those gates are completed.
+v49 is source-QA green. Canonical GitHub `main` and the established Vercel production project remain explicit release gates; `PROJECT_STATE.md` records their exact verified state. A version is not represented as fully shipped until those gates are satisfied or a concrete blocker is recorded.
 
 ## Branding
 

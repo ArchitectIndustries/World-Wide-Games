@@ -7,7 +7,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
  def log_message(self,*a): pass
 srv=socketserver.TCPServer(('127.0.0.1',0),Handler);port=srv.server_address[1]
 t=threading.Thread(target=srv.serve_forever,daemon=True);t.start();time.sleep(.05)
-paths=['/','/index.html','/game.html','/assets/styles.css','/assets/wwg-input.js','/js/games.js','/js/app.js']+[('/'+g['path']) for g in games]+[('/'+g['cover']) for g in games]
+paths=['/','/index.html','/game.html','/assets/styles.css','/assets/wwg-input.js','/assets/wwg-webgl.js','/js/games.js','/js/app.js']+[('/'+g['path']) for g in games]+[('/'+g['cover']) for g in games]
 failed=[]
 for p in paths:
  try:

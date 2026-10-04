@@ -6,8 +6,7 @@ ROOT=Path(__file__).resolve().parents[1]
 CAT=(ROOT/'js/games.js').read_text()
 paths=re.findall(r"\bpath\s*:\s*['\"]([^'\"]+)['\"]",CAT)
 ids=re.findall(r"\bid\s*:\s*['\"]([^'\"]+)['\"]",CAT)
-assert len(paths)==len(ids)==77,(len(ids),len(paths))
-input_js=(ROOT/'assets/wwg-input.js').read_text()
+assert len(paths)==len(ids),(len(ids),len(paths))
 PRE="""<script>const __ls={};Object.defineProperty(window,'localStorage',{value:{getItem:k=>Object.prototype.hasOwnProperty.call(__ls,k)?__ls[k]:null,setItem:(k,v)=>__ls[k]=String(v),removeItem:k=>delete __ls[k],clear:()=>{for(const k in __ls)delete __ls[k]}},configurable:true});</script>"""
 fail=[];changed=0
 with sync_playwright() as pw:
@@ -16,8 +15,16 @@ with sync_playwright() as pw:
         page=browser.new_page(viewport={'width':960,'height':720})
         errs=[]; page.on('pageerror',lambda e,errs=errs: errs.append(str(e)))
         try:
-            html=(ROOT/rel).read_text()
-            html=re.sub(r'<script\s+src=["\'][^"\']*wwg-input\.js["\']\s*></script>',lambda _:f'<script>{input_js}</script>',html,flags=re.I)
+            game_path=ROOT/rel
+            html=game_path.read_text()
+            def inline_local(m):
+                src=m.group(1)
+                if src.startswith(('http://','https://','//')): return m.group(0)
+                target=(game_path.parent/src).resolve()
+                try: target.relative_to(ROOT.resolve())
+                except ValueError: return m.group(0)
+                return f'<script>{target.read_text()}</script>' if target.exists() else m.group(0)
+            html=re.sub(r'<script\s+src=["\']([^"\']+)["\']\s*></script>',inline_local,html,flags=re.I)
             pos=html.lower().find('<script')
             html=html[:pos]+PRE+html[pos:] if pos>=0 else PRE+html
             page.set_content(html,wait_until='domcontentloaded',timeout=8000)

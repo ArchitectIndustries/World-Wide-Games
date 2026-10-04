@@ -15,36 +15,36 @@
   ],
   "shortcuts": [
     {
+      "name": "Cinderline Velocity",
+      "short_name": "3D Hover Racing",
+      "url": "game.html?id=cinderline-velocity",
+      "icons": [
+        {
+          "src": "covers/cinderline-velocity.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Glasswild Ascent",
+      "short_name": "3D Traversal",
+      "url": "game.html?id=glasswild-ascent",
+      "icons": [
+        {
+          "src": "covers/glasswild-ascent.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
       "name": "Parallax Accord",
       "short_name": "Card Strategy",
       "url": "game.html?id=parallax-accord",
       "icons": [
         {
           "src": "covers/parallax-accord.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Lattice Armada",
-      "short_name": "Vertical Shooter",
-      "url": "game.html?id=lattice-armada",
-      "icons": [
-        {
-          "src": "covers/lattice-armada.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Rift Relay 2.0",
-      "short_name": "Co-op Relay",
-      "url": "game.html?id=rift-relay",
-      "icons": [
-        {
-          "src": "covers/rift-relay.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }

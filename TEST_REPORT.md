@@ -1,45 +1,46 @@
 # WorldWideGames Validation Report
 
-Date: 2026-10-03
-Release candidate: **v48 — Parallax Accord**
+Date: 2026-10-04
+Release candidate: **v49 — Procedural Worlds**
 Owner/operator: Architect Industries
 
 ## Result
 
-**PASS — local/source release QA is green. GitHub synchronization and production deployment remain separate blocked gates.**
+**PASS — local/source release QA is green. GitHub `main` synchronization and production deployment remain separate mandatory gates.**
 
-### v48 release assertions
+### v49 release assertions
 
-- 77 unique registered games.
+- 79 unique registered games.
 - 125 unique genre tags.
-- 124 unique achievements.
-- 49 remappable releases.
-- Sole featured game: Parallax Accord 1.0.
-- PWA shortcuts: Parallax Accord, Lattice Armada, Rift Relay 2.0.
-- Offline cache: `wwg-v48`.
+- 128 unique achievements.
+- 51 remappable releases.
+- Sole featured game: Cinderline Velocity 1.0.
+- PWA shortcuts: Cinderline Velocity, Glasswild Ascent, Parallax Accord.
+- Offline cache: `wwg-v49`.
+- Shared procedural renderer: `assets/wwg-webgl.js`.
 - All catalog game and cover paths exist.
-- Public-facing v48 game/cover/platform source checked in this release pass contains no prohibited internal creation/tool branding.
+- Public-facing v49 game/cover/platform source checked in this release pass contains no prohibited internal creation/tool branding.
 
-### Parallax Accord dedicated QA
+## Procedural Worlds dedicated QA
 
-`python3 tests/v48_parallax_accord.py`: **PASS**
+`python3 tests/v49_procedural_worlds.py`: **PASS**
 
-Validated three rival delegations; three district laws; six envoy card types; keyboard district selection; real card commit with energy consumption; rival AI turn execution; round-energy growth; retry score checkpoint; full three-delegation campaign progression; three-district sweep events; campaign completion; dual `game` + `gameId` telemetry; persistent best/clear/furthest/sweep records; and 390x844 mobile root-width containment.
+Validated Cinderline Velocity's three circuits, two-lap/three-gate ordering, campaign progression, rival simulation, custom remap plus universal Arrow/WASD behavior, Space boost fallback, persistent best/unlock/clear records, clean-run/campaign telemetry, touch controls, and narrow layout. Validated Glasswild Ascent's three expeditions, four memory echoes, jump, custom Secondary plus E dash fallback, void recovery, checkpoints, complete campaign progression, persistent best/unlock/clear records, telemetry, touch controls, and narrow layout.
 
-A pre-release responsive-layout defect was found and fixed during QA: the fixed-width horizontal hand could force CSS grid min-content expansion on narrow screens, widening the root document to 628px. Grid children now explicitly allow `min-width:0`, preserving a scrollable hand without horizontal page overflow.
+A pre-release input defect was found and corrected: when a player had a saved custom keymap, the new games originally stopped accepting the advertised Space fallback for Primary. v49 keeps saved remaps additive while retaining permanent familiar fallbacks (Space for boost/jump and E for drift/dash).
 
-### Visual review
+## Renderer validation boundary
 
-- 1180x820 desktop screenshot: **PASS** — clear information hierarchy, distinct districts, readable laws and card abilities, accessible action controls.
-- 390x844 mobile screenshot: **PASS** — districts stack vertically, card hand scrolls inside its own region, touch actions remain visible, and the root document does not overflow.
+The available Chromium runtime exposes neither WebGL nor WebGL2, including the available SwiftShader launch configurations. Browser campaign tests therefore executed the engine's Canvas2D compatibility renderer. The WebGL2/GLSL ES 3.00 source path passed syntax/static source invariants, but this environment cannot provide GPU-rendered WebGL screenshots or runtime shader compilation evidence. Production browsers attempt WebGL2 first and fall back when unavailable.
 
-### Platform and retained regressions
+## Platform and retained regressions
 
-- `node tests/v48_static.js`: **PASS**.
-- `node tests/smoke.js`: **77/77** registered games boot; homepage and detail shell boot.
-- `python3 tests/v41_controls_browser.py`: **77/77** objective/control pages; **49/49** remappable profiles.
-- `python3 tests/v41_catalog_audit.py`: **77/77 runtime-clean**.
-- `python3 tests/v32_http.py`: **161/161** local-origin paths return HTTP 200. Server-side BrokenPipe logs were benign client disconnects after successful assertions.
+- `node tests/v49_static.js`: **PASS** — 79 games / 125 genres / 128 achievements / 51 remappable releases, sole featured Cinderline Velocity, v49 cache/PWA/source wiring.
+- `node tests/smoke.js`: **79/79** registered games boot; homepage and detail shell boot. Harness now executes local script dependencies in document order.
+- `python3 tests/v41_controls_browser.py`: **79/79** objective/control pages; **51/51** remappable profiles.
+- `python3 tests/v41_catalog_audit.py`: **79/79 runtime-clean**. Audit is now catalog-driven and local-script-aware.
+- `python3 tests/v32_http.py`: **166/166** local-origin paths return HTTP 200. Any server-side client reset messages after successful assertions are non-failing transport cleanup.
+- `python3 tests/v48_parallax_accord.py`: **PASS**.
 - `python3 tests/v47_lattice_armada.py`: **PASS**.
 - `python3 tests/v46_rift_relay.py`: **PASS**.
 - `python3 tests/v46_event_bridge.py`: **PASS**.
@@ -47,11 +48,12 @@ A pre-release responsive-layout defect was found and fixed during QA: the fixed-
 - `python3 tests/v44_vanta.py`: **PASS**.
 - `python3 tests/v42_reliability.py`: **PASS**.
 - `python3 tests/v41_classics.py`: **PASS**.
+- `python3 tests/v41_orbit_breaker.py`: **PASS**.
 
 ## Evidence boundary
 
-The catalog runtime audit uses the established isolated/self-contained Chromium harness, while HTTP delivery uses the local-origin path test. This is strong source/runtime evidence but is not represented as Vercel production-origin verification. Physical controller behavior is covered by source logic and browser gamepad API paths rather than a real hardware controller in this environment.
+Catalog/runtime tests use isolated/self-contained Chromium plus local-origin HTTP delivery tests. They are strong source/runtime evidence, not Vercel production-origin evidence. Physical gamepad behavior is implemented against the standard Gamepad API but is not represented as hardware-in-loop testing.
 
-## GitHub/Vercel status
+## Release-gate status
 
-GitHub `main` was freshly compared against verified v45 catch-up state before new release work. The complete v48 source is now synchronized on `release/v48-parallax-accord` at commit `cf38aa08c714797329a4710eb2b1aab2857818b3`; all 26 changed/added blob SHAs match the final local tree with zero mismatches. A final fresh compare showed the branch three commits ahead and zero behind `main`, but the non-force `main` ref update was blocked by connector safety checks before mutation; the PR fallback was also blocked before creation. The v48 archives pass ZIP integrity checks and are persisted in `/WorldWideGames`. Vercel exact-project lookup remains connector-limited (404 in current context) and deployment enumeration remains 403. No duplicate project was created.
+GitHub branch and canonical `main` status are finalized in `PROJECT_STATE.md` after the atomic source synchronization step. Production Vercel status is recorded separately and is not inferred from local QA.
