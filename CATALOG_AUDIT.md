@@ -1,23 +1,31 @@
 # WorldWideGames Full Catalog Quality Audit
 
 Date: 2026-10-03
-Release: **v45 — Vector Shatter**
+Release candidate: **v48 — Parallax Accord**
 Owner/operator: Architect Industries
 
-## Current release result
+## Current result
 
-- **75/75 games** load without page/runtime errors in the isolated Chromium catalog harness.
-- **75/75 games** pass the registered-game boot smoke harness.
-- **157/157** local-origin platform, game, and cover paths return successfully.
-- **75/75** game-detail pages expose objectives and controls.
-- **48/48** remappable releases expose the current/default keyboard profile.
-- Vector Shatter has dedicated mechanic coverage for its five sectors, five power systems, remap/universal movement behavior, pause/retry, Guard recovery, persistence, complete campaign events, and mobile width.
-- Prior deep regressions remain green for Vanta Frontline, Ironlight Breach, Astral Menagerie, Polyforge Studio, Ashen Covenant, Verdant Echoes, Rune Depths, Aetherstead Colony, Mosslight Vale, Circuit Rush, Fluxward Conclave, Pulsevine Parkour, and the reliability-fix set.
+- **77/77 games** load without page/runtime errors in the isolated Chromium catalog harness.
+- **77/77 games** pass registered-game boot checks.
+- **77/77 game-detail pages** expose explicit objectives and controls.
+- **49/49 remappable releases** expose current/default profiles plus universal movement rules.
+- **161/161 local-origin platform, game, and cover paths** return successfully.
+- Parallax Accord has dedicated coverage for three delegations, three district laws, six card types, real card/energy play, AI rounds, retry checkpointing, full campaign completion, telemetry, persistence, and mobile width.
+- Lattice Armada, Rift Relay 2.0, Vector Shatter, Vanta Frontline, the v42 reliability set, and Classics regressions remain green.
 
-## v45 catalog addition
+## v48 addition
 
 | Game | Version | Primary genre | Remappable | Runtime |
 |---|---:|---|:---:|---|
-| Vector Shatter | 1.0 | Brick Breaker | Yes | Clean |
+| Parallax Accord | 1.0 | Card | No | Clean |
 
-The complete catalog remains data-driven through `js/games.js`; historical per-game audit detail is preserved in prior Git revisions.
+Parallax Accord deepens the Board & Tabletop catalog with original names, rules, art, card identities, district laws, AI logic, and campaign structure. It does not reproduce protected franchise characters, card sets, logos, storylines, music, or external art assets.
+
+## Responsive QA finding
+
+The first mobile pass found a real CSS grid min-content bug: the horizontally scrollable five-card hand forced the overall grid wider than a 390px viewport. The release now sets grid children to `min-width:0`, containing the horizontal hand scroll without root-page overflow.
+
+## Scope boundary
+
+The runtime audit proves clean loading and representative interaction, not exhaustive completion of every random seed, browser/OS combination, physical controller, or every possible human strategy. Recent and flagship releases retain dedicated mechanic/campaign regressions for deeper guarantees.

@@ -1,0 +1,25 @@
+const fs=require('fs'),vm=require('vm'),path=require('path');
+const root=path.resolve(__dirname,'..'),ctx={window:{}};vm.createContext(ctx);vm.runInContext(fs.readFileSync(path.join(root,'js/games.js'),'utf8'),ctx);vm.runInContext(fs.readFileSync(path.join(root,'js/v46-patch.js'),'utf8'),ctx);
+const games=ctx.window.WWG_GAMES,assert=(ok,msg)=>{if(!ok)throw new Error(msg)};
+assert(games.length===75,`expected 75 games, got ${games.length}`);
+assert(new Set(games.map(g=>g.id)).size===75,'duplicate game id');
+assert(new Set(games.flatMap(g=>g.genres)).size===122,'genre total mismatch');
+assert(games.filter(g=>g.remappable).length===48,'remappable total mismatch');
+assert(JSON.stringify(games.filter(g=>g.featured).map(g=>g.id))===JSON.stringify(['rift-relay']),'featured mismatch');
+const rift=games.find(g=>g.id==='rift-relay');
+assert(rift&&rift.version==='2.0'&&rift.modes.includes('Solo')&&rift.modes.includes('Local Multiplayer'),'Rift Relay metadata missing');
+assert(rift.scoreMeta?.direction==='high','Rift score metadata missing');
+const patch=fs.readFileSync(path.join(root,'js/v46-patch.js'),'utf8');assert(patch.includes('Rift Relay 2.0')&&patch.includes('data-release')&&patch.includes('v46'),'v46 release-history overlay missing');
+for(const g of games){assert(fs.existsSync(path.join(root,g.path)),`missing game path: ${g.id}`);assert(fs.existsSync(path.join(root,g.cover)),`missing cover: ${g.id}`)}
+const app=fs.readFileSync(path.join(root,'js/app.js'),'utf8'),gp=fs.readFileSync(path.join(root,'js/game-page.js'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8'),manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.webmanifest'),'utf8'));
+const ab=app.slice(app.indexOf('const achievements = ['),app.indexOf('];',app.indexOf('const achievements = ['))+2),ids=[...ab.matchAll(/\{id:'([^']+)'/g)].map(m=>m[1]);
+assert(ids.length===120&&new Set(ids).size===120,`achievement total mismatch ${ids.length}`);
+assert(gp.includes("e.data.game||e.data.gameId"),'event compatibility gate missing');
+assert(sw.includes("wwg-v46"),'cache version mismatch');
+assert(sw.includes('./games/rift-relay/index.html')&&sw.includes('./covers/rift-relay.svg')&&sw.includes('./js/v46-patch.js'),'Rift assets/catalog patch not cached');
+const shortcuts=(manifest.shortcuts||[]).map(x=>x.url).slice(0,3);
+assert(JSON.stringify(shortcuts)===JSON.stringify(['game.html?id=rift-relay','game.html?id=vector-shatter','game.html?id=vanta-frontline']),'PWA shortcut mismatch');
+assert(fs.readFileSync(path.join(root,'index.html'),'utf8').includes('js/v46-patch.js')&&fs.readFileSync(path.join(root,'game.html'),'utf8').includes('js/v46-patch.js'),'catalog patch script not wired');
+assert(fs.readFileSync(path.join(root,'games/rift-relay/index.html'),'utf8').toUpperCase().includes('ARCHITECT INDUSTRIES'),'Rift game branding missing');
+assert(fs.readFileSync(path.join(root,'covers/rift-relay.svg'),'utf8').toUpperCase().includes('ARCHITECT INDUSTRIES'),'Rift cover branding missing');
+console.log(JSON.stringify({games:75,genres:122,achievements:120,remappable:48,featured:'rift-relay',cache:'wwg-v46',pwaShortcut:'rift-relay',eventCompatibility:'game+gameId'}));

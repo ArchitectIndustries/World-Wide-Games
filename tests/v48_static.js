@@ -1,0 +1,28 @@
+const fs=require('fs'),vm=require('vm'),path=require('path');
+const root=path.resolve(__dirname,'..'),ctx={window:{}};vm.createContext(ctx);vm.runInContext(fs.readFileSync(path.join(root,'js/games.js'),'utf8'),ctx);
+const games=ctx.window.WWG_GAMES,assert=(ok,msg)=>{if(!ok)throw new Error(msg)};
+assert(games.length===77,`expected 77 games, got ${games.length}`);
+assert(new Set(games.map(g=>g.id)).size===77,'duplicate game id');
+assert(new Set(games.flatMap(g=>g.genres)).size===125,'genre total mismatch');
+assert(games.filter(g=>g.remappable).length===49,'remappable total mismatch');
+assert(JSON.stringify(games.filter(g=>g.featured).map(g=>g.id))===JSON.stringify(['parallax-accord']),'featured mismatch');
+const pa=games.find(g=>g.id==='parallax-accord'),lattice=games.find(g=>g.id==='lattice-armada');
+assert(pa&&pa.version==='1.0'&&pa.genres.includes('Card')&&pa.genres.includes('Lane Strategy'),'Parallax metadata missing');
+assert(pa.scoreMeta?.direction==='high'&&!pa.remappable,'Parallax scoring/input metadata mismatch');
+assert(lattice&&!lattice.featured&&lattice.version==='1.0','Lattice continuity mismatch');
+for(const g of games){assert(fs.existsSync(path.join(root,g.path)),`missing game path: ${g.id}`);assert(fs.existsSync(path.join(root,g.cover)),`missing cover: ${g.id}`)}
+const app=fs.readFileSync(path.join(root,'js/app.js'),'utf8'),gp=fs.readFileSync(path.join(root,'js/game-page.js'),'utf8'),sw=fs.readFileSync(path.join(root,'sw.js'),'utf8'),manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.webmanifest'),'utf8'));
+const ab=app.slice(app.indexOf('const achievements = ['),app.indexOf('];',app.indexOf('const achievements = ['))+2),ids=[...ab.matchAll(/\{id:'([^']+)'/g)].map(m=>m[1]);
+assert(ids.length===124&&new Set(ids).size===124,`achievement total mismatch ${ids.length}`);
+assert(ids.includes('accord-keeper')&&ids.includes('district-sweep'),'Parallax achievements missing');
+assert(app.includes("{version:'v48',title:'Parallax Accord'"),'v48 release history missing');
+assert(gp.includes('e.data.game||e.data.gameId'),'event compatibility gate missing');
+assert(sw.includes("wwg-v48"),'cache version mismatch');
+assert(sw.includes('./games/parallax-accord/index.html')&&sw.includes('./covers/parallax-accord.svg'),'Parallax assets not cached');
+const shortcuts=(manifest.shortcuts||[]).map(x=>x.url).slice(0,3);
+assert(JSON.stringify(shortcuts)===JSON.stringify(['game.html?id=parallax-accord','game.html?id=lattice-armada','game.html?id=rift-relay']),'PWA shortcut mismatch');
+const src=fs.readFileSync(path.join(root,'games/parallax-accord/index.html'),'utf8'),cover=fs.readFileSync(path.join(root,'covers/parallax-accord.svg'),'utf8');
+assert(src.toUpperCase().includes('ARCHITECT INDUSTRIES')&&cover.toUpperCase().includes('ARCHITECT INDUSTRIES'),'Parallax branding missing');
+assert(src.includes("game:GAME,gameId:GAME"),'dual event id payload missing');
+for(const bad of ['ChatGPT','OpenAI'])assert(!src.includes(bad)&&!cover.includes(bad),`prohibited public branding: ${bad}`);
+console.log(JSON.stringify({games:77,genres:125,achievements:124,remappable:49,featured:'parallax-accord',cache:'wwg-v48',pwaShortcut:'parallax-accord'}));

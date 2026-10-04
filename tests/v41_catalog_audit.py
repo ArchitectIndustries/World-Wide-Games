@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[1]
 CAT=(ROOT/'js/games.js').read_text()
 paths=re.findall(r"\bpath\s*:\s*['\"]([^'\"]+)['\"]",CAT)
 ids=re.findall(r"\bid\s*:\s*['\"]([^'\"]+)['\"]",CAT)
-assert len(paths)==len(ids)==75,(len(ids),len(paths))
+assert len(paths)==len(ids)==77,(len(ids),len(paths))
 input_js=(ROOT/'assets/wwg-input.js').read_text()
 PRE="""<script>const __ls={};Object.defineProperty(window,'localStorage',{value:{getItem:k=>Object.prototype.hasOwnProperty.call(__ls,k)?__ls[k]:null,setItem:(k,v)=>__ls[k]=String(v),removeItem:k=>delete __ls[k],clear:()=>{for(const k in __ls)delete __ls[k]}},configurable:true});</script>"""
 fail=[];changed=0

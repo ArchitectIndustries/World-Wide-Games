@@ -1,7 +1,7 @@
 # Third-Party Notices
 
-WorldWideGames v45 is owned and operated by Architect Industries.
+WorldWideGames v48 is owned and operated by **Architect Industries**.
 
-Vector Shatter's code, interface, cover art, gameplay layouts, and runtime-generated visual/audio effects are original project assets. No new third-party runtime libraries, paid APIs, external art packs, music tracks, fonts, or remote game-engine dependencies were added for v45.
+Parallax Accord's game code, interface, campaign rules, district layouts, cover artwork, runtime-generated visuals, and procedural sound effects are original project assets. The v48 release adds no new third-party runtime libraries, paid APIs, remote game engines, external art packs, music tracks, or fonts.
 
-Existing third-party or permissively licensed materials, where present elsewhere in the repository, remain subject to their previously recorded notices and license terms.
+Lattice Armada and Rift Relay 2.0 remain based on local/original project code and assets. Any unchanged third-party or permissively licensed material elsewhere in the repository remains subject to its previously recorded notices and license terms.

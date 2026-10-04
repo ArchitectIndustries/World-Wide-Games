@@ -1,4 +1,4 @@
-const CACHE='wwg-v45';
+const CACHE='wwg-v48';
 const ASSETS=[
   "./",
   "./index.html",
@@ -10,6 +10,12 @@ const ASSETS=[
   "./js/app.js",
   "./js/game-page.js",
   "./manifest.webmanifest",
+  "./covers/parallax-accord.svg",
+  "./games/parallax-accord/index.html",
+  "./covers/lattice-armada.svg",
+  "./games/lattice-armada/index.html",
+  "./covers/rift-relay.svg",
+  "./games/rift-relay/index.html",
   "./covers/vector-shatter.svg",
   "./games/vector-shatter/index.html",
   "./covers/vanta-frontline.svg",

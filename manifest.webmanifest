@@ -15,37 +15,37 @@
   ],
   "shortcuts": [
     {
-      "name": "Vector Shatter",
-      "short_name": "Brick Breaker",
-      "url": "game.html?id=vector-shatter",
+      "name": "Parallax Accord",
+      "short_name": "Card Strategy",
+      "url": "game.html?id=parallax-accord",
       "icons": [
         {
-          "src": "covers/vector-shatter.svg",
-          "sizes": "800x500",
+          "src": "covers/parallax-accord.svg",
+          "sizes": "any",
           "type": "image/svg+xml"
         }
       ]
     },
     {
-      "name": "Vanta Frontline",
-      "short_name": "Tactical FPS",
-      "url": "game.html?id=vanta-frontline",
+      "name": "Lattice Armada",
+      "short_name": "Vertical Shooter",
+      "url": "game.html?id=lattice-armada",
       "icons": [
         {
-          "src": "covers/vanta-frontline.svg",
-          "sizes": "800x500",
+          "src": "covers/lattice-armada.svg",
+          "sizes": "any",
           "type": "image/svg+xml"
         }
       ]
     },
     {
-      "name": "Neon Stack 2.0",
-      "short_name": "Falling Blocks",
-      "url": "game.html?id=neon-stack",
+      "name": "Rift Relay 2.0",
+      "short_name": "Co-op Relay",
+      "url": "game.html?id=rift-relay",
       "icons": [
         {
-          "src": "covers/neon-stack.svg",
-          "sizes": "800x500",
+          "src": "covers/rift-relay.svg",
+          "sizes": "any",
           "type": "image/svg+xml"
         }
       ]

@@ -1,28 +1,37 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built around original instant-play games. The current verified source release is **v45 — Vector Shatter**, with **75 games across 122 genre tags**, **120 unique achievements**, and **48 remappable releases**.
+WorldWideGames is an **Architect Industries** browser-gaming platform for original instant-play games. The current tested source candidate is **v48 — Parallax Accord**, with **77 games across 125 genre tags**, **124 achievements**, and **49 remappable releases**.
 
-## v45 — Vector Shatter
+## v48 — Parallax Accord
 
-Vector Shatter is an original five-sector brick-breaker campaign with angle-controlled paddle rebounds, armored and prism panels, five powerup systems, multiball, Guard recovery, combo scoring, persistent local records, touch controls, gamepad support, and universal Arrow/A-D movement alongside saved custom remaps.
+Parallax Accord is an original turn-based card-and-board strategy campaign built around three simultaneous districts, growing round energy, six envoy archetypes, district-specific scoring laws, and three rival delegations with distinct AI preferences. The six-round match structure supports comeback play, low-cost combo lines, high-power Foundry builds, persistent progression, campaign score checkpoints, touch controls, keyboard shortcuts, and gamepad district/action support.
 
-It is the featured v45 release, the first PWA shortcut, and the Brick Breaker entry in Classics, Reimagined. The offline cache is `wwg-v45`.
+Parallax Accord becomes the featured release and first PWA shortcut, joins Long Campaigns, and is automatically discoverable in Strategy Desk and Board & Tabletop. The offline cache advances to `wwg-v48`.
 
 ## Run locally
 
-Serve the repository with a local static HTTP server, then open the root page in a modern browser. No paid API, remote asset service, game engine install, or external runtime dependency is required for the bundled catalog.
+```bash
+python3 -m http.server 8080
+```
+
+Open `http://localhost:8080/` in a modern browser. The bundled catalog requires no package installation, paid API, remote runtime asset service, or external game engine.
 
 ## Project structure
 
-- `index.html` — discovery/home experience
-- `game.html` — reusable game-detail shell
-- `js/games.js` — data-driven catalog
-- `js/app.js` — discovery, profile, achievement, and classics logic
-- `assets/wwg-input.js` — shared input/remapping layer
-- `games/` — self-contained games
+- `index.html` — discovery/home experience and collections
+- `game.html` — reusable game-detail shell with objective, controls, records, and event telemetry
+- `js/games.js` — canonical data-driven game catalog
+- `js/app.js` — discovery, profile, achievements, challenges, recommendations, and release history
+- `js/game-page.js` — reusable detail/runtime bridge accepting both `game` and `gameId` event identifiers
+- `assets/wwg-input.js` — universal movement and local keyboard-remapping layer
+- `games/` — self-contained game releases
 - `covers/` — local cover artwork
-- `tests/` — release and regression gates
-- `PROJECT_STATE.md`, `TEST_REPORT.md`, and `RELEASE_NOTES.md` — release continuity
+- `tests/` — release gates and regression suites
+- `PROJECT_STATE.md`, `TEST_REPORT.md`, `RELEASE_NOTES.md` — release continuity and QA state
+
+## Release gate status
+
+v48 is source-QA green. Canonical GitHub `main` promotion remains blocked by connector write-safety authorization and the established Vercel project remains unavailable for authenticated deployment/listing through the current connector context. v48 is therefore a **verified release candidate rather than a fully shipped production release** until those gates are completed.
 
 ## Branding
 

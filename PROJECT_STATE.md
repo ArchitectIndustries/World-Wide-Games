@@ -2,45 +2,72 @@
 
 Last updated: 2026-10-03
 Owner/operator: Architect Industries
-Current verified source release: **v45 — Vector Shatter**
-Release-gate status: **source QA green; GitHub main synchronized to the complete verified v45 release state**
-Status: **75 games / 122 genre tags / 120 achievements / 48 remappable releases**
+Current verified source candidate: **v48 — Parallax Accord**
+Release-gate status: **source QA green; complete v48 package persisted to Library; GitHub `main` promotion remains blocked by repository write-safety authorization**
+Status: **77 games / 125 genre tags / 124 achievements / 49 remappable releases**
 
-## v45 — Vector Shatter
+## v48 — Parallax Accord
 
-Vector Shatter 1.0 is an original five-sector neon brick-breaker campaign. It includes angle-controlled paddle rebounds, normal and armored panels, prism panels, combo scoring, multiball, three recovery lives, and five power systems: Wide, Multi, Slow, Guard, and Pierce.
+WorldWideGames adds **Parallax Accord 1.0**, an original turn-based card-and-board strategy campaign designed to deepen the Board & Tabletop and Strategy Desk catalog instead of repeating another action loop.
 
-Input coverage includes permanent Arrow/A-D movement aliases alongside saved custom remaps, pointer/touch movement, mobile launch controls, and gamepad support. Persistent records store best score, campaign clears, furthest sector, and collected powerups.
+- Three rival delegations: Steward Ilyr, Artificer Vey, and Curator Senn.
+- Three simultaneous districts with distinct laws: Harbor rewards the first commitment, Foundry rewards high-base-power envoys, and Archive rewards low-base-power envoys.
+- Six original envoy archetypes: Anchor, Envoy, Warden, Bloom, Prism, and Architect.
+- Growing round energy supports multi-card turns and six-round match planning.
+- Rival AI evaluates lane deficits, district laws, opponent-specific preferences, energy cost, and card synergies.
+- Campaign scoring carries between successful delegations; retry restores the delegation-start checkpoint.
+- Persistent best score, campaign clears, furthest delegation, and sweep records.
+- Pointer/touch play, compact keyboard shortcuts, and gamepad district/action support.
+- Dual `game` + `gameId` telemetry keeps compatibility with the v46 event bridge.
+- Original local HTML/CSS/SVG/runtime audio only; no paid service or external runtime asset dependency.
 
-Platform integration adds the Brick Breaker archetype to Classics, Reimagined, makes Vector Shatter the featured release and first PWA shortcut, adds Shatter Crown and Prism Harvester achievements, and advances the offline cache to `wwg-v45`.
+## Platform work
+
+- Catalog expands to **77 games / 125 genre tags / 124 achievements / 49 remappable releases**.
+- Added achievements **Accord Keeper** and **District Sweep**.
+- Parallax Accord becomes the sole featured release and first PWA shortcut.
+- Added Parallax Accord to **Long Campaigns** while it is automatically discoverable under **Strategy Desk** and **Board & Tabletop** from its genre metadata.
+- Offline cache advances to `wwg-v48`.
+- Retained the v47 canonical catalog cleanup and v46 `game`/`gameId` telemetry bridge.
 
 ## Verification
 
-- Vector Shatter dedicated mechanic/campaign/mobile suite: PASS.
-- Static release integration: PASS at 75 games, 122 genres, 120 achievements, 48 remappable releases.
-- Full isolated-Chromium catalog: **75/75 runtime-clean**.
-- Boot smoke: **75/75**.
-- Objective/control pages: **75/75**; remappable profiles: **48/48**.
-- Local-origin HTTP paths: **157/157**.
-- Reliability and deep campaign regressions remain green.
+- `python3 tests/v48_parallax_accord.py`: **PASS** — three delegations, three districts, six card types, keyboard district/card play, real energy-consuming commit, adaptive AI round, retry checkpoint, full three-match campaign, sweep/campaign telemetry, persistence, and 390x844 mobile width.
+- `node tests/v48_static.js`: **PASS** — 77 games, 125 genres, 124 achievements, 49 remappable releases, sole featured Parallax Accord, cache/PWA wiring, assets, release history, and public-branding checks.
+- Visual browser review: **PASS** — desktop 1180x820 and mobile 390x844 screenshots inspected; interface remains readable and responsive without root overflow.
+- `node tests/smoke.js`: **77/77 registered games boot** plus homepage and reusable game-detail shell.
+- `python3 tests/v41_controls_browser.py`: **77/77** detail pages expose objectives/controls; **49/49** remappable releases expose the universal/current keyboard profile.
+- `python3 tests/v41_catalog_audit.py`: **77/77 runtime-clean** in isolated Chromium.
+- `python3 tests/v32_http.py`: **161/161** local-origin release paths return HTTP 200. Benign client-disconnect BrokenPipe logs occurred after successful responses and did not alter assertions.
+- v47 Lattice Armada, v46 Rift Relay/event bridge, v45 Vector Shatter, v44 Vanta Frontline, v42 reliability, and v41 Classics regressions all remain green.
 
-## GitHub continuity
+## GitHub continuity and mandatory release gate
 
-Canonical repository: `ArchitectIndustries/World-Wide-Games`, branch `main`.
+Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `main`.
 
-- v44 release-state baseline: `adf3bcf88f033885e56ff4fc7ba36e5cea8632a9`.
-- Complete verified v45 source commit: `7be4cdbcc2907c274ae666a1ba98a7b2a7446315`.
-- The release-state documentation commit is a child of that source commit and is promoted with a non-force fast-forward after a final concurrency check.
+- Verified `main` remains **v44 release state `adf3bcf88f033885e56ff4fc7ba36e5cea8632a9`**.
+- Verified v45 release-state branch `release/v45-vector-shatter-final` remains exactly two commits ahead and zero behind `main`, targeting **`3878589d1efabe308320543ed4909d585a7efb55`**.
+- At the start of this run, the required non-force `main` fast-forward was re-attempted after a fresh compare. The write was blocked by the connector safety layer before mutation, so `main` was left unchanged.
+- A staging branch, `release/v48-parallax-accord`, was created successfully from verified v45 release state `3878589d1efabe308320543ed4909d585a7efb55`. A post-create compare confirms it is still **identical** to v45; no partial v48 source was written to GitHub.
+- Because GitHub synchronization is a required release gate, **v48 is a verified release candidate, not a fully shipped release**, until the complete verified source is synchronized and `main` is re-verified.
 
-## Production
+## Library persistence
 
-Canonical Vercel target remains project `prj_CgW1xTHIZOOe1R4RNzcByfvxantq` under Architect Industries, domain `https://worldwidegames.vercel.app`.
+- The previously blocked v47 source and records archives were successfully persisted to `/WorldWideGames` during this run, restoring Library continuity through v47.
+- Complete v48 source and records ZIPs were built, ZIP-integrity tested, and successfully persisted to `/WorldWideGames`. v48 is now the newest verified Library package.
 
-Automated Vercel inspection remains connector-limited: deployment enumeration returns 403 and project lookup retains the known schema mismatch. This is treated as an authorization limitation, not evidence the project is absent. No duplicate project is created and no v45 production deployment is claimed.
+## Production deployment
+
+Canonical Vercel target: project `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`, project name `worldwidegames`, Architect Industries team `team_wwOmTAdrfPwvTGNSLU1VarOy`, domain `https://worldwidegames.vercel.app`.
+
+- Exact project lookup still returns `404 Project not found` in the current connector context.
+- Deployment enumeration still returns `403 Forbidden` / insufficient permission.
+- These remain connector authorization/visibility limitations, not evidence the established project is absent.
+- No duplicate Vercel project was created and no v48 production deployment is claimed.
 
 ## Next priorities
 
-1. Continue filling meaningful classic-archetype and genre gaps with original high-quality games.
-2. Deep-play Vector Shatter difficulty and rebound/powerup tuning with longer human-like runs.
-3. Continue targeted reliability audits across older concise titles.
-4. Deploy the newest verified release to the established Vercel project when project-scoped authorization permits it.
+1. Atomically synchronize the complete verified v48 source on the existing `release/v48-parallax-accord` staging branch and fast-forward `main` only after a final concurrency check.
+2. Deploy that same GitHub-verified source to the established Vercel project when project-scoped authorization allows writes, then perform production-origin smoke tests.
+3. Deep-play Parallax Accord with longer varied drafts to tune AI preferences, low-cost Archive strategies, Architect scaling, and comeback-card balance.
+4. Continue targeted reliability audits and add mechanically distinct genres rather than low-depth clones.
