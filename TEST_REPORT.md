@@ -1,58 +1,33 @@
-# WorldWideGames Validation Report
+# WorldWideGames v51 Test Report
 
 Date: 2026-10-04
-Release candidate: **v50 — Skyvault Atlas**
 Owner/operator: Architect Industries
+Release: **v51 — Aegis Verge**
 
 ## Result
 
-**PASS — local/source release QA is green. GitHub synchronization is the remaining release gate being completed in this run; Vercel production-origin inspection is connector-limited.**
+**PASS — source QA green.**
 
-### v50 release assertions
+- Aegis Verge dedicated Playwright campaign QA: PASS. Renderer observed in this environment: `canvas2d` compatibility mode.
+- v51 static/catalog integration: PASS — 81 games, 126 genre tags, 132 achievements, 53 remappable releases.
+- Registered-game smoke: **81/81 boot**.
+- Detail/objective/control coverage: **81/81**.
+- Remappable profiles: **53/53**.
+- Isolated Chromium catalog runtime: **81/81 clean**.
+- Local-origin HTTP paths: **170/170 status 200**.
+- Skyvault Cartographer v50 regression: PASS.
 
-- 80 unique registered games.
-- 125 unique genre tags.
-- 130 unique achievements.
-- 52 remappable releases.
-- Sole featured game: Skyvault Cartographer 1.0.
-- PWA shortcuts: Skyvault Cartographer, Cinderline Velocity, Glasswild Ascent.
-- Offline cache: `wwg-v50`.
-- Shared procedural renderer: `assets/wwg-webgl.js` with WebGL2-first behavior and pitch-aware Canvas2D fallback projection.
-- All catalog game and cover paths exist.
-- Public-facing v50 game/cover/platform source checked in this release pass contains no prohibited internal creation/tool branding.
+## Aegis Verge coverage
 
-## Skyvault Cartographer dedicated QA
+The dedicated release test starts the shared renderer, verifies a 390px mobile viewport, drives the craft, consumes Aegis Pulse energy, applies hull damage, disables all nine shield pylons across three operations, exposes/destroys all three Bastion Cores, verifies unlock/best-record progression and campaign telemetry, and rejects page/runtime errors.
 
-`python3 tests/v50_skyvault.py`: **PASS**
+## Rendering boundary
 
-Validated all three regions and fifteen ordered beacons; continuous flight state; universal Arrow/WASD movement while a saved custom mapping is present; saved custom movement; Space boost fallback; custom Secondary and E scan behavior; impact recovery; route progression; persistent unlock/best/clear records; campaign/clean-survey telemetry; and narrow mobile layout.
+Headless Chromium available here exposes no WebGL/WebGL2 context. Browser execution therefore used the engine's Canvas2D fallback. WebGL2 shader/runtime source invariants remain covered by static tests, but GPU-rendered WebGL2 output was not visually validated in this run.
 
-## Renderer regression
+## Release evidence
 
-The Canvas2D compatibility renderer now rotates world-space vertical/depth coordinates by camera pitch before perspective projection. Dedicated Skyvault, Cinderline Velocity, and Glasswild Ascent campaign tests remain green after the change. The environment still exposes no WebGL/WebGL2 context, so no GPU shader runtime claim is made.
+Verified source commit: `7371080a69df9584189189d23ac4643d9be4e87e`
+Verified source tree: `13a677a6c5e4a0f0afbb5b7d866d4eb82a3f5223`
 
-## Platform and retained regressions
-
-- `node tests/v50_static.js`: **PASS** — 80 games / 125 genres / 130 achievements / 52 remappable releases, v50 cache/PWA/source wiring.
-- `node tests/smoke.js`: **80/80** registered games boot; homepage and detail shell boot.
-- `python3 tests/v41_controls_browser.py`: **80/80** objective/control pages; **52/52** remappable profiles.
-- `python3 tests/v41_catalog_audit.py`: **80/80 runtime-clean**.
-- `python3 tests/v32_http.py`: **168/168** local-origin paths return HTTP 200. Non-failing Python HTTP server BrokenPipe messages can occur after browser clients close successful responses.
-- `python3 tests/v49_procedural_worlds.py`: **PASS**.
-- `python3 tests/v48_parallax_accord.py`: **PASS**.
-- `python3 tests/v47_lattice_armada.py`: **PASS**.
-- `python3 tests/v46_rift_relay.py`: **PASS**.
-- `python3 tests/v46_event_bridge.py`: **PASS**.
-- `python3 tests/v45_vector_shatter.py`: **PASS**.
-- `python3 tests/v44_vanta.py`: **PASS**.
-- `python3 tests/v42_reliability.py`: **PASS**.
-- `python3 tests/v41_classics.py`: **PASS**.
-- `python3 tests/v41_orbit_breaker.py`: **PASS**.
-
-## Evidence boundary
-
-Catalog/runtime tests use isolated/self-contained Chromium plus local-origin HTTP delivery tests. They are strong source/runtime evidence, not Vercel production-origin evidence. Physical gamepad behavior is implemented against the standard Gamepad API but is not represented as hardware-in-loop testing.
-
-## Release-gate status
-
-The source is ready for the required atomic GitHub synchronization. Exact commit/tree verification, main promotion, Library archive persistence, and any GitHub/Vercel deployment status evidence are recorded in `PROJECT_STATE.md` when those steps complete.
+Vercel connector inspection remains authorization-limited (project lookup 404; deployment listing 403), so no independent production-origin claim is made from those connector calls.
