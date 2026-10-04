@@ -1,6 +1,6 @@
 # WorldWideGames
 
-WorldWideGames is an **Architect Industries** browser-gaming platform for original instant-play games. The current verified release is **v51 — Aegis Verge**, with **81 games across 126 genre tags**, **132 achievements**, and **53 remappable releases**.
+WorldWideGames is an **Architect Industries** browser-gaming platform for original instant-play games. The current verified source candidate is **v51 — Aegis Verge**, with **81 games across 126 genre tags**, **132 achievements**, and **53 remappable releases**.
 
 ## v51 — Aegis Verge
 
@@ -31,6 +31,6 @@ Open `http://localhost:8080/` in a modern browser.
 
 ## Release gate
 
-v51 source QA is green. Verified v51 source commit: `7371080a69df9584189189d23ac4643d9be4e87e`. See `PROJECT_STATE.md` for final GitHub-main, Library-persistence, Vercel, and evidence-boundary status.
+v51 source QA is green and complete source/release state is preserved on `release/v51-aegis-verge`. Verified v51 source commit: `7371080a69df9584189189d23ac4643d9be4e87e`. Canonical `main` remains verified v50 because the final non-force ref update/PR creation path was blocked after a fresh 2-ahead / 0-behind concurrency check. See `PROJECT_STATE.md` for the exact gate state.
 
 WorldWideGames is owned and operated by **Architect Industries**.

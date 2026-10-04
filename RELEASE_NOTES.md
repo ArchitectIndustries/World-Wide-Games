@@ -1,6 +1,6 @@
 # WorldWideGames v51 — Aegis Verge
 
-Released 2026-10-04 by Architect Industries.
+Prepared as a verified source candidate on 2026-10-04 by Architect Industries.
 
 Aegis Verge expands WorldWideGames' reusable 3D foundation into third-person vehicle combat. The three-operation campaign features hover driving, nine shield pylons, autonomous interceptors, projectile combat, a regenerating Aegis Pulse that clears nearby hostile fire and damages close targets, hull recovery checkpoints, three Bastion Core finales, touch/gamepad support, remappable controls, persistent unlocks/best scores, local generated rendering/audio, and campaign telemetry.
 
@@ -10,7 +10,7 @@ QA is green: 81/81 games boot, 81/81 game-detail pages expose objectives/control
 
 Rendering evidence boundary: the available Chromium environment exposes no WebGL/WebGL2 context, so browser campaign QA ran through the shared Canvas2D fallback. WebGL2 source is statically validated; GPU-rendered WebGL2 is not claimed from this run.
 
-GitHub source commit: `7371080a69df9584189189d23ac4643d9be4e87e`. The run also safely caught canonical `main` up from v49 to verified v50 before constructing v51, preserving fast-forward history.
+GitHub source commit: `7371080a69df9584189189d23ac4643d9be4e87e`. Complete v51 release state is preserved on `release/v51-aegis-verge`. The run safely caught canonical `main` up from v49 to verified v50 before constructing v51; final v51 comparison was 2 commits ahead / 0 behind, but the repository write path blocked both the non-force `main` ref update and PR creation before either promotion mutation was accepted. Therefore v51 is **not yet labeled fully shipped** and canonical `main` remains verified v50.
 
 Library upload remains blocked by a `container_session_unavailable` bridge error after `/WorldWideGames/_v51_transfer` was created; the complete tested archive is retained in the working container. Vercel connector visibility remains authorization-limited (404 exact project lookup / 403 deployment listing), and no duplicate project was created.
 

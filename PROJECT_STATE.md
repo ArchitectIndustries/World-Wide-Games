@@ -42,7 +42,9 @@ Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `ma
 - v50 base tree for v51: `0beb438622e5d3392726b81cb299ea3e41a8a701`.
 - Verified v51 source commit: `7371080a69df9584189189d23ac4643d9be4e87e`.
 - v51 source tree: `13a677a6c5e4a0f0afbb5b7d866d4eb82a3f5223`.
-- The final release-state documentation commit is created after this source commit and promoted to `main` only after a fresh concurrency check.
+- Final concurrency verification showed the v51 release state exactly **2 commits ahead / 0 behind** canonical `main` at v50 `aea3caf44cb90347f16fef966c79c81c15abdd9d`.
+- Final promotion was attempted only after that check, but the repository write path blocked both the non-force `main` ref update and PR creation before GitHub accepted either mutation.
+- Complete v51 source/release state is preserved on `release/v51-aegis-verge`; canonical `main` remains the verified v50 commit and v51 must not be described as fully shipped until promotion succeeds.
 
 ## Vercel production target
 
@@ -57,6 +59,6 @@ The Library connector created `/WorldWideGames/_v51_transfer` but refused contai
 ## Next priorities
 
 1. Restore direct Library container upload and persist the tested v51 source/records archives under `/WorldWideGames`.
-2. Restore Vercel project/deployment authorization and verify the production deployment for the exact v51 GitHub commit.
-3. Perform GPU-capable WebGL2 visual/performance validation and tune the shared renderer from measured frame timing.
-4. Continue diversifying the 3D line with a mechanically different long-form genre rather than cloning the same loop.
+2. Promote the already-verified v51 release branch to canonical `main` as the first release-management priority once repository mutation authorization succeeds.
+3. Restore Vercel project/deployment authorization and verify the production deployment for the exact v51 GitHub commit.
+4. Perform GPU-capable WebGL2 visual/performance validation and tune the shared renderer from measured frame timing.
