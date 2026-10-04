@@ -3,7 +3,7 @@
 Last updated: 2026-10-04
 Owner/operator: Architect Industries
 Current verified release candidate: **v54 — Aegis Relay Salvage**
-Release status: **source QA green; GitHub/Vercel promotion pending release gate**
+Release status: **verified and staged; canonical GitHub main promotion is blocked, so v54 is not fully shipped**
 Catalog: **82 games / 128 genre tags / 138 achievements / 54 remappable releases**
 
 ## v54 — Aegis Relay Salvage
@@ -55,19 +55,20 @@ At the start of this run, canonical GitHub `main` and Vercel production both poi
 Canonical repository: `ArchitectIndustries/World-Wide-Games`, default branch `main`.
 
 - Base/main observed before v54 synchronization: `2543a3f2a21120c48f8edc100f9f6c1f8db82192` (v52 Aegis Relayfront).
-- v54 verified source commit: `SOURCE_COMMIT_PENDING`.
-- Final canonical main release-state commit: `MAIN_COMMIT_PENDING`.
-- A release is not described as fully shipped until non-force GitHub synchronization succeeds and `main` is re-read at the v54 release state.
+- v54 verified source commit: `ae69f62dbd9056f91a99f7cc5ecd8edae46e8441`.
+- Verified release branch: `release/v54-aegis-relay-salvage`.
+- Canonical `main` remains `2543a3f2a21120c48f8edc100f9f6c1f8db82192` because both the non-force `main` ref update and PR-creation fallback were blocked before GitHub accepted them.
+- v54 therefore remains a verified staged release, not a fully shipped release. GitHub `main` catch-up is the first release-management priority on the next run.
 
 ## Vercel production target
 
 Project: `prj_CgW1xTHIZOOe1R4RNzcByfvxantq` (`worldwidegames`) under Architect Industries, domain `https://worldwidegames.vercel.app`.
 
-Before v54 promotion, production deployment `dpl_69am1zSFShKSRwmgf7R76shQsFD3` was READY and built from canonical `main` commit `2543a3f2a21120c48f8edc100f9f6c1f8db82192` (v52 Aegis Relayfront). v54 production deployment status is recorded after the GitHub release gate.
+Production deployment `dpl_69am1zSFShKSRwmgf7R76shQsFD3` remains READY on canonical `main` commit `2543a3f2a21120c48f8edc100f9f6c1f8db82192` (v52 Aegis Relayfront). Vercel automatically built v54 source commit `ae69f62dbd9056f91a99f7cc5ecd8edae46e8441` as READY preview deployment `dpl_3BPVLymHbQiXpoB3jvrxcN7ZyKX1` at `worldwidegames-px3bk6h3z-architect-industries.vercel.app`. The attempted production promotion was blocked before Vercel accepted it, so production remains v52.
 
 ## Next priorities
 
-1. Synchronize the complete verified v54 tree atomically to GitHub and fast-forward `main` without force after a final concurrency check.
-2. Confirm or trigger the matching Vercel production deployment and smoke-test the public origin when reachable.
-3. Persist v53 and v54 source/record archives under `/WorldWideGames` while preserving earlier stable packages.
+1. Promote the verified v54 release branch to canonical `main` without force as soon as the current write-policy blocker clears; do not start v55 first when practical.
+2. Promote the READY v54 Vercel preview to production after the canonical-main gate clears, then smoke-test the public origin.
+3. v53 source/record archives are persisted under `/WorldWideGames`; persist v54 source/record archives when the container-to-Library bridge is available.
 4. Run GPU-capable WebGL2 visual/performance QA on production-class hardware.

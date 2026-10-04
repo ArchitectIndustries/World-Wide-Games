@@ -33,4 +33,4 @@ Browser QA in this environment used the shared Canvas2D compatibility renderer b
 
 ## Release-management verification
 
-At run start, GitHub `main` and Vercel production both matched v52 commit `2543a3f2a21120c48f8edc100f9f6c1f8db82192`. v54 promotion is recorded after the mandatory GitHub gate completes.
+GitHub `main` and Vercel production both remain on v52 commit `2543a3f2a21120c48f8edc100f9f6c1f8db82192`. The complete verified v54 tree exists at source commit `ae69f62dbd9056f91a99f7cc5ecd8edae46e8441` on `release/v54-aegis-relay-salvage`; Vercel built it successfully as READY preview `dpl_3BPVLymHbQiXpoB3jvrxcN7ZyKX1`. Non-force `main` promotion, PR fallback, and Vercel production promotion were each blocked before the respective service accepted the mutation. This is a release-management blocker, not a source-QA failure.
