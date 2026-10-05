@@ -1,26 +1,24 @@
-# WorldWideGames Longform Audit — v58
+# WorldWideGames Longform Audit — v59
 
 Date: 2026-10-05
 Owner/operator: Architect Industries
 
 ## Production-quality focus
 
-v58 deepens an existing stealth game into a replayable campaign while preserving the independently verified v57 Glasswing Polo 2.0 work. The change favors authored depth, responsive controls, predictable recovery, persistence, mobile support, and regression safety over adding a shallow catalog clone.
+v59 turns Neon Serpent from a compact arcade entry into a structured five-contract campaign without discarding the immediate readability that makes snake work. The first contract remains a clean grow-and-survive game; later contracts progressively add adversaries, routing systems, scoring depth, and a finale rather than front-loading complexity.
 
-## Quiet Protocol 2.0 design audit
+## Neon Serpent 3.0 design audit
 
-Ghostline contains three authored facilities with increasing patrol, wall, relay, and camera complexity. Vision is line-of-sight aware: walls occlude patrols and cameras rather than allowing detection through geometry. Guards can investigate movement noise, while sprinting trades speed for stealth risk.
+Classic Coil begins with cyan food sparks and self-collision as the primary loop. The later gold bonus is excluded from this opening contract. Drone Run introduces one mobile hunter. Relay Rush adds paired teleporter gates. Gridfall increases routing pressure. Crown Coil combines five hunters, four relay pairs, and eight pulsing Crown hazards.
 
-The player now has a deliberate stealth toolkit. Relay objectives require a sustained hack at close range, cloak energy can be toggled and recharges when inactive, and limited pulse jammers can interrupt nearby sensors while reducing alert. Full alert causes lockdown; clearing all relays opens extraction.
+Phase Drive gives the player a rechargeable, short-lived collision-protection window while preserving the importance of route planning. Combo scoring, gold sparks in advanced contracts, seed display, local best records, unlock persistence, and campaign completion create replay value beyond a single score chase.
 
-Campaign state persists mission unlocks, best score, clear count, and clean progress. Telemetry distinguishes relay shutdowns, detections, jammer use, clean missions, mission completion, lockdown, and full-campaign completion. Touch, gamepad, remapped keyboard movement, pause, restart, and synthesized feedback are supported.
+Seeded layouts are reproducible. The Build & QA pass added explicit placement exclusion across food, gold, drones, every relay endpoint, Crown hazards, and the starting snake body, preventing unfair initial overlaps. A layout test API supports deterministic regression coverage without changing normal play.
 
-## Continuity and validation
+The v3 save schema imports legacy Neon Serpent unlocks and bests, then continues mirroring those legacy keys so existing progress remains compatible. Telemetry covers phase use, spark collection, gold sparks, run endings, contract clears, Classic Coil completion, Crown Coil completion, and campaign completion.
 
-Glasswing Polo 2.0 Grand Circuit remains intact from v57 with three opponent styles, Wingdrive, bank goals, local two-player keyboard isolation, dual gamepad support, touch controls, persistence, and its platform achievements.
+## Platform integration and validation
 
-Ghostline Complete and Clean Signal raise the platform total to 146 achievements. Quiet Protocol becomes featured, the new Infiltration tag raises the distinct catalog total to 129, PWA shortcuts rotate, and cache metadata advances to v58.
+Crown Coil and Phase Architect increase the platform total to 148 achievements. Catalog/PWA metadata advances to v59, the install shortcut highlights Neon Serpent, the offline cache advances to `wwg-v59`, and homepage/detail cache-busters are synchronized.
 
-Dedicated Quiet Protocol and Glasswing gameplay suites pass. Vector Shatter 2.0, Ironlight 4.0, Aegis 1.2, Aetherfoil, Skyvault, shared procedural-world regressions, full catalog boot, controls/objectives, isolated runtime, and 172-path local HTTP coverage also pass.
-
-The available Chromium environment uses the existing compatibility path where applicable; GPU-specific performance claims are not inferred from headless validation.
+Dedicated Neon Serpent gameplay QA, full static invariants, all 82 rendered detail pages, all 82 game boots, all 82 isolated runtime loads, 172 local HTTP paths, and selected flagship regressions pass. Headless Chromium evidence is not treated as a GPU-performance benchmark.

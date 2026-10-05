@@ -1,20 +1,20 @@
-# WorldWideGames Catalog Audit — v58
+# WorldWideGames Catalog Audit — v59
 
 Date: 2026-10-05
 Owner/operator: Architect Industries
 
 - **82** registered games
 - **129** distinct genre/tag values
-- **146** achievements
+- **148** achievements
 - **54** remappable releases
 - **82/82** explicit semantic game versions
 - **82/82** game boots
-- **82/82** usable objective/control pages
+- **82/82** usable rendered objective/control pages
 - **82/82** isolated Chromium runs runtime-clean
 - **172/172** local-origin release paths HTTP 200
 
-## Featured release
+## Featured v59 upgrade
 
-**Quiet Protocol 2.0: Ghostline** — a three-facility stealth-action campaign with occluded patrol/camera vision, investigation behavior, noisy sprinting, relay hacking, rechargeable cloak energy, limited pulse jammers, shared alert pressure, persistent unlocks, touch/gamepad/remapped controls, and clean-extraction telemetry.
+**Neon Serpent 3.0: Crown Coil** — a five-contract progression from classic snake into a deterministic seeded arcade campaign with hunter drones, relay gates, combo/gold scoring, timed Phase Drive routing, touch/gamepad/remapped controls, persistent progression, and a Crown hazard finale.
 
-v58 deepens an existing stealth title rather than inflating the catalog with a near-clone. The verified v57 Glasswing Polo 2.0 Grand Circuit and v56 Vector Shatter 2.0 remain intact alongside the broader puzzle, action, RPG, strategy, simulation, racing, exploration, sports, physics, tabletop, survival, and experimental mix.
+v59 deepens an existing catalog classic rather than adding a near-clone. Classic Coil preserves the clean grow-and-survive opening, while later contracts add mechanics incrementally. The Build & QA pass also hardened spawn allocation so collision-critical objects cannot begin on the same cell.

@@ -1,12 +1,13 @@
 {
-  "version": "v58",
-  "title": "Quiet Protocol 2.0: Ghostline",
+  "version": "v59",
+  "title": "Neon Serpent 3.0: Crown Coil",
   "date": "2026-10-05",
   "owner": "Architect Industries",
+  "status": "READY FOR RELEASE TASK",
   "catalog": {
     "games": 82,
     "genres": 129,
-    "achievements": 146,
+    "achievements": 148,
     "remappable": 54
   },
   "qa": {
@@ -16,27 +17,29 @@
     "remappableProfiles": "54/54",
     "runtimeClean": "82/82",
     "localHttpPaths": "172/172",
-    "quietProtocol2": "PASS",
-    "glasswing2": "PASS",
-    "flagshipRegressions": "PASS"
+    "neonSerpent3": "PASS",
+    "deterministicSpawnSafety": "PASS",
+    "classicCoilPurity": "PASS",
+    "flagshipRegressions": "PASS",
+    "extendedInteractionSweep": "partial 73/82 due bounded execution window; not used as release gate"
   },
   "github": {
     "repository": "ArchitectIndustries/World-Wide-Games",
-    "canonicalMainAtGateStart": "bb6272c76f63a6aca05053c8ccd2d71d30869e1f",
-    "v57RecordBase": "252f29b5226c09142617434a06274fa8270a1536",
-    "verifiedSourceCommit": "8da5e0e42356a5fd5f941ac35d3508ecfa2e2d75",
-    "releaseBranch": "release/v58-complete",
-    "canonicalMainVerified": false
+    "canonicalMainAtBuildStart": "332abd9028ad4d4fdc5ef123108aaf837944d81e",
+    "partialV59Branch": "release/v59-final",
+    "partialV59Head": "4d511df0382d45d8d26f8f313de874c9a7e4c753",
+    "buildHandoffBranch": "release/v59-buildqa-ready",
+    "canonicalMainChangedByBuildTask": false
   },
   "vercel": {
     "projectId": "prj_CgW1xTHIZOOe1R4RNzcByfvxantq",
     "domain": "https://worldwidegames.vercel.app",
-    "previewState": "pending branch deployment",
-    "productionState": "retain last verified main-backed deployment until GitHub gate"
+    "partialV59PreviewDeployment": "dpl_Fj4dVhQVEhGTJDPi55bYeQAj1eeG",
+    "partialV59PreviewState": "READY",
+    "productionChangedByBuildTask": false
   },
-  "library": {
-    "sourcePath": "/WorldWideGames/WorldWideGames_v58.zip",
-    "recordsPath": "/WorldWideGames/WorldWideGames_v58_records.zip",
-    "status": "container upload bridge unavailable during staging"
+  "handoff": {
+    "ready": true,
+    "instruction": "Verify integrity, reconcile final files to GitHub, satisfy canonical main gate, then deploy production."
   }
 }

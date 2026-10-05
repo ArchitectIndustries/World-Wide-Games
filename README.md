@@ -4,15 +4,15 @@ WorldWideGames is an Architect Industries browser-gaming platform focused on ins
 
 ## Current verified candidate
 
-**v58 — Quiet Protocol 2.0: Ghostline**
+**v59 — Neon Serpent 3.0: Crown Coil**
 
-Quiet Protocol now spans three stealth facilities with wall-occluded patrol/camera vision, investigation AI, noisy sprinting, relay hacking, rechargeable cloak energy, limited pulse jammers, persistent mission unlocks and records, touch/gamepad/remapped controls, and clean-extraction telemetry. The verified v57 Glasswing Polo 2.0 Grand Circuit remains intact.
+Neon Serpent now spans five escalating contracts, beginning with classic grow-and-survive snake before adding hunter drones, paired relay gates, deterministic seeded routing, combo scoring, Phase Drive protection, and the hazardous Crown Coil finale. v59 preserves v2 progression through a v3 save migration and adds touch, gamepad, remapped keyboard play, synthesized feedback, telemetry, persistent records, mobile support, and hardened non-overlapping spawn allocation.
 
 ## Catalog
 
 - 82 registered games
 - 129 genre/tag values
-- 146 achievements
+- 148 achievements
 - 54 remappable releases
 - 82/82 explicit semantic game versions
 - Touch/pointer support throughout the catalog where appropriate

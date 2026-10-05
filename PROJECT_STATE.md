@@ -2,34 +2,42 @@
 
 Last updated: 2026-10-05
 Owner/operator: Architect Industries
-Current verified release candidate: **v58 — Quiet Protocol 2.0: Ghostline**
-Catalog: **82 games / 129 genre tags / 146 achievements / 54 remappable releases**
+Current verified release candidate: **v59 — Neon Serpent 3.0: Crown Coil**
+Catalog: **82 games / 129 genre tags / 148 achievements / 54 remappable releases**
+Handoff status: **READY FOR RELEASE TASK**
 
-## v58
+## v59 objective
 
-Quiet Protocol is rebuilt into a three-mission stealth-action campaign. Ghostline adds occluded patrol and camera vision, investigation behavior, noise-aware sprinting, hold-to-hack relay objectives, rechargeable cloak energy, limited pulse jammers, shared facility alert/lockdown, extraction objectives, persistent mission unlocks and records, synthesized audio, touch controls, gamepad support, pause/restart, and remapped keyboard movement.
+v59 substantially upgrades Neon Serpent into **Neon Serpent 3.0: Crown Coil**, a five-contract campaign that begins with a classic grow-and-survive ruleset and progressively adds hunter drones, paired relay gates, combo scoring, gold sparks, deterministic seeded layouts, a rechargeable Phase Drive, and a hazardous Crown Coil finale.
 
-The release preserves and validates the concurrent v57 Glasswing Polo 2.0 Grand Circuit work rather than overwriting it. Glasswing remains v2.0 with three rival styles, Wingdrive, local two-player control isolation, touch/gamepad support, persistence, and its v57 achievements.
+The Build & QA pass hardened the existing v59 staging work rather than replacing it. Classic Coil no longer spawns the later-contract gold bonus, Crown Coil spawn allocation now prevents food, gold, drones, relay endpoints, and Crown hazards from occupying the same initial cell, and the game exposes deterministic layout state to regression QA. Existing v2 unlock/best-score data migrates into the v3 metadata schema while legacy mirrors remain updated for backwards compatibility.
+
+Platform integration includes v59 catalog metadata, cover art, release history, the Crown Coil and Phase Architect achievements, PWA shortcut rotation, `wwg-v59` service-worker cache metadata, remapped keyboard input, touch controls, gamepad support, synthesized audio, telemetry, pause/restart, and mobile layout support.
 
 ## Verification
 
-**PASS — verified release candidate.**
+**PASS — verified Build & QA release candidate.**
 
-- v58 static/catalog invariants: 82 games, 129 genres, 146 achievements, 54 remappable releases.
-- Quiet Protocol 2.0 dedicated gameplay QA: three missions, relay hacking, cloak, jammer, persistence, telemetry, pause, remapping, and 390px mobile layout.
-- Glasswing Polo 2.0 dedicated gameplay/static QA: PASS.
-- Vector Shatter 2.0, Ironlight 4.0, Aegis 1.2, Aetherfoil, Skyvault, and shared procedural-world regressions: PASS.
-- Catalog smoke: 82/82 games boot.
-- Objective/control pages: 82/82; remappable profiles: 54/54.
-- Isolated runtime audit: 82/82.
-- Local HTTP audit: 172/172 release paths return HTTP 200.
+- `node tests/v59_static.js` — PASS: 82 games, 129 genres, 148 achievements, 54 remappable releases, semantic versions, assets, objective/control metadata, v59 catalog/PWA/cache invariants, Classic Coil purity, and Crown spawn-safety hooks.
+- `python3 tests/v59_neon_serpent.py` — PASS: v2→v3 migration, universal/remapped input, Phase Drive, deterministic seeded layouts, collision-safe initial placement, Classic Coil purity, Crown finale/campaign telemetry, persistence, pause, and 390px mobile behavior.
+- `python3 tests/v59_platform_gate.py` — PASS: 82/82 rendered detail pages expose controls and objective panels, 54/54 remappable profiles render correctly, homepage renders all 82 cards at 390px with no horizontal overflow and no page errors.
+- `node tests/smoke.js` — PASS: 82/82 game scripts boot in the shared smoke harness plus homepage/detail shell.
+- `python3 tests/v41_catalog_audit.py` — PASS: 82/82 isolated Chromium game loads are runtime-clean.
+- `python3 tests/v32_http.py` — PASS: 172/172 local-origin release paths return HTTP 200.
+- Dedicated regressions remain PASS for Quiet Protocol 2.0, Glasswing Polo 2.0, Vector Shatter 2.0, Ironlight Breach 4.0, Aegis Verge 1.2, Aetherfoil Circuit, Skyvault Cartographer, and the shared procedural-world runtime.
 
-Verified v58 source commit: `8da5e0e42356a5fd5f941ac35d3508ecfa2e2d75`, based on v57 release-record commit `252f29b5226c09142617434a06274fa8270a1536`.
+An additional broad interaction sweep was attempted but exceeded the bounded execution window after 73/82 games; it is not used as release evidence. The independent full-catalog boot, isolated runtime, rendered control/objective, and HTTP gates all completed successfully.
 
-## Release gate
+## Source continuity
 
-Canonical GitHub `main` was still verified v55 (`bb6272c76f63a6aca05053c8ccd2d71d30869e1f`) at the start of the v58 release gate. The complete v58 line is staged for `release/v58-complete`; a non-force main update must succeed before v58 is described as fully shipped.
+Canonical GitHub repository: `ArchitectIndustries/World-Wide-Games`.
 
-The Library container-upload bridge returned `container_session_unavailable` during staging. Final archives are retained locally for upload retry and user download if the bridge remains unavailable.
+- Canonical `main` inspected at start and rechecked before candidate preservation: **v58 record commit `332abd9028ad4d4fdc5ef123108aaf837944d81e`**.
+- Existing partial v59 line inspected: `release/v59-final` at `4d511df0382d45d8d26f8f313de874c9a7e4c753`, 9 commits ahead / 0 behind main before this Build & QA pass.
+- GitHub Actions run `37265889079` on that partial branch passed its v59 static/package workflow, and Vercel preview `dpl_Fj4dVhQVEhGTJDPi55bYeQAj1eeG` is READY for the partial branch commit. Those are continuity evidence only; they predate the final spawn-safety/Classic-Coil hardening in this package.
+- A handoff branch `release/v59-buildqa-ready` was created from the partial branch head, but subsequent content writes were blocked by the current repository mutation safety layer. Treat that branch as a baseline pointer, **not** as the authoritative final v59 candidate.
+- This Build & QA task intentionally did **not** update canonical `main` and did **not** promote/deploy production. Those actions belong to the WorldWideGames Release & Deploy task.
 
-Vercel target remains project `prj_CgW1xTHIZOOe1R4RNzcByfvxantq` / `worldwidegames` / https://worldwidegames.vercel.app. Production must remain on the last verified main-backed release until the GitHub gate clears.
+## Release handoff
+
+The authoritative v59 candidate for the next release-management pass is the complete tested source package generated by this Build & QA run, together with the matching release-record package. The Release & Deploy task should verify package integrity, reconcile the final files onto a release branch/main without overwriting unrelated work, then perform the mandatory GitHub main gate before production promotion.

@@ -1,5 +1,17 @@
 # WorldWideGames Release Notes
 
+
+## v59 — Neon Serpent 3.0: Crown Coil — 2026-10-05
+
+- Upgraded **Neon Serpent** into a five-contract campaign: Classic Coil, Drone Run, Relay Rush, Gridfall, and Crown Coil.
+- Added deterministic seeded layouts, escalating hunter drones, paired relay gates, combo scoring, advanced-contract gold sparks, and Crown hazards.
+- Added **Phase Drive**, v2→v3 save migration, synthesized audio, remapped keyboard/touch/gamepad support, telemetry, pause/restart, and mobile support.
+- Hardened spawn allocation so food, gold, drones, relay endpoints, hazards, and the starting snake cannot overlap initially; Classic Coil excludes the later-contract gold bonus.
+- Added **Crown Coil** and **Phase Architect**, raising the platform to **148 achievements**.
+- Advanced PWA/cache integration to v59.
+- Release QA passed: 82/82 game boots, 82/82 isolated runtime loads, 82/82 rendered objective/control pages, 54/54 remappable profiles, and 172/172 HTTP paths.
+
+
 ## v58 — Quiet Protocol 2.0: Ghostline — 2026-10-05
 
 - Rebuilds **Quiet Protocol** into a three-mission stealth-action campaign across Glass Intake, Archive Lattice, and Crown Node.
