@@ -1,23 +1,23 @@
-# WorldWideGames Catalog Audit — v61
+# WorldWideGames Catalog Audit — v63
 
 Date: 2026-10-05
 Owner/operator: Architect Industries
 
 - **82** registered games
 - **129** distinct genre/tag values
-- **150** achievements
+- **152** achievements
 - **54** remappable releases
 - **82/82** explicit semantic game versions
 - **82/82** game boots
 - **82/82** usable rendered objective/control pages
-- **82/82** isolated interaction-level Chromium runs runtime-clean after the v61 upgrade
+- **82/82** interaction-level Chromium runs runtime-clean
 - **82/82** local asset-reference scans clean
 - **82/82** 390px game layouts free of horizontal overflow
 
-## v61 audit result
+## v63 audit result
 
-The completed v60 reliability baseline was rerun after materially expanding Orbit Breaker. The entire 82-game interaction sweep still passes, so the new campaign did not regress other catalog entries.
+The full-catalog reliability baseline remains green after the Command Bloom fix. The bounded defect audit found a genuine campaign-integrity problem not detectable by boot-only testing: Command Bloom allowed the sixth map to be selected immediately and its original completion function equated that single clear with finishing all six programs.
 
-**Orbit Breaker 2.0** now has three connected sectors, armored asteroids, hunter drones, enemy bolts, shield salvage, a chargeable Pulse Burst reactor, persistent campaign progress, and a moving Breaker Core finale. Dedicated regression coverage confirms the trust-critical rule remains intact: threats that miss the player and leave the playfield do not damage shield; only direct collisions or hostile projectiles can do so.
+Command Bloom 1.1 now tracks six unique stage clears, requires the complete set before the terminal event, and locks already-cleared stage buttons against duplicate-score farming. Dedicated browser regression coverage demonstrates the old final-map-first exploit no longer completes the campaign.
 
-No new reproducible catalog defect remained after the v61 gates. This is release evidence rather than a mathematical claim that future input/state combinations cannot expose another defect.
+No other reproducible catalog regression remained after the v63 gates. This is test evidence, not a claim that all future state/input combinations are mathematically bug-free.

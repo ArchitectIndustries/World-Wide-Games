@@ -1,22 +1,18 @@
-# WorldWideGames Longform Audit — v61
+# WorldWideGames Longform Audit — v63
 
 Date: 2026-10-05
 Owner/operator: Architect Industries
 
 ## Production-quality focus
 
-v61 deliberately deepens an existing classic rather than increasing catalog count. Orbit Breaker had previously received collision-safety repairs, so this cycle turns that trust-sensitive game into a more substantial campaign while retaining explicit regression coverage for the original problem.
+v63 follows the public WorldWideGames development standard: player-facing correctness outranks catalog-count growth. This cycle fixes a progression-integrity defect in an existing game rather than adding another title.
 
-## Orbit Breaker 2.0 campaign
+## Command Bloom progression integrity
 
-The former endless score chase is now a three-sector progression arc. Debris Corridor establishes the asteroid loop, Hunter Belt adds two-hit strafing drones and projectile pressure, and Breaker Core requires eight escort kills before exposing a moving 24-HP final target. Armored asteroids take three hits, threats contribute different scores/reactor values, and bounded shield salvage provides recoverability without removing risk.
+Command Bloom is a six-map programming puzzle. The original stage selector intentionally allowed players to choose any map, but campaign state did not track which maps had actually been solved. The completion path treated clearing map 6 as finishing all six. A player could therefore choose map 6 first, solve only that map, and receive the terminal state and achievement event intended for complete campaign progression.
 
-The new Reactor system adds a strategic resource layer. Destroyed threats charge Reactor toward 100%; Secondary/E/gamepad-B/touch Pulse activates Pulse Burst, clearing nearby non-boss threats and heavily damaging the Core. Campaign progression and best score persist through a v2 save record that migrates the historical local-best key.
+The v63 implementation adds a unique-cleared-stage set, visible solved count, explicit six-map completion gate, automatic routing to another unsolved map after a clear, and lockout of cleared buttons. Open-order selection remains available for unsolved maps.
 
-The original collision rule remains explicit in UI copy and code: missed threats do not hurt the player. The historical regression test is retained and upgraded alongside the new campaign test so future feature work cannot silently reintroduce the credibility-damaging behavior.
+A state-space solver validates all six maps as reachable. Chromium regression reproduces the historical exploit path, verifies it no longer completes the campaign, completes all six maps, checks exactly one terminal event, exercises reset behavior, and validates the narrow mobile layout.
 
-## Catalog-wide regression
-
-After the Orbit upgrade, the completed v60 full-catalog interaction harness reran all 82 titles and remained green. The platform gate also retained 82/82 objective/control pages, 54/54 remappable profiles, and clean 390px homepage behavior. The local release server returned 200 for all 172 checked paths.
-
-Direct browser navigation to localhost is currently blocked by execution policy, so this run distinguishes self-contained Chromium interaction/rendering evidence from HTTP-path validation rather than claiming an origin-level browser test that did not occur.
+No external libraries, art, audio, models, or network services were added. Full catalog interaction, platform-page, mobile, and HTTP regressions remain green.

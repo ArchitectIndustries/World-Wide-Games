@@ -1,9 +1,9 @@
 {
-  "version": "v62",
-  "title": "Emberfield Survival 2.0: Pyre Crown",
+  "version": "v63",
+  "title": "Command Bloom 1.1: Six-Map Integrity",
   "date": "2026-10-05",
   "owner": "Architect Industries",
-  "status": "READY FOR RELEASE TASK",
+  "status": "RELEASE GATE VERIFIED — PENDING MAIN / PRODUCTION",
   "catalog": {
     "games": 82,
     "genres": 129,
@@ -11,54 +11,40 @@
     "remappable": 54
   },
   "objective": {
-    "game": "emberfield-survival",
+    "game": "command-bloom",
     "fromVersion": "1.0",
-    "toVersion": "2.0",
-    "summary": "Turn Emberfield Survival into a three-phase boss campaign with Nova Burst, richer enemy roles, persistent progression, and stronger input/mobile support."
+    "toVersion": "1.1",
+    "summary": "Require all six unique Command Bloom map clears before campaign completion and prevent duplicate-score replay of cleared maps."
   },
   "qa": {
     "status": "PASS",
+    "candidateIntegrity": "PASS",
+    "commandBloom11": "PASS",
     "gameBoots": "82/82",
     "fullInteractionAudit": "82/82",
     "controlObjectivePages": "82/82",
     "remappableProfiles": "54/54",
     "mobileHomepageCards": "82/82",
-    "localHttpPaths": "172/172",
-    "emberfield20": "PASS",
-    "orbitBreaker20": "PASS",
-    "verdantBossPersistence": "PASS",
-    "astralControls": "PASS",
-    "reliabilitySweep": "PASS",
-    "visualDesktop": "PASS",
-    "visualMobile": "PASS"
+    "localHttpPaths": "172/172"
   },
-  "changes": [
-    "Three-phase Ash Verge / Cinderstorm / Pyre Crown campaign",
-    "Brutes, ranged Wraiths, enemy projectiles, healing salvage",
-    "Six ember upgrade choices",
-    "0-100 Ember Core and player-triggered Nova Burst",
-    "Two Cinder Wardens and final Pyre Regent boss",
-    "v2 persistent best/clears/highest-level/nova-use records",
-    "Pyre Crown and Nova Born achievements",
-    "v62 PWA/cache metadata and shortcut"
-  ],
+  "artifacts": {
+    "sourceSha256": "ab73010b831e2d3935329e20ad0a3a1e69ce1e1cfcbd75c5b91b98726a04dafe",
+    "recordsSha256": "7609e2fc9e87d0bc44165d2bfe144f143067c9667c8143cad6218fc91aca62e3"
+  },
   "github": {
     "repository": "ArchitectIndustries/World-Wide-Games",
-    "canonicalMainAtBuildStart": "332abd9028ad4d4fdc5ef123108aaf837944d81e",
-    "canonicalMainVersionAtBuildStart": "v58",
-    "newestInspectedVerifiedBranch": "release/v60-safe",
-    "newestInspectedVerifiedHead": "8e2e2f34f6de28691ad864f12b350d6a996e217f",
-    "canonicalMainChangedByBuildTask": false,
-    "candidateBranchCreatedByBuildTask": false
+    "mainBeforePromotion": "6e560401a99369355a2b0aa4c9dd142a8a8b5ede",
+    "baseVersion": "v62",
+    "releaseBranch": "release/v63-verified"
   },
-  "handoff": {
-    "ready": true,
-    "instruction": "Release & Deploy should verify the complete v62 package, reconcile it atomically with the latest verified GitHub state without overwriting unrelated work, satisfy the canonical main gate, and only then deploy/promote that exact commit to the established WorldWideGames Vercel project."
+  "production": {
+    "projectId": "prj_CgW1xTHIZOOe1R4RNzcByfvxantq",
+    "domain": "https://worldwidegames.vercel.app",
+    "status": "PENDING MAIN PROMOTION"
   },
   "library": {
-    "sourcePackageTarget": "/WorldWideGames/WorldWideGames_v61.zip",
-    "recordsPackageTarget": "/WorldWideGames/WorldWideGames_v61_records.zip",
-    "checksumRecordTarget": "/WorldWideGames/WorldWideGames_v61_SHA256.txt",
-    "persistenceStatus": "See matching release records outside the source archive after upload."
+    "sourcePackageTarget": "/WorldWideGames/WorldWideGames_v63.zip",
+    "recordsPackageTarget": "/WorldWideGames/WorldWideGames_v63_records.zip",
+    "checksumRecordTarget": "/WorldWideGames/WorldWideGames_v63_SHA256.txt"
   }
 }

@@ -1,10 +1,19 @@
-# WorldWideGames Test Report — v62
+# WorldWideGames Test Report — v63
 
 Date: 2026-10-05
 Owner/operator: Architect Industries
-Candidate: v62 — Emberfield Survival 2.0: Pyre Crown
-Status: PASS — verified for release promotion.
+Candidate: **v63 — Command Bloom 1.1: Six-Map Integrity**
+Status: **PASS — release gate independently verified.**
 
-Release QA completed on the candidate source package. Results: 82/82 game boots, 82/82 catalog interaction checks, 82/82 rendered objective/control pages, 54/54 remappable profiles, 82/82 mobile homepage cards, and 172/172 local HTTP paths. Targeted Emberfield 2.0 checks passed persistence, upgrades, Nova Burst behavior, durable boss damage, phase progression, Pyre Regent completion, remapped Secondary input, restart safety, and mobile controls. Orbit Breaker 2.0, Verdant Echoes boss persistence, Astral Menagerie controls, and reliability regressions also passed.
+The v63 archives were verified against their SHA-256 record and the release-critical suite was rerun from the exact source package.
 
-Desktop and mobile self-contained Chromium renders were inspected with no horizontal overflow observed. Local HTTP path validation was performed separately from browser rendering.
+- `node tests/v63_static.js` — PASS
+- `python3 tests/v63_command_bloom.py` — PASS
+- `node tests/smoke.js` — PASS, 82/82 game boots
+- `python3 tests/v60_full_catalog_fast.py` — PASS, 82/82 interaction audits with zero runtime/page/missing-reference/mobile-overflow/invalid-visible-state failures
+- `python3 tests/v59_platform_gate.py` — PASS, 82/82 rendered detail/objective/control pages and 54/54 remappable profiles
+- `python3 tests/v32_http.py` — PASS, 172/172 local paths HTTP 200
+
+Command Bloom regression evidence confirms all six maps are solvable, stage-6-first no longer completes the campaign, six unique clears are required, cleared stages lock, exactly one completion event fires, Escape resets the completed campaign, and the 390×844 layout remains usable.
+
+Two BrokenPipe traces from the temporary Python HTTP server occurred after completed client requests closed their connections; the HTTP gate itself succeeded and every asserted path returned 200.

@@ -1,5 +1,13 @@
 # WorldWideGames Release Notes
 
+## v63 — Command Bloom 1.1: Six-Map Integrity — 2026-10-05
+
+- Fixes a false campaign-completion defect in Command Bloom: solving stage 6 alone can no longer award the six-program completion.
+- Tracks six unique stabilized maps, displays solved progress, preserves free selection among unsolved maps, and locks cleared maps against duplicate-score farming.
+- Adds dedicated solvability and browser regression coverage, including final-map-first exploit prevention, one-event completion, reset behavior, and 390px layout.
+- Full release gate remains green at 82/82 boots, 82/82 interaction checks, 82/82 objective/control pages, 54/54 remappable profiles, and 172/172 local HTTP paths.
+- Catalog remains 82 games / 129 genre tags / 152 achievements / 54 remappable releases.
+
 ## v62 — Emberfield Survival 2.0: Pyre Crown — 2026-10-05
 
 - Emberfield Survival advances from 1.0 to 2.0 with Ash Verge, Cinderstorm, and Pyre Crown campaign phases.

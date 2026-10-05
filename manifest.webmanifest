@@ -15,6 +15,18 @@
   ],
   "shortcuts": [
     {
+      "name": "Command Bloom: Six-Map Integrity",
+      "short_name": "Command Bloom 1.1",
+      "url": "game.html?id=command-bloom",
+      "icons": [
+        {
+          "src": "covers/command-bloom.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
       "name": "Emberfield Survival: Pyre Crown",
       "short_name": "Emberfield 2.0",
       "url": "game.html?id=emberfield-survival",
@@ -45,18 +57,6 @@
       "icons": [
         {
           "src": "covers/verdant-echoes.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Neon Serpent: Crown Coil",
-      "short_name": "Crown Coil 3.0",
-      "url": "game.html?id=neon-serpent",
-      "icons": [
-        {
-          "src": "covers/neon-serpent.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }

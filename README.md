@@ -1,35 +1,25 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform focused on instant-play original games, broad genre variety, responsive desktop/mobile play, local progression, and increasingly ambitious campaign releases.
+WorldWideGames is an Architect Industries browser-gaming platform focused on original, polished, no-install games across a broad range of genres.
 
 ## Current verified candidate
 
-**v62 — Emberfield Survival 2.0: Pyre Crown**
+**v63 — Command Bloom 1.1: Six-Map Integrity**
 
-Emberfield Survival now runs as a three-phase roguelite campaign with multiple enemy roles, six build upgrades, healing salvage, a chargeable Nova Burst, two Cinder Warden checkpoints, a Pyre Regent finale, persistent records, and full remapped keyboard/touch/gamepad support. The completed 82-game interaction reliability gate remains green after the upgrade.
+Command Bloom now tracks six unique stabilized maps correctly. Selecting and solving the final map early no longer falsely completes the campaign, cleared maps lock against duplicate-score farming, solved progress is visible, and dedicated browser regression proves the six-map completion contract. The v62 Emberfield Survival 2.0 and earlier reliability fixes remain intact.
 
 ## Catalog
 
-- 82 registered games
+- 82 playable browser games
 - 129 genre/tag values
 - 152 achievements
 - 54 remappable releases
-- 82/82 explicit semantic game versions
-- Touch/pointer support throughout the catalog where appropriate
-- Gamepad support on an expanding set of releases
-- Installable/offline-capable PWA shell
-- Local favorites, ratings, play-later queue, scores, achievements, challenges, playtime, recommendations, and accessibility preferences
+- Responsive homepage, discovery, favorites, ratings, local stats, PWA/offline support, controller/touch support where appropriate
 
-## Run locally
+## Development and release quality
 
-Serve the repository over a local HTTP server and open `index.html`, for example:
+See `DEVELOPMENT_STANDARDS.md` for the public WorldWideGames development, QA, and release-quality contract.
 
-```bash
-python3 -m http.server 8000
-```
+## Ownership
 
-Then visit `http://localhost:8000/`.
-
-See `PROJECT_STATE.md`, `TEST_REPORT.md`, `RELEASE_NOTES.md`, and `THIRD_PARTY_NOTICES.md` for current details.
-
-© 2026 Architect Industries.
+WorldWideGames is owned and operated by Architect Industries.

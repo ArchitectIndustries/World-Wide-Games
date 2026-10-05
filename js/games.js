@@ -326,11 +326,12 @@ window.WWG_GAMES = [
   },
   {
     id: 'command-bloom', title: 'Command Bloom', tagline: 'Program the garden one instruction at a time.',
-    description: 'A six-stage programming logic puzzle about building short command queues, rotating a drone, navigating root walls, pulsing energy cores, and reaching each green gate efficiently.',
-    genres: ['Programming', 'Logic', 'Puzzle'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 127,
+    description: 'A six-stage programming logic puzzle about building short command queues, rotating a drone, navigating root walls, pulsing energy cores, and stabilizing every root map before the campaign can be completed.',
+    objective: 'Stabilize all six root maps. On each stage, collect every core with PULSE and finish on the green gate; stages may be practiced in any order, but the campaign completes only after all six are solved.',
+    genres: ['Programming', 'Logic', 'Puzzle'], added: '2026-09-30', updated: '2026-10-05', version: '1.1', featured: false, basePopularity: 127,
     cover: 'covers/command-bloom.svg', path: 'games/command-bloom/index.html', accent: '#86efac',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Program score' },
-    controls: ['F/L/R/P add Forward, Left, Right, and Pulse commands', 'Enter runs the queued program', 'Backspace removes the last instruction', 'Tap/click controls support touch and pointer play', 'Escape resets the current stage or restarts after completion']
+    controls: ['F/L/R/P add Forward, Left, Right, and Pulse commands', 'Enter runs the queued program', 'Backspace removes the last instruction', 'Tap/click controls and stage buttons support touch and pointer play', 'Solve all six stages; cleared stages lock to prevent duplicate-score farming', 'Escape resets the current stage or restarts the full campaign after completion']
   },
   {
     id: 'railspire-dispatch',
