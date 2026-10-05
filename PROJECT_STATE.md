@@ -2,34 +2,46 @@
 
 Last updated: 2026-10-05
 Owner/operator: Architect Industries
-Current verified release candidate: **v58 — Quiet Protocol 2.0: Ghostline**
-Catalog: **82 games / 129 genre tags / 146 achievements / 54 remappable releases**
+Current verified release candidate: **v60 — Catalog Reliability Audit**
+Catalog: **82 games / 129 genre tags / 148 achievements / 54 remappable releases**
+Handoff status: **READY FOR RELEASE TASK**
 
-## v58
+## v60 objective
 
-Quiet Protocol is rebuilt into a three-mission stealth-action campaign. Ghostline adds occluded patrol and camera vision, investigation behavior, noise-aware sprinting, hold-to-hack relay objectives, rechargeable cloak energy, limited pulse jammers, shared facility alert/lockdown, extraction objectives, persistent mission unlocks and records, synthesized audio, touch controls, gamepad support, pause/restart, and remapped keyboard movement.
+v60 is a reliability-first release created in response to a catalog-wide gameplay audit. The primary objective was to complete an interaction-level pass across every registered game rather than relying only on boot/static coverage, then repair any reproducible gameplay defect discovered.
 
-The release preserves and validates the concurrent v57 Glasswing Polo 2.0 Grand Circuit work rather than overwriting it. Glasswing remains v2.0 with three rival styles, Wingdrive, local two-player control isolation, touch/gamepad support, persistence, and its v57 achievements.
+The full 82-game interaction gate now checks each title in isolated Chromium with local shared scripts inlined: load/runtime errors, unhandled rejections, missing local references, common keyboard input, start/action controls when present, canvas/pointer interaction, pause/resume/restart safety, narrow 390px layout overflow, and visibly invalid `NaN`/`undefined` state. All 82 titles pass after the fix below.
+
+## Gameplay defect fixed
+
+**Verdant Echoes 2.1:** the Hollow Stag and Thorn Regent were being recreated by `spawnBossIfNeeded()` every animation update. That reset their health to maximum after each rendered frame, making normal paced combat effectively unwinnable unless lethal damage landed before the next frame. The boss lifecycle now preserves any living boss and only evaluates a new spawn when no active boss exists; map transitions explicitly clear the prior area's boss before evaluating the next area. Dedicated regression QA proves damage persists over multiple animation frames and that both bosses can be defeated through spaced real attacks.
+
+Historical regression harnesses for Pulsevine Parkour, catalog control metadata, the classic Neon Serpent contract, and the v32 flagship bundle were also updated to track the current catalog/data APIs rather than failing on obsolete assumptions.
 
 ## Verification
 
-**PASS — verified release candidate.**
+**PASS — verified Build & QA release candidate.**
 
-- v58 static/catalog invariants: 82 games, 129 genres, 146 achievements, 54 remappable releases.
-- Quiet Protocol 2.0 dedicated gameplay QA: three missions, relay hacking, cloak, jammer, persistence, telemetry, pause, remapping, and 390px mobile layout.
-- Glasswing Polo 2.0 dedicated gameplay/static QA: PASS.
-- Vector Shatter 2.0, Ironlight 4.0, Aegis 1.2, Aetherfoil, Skyvault, and shared procedural-world regressions: PASS.
-- Catalog smoke: 82/82 games boot.
-- Objective/control pages: 82/82; remappable profiles: 54/54.
-- Isolated runtime audit: 82/82.
-- Local HTTP audit: 172/172 release paths return HTTP 200.
+- `python3 tests/v60_full_catalog_fast.py` — PASS: **82/82 interaction-level audit**; no runtime/page/console errors, unhandled rejections, missing local references, mobile overflow, or invalid visible numeric state.
+- `python3 tests/v60_verdant_boss_persistence.py` — PASS: Hollow Stag and Thorn Regent damage persists across multiple real animation frames; spaced boss defeat and area boss reset pass.
+- `python3 tests/v35_verdant.py` — PASS: full Echo Grove → Rootvault → Moonsteel → Thorn Regent campaign regression after the lifecycle repair.
+- `node tests/v60_static.js` — PASS: catalog totals/versions/assets, v60 cache/PWA/cache-busters, Verdant 2.1 metadata and lifecycle invariants.
+- `node tests/smoke.js` — PASS: **82/82** game scripts boot plus platform shells.
+- `python3 tests/v59_platform_gate.py` — PASS: **82/82** rendered detail pages, **54/54** remappable profiles, 82-card 390px homepage.
+- `python3 tests/v32_http.py` — PASS: **172/172** release paths returned HTTP 200 on the local release server.
+- Known prior reliability regressions remain PASS, including Orbit Breaker collision rules, Astral Menagerie controls, Skyhook Sprint checkpoint safety, Crownline Tactics retargeting, Vector League whistle freeze, Windward Cargo terminal-event integrity, and flagship campaign suites through v59.
 
-Verified v58 source commit: `8da5e0e42356a5fd5f941ac35d3508ecfa2e2d75`, based on v57 release-record commit `252f29b5226c09142617434a06274fa8270a1536`.
+A browser runtime cannot mathematically prove that no defect exists in every possible player state. v60 materially raises confidence by completing the interaction sweep that v59 could not finish and by converting the discovered gameplay failure into a permanent regression test.
 
-## Release gate
+## Source continuity
 
-Canonical GitHub `main` was still verified v55 (`bb6272c76f63a6aca05053c8ccd2d71d30869e1f`) at the start of the v58 release gate. The complete v58 line is staged for `release/v58-complete`; a non-force main update must succeed before v58 is described as fully shipped.
+Canonical GitHub repository: `ArchitectIndustries/World-Wide-Games`.
 
-The Library container-upload bridge returned `container_session_unavailable` during staging. Final archives are retained locally for upload retry and user download if the bridge remains unavailable.
+- Canonical `main` inspected during this Build & QA pass: **v58 record commit `332abd9028ad4d4fdc5ef123108aaf837944d81e`**.
+- Latest reconciled v59 candidate branch inspected: **`release/v59-buildqa-ready` at `10b5c58256e192bf64876a8525b84374e06d245f`**, ahead of canonical main.
+- v60 is derived from the complete verified v59 Library package, then applies only the reliability/test/documentation changes described above.
+- This Build & QA task intentionally does **not** update canonical `main` and does **not** promote/deploy production. Those actions belong to the WorldWideGames Release & Deploy task.
 
-Vercel target remains project `prj_CgW1xTHIZOOe1R4RNzcByfvxantq` / `worldwidegames` / https://worldwidegames.vercel.app. Production must remain on the last verified main-backed release until the GitHub gate clears.
+## Release handoff
+
+The authoritative v60 candidate is the complete tested source package and matching release-record package generated by this run and persisted in `/WorldWideGames` as `WorldWideGames_v60.zip` and `WorldWideGames_v60_records.zip`, with a separate `WorldWideGames_v60_SHA256.txt` checksum record. This Build & QA task did not create or move a GitHub v60 branch, avoiding any partial-source branch state; the Release & Deploy task should verify package integrity, preserve/reconcile the verified v59 ancestry at `10b5c58256e192bf64876a8525b84374e06d245f`, synchronize the complete v60 tree to GitHub without overwriting unrelated work, satisfy the canonical `main` gate, then deploy/promote production.

@@ -1,30 +1,26 @@
-# WorldWideGames Test Report — v58
+# WorldWideGames Test Report — v60
 
 Date: 2026-10-05
 Owner/operator: Architect Industries
-Candidate: **v58 — Quiet Protocol 2.0: Ghostline**
-Source commit: `8da5e0e42356a5fd5f941ac35d3508ecfa2e2d75`
+Candidate: **v60 — Catalog Reliability Audit**
+Status: **PASS — READY FOR RELEASE TASK**
 
-## Result
+## Release-gate evidence
 
-**PASS — verified release candidate.**
+- Complete v60 Library source archive SHA-256: `324bd4a636100ca4d9f1f478a93db04e020da823feb267b5df54a6d85aadb310`.
+- Complete v60 Library release-record archive SHA-256: `d8aff0e76cddbea3d2658fb6c4b23b72cacf7674bfbc9bf4e108312ace119094`.
+- `node tests/v60_static.js` — PASS.
+- Verdant Echoes 2.1 multi-frame boss persistence regression — PASS.
+- Full-catalog interaction audit — **82/82 PASS**, with 0 runtime-error games, 0 missing-reference games, 0 mobile-overflow games, and 0 invalid-visible-state games.
+- `node tests/smoke.js` — **82/82 PASS**.
+- Rendered detail/objective/control gate — **82/82 PASS**; remappable profiles **54/54**.
+- Local HTTP release paths — **172/172 HTTP 200**.
+- Known Orbit Breaker, Astral Menagerie, Skyhook Sprint, Crownline Tactics, Vector League, Windward Cargo, and flagship campaign regressions remain green.
 
-### Dedicated v58 coverage
-- `node tests/v58_static.js` — PASS: 82 games, 129 genre tags, 146 achievements, 54 remappable releases, Quiet Protocol 2.0 catalog/PWA/cache invariants.
-- `python3 tests/v58_quiet_protocol.py` — PASS: boot, remapped movement, hold-to-hack relay flow, cloak, jammer consumption, pause/resume, all three missions, persistence, clean/campaign telemetry, and 390px mobile behavior.
+## Defect fixed
 
-### Continuity and regression coverage
-- Glasswing Polo 2.0 v57 gameplay/static QA — PASS.
-- Vector Shatter 2.0 v56 and legacy Vector QA — PASS.
-- Ironlight Breach 4.0 and legacy Ironlight QA — PASS.
-- Aegis Verge 1.2, Aetherfoil Circuit, Skyvault Cartographer, and shared procedural-world QA — PASS.
-- Catalog smoke — **82/82** games boot plus homepage/detail shell.
-- Controls/objectives — **82/82** pages; **54/54** remappable profiles.
-- Isolated Chromium runtime audit — **82/82**.
-- Local HTTP audit — **172/172** paths return HTTP 200.
+Verdant Echoes 2.0 recreated active bosses at full health on every animation frame. Verdant Echoes 2.1 preserves living boss state across frames and explicitly resets boss state on area rebuilds. Hollow Stag and Thorn Regent damage persistence and spaced defeat paths were verified before release.
 
-The local HTTP server emitted benign connection-reset/broken-pipe traces when Chromium closed already-started requests; the audited paths themselves returned 200 and the suite passed.
+## Interpretation
 
-## Release-management verification
-
-The v58 source is based on the verified v57 records lineage, preserving Glasswing Polo 2.0. Canonical main was v55 at release-gate start and must be promoted non-force to the verified v58 head before the release is called fully shipped.
+The executed gates found no remaining reproducible defect. This is strong release evidence, not a mathematical claim that every future input/state combination is bug-free.

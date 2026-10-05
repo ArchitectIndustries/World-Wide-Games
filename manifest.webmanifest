@@ -15,36 +15,36 @@
   ],
   "shortcuts": [
     {
+      "name": "Verdant Echoes",
+      "short_name": "Verdant Echoes 2.1",
+      "url": "game.html?id=verdant-echoes",
+      "icons": [
+        {
+          "src": "covers/verdant-echoes.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Neon Serpent: Crown Coil",
+      "short_name": "Crown Coil 3.0",
+      "url": "game.html?id=neon-serpent",
+      "icons": [
+        {
+          "src": "covers/neon-serpent.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
       "name": "Quiet Protocol: Ghostline",
       "short_name": "Ghostline 2.0",
       "url": "game.html?id=quiet-protocol",
       "icons": [
         {
           "src": "covers/quiet-protocol.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Glasswing Polo",
-      "short_name": "Grand Circuit 2.0",
-      "url": "game.html?id=glasswing-polo",
-      "icons": [
-        {
-          "src": "covers/glasswing-polo.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Vector Shatter",
-      "short_name": "Prism Reactor 2.0",
-      "url": "game.html?id=vector-shatter",
-      "icons": [
-        {
-          "src": "covers/vector-shatter.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }

@@ -1,0 +1,28 @@
+const fs=require('fs'),path=require('path'),vm=require('vm'),root=path.resolve(__dirname,'..');
+const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const game=read('games/neon-serpent/index.html'), catalog=read('js/games.js'), app=read('js/app.js'), sw=read('sw.js'), index=read('index.html'), detail=read('game.html'), manifest=JSON.parse(read('manifest.webmanifest'));
+const must=(ok,msg)=>{if(!ok)throw new Error(msg)};
+const inline=[...game.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]).filter(Boolean); inline.forEach((src,i)=>{try{new Function(src)}catch(e){throw new Error('inline game script '+i+' syntax: '+e.message)}});
+const ctx={window:{}};vm.createContext(ctx);vm.runInContext(catalog,ctx);const games=ctx.window.WWG_GAMES;
+const achievementBlock=app.slice(app.indexOf('const achievements = ['),app.indexOf('];',app.indexOf('const achievements = ['))+2),achievementIds=[...achievementBlock.matchAll(/\{id:'([^']+)'/g)].map(m=>m[1]);
+must(games.length===82,'game total mismatch '+games.length);
+must(new Set(games.map(g=>g.id)).size===82,'duplicate game id');
+must(new Set(games.flatMap(g=>g.genres)).size===129,'genre total mismatch');
+must(games.filter(g=>g.remappable).length===54,'remappable total mismatch');
+for(const g of games){must(Array.isArray(g.controls)&&g.controls.length>=3,'control metadata missing '+g.id);must(String(g.objective||g.description||'').trim().length>=30,'objective metadata missing '+g.id);must(fs.existsSync(path.join(root,g.path)),'missing game '+g.id);must(fs.existsSync(path.join(root,g.cover)),'missing cover '+g.id);must(/^\d+\.\d+(?:\.\d+)?$/.test(String(g.version||'')),'semantic version missing '+g.id)}
+must(achievementIds.length===148&&new Set(achievementIds).size===148,'achievement total mismatch '+achievementIds.length);
+must(game.includes('Neon Serpent 3.0')&&game.includes('Crown Coil'),'v59 title/finale missing');
+must(game.includes("hazards:8")&&game.includes('phaseDrive')&&game.includes('navigator.getGamepads'),'finale, Phase Drive, or gamepad missing');
+must(game.includes("META='wwg:neon-serpent:meta-v3'")&&game.includes('crown-coil-cleared'),'v3 persistence or telemetry missing');
+must(game.includes("gold=contract===1?null")&&game.includes('function gateCells()'),'Classic Coil purity or spawn-safety implementation missing');
+must(game.includes('layout:()=>')&&game.includes('window.__neonSerpent'),'v59 test API missing');
+const neon=games.find(g=>g.id==='neon-serpent');
+must(neon&&neon.title==='Neon Serpent: Crown Coil'&&neon.version==='3.0'&&neon.featured,'catalog v59 metadata missing');
+must(neon.updated==='2026-10-05'&&neon.controls.some(x=>x.includes('Clear all five contracts')),'catalog update/controls missing');
+must(achievementIds.includes('crown-coil')&&achievementIds.includes('phase-architect')&&app.includes("version:'v59'"),'v59 achievements/history missing');
+must(sw.includes("const CACHE='wwg-v59'"),'v59 cache missing');
+must(sw.includes('./covers/neon-serpent.svg')&&sw.includes('./games/neon-serpent/index.html'),'Neon Serpent offline assets missing');
+must(index.includes('js/games.js?v59')&&index.includes('js/app.js?v59'),'homepage cache busters missing');
+must(detail.includes('js/games.js?v59'),'detail cache buster missing');
+must(manifest.shortcuts[0]&&manifest.shortcuts[0].url==='game.html?id=neon-serpent','PWA shortcut missing');
+console.log(JSON.stringify({games:82,genres:129,achievements:148,remappable:54,upgrade:'neon-serpent-3.0',cache:'wwg-v59',spawnSafety:'verified-static'}));

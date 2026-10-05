@@ -1,0 +1,26 @@
+const fs=require('fs'),path=require('path'),vm=require('vm'),root=path.resolve(__dirname,'..');
+const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const verdant=read('games/verdant-echoes/index.html'), catalog=read('js/games.js'), app=read('js/app.js'), sw=read('sw.js'), index=read('index.html'), detail=read('game.html'), manifest=JSON.parse(read('manifest.webmanifest'));
+const must=(ok,msg)=>{if(!ok)throw new Error(msg)};
+const ctx={window:{}};vm.createContext(ctx);vm.runInContext(catalog,ctx);const games=ctx.window.WWG_GAMES;
+const achievementBlock=app.slice(app.indexOf('const achievements = ['),app.indexOf('];',app.indexOf('const achievements = ['))+2),achievementIds=[...achievementBlock.matchAll(/\{id:'([^']+)'/g)].map(m=>m[1]);
+must(games.length===82,'game total mismatch '+games.length);
+must(new Set(games.map(g=>g.id)).size===82,'duplicate game id');
+must(new Set(games.flatMap(g=>g.genres)).size===129,'genre total mismatch');
+must(games.filter(g=>g.remappable).length===54,'remappable total mismatch');
+for(const g of games){must(Array.isArray(g.controls)&&g.controls.length>=3,'control metadata missing '+g.id);must(String(g.objective||g.description||'').trim().length>=30,'objective metadata missing '+g.id);must(fs.existsSync(path.join(root,g.path)),'missing game '+g.id);must(fs.existsSync(path.join(root,g.cover)),'missing cover '+g.id);must(/^\d+\.\d+(?:\.\d+)?$/.test(String(g.version||'')),'semantic version missing '+g.id)}
+must(achievementIds.length===148&&new Set(achievementIds).size===148,'achievement total mismatch '+achievementIds.length);
+const v=games.find(g=>g.id==='verdant-echoes');must(v&&v.version==='2.1'&&v.updated==='2026-10-05','Verdant 2.1 metadata missing');
+must(verdant.includes('function buildMap(which){area=which;boss=null;'),'area boss reset missing');
+must(verdant.includes('function spawnBossIfNeeded(){if(boss&&boss.hp>0)return;'),'living boss persistence guard missing');
+must(verdant.includes("else if(area==='grove'&&rootSigil&&takenRelics.size===4"),'regent spawn branch missing');
+const inline=[...verdant.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]).filter(Boolean);inline.forEach((src,i)=>{try{new Function(src)}catch(e){throw new Error('Verdant inline script '+i+' syntax: '+e.message)}});
+must(app.includes("version:'v60'")&&app.includes('Catalog Reliability Audit'),'v60 release history missing');
+must(sw.includes("const CACHE='wwg-v60'"),'v60 cache missing');
+must(sw.includes('./covers/verdant-echoes.svg')&&sw.includes('./games/verdant-echoes/index.html'),'Verdant offline assets missing');
+must(index.includes('js/games.js?v60')&&index.includes('js/app.js?v60'),'homepage cache busters missing');
+must(detail.includes('js/games.js?v60'),'detail cache buster missing');
+must(manifest.shortcuts[0]&&manifest.shortcuts[0].url==='game.html?id=verdant-echoes','PWA shortcut missing');
+must(fs.existsSync(path.join(root,'tests/v60_full_catalog_fast.py')),'full catalog interaction gate missing');
+must(fs.existsSync(path.join(root,'tests/v60_verdant_boss_persistence.py')),'Verdant boss persistence regression missing');
+console.log(JSON.stringify({games:82,genres:129,achievements:148,remappable:54,upgrade:'verdant-echoes-2.1',cache:'wwg-v60',bossPersistence:'verified-static'}));

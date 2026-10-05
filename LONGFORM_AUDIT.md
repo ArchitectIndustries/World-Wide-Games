@@ -1,26 +1,24 @@
-# WorldWideGames Longform Audit — v58
+# WorldWideGames Longform Audit — v60
 
 Date: 2026-10-05
 Owner/operator: Architect Industries
 
 ## Production-quality focus
 
-v58 deepens an existing stealth game into a replayable campaign while preserving the independently verified v57 Glasswing Polo 2.0 work. The change favors authored depth, responsive controls, predictable recovery, persistence, mobile support, and regression safety over adding a shallow catalog clone.
+v60 prioritizes credibility and mechanical correctness. The catalog previously had strong 82/82 boot and runtime-clean gates, but the broad interaction sweep had not completed inside its bounded execution window. This pass completes that missing layer across every title and follows suspicious historical regressions into the actual gameplay implementation.
 
-## Quiet Protocol 2.0 design audit
+## Verdant Echoes 2.1 reliability repair
 
-Ghostline contains three authored facilities with increasing patrol, wall, relay, and camera complexity. Vision is line-of-sight aware: walls occlude patrols and cameras rather than allowing detection through geometry. Guards can investigate movement noise, while sprinting trades speed for stealth risk.
+The audit surfaced a high-impact long-form defect in Verdant Echoes. `bossUpdate()` called `spawnBossIfNeeded()` every frame, and that helper began by assigning `boss=null` before constructing any eligible boss. The result was a fresh Hollow Stag or Thorn Regent with maximum HP on every animation frame. Directly after a hit the HP briefly fell, then returned to full during the next frame. A player using normal attack cadence could therefore appear to damage a boss without making durable progress.
 
-The player now has a deliberate stealth toolkit. Relay objectives require a sustained hack at close range, cloak energy can be toggled and recharges when inactive, and limited pulse jammers can interrupt nearby sensors while reducing alert. Full alert causes lockdown; clearing all relays opens extraction.
+The repair separates area-reset behavior from per-frame spawn evaluation. `buildMap()` clears the previous area's boss when entering/rebuilding an area; `spawnBossIfNeeded()` now returns immediately when a living boss already exists. Boss health, cooldown, position, and phase state therefore persist during active combat. The regression waits through multiple real browser frames after attacks and proves the reduced HP remains before completing the campaign with spaced attacks.
 
-Campaign state persists mission unlocks, best score, clear count, and clean progress. Telemetry distinguishes relay shutdowns, detections, jammer use, clean missions, mission completion, lockdown, and full-campaign completion. Touch, gamepad, remapped keyboard movement, pause, restart, and synthesized feedback are supported.
+## Full-catalog interaction gate
 
-## Continuity and validation
+The new v60 interaction gate loads all 82 current game documents in Chromium with the shared input/WebGL helpers inlined, exercises common keyboard and pointer paths, activates obvious start controls, runs pause/resume/restart safety input, checks local references, captures browser/console/unhandled-rejection failures, scans visible state for invalid values, and switches to a 390px viewport to detect horizontal overflow.
 
-Glasswing Polo 2.0 Grand Circuit remains intact from v57 with three opponent styles, Wingdrive, bank goals, local two-player keyboard isolation, dual gamepad support, touch controls, persistence, and its platform achievements.
+All 82 titles pass after the Verdant repair. Deep historical/system regressions were also rerun across puzzle, strategy, platforming, simulation, action, RPG, sports, classics, and flagship campaign families. Obsolete test assumptions were updated instead of being mistaken for product defects.
 
-Ghostline Complete and Clean Signal raise the platform total to 146 achievements. Quiet Protocol becomes featured, the new Infiltration tag raises the distinct catalog total to 129, PWA shortcuts rotate, and cache metadata advances to v58.
+## QA posture
 
-Dedicated Quiet Protocol and Glasswing gameplay suites pass. Vector Shatter 2.0, Ironlight 4.0, Aegis 1.2, Aetherfoil, Skyvault, shared procedural-world regressions, full catalog boot, controls/objectives, isolated runtime, and 172-path local HTTP coverage also pass.
-
-The available Chromium environment uses the existing compatibility path where applicable; GPU-specific performance claims are not inferred from headless validation.
+Passing automation is evidence, not proof of impossibility of future defects. The v60 release record therefore avoids claiming a mathematically bug-free catalog. It does establish a substantially stronger baseline: every current game has now received a completed interaction-level browser pass, complex titles retain dedicated gameplay regressions, and the defect found by the audit is permanently guarded by a targeted test.

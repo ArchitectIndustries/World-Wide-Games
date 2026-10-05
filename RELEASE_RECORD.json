@@ -1,42 +1,54 @@
 {
-  "version": "v58",
-  "title": "Quiet Protocol 2.0: Ghostline",
+  "version": "v60",
+  "title": "Catalog Reliability Audit",
   "date": "2026-10-05",
   "owner": "Architect Industries",
+  "status": "READY FOR RELEASE TASK",
   "catalog": {
     "games": 82,
     "genres": 129,
-    "achievements": 146,
+    "achievements": 148,
     "remappable": 54
   },
   "qa": {
     "status": "PASS",
     "gameBoots": "82/82",
+    "fullInteractionAudit": "82/82",
     "controlObjectivePages": "82/82",
     "remappableProfiles": "54/54",
-    "runtimeClean": "82/82",
-    "localHttpPaths": "172/172",
-    "quietProtocol2": "PASS",
-    "glasswing2": "PASS",
-    "flagshipRegressions": "PASS"
+    "localRefs": "82/82",
+    "mobileOverflow": "0/82",
+    "verdantBossPersistence": "PASS",
+    "knownReliabilityRegressions": "PASS",
+    "interpretation": "No reproducible defect remains in the executed gates; this is not a mathematical proof that future/unexplored states contain no bugs.",
+    "localHttpPaths": "172/172"
   },
+  "fixes": [
+    {
+      "game": "verdant-echoes",
+      "fromVersion": "2.0",
+      "toVersion": "2.1",
+      "issue": "Living bosses were recreated at full HP every animation frame.",
+      "resolution": "Preserve a living boss across updates and clear boss state only when rebuilding/changing area.",
+      "regression": "tests/v60_verdant_boss_persistence.py"
+    }
+  ],
   "github": {
     "repository": "ArchitectIndustries/World-Wide-Games",
-    "canonicalMainAtGateStart": "bb6272c76f63a6aca05053c8ccd2d71d30869e1f",
-    "v57RecordBase": "252f29b5226c09142617434a06274fa8270a1536",
-    "verifiedSourceCommit": "8da5e0e42356a5fd5f941ac35d3508ecfa2e2d75",
-    "releaseBranch": "release/v58-complete",
-    "canonicalMainVerified": false
+    "canonicalMainAtBuildStart": "332abd9028ad4d4fdc5ef123108aaf837944d81e",
+    "verifiedV59Branch": "release/v59-buildqa-ready",
+    "verifiedV59Head": "10b5c58256e192bf64876a8525b84374e06d245f",
+    "canonicalMainChangedByBuildTask": false,
+    "candidateBranchCreatedByBuildTask": false
   },
-  "vercel": {
-    "projectId": "prj_CgW1xTHIZOOe1R4RNzcByfvxantq",
-    "domain": "https://worldwidegames.vercel.app",
-    "previewState": "pending branch deployment",
-    "productionState": "retain last verified main-backed deployment until GitHub gate"
+  "handoff": {
+    "ready": true,
+    "instruction": "Release & Deploy should verify the v60 package, preserve/reconcile the v59 ancestry, synchronize the complete v60 source tree to canonical main without overwriting unrelated work, then deploy that exact main-backed version to the established Vercel project."
   },
   "library": {
-    "sourcePath": "/WorldWideGames/WorldWideGames_v58.zip",
-    "recordsPath": "/WorldWideGames/WorldWideGames_v58_records.zip",
-    "status": "container upload bridge unavailable during staging"
+    "sourcePackage": "/WorldWideGames/WorldWideGames_v60.zip",
+    "recordsPackage": "/WorldWideGames/WorldWideGames_v60_records.zip",
+    "checksumRecord": "/WorldWideGames/WorldWideGames_v60_SHA256.txt",
+    "persisted": true
   }
 }

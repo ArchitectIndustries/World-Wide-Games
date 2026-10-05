@@ -1,20 +1,23 @@
-# WorldWideGames Catalog Audit — v58
+# WorldWideGames Catalog Audit — v60
 
 Date: 2026-10-05
 Owner/operator: Architect Industries
 
 - **82** registered games
 - **129** distinct genre/tag values
-- **146** achievements
+- **148** achievements
 - **54** remappable releases
 - **82/82** explicit semantic game versions
 - **82/82** game boots
-- **82/82** usable objective/control pages
-- **82/82** isolated Chromium runs runtime-clean
-- **172/172** local-origin release paths HTTP 200
+- **82/82** usable rendered objective/control pages
+- **82/82** isolated interaction-level Chromium runs runtime-clean
+- **82/82** local asset-reference scans clean
+- **82/82** 390px game layouts free of horizontal overflow
 
-## Featured release
+## Audit result
 
-**Quiet Protocol 2.0: Ghostline** — a three-facility stealth-action campaign with occluded patrol/camera vision, investigation behavior, noisy sprinting, relay hacking, rechargeable cloak energy, limited pulse jammers, shared alert pressure, persistent unlocks, touch/gamepad/remapped controls, and clean-extraction telemetry.
+The catalog-wide audit found one reproducible gameplay defect rather than merely confirming loadability: **Verdant Echoes bosses lost all accumulated damage on the next animation frame because the boss-spawn helper recreated the active boss every update.** This could make both required boss fights effectively unwinnable during normal paced play.
 
-v58 deepens an existing stealth title rather than inflating the catalog with a near-clone. The verified v57 Glasswing Polo 2.0 Grand Circuit and v56 Vector Shatter 2.0 remain intact alongside the broader puzzle, action, RPG, strategy, simulation, racing, exploration, sports, physics, tabletop, survival, and experimental mix.
+Verdant Echoes 2.1 fixes the lifecycle so a living boss persists across updates. A dedicated multi-frame regression now damages each boss, waits across real rendered frames, verifies the reduced HP remains, and defeats the Thorn Regent through spaced attacks.
+
+No additional runtime exception, broken local reference, mobile overflow, or invalid visible-state defect was reproduced in the completed 82-game interaction sweep. This is strong release evidence, not a claim that software can be mathematically proven bug-free in every possible future state.

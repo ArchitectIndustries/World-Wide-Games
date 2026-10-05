@@ -4,15 +4,15 @@ WorldWideGames is an Architect Industries browser-gaming platform focused on ins
 
 ## Current verified candidate
 
-**v58 — Quiet Protocol 2.0: Ghostline**
+**v60 — Catalog Reliability Audit**
 
-Quiet Protocol now spans three stealth facilities with wall-occluded patrol/camera vision, investigation AI, noisy sprinting, relay hacking, rechargeable cloak energy, limited pulse jammers, persistent mission unlocks and records, touch/gamepad/remapped controls, and clean-extraction telemetry. The verified v57 Glasswing Polo 2.0 Grand Circuit remains intact.
+v60 prioritizes catalog credibility over new content. A completed 82-game interaction sweep now exercises every registered title for runtime errors, local asset integrity, keyboard/pointer input, pause/restart safety, narrow/mobile overflow, and invalid visible state. The audit uncovered and fixes a real Verdant Echoes 2.0 defect that recreated active bosses at full health every animation frame; Verdant Echoes 2.1 now preserves Hollow Stag and Thorn Regent damage across real combat frames. Historical regression harnesses were refreshed so current catalog growth and modern game APIs no longer create false failures.
 
 ## Catalog
 
 - 82 registered games
 - 129 genre/tag values
-- 146 achievements
+- 148 achievements
 - 54 remappable releases
 - 82/82 explicit semantic game versions
 - Touch/pointer support throughout the catalog where appropriate
