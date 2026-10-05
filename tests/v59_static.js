@@ -1,0 +1,16 @@
+const fs=require('fs'),path=require('path'),root=path.resolve(__dirname,'..');
+const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const game=read('games/neon-serpent/index.html'), catalog=read('js/games.js'), app=read('js/app.js'), sw=read('sw.js'), index=read('index.html'), detail=read('game.html'), manifest=JSON.parse(read('manifest.webmanifest'));
+const must=(ok,msg)=>{if(!ok)throw new Error(msg)};
+must(game.includes('Neon Serpent 3.0')&&game.includes('Crown Coil'),'v59 title/finale missing');
+must(game.includes("hazards:8")&&game.includes('phaseDrive')&&game.includes('navigator.getGamepads'),'finale, Phase Drive, or gamepad missing');
+must(game.includes("META='wwg:neon-serpent:meta-v3'")&&game.includes('crown-coil-cleared'),'v3 persistence or telemetry missing');
+must(game.includes('window.__neonSerpent'),'v59 test API missing');
+must(catalog.includes("title:'Neon Serpent: Crown Coil'")&&catalog.includes("version:'3.0'"),'catalog v59 metadata missing');
+must(catalog.includes("updated:'2026-10-05'")&&catalog.includes("Clear all five contracts to master Crown Coil"),'catalog update/controls missing');
+must(app.includes("id:'crown-coil'")&&app.includes("id:'phase-architect'")&&app.includes("version:'v59'"),'v59 achievements/history missing');
+must(sw.includes("const CACHE='wwg-v59'"),'v59 cache missing');
+must(index.includes('js/games.js?v59')&&index.includes('js/app.js?v59'),'homepage cache busters missing');
+must(detail.includes('js/games.js?v59'),'detail cache buster missing');
+must(manifest.shortcuts[0]&&manifest.shortcuts[0].url==='game.html?id=neon-serpent','PWA shortcut missing');
+console.log('PASS v59 static: Crown Coil gameplay metadata, achievements, release history, PWA cache and shortcuts');
