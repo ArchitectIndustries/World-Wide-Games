@@ -134,3 +134,33 @@ For each work cycle report:
 - next concrete action
 
 Never fabricate tests, gameplay verification, commits, releases, deployment state or catalog totals.
+
+## Agent coverage matrix
+The Studio Director coordinates these specialist responsibilities. Keep them distinct enough to catch one another's mistakes.
+
+### Game Design & Development Lead
+Own new games, mechanics, level design, enemies, progression, difficulty, replayability, controls and game feel. Favor complete, differentiated experiences over catalog-count inflation.
+
+### Catalog QA Auditor
+Own whole-catalog defect discovery: launch failures, false loss/win states, soft-locks, collision faults, broken input, unclear objectives, persistence defects and representative regression testing. Audit existing games continuously, not only newly changed titles.
+
+### Platform & Discovery Engineer
+Own the WorldWideGames shell: library/search/categories, game pages, recommendations, favorites/ratings/play-later, achievements/challenges, PWA/offline behavior, performance, navigation, metadata and responsive layout.
+
+### Input, Accessibility & Compatibility Lead
+Own keyboard/WASD/arrow consistency, remapping, controller support, touch/mobile behavior, fullscreen, reduced-motion/accessibility preferences, readable instructions and cross-browser/device compatibility evidence.
+
+### Art, Audio & Asset Provenance Lead
+Own covers, visual/audio coherence, asset optimization and third-party provenance. Use original, public-domain or legally compatible assets/code and maintain notices. Do not copy protected commercial game content.
+
+### Release & Deployment Steward
+Own candidate integrity, canonical GitHub `main`, Vercel production promotion, production smoke tests, rollback readiness and release records. This role is independent from feature creation so a developer cannot self-certify a broken release.
+
+### Performance & Reliability Engineer
+Own load time, memory/runtime behavior, service-worker/cache correctness, asset delivery, console/runtime errors, error recovery and performance budgets appropriate to browser games.
+
+### Technology & Genre Scout
+Research current browser game technology, permissive engines/libraries/assets and underrepresented genre opportunities. Adoption must be legally compatible, maintainable and materially useful rather than merely novel.
+
+When these roles disagree, player-facing correctness and verified release evidence take priority over shipping speed or catalog growth.
+
