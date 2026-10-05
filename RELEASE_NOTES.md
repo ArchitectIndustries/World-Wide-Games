@@ -1,5 +1,20 @@
 # WorldWideGames Release Notes
 
+## v55 — Ironlight Breach 4.0 — 2026-10-04
+
+- Substantially upgrades **Ironlight Breach to 4.0** with elite Wardens in sectors three/four and a shielded final Overseer in sector five.
+- Adds boss spread-fire volleys, core-dependent armor, and a hard extraction gate that requires the Overseer to fall.
+- Adds timed combat-chain scoring, persistent best-streak and Overseer records, and achievements **Overseer Down** and **Breach Chain**.
+- Adds pause/resume, gamepad movement/turn/fire/sprint/weapon cycling, synthesized combat audio, and expanded Threat/Streak HUD feedback.
+- Preserves v3/v2 save migration plus the established rifle, scattergun, Arc Lance, sentry, drone, keycard, secret, cipher-route, vault, checkpoint, touch, mouse, and keyboard systems.
+- Promotes Ironlight Breach as the featured game, updates cover/discovery/PWA shortcut metadata, advances offline cache to `wwg-v55`, and advances browser bundle cache-busters to v55.
+- QA is green across 82/82 game boots, 82/82 isolated Chromium runtime checks, 172/172 local HTTP release paths, and dedicated current/legacy Ironlight regressions.
+- The previous v54 release gate is recovered: canonical `main` and Vercel production reached verified v54 commit `7a7bdd928af84323f905c5036edb1a8d9eaea944` before v55 synchronization began.
+
+### Release gate status
+
+v55 is a verified release candidate while the immutable source commit, canonical-main fast-forward, and production deployment are completed. Final commit/deployment evidence is recorded in the current project state and release record.
+
 ## v54 — Aegis Relay Salvage — 2026-10-04
 
 - Upgraded **Aegis Verge to 1.2**, combining the current Relayfront campaign architecture with deterministic field salvage instead of choosing one divergent line over the other.

@@ -1,36 +1,41 @@
-# WorldWideGames Test Report — v54
+# WorldWideGames Test Report — v55
 
-Date: 2026-10-04  
-Owner/operator: Architect Industries  
-Candidate: **v54 — Aegis Relay Salvage**
+Date: 2026-10-04
+Owner/operator: Architect Industries
+Candidate: **v55 — Ironlight Breach 4.0**
 
 ## Result
 
-**PASS — verified release candidate.** No known release-blocking local/source regression remains.
+**PASS — verified release candidate.** No known release-blocking source/gameplay regression remains.
 
 | Test | Result | Coverage |
 |---|---|---|
-| `node tests/v54_static.js` | PASS | 82 games, 128 genres, 138 achievements, 54 remappable, feature/cache/PWA/branding invariants |
-| `python3 tests/v54_aegis_relay_salvage.py` | PASS | Aegis 1.2 relays, four enemy roles, continuous shield, repair/energy salvage, campaign, persistence, telemetry, 390px mobile |
-| `python3 tests/v52_aegis_relayfront.py` | PASS | Relayfront/v1 save/control/campaign compatibility |
-| `python3 tests/v52_aegis_salvage.py` | PASS | Salvage drop/collection compatibility |
-| `python3 tests/v51_aegis.py` | PASS | Legacy Aegis API/campaign compatibility |
-| `python3 tests/v53_aetherfoil.py` | PASS | Fencing parry/riposte, 3-bout campaign, persistence, telemetry, pause/restart, mobile |
-| `python3 tests/v50_skyvault.py` | PASS | 3 routes, 15 beacons, controls, collision recovery, campaign, persistence, telemetry |
-| `python3 tests/v49_procedural_worlds.py` | PASS | Shared procedural 3D Cinderline/Glasswild campaigns |
+| `node tests/v55_static.js` | PASS | 82 games, 128 genres, 140 achievements, 54 remappable, control/objective metadata, Ironlight/cache/PWA/cache-buster invariants |
+| `python3 tests/v55_ironlight.py` | PASS | Ironlight five-sector map, Wardens, Overseer, boss-volley/core-gate/combat-chain/pause/persistence source invariants |
+| Pre-package browser scenario validation | PASS | Overseer armor transition, 3-shot volley, 8-kill chain, boss-gated extraction, pause/resume, v4 persistence, 390px layout |
+| `python3 tests/v39_ironlight.py` | PASS | Legacy Ironlight campaign, weapons, secrets, sentries, cipher routes, vaults, checkpoints |
+| `python3 tests/v54_aegis_relay_salvage.py` | PASS | Aegis 1.2 relay/salvage/shield campaign |
+| `python3 tests/v53_aetherfoil.py` | PASS | Aetherfoil fencing campaign |
+| `python3 tests/v50_skyvault.py` | PASS | Skyvault campaign/recovery |
+| `python3 tests/v49_procedural_worlds.py` | PASS | Shared procedural-3D campaigns |
 | `node tests/smoke.js` | PASS | 82/82 game boots + homepage + detail shell |
-| `python3 tests/v41_controls_browser.py` | PASS | 82/82 objective/control pages; 54/54 remappable profiles |
 | `python3 tests/v41_catalog_audit.py` | PASS | 82/82 runtime-clean in isolated Chromium |
 | `python3 tests/v32_http.py` | PASS | 172/172 local HTTP paths returned 200 |
 
-## Defect fixed during this run
+## Defects and quality gaps fixed
 
-Skyvault Cartographer could register two impacts from one collision because a recovery checkpoint could still overlap collision geometry on the first animation frame after respawn. v54 adds a short recovery collision-grace interval, preventing chain damage while preserving normal boundary/terrain collision detection. The dedicated Skyvault regression is green after the fix.
+1. Ironlight sector five now has a true completion gate: the Overseer must be defeated before extraction opens.
+2. Core collection now matters tactically during the boss encounter because the Overseer resists damage until all three cores are secured.
+3. Elite Wardens and timed combat chains add late-campaign enemy and scoring depth without invalidating prior saves.
+4. `index.html` and `game.html` no longer advertise stale v52 JavaScript cache-busters; they advance to v55.
+5. Current release metadata guarantees at least three control instructions and usable objective/description guidance for every registered game.
 
-## Renderer evidence boundary
+## Evidence boundary
 
-Browser QA in this environment used the shared Canvas2D compatibility renderer because Chromium did not expose WebGL/WebGL2. The WebGL2 source path remains statically covered and shared-3D regressions are green; GPU-rendered visual/performance verification remains a production-hardware follow-up.
+The complete 82-game smoke and isolated-runtime suites are green, and all 172 local-origin release paths return 200. The older `full_catalog_fast.py` sequential interaction heuristic reaches 73 titles before its single-process execution window expires; its incomplete run is not treated as a product regression because the complete independent suites pass.
 
-## Release-management verification
+The available Chromium environment exposes Canvas2D compatibility rendering for procedural-3D QA. GPU-rendered WebGL2 performance is not claimed from this environment.
 
-GitHub `main` and Vercel production both remain on v52 commit `2543a3f2a21120c48f8edc100f9f6c1f8db82192`. The complete verified v54 tree exists at source commit `ae69f62dbd9056f91a99f7cc5ecd8edae46e8441` on `release/v54-aegis-relay-salvage`; Vercel built it successfully as READY preview `dpl_3BPVLymHbQiXpoB3jvrxcN7ZyKX1`. Non-force `main` promotion, PR fallback, and Vercel production promotion were each blocked before the respective service accepted the mutation. This is a release-management blocker, not a source-QA failure.
+## Release management
+
+The prior v54 gap is closed: GitHub `main` equals `7a7bdd928af84323f905c5036edb1a8d9eaea944` and Vercel production deployment `dpl_Cx3jdz24LRR5CfKuDqW2aF29C32H` is READY on that exact commit. v55 GitHub/Vercel results are finalized after source synchronization.

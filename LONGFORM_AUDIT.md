@@ -1,30 +1,34 @@
-# WorldWideGames Longform Audit — v54
+# WorldWideGames Longform Audit — v55
 
-Date: 2026-10-04  
+Date: 2026-10-04
 Owner/operator: Architect Industries
 
 ## Production-quality focus
 
-v54 resolves a source-of-truth split rather than simply adding another isolated feature. Canonical GitHub/Vercel had advanced to the v52 Aegis Relayfront line, while the persistent Library held the independently verified v52 Aegis Salvage line and the latest conversation artifact held the verified v53 Aetherfoil release. The v54 source keeps the useful mechanics from all three states and validates the merged behavior before promotion.
+v55 prioritizes depth over catalog inflation. Ironlight Breach already had a complete five-sector FPS foundation, three weapons, keycards, secrets, ranged enemies, cipher routes, vaults, checkpoints, mobile play, and mouse/keyboard controls. The release turns that foundation into a stronger campaign with differentiated elite pressure, an explicit final boss, a real completion gate, persistent mastery records, combat-chain incentives, pause support, and gamepad parity.
 
-## Aegis Verge 1.2 design audit
+## Ironlight Breach 4.0 design audit
 
-The combined loop is materially stronger than either v52 variant alone. Players first manage vehicle positioning and differentiated hostile pressure, then stabilize a cleared relay, decide whether exposed salvage is worth collecting before it expires, and finally extract. Repair drops create hull-recovery routing decisions; energy drops affect shield uptime; continuous shielding creates a resource tradeoff instead of a simple cooldown. The campaign preserves three-operation progression and existing local saves.
+Wardens can pursue the player, sustain more damage, apply ranged pressure, and be disrupted by the Arc Lance. This gives the Arc Lance a clearer tactical role and forces movement during later sectors.
 
-Compatibility was treated as a feature: the v1 save key remains stable, prior Relayfront campaign behavior has a dedicated regression, prior Salvage pickup behavior has a dedicated regression, and the older Aegis test API still passes. This avoids a false “upgrade” that silently invalidates earlier player state or QA coverage.
+The final Overseer creates a two-stage objective. Before all three cores are secured it receives reduced damage; after core completion normal damage applies. Its three-projectile spread volley punishes stationary play, and extraction remains blocked until the Overseer is down. The final sector therefore cannot collapse into a simple exit sprint.
 
-## Platform/catalog audit
+Combat chains reward confident room clearing without replacing the base score loop. Consecutive kills inside the streak timer raise score value and expose a visible streak HUD. The eight-kill threshold emits a dedicated milestone and powers the Breach Chain achievement. Best streak and Overseer defeats persist through the v4 local record while v3/v2 migrations remain supported.
 
-Aetherfoil Circuit remains a mechanically distinct action-sports title, preventing the flagship work from collapsing the catalog toward shooters/vehicle combat. All 82 games retain explicit version metadata, enabling release/update badges and more reliable discovery sorting. PWA cache/shortcuts were updated for v54.
+## Input and accessibility audit
 
-## Reliability audit
+Keyboard universal movement fallbacks remain intact, saved remaps remain additive, mouse/Q/E turning remains available, touch controls remain supported, and gamepad controls cover movement, turning, firing, sprinting, and weapon cycling. P pauses simulation, and checkpoint retries reset the combat streak so cleared encounters cannot be farmed.
 
-A broad regression sweep exposed an existing Skyvault Cartographer defect: a player could respawn at a checkpoint and immediately collide again, registering a second impact from one event. A short recovery collision-grace period fixes the chain damage, and the full Skyvault campaign regression passes afterward. This is exactly the kind of cross-title defect that platform-wide QA is intended to surface.
+## Platform and reliability audit
 
-## Evidence boundary
+Browser entry pages were still cache-busting the catalog/application bundle as v52 even though later releases changed both. They now use v55. The current static release gate also validates control and objective metadata for every registered game.
 
-All 82 registered games boot; all 82 audited game-detail pages expose objectives/controls; all 54 remappable releases expose current/default profiles; 82/82 isolated Chromium runs are runtime-clean; 172/172 local-origin paths return HTTP 200. Dedicated browser tests validate Aegis, Aetherfoil, Skyvault, and shared procedural-world campaigns. The available Chromium environment used Canvas2D fallback rather than GPU WebGL2, so WebGL2 GPU visual/performance claims remain intentionally out of scope for this run.
+## Verification evidence
+
+The 82-title boot harness, 82-title isolated-runtime audit, and 172-path local HTTP audit are green. Dedicated regressions cover current and legacy Ironlight behavior, Aegis, Aetherfoil, Skyvault, and the shared procedural-world runtime. A pre-package browser scenario also validated the new Overseer armor transition, spread volley, combat chain, extraction gate, pause/resume, persistence, and 390px layout.
+
+The older sequential `full_catalog_fast.py` interaction heuristic reaches 73 titles before the available single-process execution window expires. Its incomplete run is not treated as a product failure because the complete independent catalog suites pass.
 
 ## Release engineering audit
 
-The release gate requires complete GitHub synchronization before v54 can be called fully shipped. At run start, both GitHub `main` and the Vercel production deployment matched v52 Relayfront commit `2543a3f2a21120c48f8edc100f9f6c1f8db82192`. v54 is built as a fast-forward release from that canonical base with tested reconciliation overlays rather than a force overwrite. Library packaging and production status are updated after source promotion.
+The previous v54 GitHub/Vercel gap is resolved before v55: `main` safely fast-forwarded to `7a7bdd928af84323f905c5036edb1a8d9eaea944`, and Vercel production built the same commit as READY deployment `dpl_Cx3jdz24LRR5CfKuDqW2aF29C32H`. v55 is built from that canonical base and is only considered fully shipped after its own immutable release commit is fast-forwarded to `main` without divergence and the established production project is confirmed on the same release line.

@@ -15,6 +15,18 @@
   ],
   "shortcuts": [
     {
+      "name": "Ironlight Breach",
+      "short_name": "Retro FPS 4.0",
+      "url": "game.html?id=ironlight-breach",
+      "icons": [
+        {
+          "src": "covers/ironlight-breach.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
       "name": "Aegis Verge",
       "short_name": "3D Hover Combat",
       "url": "game.html?id=aegis-verge",
@@ -33,18 +45,6 @@
       "icons": [
         {
           "src": "covers/aetherfoil-circuit.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Skyvault Cartographer",
-      "short_name": "3D Aerial Survey",
-      "url": "game.html?id=skyvault-cartographer",
-      "icons": [
-        {
-          "src": "covers/skyvault-cartographer.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }
