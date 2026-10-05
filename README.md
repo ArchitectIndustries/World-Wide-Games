@@ -1,46 +1,34 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform built as a self-contained, progressively expanding catalog of original games that launch directly in modern browsers.
+WorldWideGames is an Architect Industries browser-gaming platform focused on instant-play original games, broad genre variety, responsive desktop/mobile play, local progression, and increasingly ambitious campaign releases.
 
-## Current release
+## Current verified candidate
 
-**v55 — Ironlight Breach 4.0**
-Catalog: **82 games / 128 genre tags / 140 achievements / 54 remappable releases**
+**v56 — Vector Shatter 2.0: Prism Reactor**
 
-Ironlight Breach 4.0 is the current featured release. Its five-sector retro corridor-FPS campaign now includes elite Wardens, a shielded final Overseer, boss spread-fire, core-gated armor, combat-chain scoring, persistent streak/boss records, pause support, gamepad play, touch/keyboard/mouse controls, checkpoint retries, secret/cipher routes, three weapons, and synthesized local audio.
+Vector Shatter's five-sector brick-breaker campaign now includes a chargeable Prism Reactor, player-triggered multiball/pierce/time-dilation surges, v1→v2 persistent record migration, and a moving final Prism Core encounter. Ironlight Breach 4.0, Aegis Verge 1.2, Aetherfoil Circuit 1.0, Skyvault Cartographer, and the broader catalog remain intact.
 
-## Platform capabilities
+## Catalog
 
-- Data-driven catalog, search, tags, collections, featured/recent/popular discovery, favorites, achievements, saves, release history, and update badges.
-- Keyboard, touch, gamepad, fullscreen, and saved control-remap support where appropriate.
-- Installable PWA/offline caching for core platform/game assets.
-- Local-first/self-contained runtime assets for current flagship games; no paid runtime API is required for gameplay.
-- Shared procedural 3D runtime with WebGL2-first rendering and Canvas2D compatibility fallback.
-- Architect Industries public branding and original game identities/assets.
+- 82 registered games
+- 128 genre/tag values
+- 142 achievements
+- 54 remappable releases
+- Touch/pointer support throughout the catalog where appropriate
+- Gamepad support on an expanding set of releases
+- Installable/offline-capable PWA shell
+- Local favorites, ratings, play-later queue, scores, achievements, challenges, playtime, recommendations, and accessibility preferences
 
 ## Run locally
 
-```sh
-python3 -m http.server 8080
+Serve the repository over a local HTTP server and open `index.html`, for example:
+
+```bash
+python3 -m http.server 8000
 ```
 
-Then open `http://localhost:8080/`.
+Then visit `http://localhost:8000/`.
 
-## Current verification
+See `PROJECT_STATE.md`, `TEST_REPORT.md`, `RELEASE_NOTES.md`, and `THIRD_PARTY_NOTICES.md` for current details.
 
-```sh
-node tests/v55_static.js
-python3 tests/v55_ironlight.py
-python3 tests/v39_ironlight.py
-python3 tests/v54_aegis_relay_salvage.py
-python3 tests/v53_aetherfoil.py
-python3 tests/v50_skyvault.py
-python3 tests/v49_procedural_worlds.py
-node tests/smoke.js
-python3 tests/v41_catalog_audit.py
-python3 tests/v32_http.py
-```
-
-See `PROJECT_STATE.md`, `TEST_REPORT.md`, `RELEASE_NOTES.md`, `CATALOG_AUDIT.md`, `LONGFORM_AUDIT.md`, and `THIRD_PARTY_NOTICES.md` for current release state and verification details.
-
-Copyright © Architect Industries.
+© 2026 Architect Industries.

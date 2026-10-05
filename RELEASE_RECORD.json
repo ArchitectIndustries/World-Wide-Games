@@ -1,40 +1,40 @@
 {
-  "project": "WorldWideGames",
-  "owner_operator": "Architect Industries",
-  "version": "v55",
-  "title": "Ironlight Breach 4.0",
+  "version": "v56",
+  "title": "Vector Shatter 2.0: Prism Reactor",
   "date": "2026-10-04",
-  "catalog": {"games": 82, "genres": 128, "achievements": 140, "remappable": 54},
-  "github": {
-    "repository": "ArchitectIndustries/World-Wide-Games",
-    "verified_base": "7a7bdd928af84323f905c5036edb1a8d9eaea944",
-    "release_commit": null,
-    "verified_branch": "release/v55-verified",
-    "status": "verified source awaiting immutable release commit"
-  },
-  "vercel": {
-    "project_id": "prj_CgW1xTHIZOOe1R4RNzcByfvxantq",
-    "pre_v55_production_deployment": "dpl_Cx3jdz24LRR5CfKuDqW2aF29C32H",
-    "pre_v55_production_commit": "7a7bdd928af84323f905c5036edb1a8d9eaea944",
-    "v55_production_deployment": null,
-    "v55_production_commit": null,
-    "status": "pending v55 GitHub release gate"
+  "owner": "Architect Industries",
+  "catalog": {
+    "games": 82,
+    "genres": 128,
+    "achievements": 142,
+    "remappable": 54
   },
   "qa": {
-    "v55_static": "PASS",
-    "v55_ironlight": "PASS",
-    "v39_ironlight_compatibility": "PASS",
-    "v54_aegis": "PASS",
-    "v53_aetherfoil": "PASS",
-    "v50_skyvault": "PASS",
-    "v49_procedural_worlds": "PASS",
-    "smoke": "82/82 PASS",
-    "catalog_runtime": "82/82 PASS",
-    "http": "172/172 PASS",
-    "interactive_ironlight_scenario": "PASS",
-    "full_catalog_fast": "73 titles before harness execution-window timeout; complete independent suites PASS",
-    "renderer_evidence": "Canvas2D compatibility renderer; WebGL2 not GPU-validated in this environment"
+    "status": "PASS",
+    "gameBoots": "82/82",
+    "controlObjectivePages": "82/82",
+    "remappableProfiles": "54/54",
+    "runtimeClean": "82/82",
+    "localHttpPaths": "172/172",
+    "vector2": "PASS",
+    "legacyVector": "PASS",
+    "ironlight4": "PASS",
+    "flagshipRegressions": "PASS"
   },
-  "source_zip": {"filename": "WorldWideGames_v55.zip", "sha256": null},
-  "library": {"v54_source_and_records": "persisted", "v55": "pending final package upload"}
+  "github": {
+    "repository": "ArchitectIndustries/World-Wide-Games",
+    "baseMain": "bb6272c76f63a6aca05053c8ccd2d71d30869e1f",
+    "preexistingV56BranchHead": "d4b528f5c700d1dcc552d9e7ba0125091c825991",
+    "releaseSourceCommit": "590f94afd5921e21f5fc2d234185d7ed03a10162",
+    "canonicalMainVerified": false,
+    "refUpdate": "blocked-before-acceptance"
+  },
+  "vercel": {
+    "projectId": "prj_CgW1xTHIZOOe1R4RNzcByfvxantq",
+    "domain": "https://worldwidegames.vercel.app",
+    "baselineProductionDeployment": "dpl_542TtvJVYrDmDksBzuszbqeUMFhu",
+    "baselineProductionSha": "bb6272c76f63a6aca05053c8ccd2d71d30869e1f",
+    "v56DeploymentId": null,
+    "status": "production remains v55"
+  }
 }
