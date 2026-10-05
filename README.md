@@ -4,16 +4,17 @@ WorldWideGames is an Architect Industries browser-gaming platform focused on ins
 
 ## Current verified candidate
 
-**v57 — Glasswing Polo 2.0: Grand Circuit**
+**v58 — Quiet Protocol 2.0: Ghostline**
 
-Glasswing Polo now centers on a three-rival Grand Circuit, bank-shot Wingdrive charging, player-triggered overdrive, persistent records, and corrected same-device control isolation while preserving exhibition play, local 2P, touch, gamepad, and remappable keyboard support.
+Quiet Protocol now spans three stealth facilities with wall-occluded patrol/camera vision, investigation AI, noisy sprinting, relay hacking, rechargeable cloak energy, limited pulse jammers, persistent mission unlocks and records, touch/gamepad/remapped controls, and clean-extraction telemetry. The verified v57 Glasswing Polo 2.0 Grand Circuit remains intact.
 
 ## Catalog
 
 - 82 registered games
-- 128 genre/tag values
-- 144 achievements
+- 129 genre/tag values
+- 146 achievements
 - 54 remappable releases
+- 82/82 explicit semantic game versions
 - Touch/pointer support throughout the catalog where appropriate
 - Gamepad support on an expanding set of releases
 - Installable/offline-capable PWA shell

@@ -1,24 +1,26 @@
-# WorldWideGames Longform Audit — v57
+# WorldWideGames Longform Audit — v58
 
-Date: 2026-10-04
+Date: 2026-10-05
 Owner/operator: Architect Industries
 
 ## Production-quality focus
 
-v57 deepens an existing sports title and fixes a real same-device control conflict while preserving the verified v56 lineage.
+v58 deepens an existing stealth game into a replayable campaign while preserving the independently verified v57 Glasswing Polo 2.0 work. The change favors authored depth, responsive controls, predictable recovery, persistence, mobile support, and regression safety over adding a shallow catalog clone.
 
-## Glasswing Polo 2.0 design audit
+## Quiet Protocol 2.0 design audit
 
-Glasswing Polo now includes a three-rival Grand Circuit. Harbor Warden plays conservatively, Slipstream Ace presses aggressively, and Mirrorwing Crown uses predictive positioning. Matches are first to three within sixty seconds, with sudden-death overtime on ties.
+Ghostline contains three authored facilities with increasing patrol, wall, relay, and camera complexity. Vision is line-of-sight aware: walls occlude patrols and cameras rather than allowing detection through geometry. Guards can investigate movement noise, while sprinting trades speed for stealth risk.
 
-Wingdrive creates a bank-and-spend decision: touches and wall banks build charge, and a full meter can be activated for four seconds of extra speed and contact force. Bank goals and circuit victories feed persistent records and platform telemetry.
+The player now has a deliberate stealth toolkit. Relay objectives require a sustained hack at close range, cloak energy can be toggled and recharges when inactive, and limited pulse jammers can interrupt nearby sensors while reducing alert. Full alert causes lockdown; clearing all relays opens extraction.
 
-Local two-player mode reserves Arrow movement for Player 2 while Player 1 keeps remappable/WASD movement, removing the previous shared-input conflict. Touch and dual-gamepad support remain available.
+Campaign state persists mission unlocks, best score, clear count, and clean progress. Telemetry distinguishes relay shutdowns, detections, jammer use, clean missions, mission completion, lockdown, and full-campaign completion. Touch, gamepad, remapped keyboard movement, pause, restart, and synthesized feedback are supported.
 
-## Platform and validation
+## Continuity and validation
 
-Grand Circuit Crown and Bank Artist raise the platform total to 144 achievements. Glasswing Polo becomes featured, PWA shortcuts rotate, and cache metadata advances to v57.
+Glasswing Polo 2.0 Grand Circuit remains intact from v57 with three opponent styles, Wingdrive, bank goals, local two-player keyboard isolation, dual gamepad support, touch controls, persistence, and its platform achievements.
 
-Dedicated Glasswing testing covers all three rivals, Wingdrive, bank goals, persistent records, pause, mobile layout, and local keyboard isolation. Vector Shatter 2.0, Ironlight 4.0, Aegis 1.2, Aetherfoil, Skyvault, shared procedural-world regressions, catalog boot, controls, runtime checks, and local HTTP coverage also pass.
+Ghostline Complete and Clean Signal raise the platform total to 146 achievements. Quiet Protocol becomes featured, the new Infiltration tag raises the distinct catalog total to 129, PWA shortcuts rotate, and cache metadata advances to v58.
 
-The available Chromium environment uses the Canvas2D compatibility path for procedural-3D regression tests; GPU WebGL2 performance is not claimed here.
+Dedicated Quiet Protocol and Glasswing gameplay suites pass. Vector Shatter 2.0, Ironlight 4.0, Aegis 1.2, Aetherfoil, Skyvault, shared procedural-world regressions, full catalog boot, controls/objectives, isolated runtime, and 172-path local HTTP coverage also pass.
+
+The available Chromium environment uses the existing compatibility path where applicable; GPU-specific performance claims are not inferred from headless validation.

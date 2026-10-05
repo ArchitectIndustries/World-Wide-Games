@@ -1,5 +1,20 @@
 # WorldWideGames Release Notes
 
+## v58 — Quiet Protocol 2.0: Ghostline — 2026-10-05
+
+- Rebuilds **Quiet Protocol** into a three-mission stealth-action campaign across Glass Intake, Archive Lattice, and Crown Node.
+- Adds wall-occluded patrol/camera vision, investigation behavior, shared alert/lockdown pressure, noisy sprinting, rechargeable cloak energy, and limited pulse jammers.
+- Relay objectives now use hold-to-hack interactions; completed facilities unlock persistent campaign progression and clean-extraction/campaign telemetry.
+- Adds touch controls, gamepad support, pause/restart, remapped keyboard movement, synthesized audio, refreshed Architect Industries cover art, and offline/PWA cache metadata for v58.
+- Adds **Ghostline Complete** and **Clean Signal**, raising the platform to **146 achievements**.
+- Preserves and revalidates v57 Glasswing Polo 2.0 Grand Circuit, including Wingdrive, three rival styles, local-control isolation, persistence, and its dedicated QA.
+- Catalog totals: **82 games / 129 genre tags / 146 achievements / 54 remappable releases**.
+- QA is green: **82/82** boots, **82/82** objective/control pages, **54/54** remappable profiles, **82/82** isolated runtime checks, and **172/172** local HTTP paths.
+
+### Release gate status
+
+Verified v58 source commit: `8da5e0e42356a5fd5f941ac35d3508ecfa2e2d75`, based on verified v57 release-record commit `252f29b5226c09142617434a06274fa8270a1536`. Canonical main was still verified v55 at release-gate start; v58 is not fully shipped until the required non-force main promotion succeeds. The Library container upload bridge returned `container_session_unavailable` during staging.
+
 ## v57 — Glasswing Polo 2.0: Grand Circuit — 2026-10-04
 
 - Glasswing Polo 2.0 adds a three-rival Grand Circuit, first-to-three 60-second rounds, and distinct defensive, pressing, and predictive opponents.

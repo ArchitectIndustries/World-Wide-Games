@@ -1,12 +1,12 @@
 {
-  "version": "v57",
-  "title": "Glasswing Polo 2.0: Grand Circuit",
-  "date": "2026-10-04",
+  "version": "v58",
+  "title": "Quiet Protocol 2.0: Ghostline",
+  "date": "2026-10-05",
   "owner": "Architect Industries",
   "catalog": {
     "games": 82,
-    "genres": 128,
-    "achievements": 144,
+    "genres": 129,
+    "achievements": 146,
     "remappable": 54
   },
   "qa": {
@@ -16,28 +16,27 @@
     "remappableProfiles": "54/54",
     "runtimeClean": "82/82",
     "localHttpPaths": "172/172",
+    "quietProtocol2": "PASS",
     "glasswing2": "PASS",
     "flagshipRegressions": "PASS"
   },
   "github": {
     "repository": "ArchitectIndustries/World-Wide-Games",
-    "canonicalMain": "bb6272c76f63a6aca05053c8ccd2d71d30869e1f",
-    "verifiedSourceBranch": "release/v57-source",
-    "verifiedSourceCommit": "2ad2ef9d7eb04334afe21c4e165a02816652672f",
-    "aheadBy": 13,
-    "behindBy": 0,
+    "canonicalMainAtGateStart": "bb6272c76f63a6aca05053c8ccd2d71d30869e1f",
+    "v57RecordBase": "252f29b5226c09142617434a06274fa8270a1536",
+    "verifiedSourceCommit": "8da5e0e42356a5fd5f941ac35d3508ecfa2e2d75",
+    "releaseBranch": "release/v58-complete",
     "canonicalMainVerified": false
   },
   "vercel": {
     "projectId": "prj_CgW1xTHIZOOe1R4RNzcByfvxantq",
     "domain": "https://worldwidegames.vercel.app",
-    "productionDeployment": "dpl_542TtvJVYrDmDksBzuszbqeUMFhu",
-    "previewDeployment": "dpl_A7ChUGpSW213V7EncQ3fDh4gVtmY",
-    "previewState": "READY"
+    "previewState": "pending branch deployment",
+    "productionState": "retain last verified main-backed deployment until GitHub gate"
   },
   "library": {
-    "sourcePath": "/WorldWideGames/WorldWideGames_v57.zip",
-    "recordsPath": "/WorldWideGames/WorldWideGames_v57_records.zip",
-    "status": "pending upload bridge"
+    "sourcePath": "/WorldWideGames/WorldWideGames_v58.zip",
+    "recordsPath": "/WorldWideGames/WorldWideGames_v58_records.zip",
+    "status": "container upload bridge unavailable during staging"
   }
 }

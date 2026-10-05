@@ -1,11 +1,11 @@
-# WorldWideGames Catalog Audit — v57
+# WorldWideGames Catalog Audit — v58
 
-Date: 2026-10-04
+Date: 2026-10-05
 Owner/operator: Architect Industries
 
 - **82** registered games
-- **128** distinct genre/tag values
-- **144** achievements
+- **129** distinct genre/tag values
+- **146** achievements
 - **54** remappable releases
 - **82/82** explicit semantic game versions
 - **82/82** game boots
@@ -15,6 +15,6 @@ Owner/operator: Architect Industries
 
 ## Featured release
 
-**Vector Shatter 2.0** — five authored sectors, angle-controlled rebounds, armor/prism panels, five pickup systems, guard recovery, combo scoring, a chargeable Prism Reactor, timed multiball/pierce/time-dilation surges, and a moving final Prism Core.
+**Quiet Protocol 2.0: Ghostline** — a three-facility stealth-action campaign with occluded patrol/camera vision, investigation behavior, noisy sprinting, relay hacking, rechargeable cloak energy, limited pulse jammers, shared alert pressure, persistent unlocks, touch/gamepad/remapped controls, and clean-extraction telemetry.
 
-v56 deepens an existing physics/arcade title instead of inflating the catalog with a near-clone. Ironlight Breach 4.0, Aegis Verge 1.2, Aetherfoil Circuit 1.0, Skyvault Cartographer, Cinderline Velocity, Glasswild Ascent, and the broader genre mix remain intact.
+v58 deepens an existing stealth title rather than inflating the catalog with a near-clone. The verified v57 Glasswing Polo 2.0 Grand Circuit and v56 Vector Shatter 2.0 remain intact alongside the broader puzzle, action, RPG, strategy, simulation, racing, exploration, sports, physics, tabletop, survival, and experimental mix.

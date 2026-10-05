@@ -1,19 +1,30 @@
-# WorldWideGames Test Report — v57
+# WorldWideGames Test Report — v58
 
-Date: 2026-10-04
+Date: 2026-10-05
 Owner/operator: Architect Industries
-Candidate: **v57 — Glasswing Polo 2.0: Grand Circuit**
+Candidate: **v58 — Quiet Protocol 2.0: Ghostline**
+Source commit: `8da5e0e42356a5fd5f941ac35d3508ecfa2e2d75`
 
 ## Result
 
 **PASS — verified release candidate.**
 
-- `node tests/v57_static.js` — PASS: 82 games, 128 genres, 144 achievements, 54 remappable releases, v57 cache/PWA/catalog invariants.
-- `python3 tests/v57_glasswing.py` — PASS: all three rivals, Wingdrive, bank goals, circuit completion, local control isolation, persistence, pause, and 390px mobile layout.
-- Vector Shatter 2.0, Ironlight 4.0, Aegis 1.2, Aetherfoil, Skyvault, and shared procedural-world regressions — PASS.
-- Catalog smoke — 82/82 games boot plus homepage/detail shell.
-- Controls/objectives — 82/82 pages; 54/54 remappable profiles.
-- Isolated runtime audit — 82/82.
-- Local HTTP audit — 172/172 paths return HTTP 200.
+### Dedicated v58 coverage
+- `node tests/v58_static.js` — PASS: 82 games, 129 genre tags, 146 achievements, 54 remappable releases, Quiet Protocol 2.0 catalog/PWA/cache invariants.
+- `python3 tests/v58_quiet_protocol.py` — PASS: boot, remapped movement, hold-to-hack relay flow, cloak, jammer consumption, pause/resume, all three missions, persistence, clean/campaign telemetry, and 390px mobile behavior.
 
-Verified source commit: `2ad2ef9d7eb04334afe21c4e165a02816652672f`. Vercel preview `dpl_A7ChUGpSW213V7EncQ3fDh4gVtmY` is READY on that source. Canonical production remains verified v55 pending completion of the release gate.
+### Continuity and regression coverage
+- Glasswing Polo 2.0 v57 gameplay/static QA — PASS.
+- Vector Shatter 2.0 v56 and legacy Vector QA — PASS.
+- Ironlight Breach 4.0 and legacy Ironlight QA — PASS.
+- Aegis Verge 1.2, Aetherfoil Circuit, Skyvault Cartographer, and shared procedural-world QA — PASS.
+- Catalog smoke — **82/82** games boot plus homepage/detail shell.
+- Controls/objectives — **82/82** pages; **54/54** remappable profiles.
+- Isolated Chromium runtime audit — **82/82**.
+- Local HTTP audit — **172/172** paths return HTTP 200.
+
+The local HTTP server emitted benign connection-reset/broken-pipe traces when Chromium closed already-started requests; the audited paths themselves returned 200 and the suite passed.
+
+## Release-management verification
+
+The v58 source is based on the verified v57 records lineage, preserving Glasswing Polo 2.0. Canonical main was v55 at release-gate start and must be promoted non-force to the verified v58 head before the release is called fully shipped.
