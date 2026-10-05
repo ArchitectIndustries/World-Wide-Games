@@ -15,6 +15,18 @@
   ],
   "shortcuts": [
     {
+      "name": "Glasswing Polo",
+      "short_name": "Grand Circuit 2.0",
+      "url": "game.html?id=glasswing-polo",
+      "icons": [
+        {
+          "src": "covers/glasswing-polo.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
       "name": "Vector Shatter",
       "short_name": "Prism Reactor 2.0",
       "url": "game.html?id=vector-shatter",
@@ -33,18 +45,6 @@
       "icons": [
         {
           "src": "covers/ironlight-breach.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Aegis Verge",
-      "short_name": "3D Hover Combat",
-      "url": "game.html?id=aegis-verge",
-      "icons": [
-        {
-          "src": "covers/aegis-verge.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }
