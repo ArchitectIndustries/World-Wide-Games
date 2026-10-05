@@ -10,7 +10,7 @@
 - Promotes Vector Shatter as featured and advances PWA shortcuts/cache/cache-busters to v56.
 - Hardens the control-page regression harness for versioned catalog scripts.
 - Revalidates v55 Ironlight 4.0 plus Aegis, Aetherfoil, Skyvault, shared procedural worlds, full boot, control/objective, isolated runtime, and 172-path HTTP coverage.
-- Complete verified source/test commit: `590f94afd5921e21f5fc2d234185d7ed03a10162`.
+- Complete verified source/test commit: `a65803e9f0c96ffe63aec93a121d7c3a66941a88`.
 
 ### Release gate status
 

@@ -42,8 +42,8 @@ Canonical repository: `ArchitectIndustries/World-Wide-Games`.
 
 - v55 canonical main: `bb6272c76f63a6aca05053c8ccd2d71d30869e1f`.
 - Incomplete v56 branch head inspected: `d4b528f5c700d1dcc552d9e7ba0125091c825991`.
-- Complete verified v56 gameplay/platform/test source commit: `590f94afd5921e21f5fc2d234185d7ed03a10162`.
-- The connector accepted immutable Git objects/commits but rejected both branch/main ref mutation before GitHub accepted a ref change. No force update was attempted.
+- Complete verified v56 source commit: `a65803e9f0c96ffe63aec93a121d7c3a66941a88`.
+- The connector accepted immutable Git objects/commits through the complete v56 source commit, but rejected both branch/main ref mutation before GitHub accepted a ref change. No force update was attempted.
 - Therefore `release/v56-verified` and `main` remain unchanged from their pre-run refs; the complete v56 commit is staged by SHA for recovery/promotion.
 - Vercel production remains v55 because the mandatory GitHub release gate could not be completed.
 - Established Vercel project remains `prj_CgW1xTHIZOOe1R4RNzcByfvxantq`; no duplicate project was created.

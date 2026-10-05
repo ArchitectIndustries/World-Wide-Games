@@ -31,5 +31,5 @@ Candidate: **v56 — Vector Shatter 2.0: Prism Reactor**
 
 ## Release-management evidence
 
-Verified source/test commit: `590f94afd5921e21f5fc2d234185d7ed03a10162`.
+Verified source/test commit: `a65803e9f0c96ffe63aec93a121d7c3a66941a88`.
 GitHub ref mutation was blocked before acceptance, so canonical `main` and production remain v55. This is an external release gate blocker, not a QA failure.

@@ -15,4 +15,4 @@ Compatibility remains deliberate: prior records migrate, v2 writes are mirrored 
 
 ## Release engineering
 
-Complete verified source/test commit: `590f94afd5921e21f5fc2d234185d7ed03a10162`. The connector accepted immutable Git object/commit writes but rejected ref mutation before acceptance, so main and production were deliberately left on verified v55. No force update and no duplicate Vercel project were used.
+Complete verified source/test commit: `a65803e9f0c96ffe63aec93a121d7c3a66941a88`. The connector accepted immutable Git object/commit writes but rejected ref mutation before acceptance, so main and production were deliberately left on verified v55. No force update and no duplicate Vercel project were used.
