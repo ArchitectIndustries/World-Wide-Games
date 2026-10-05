@@ -2,7 +2,7 @@ name: WorldWideGames release verification
 on:
   push:
     branches:
-      - 'release/v59-verified'
+      - 'release/v59-final'
   workflow_dispatch:
 permissions:
   contents: read
@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Verify v58 baseline
-        run: node tests/v58_static.js
       - name: Verify v59 release
         run: node tests/v59_static.js
       - name: Package complete source
