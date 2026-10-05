@@ -1,5 +1,18 @@
 # WorldWideGames Release Notes
 
+## v57 — Glasswing Polo 2.0: Grand Circuit — 2026-10-04
+
+- Glasswing Polo 2.0 adds a three-rival Grand Circuit, first-to-three 60-second rounds, and distinct defensive, pressing, and predictive opponents.
+- Wingdrive turns bank play into a charge-and-spend system: touches and wall banks build energy, then Secondary/E/gamepad B/mobile activates a four-second surge.
+- Local two-player keyboard routing is corrected so Player 2 owns Arrow movement while Player 1 retains WASD/remapped movement.
+- Persistent circuit records, bank-goal and Wingdrive telemetry, pause, touch, dual-gamepad support, synthesized feedback, and refreshed Architect Industries artwork are included.
+- Grand Circuit Crown and Bank Artist raise the platform to 144 achievements; Glasswing Polo becomes featured and offline/cache metadata advances to v57.
+- QA is green across the dedicated Glasswing suite and the existing Vector, Ironlight, Aegis, Aetherfoil, Skyvault, procedural-world, catalog, control, runtime, and local HTTP regressions.
+
+### Release gate status
+
+Verified v57 source commit: `2ad2ef9d7eb04334afe21c4e165a02816652672f` on `release/v57-source`, 13 commits ahead and 0 behind canonical main. Vercel preview `dpl_A7ChUGpSW213V7EncQ3fDh4gVtmY` is READY on that exact source. Canonical main remains verified v55 because the required non-force ref update was not accepted; no force update was attempted. Library archive upload is also unavailable in this run because the container-to-Library bridge returned `container_session_unavailable`.
+
 ## v56 — Vector Shatter 2.0: Prism Reactor — 2026-10-04
 
 - Upgrades **Vector Shatter to 2.0** with a chargeable Prism Reactor and deliberate Secondary/E/gamepad-B/mobile activation.

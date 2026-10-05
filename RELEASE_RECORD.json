@@ -1,12 +1,12 @@
 {
-  "version": "v56",
-  "title": "Vector Shatter 2.0: Prism Reactor",
+  "version": "v57",
+  "title": "Glasswing Polo 2.0: Grand Circuit",
   "date": "2026-10-04",
   "owner": "Architect Industries",
   "catalog": {
     "games": 82,
     "genres": 128,
-    "achievements": 142,
+    "achievements": 144,
     "remappable": 54
   },
   "qa": {
@@ -16,33 +16,28 @@
     "remappableProfiles": "54/54",
     "runtimeClean": "82/82",
     "localHttpPaths": "172/172",
-    "vector2": "PASS",
-    "legacyVector": "PASS",
-    "ironlight4": "PASS",
+    "glasswing2": "PASS",
     "flagshipRegressions": "PASS"
   },
   "github": {
     "repository": "ArchitectIndustries/World-Wide-Games",
-    "baseMain": "bb6272c76f63a6aca05053c8ccd2d71d30869e1f",
-    "preexistingV56BranchHead": "d4b528f5c700d1dcc552d9e7ba0125091c825991",
-    "releaseSourceCommit": "a65803e9f0c96ffe63aec93a121d7c3a66941a88",
-    "canonicalMainVerified": false,
-    "refUpdate": "main-blocked-before-acceptance",
-    "stagedCompleteCommit": "a65803e9f0c96ffe63aec93a121d7c3a66941a88",
-    "recoveryBranch": "release/v56-staged",
-    "recoveryBranchCommit": "425a6d4011c668284029e2b76dc783594841c464"
+    "canonicalMain": "bb6272c76f63a6aca05053c8ccd2d71d30869e1f",
+    "verifiedSourceBranch": "release/v57-source",
+    "verifiedSourceCommit": "2ad2ef9d7eb04334afe21c4e165a02816652672f",
+    "aheadBy": 13,
+    "behindBy": 0,
+    "canonicalMainVerified": false
   },
   "vercel": {
     "projectId": "prj_CgW1xTHIZOOe1R4RNzcByfvxantq",
     "domain": "https://worldwidegames.vercel.app",
-    "baselineProductionDeployment": "dpl_542TtvJVYrDmDksBzuszbqeUMFhu",
-    "baselineProductionSha": "bb6272c76f63a6aca05053c8ccd2d71d30869e1f",
-    "v56DeploymentId": null,
-    "status": "production remains v55"
+    "productionDeployment": "dpl_542TtvJVYrDmDksBzuszbqeUMFhu",
+    "previewDeployment": "dpl_A7ChUGpSW213V7EncQ3fDh4gVtmY",
+    "previewState": "READY"
   },
   "library": {
-    "sourcePath": "/WorldWideGames/WorldWideGames_v56.zip",
-    "recordsPath": "/WorldWideGames/WorldWideGames_v56_records.zip",
-    "status": "persisted"
+    "sourcePath": "/WorldWideGames/WorldWideGames_v57.zip",
+    "recordsPath": "/WorldWideGames/WorldWideGames_v57_records.zip",
+    "status": "pending upload bridge"
   }
 }

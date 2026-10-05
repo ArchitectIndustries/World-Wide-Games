@@ -1,18 +1,24 @@
-# WorldWideGames Longform Audit — v56
+# WorldWideGames Longform Audit — v57
 
 Date: 2026-10-04
 Owner/operator: Architect Industries
 
-v56 focuses on depth, continuity, and release recovery. Canonical GitHub/Vercel had already advanced to verified v55 while the local archive lineage was v54, and a separate three-commit `release/v56-verified` branch existed with an incomplete Vector Shatter 2.0 shell. The release first reconciles v55 continuity, then completes the existing Prism Reactor direction instead of replacing concurrent work.
+## Production-quality focus
 
-## Vector Shatter 2.0
+v57 deepens an existing sports title and fixes a real same-device control conflict while preserving the verified v56 lineage.
 
-The original rebound/powerup loop was playable but largely reactive. Prism Reactor adds a bank/spend decision: panel hits build charge, prism panels build it faster, and the player chooses when to spend a full meter for a six-second multiball, pierce, and time-dilation surge. Losing all active spheres removes stored charge, rewarding sustained control.
+## Glasswing Polo 2.0 design audit
 
-Sector five now ends with a moving 14-HP Prism Core. It remains shielded until the lattice is cleared, then must be struck by the live sphere. This keeps the finale inside the game's core physics rather than swapping to an unrelated mechanic.
+Glasswing Polo now includes a three-rival Grand Circuit. Harbor Warden plays conservatively, Slipstream Ace presses aggressively, and Mirrorwing Crown uses predictive positioning. Matches are first to three within sixty seconds, with sudden-death overtime on ties.
 
-Compatibility remains deliberate: prior records migrate, v2 writes are mirrored to the v1 key, all five powerups remain, and the legacy v45 regression passes.
+Wingdrive creates a bank-and-spend decision: touches and wall banks build charge, and a full meter can be activated for four seconds of extra speed and contact force. Bank goals and circuit victories feed persistent records and platform telemetry.
 
-## Release engineering
+Local two-player mode reserves Arrow movement for Player 2 while Player 1 keeps remappable/WASD movement, removing the previous shared-input conflict. Touch and dual-gamepad support remain available.
 
-Complete verified source/test commit: `a65803e9f0c96ffe63aec93a121d7c3a66941a88`. The connector accepted immutable Git object/commit writes but rejected ref mutation before acceptance, so main and production were deliberately left on verified v55. No force update and no duplicate Vercel project were used.
+## Platform and validation
+
+Grand Circuit Crown and Bank Artist raise the platform total to 144 achievements. Glasswing Polo becomes featured, PWA shortcuts rotate, and cache metadata advances to v57.
+
+Dedicated Glasswing testing covers all three rivals, Wingdrive, bank goals, persistent records, pause, mobile layout, and local keyboard isolation. Vector Shatter 2.0, Ironlight 4.0, Aegis 1.2, Aetherfoil, Skyvault, shared procedural-world regressions, catalog boot, controls, runtime checks, and local HTTP coverage also pass.
+
+The available Chromium environment uses the Canvas2D compatibility path for procedural-3D regression tests; GPU WebGL2 performance is not claimed here.

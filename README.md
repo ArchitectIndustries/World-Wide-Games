@@ -4,15 +4,15 @@ WorldWideGames is an Architect Industries browser-gaming platform focused on ins
 
 ## Current verified candidate
 
-**v56 — Vector Shatter 2.0: Prism Reactor**
+**v57 — Glasswing Polo 2.0: Grand Circuit**
 
-Vector Shatter's five-sector brick-breaker campaign now includes a chargeable Prism Reactor, player-triggered multiball/pierce/time-dilation surges, v1→v2 persistent record migration, and a moving final Prism Core encounter. Ironlight Breach 4.0, Aegis Verge 1.2, Aetherfoil Circuit 1.0, Skyvault Cartographer, and the broader catalog remain intact.
+Glasswing Polo now centers on a three-rival Grand Circuit, bank-shot Wingdrive charging, player-triggered overdrive, persistent records, and corrected same-device control isolation while preserving exhibition play, local 2P, touch, gamepad, and remappable keyboard support.
 
 ## Catalog
 
 - 82 registered games
 - 128 genre/tag values
-- 142 achievements
+- 144 achievements
 - 54 remappable releases
 - Touch/pointer support throughout the catalog where appropriate
 - Gamepad support on an expanding set of releases
