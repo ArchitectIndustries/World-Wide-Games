@@ -1,0 +1,25 @@
+name: WorldWideGames release verification
+on:
+  push:
+    branches:
+      - 'release/v59-verified'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify v58 baseline
+        run: node tests/v58_static.js
+      - name: Verify v59 release
+        run: node tests/v59_static.js
+      - name: Package complete source
+        run: |
+          zip -rq WorldWideGames_v59.zip . -x '.git/*' -x 'WorldWideGames_v59.zip'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: WorldWideGames-v59-source
+          path: WorldWideGames_v59.zip
+          if-no-files-found: error
