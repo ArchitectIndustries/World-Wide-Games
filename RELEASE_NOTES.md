@@ -14,5 +14,5 @@
 
 ### Release gate status
 
-v56 is verified and staged but not fully shipped. The connector accepted immutable commit creation while blocking the ref update before GitHub accepted it. Canonical `main` and Vercel production therefore remain v55; no force update or duplicate Vercel project was attempted.
+v56 is verified and staged but not fully shipped. The complete lineage is preserved on recovery branch `release/v56-staged` at `425a6d4011c668284029e2b76dc783594841c464`. The required non-force canonical `main` promotion remains blocked before acceptance, so Vercel production remains v55; no force update or duplicate Vercel project was attempted. The v56 source and records archives are persisted in `/WorldWideGames`.
 

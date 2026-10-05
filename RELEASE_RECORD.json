@@ -27,8 +27,10 @@
     "preexistingV56BranchHead": "d4b528f5c700d1dcc552d9e7ba0125091c825991",
     "releaseSourceCommit": "a65803e9f0c96ffe63aec93a121d7c3a66941a88",
     "canonicalMainVerified": false,
-    "refUpdate": "blocked-before-acceptance",
-    "stagedCompleteCommit": "a65803e9f0c96ffe63aec93a121d7c3a66941a88"
+    "refUpdate": "main-blocked-before-acceptance",
+    "stagedCompleteCommit": "a65803e9f0c96ffe63aec93a121d7c3a66941a88",
+    "recoveryBranch": "release/v56-staged",
+    "recoveryBranchCommit": "425a6d4011c668284029e2b76dc783594841c464"
   },
   "vercel": {
     "projectId": "prj_CgW1xTHIZOOe1R4RNzcByfvxantq",
@@ -37,5 +39,10 @@
     "baselineProductionSha": "bb6272c76f63a6aca05053c8ccd2d71d30869e1f",
     "v56DeploymentId": null,
     "status": "production remains v55"
+  },
+  "library": {
+    "sourcePath": "/WorldWideGames/WorldWideGames_v56.zip",
+    "recordsPath": "/WorldWideGames/WorldWideGames_v56_records.zip",
+    "status": "persisted"
   }
 }

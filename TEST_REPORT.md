@@ -32,4 +32,6 @@ Candidate: **v56 — Vector Shatter 2.0: Prism Reactor**
 ## Release-management evidence
 
 Verified source/test commit: `a65803e9f0c96ffe63aec93a121d7c3a66941a88`.
-GitHub ref mutation was blocked before acceptance, so canonical `main` and production remain v55. This is an external release gate blocker, not a QA failure.
+The complete v56 lineage is preserved on recovery branch `release/v56-staged` at release-record commit `425a6d4011c668284029e2b76dc783594841c464`. The required non-force canonical `main` promotion remains blocked before acceptance, so production remains v55. This is an external release-gate blocker, not a QA failure.
+
+Library persistence succeeded for `/WorldWideGames/WorldWideGames_v56.zip` and `/WorldWideGames/WorldWideGames_v56_records.zip`.
