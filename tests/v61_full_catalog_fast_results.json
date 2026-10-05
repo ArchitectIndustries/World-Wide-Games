@@ -1,0 +1,13 @@
+{
+  "release": "v61",
+  "audit": "full-catalog interaction gate",
+  "executed_candidate_sha256": "29d49837f3e62084c1444fbfcd069d92ff5e00e3d6b4fe2c97a4525123faab5",
+  "games": 82,
+  "passed": 82,
+  "failed": 0,
+  "runtime_error_games": 0,
+  "missing_reference_games": 0,
+  "mobile_overflow_games": 0,
+  "invalid_visible_state_games": 0,
+  "note": "Per-title interaction results were retained in the verified build candidate; this repository file is the compact release-gate record."
+}

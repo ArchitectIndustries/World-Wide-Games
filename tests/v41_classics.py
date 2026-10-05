@@ -15,11 +15,13 @@ with sync_playwright() as pw:
     # Snake classic contract really is hazard-free and still honors universal aliases.
     p=b.new_page(viewport={'width':390,'height':844}); errs=[]; p.on('pageerror',lambda e:errs.append(str(e)))
     p.set_content(prep('games/neon-serpent/index.html',custom),wait_until='domcontentloaded',timeout=8000); p.wait_for_timeout(50)
-    assert p.evaluate('[cfg.length,cfg[0].name,cfg[0].drones,cfg[0].gates]')==[4,'Classic Snake',0,0]
-    p.keyboard.press('ArrowUp'); assert p.evaluate('queued.y')==-1
-    p.keyboard.press('KeyD'); assert p.evaluate('queued.x')==1
-    p.keyboard.press('KeyL'); assert p.evaluate('queued.x')==1
-    p.evaluate('contract=1;score=120;finish()'); ev=p.evaluate('window.__events'); assert any(x.get('event')=='classic-cleared' for x in ev),ev
+    st=p.evaluate('window.__neonSerpent.state()'); layout=p.evaluate('window.__neonSerpent.layout()')
+    assert st['contract']==1 and st['goal']==12
+    assert layout['gold'] is None and not layout['drones'] and not layout['gates'] and not layout['hazards']
+    p.evaluate("window.__neonSerpent.start(1,'classic-arrow')"); y=p.evaluate('window.__neonSerpent.layout().snake[0].y'); p.keyboard.press('ArrowUp'); p.evaluate('window.__neonSerpent.tick()'); assert p.evaluate('window.__neonSerpent.layout().snake[0].y')!=y
+    p.evaluate("window.__neonSerpent.start(1,'classic-wasd')"); x=p.evaluate('window.__neonSerpent.layout().snake[0].x'); p.keyboard.press('KeyD'); p.evaluate('window.__neonSerpent.tick()'); assert p.evaluate('window.__neonSerpent.layout().snake[0].x')!=x
+    p.evaluate("window.__neonSerpent.start(1,'classic-remap')"); x=p.evaluate('window.__neonSerpent.layout().snake[0].x'); p.keyboard.press('KeyL'); p.evaluate('window.__neonSerpent.tick()'); assert p.evaluate('window.__neonSerpent.layout().snake[0].x')!=x
+    p.evaluate('window.__neonSerpent.forceComplete()'); ev=p.evaluate('window.__events'); assert any(x.get('event')=='classic-cleared' for x in ev),ev
     assert p.evaluate('document.documentElement.scrollWidth<=window.innerWidth+2') and not errs,errs
     p.close()
     # New original maze-chase title: campaign events, power collision, persistent clear.

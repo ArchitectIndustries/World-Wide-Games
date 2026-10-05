@@ -15,36 +15,48 @@
   ],
   "shortcuts": [
     {
-      "name": "Quiet Protocol: Ghostline",
-      "short_name": "Ghostline 2.0",
-      "url": "game.html?id=quiet-protocol",
+      "name": "Emberfield Survival: Pyre Crown",
+      "short_name": "Emberfield 2.0",
+      "url": "game.html?id=emberfield-survival",
       "icons": [
         {
-          "src": "covers/quiet-protocol.svg",
+          "src": "covers/emberfield-survival.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }
       ]
     },
     {
-      "name": "Glasswing Polo",
-      "short_name": "Grand Circuit 2.0",
-      "url": "game.html?id=glasswing-polo",
+      "name": "Orbit Breaker: Breaker Campaign",
+      "short_name": "Orbit Breaker 2.0",
+      "url": "game.html?id=orbit-breaker",
       "icons": [
         {
-          "src": "covers/glasswing-polo.svg",
+          "src": "covers/orbit-breaker.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }
       ]
     },
     {
-      "name": "Vector Shatter",
-      "short_name": "Prism Reactor 2.0",
-      "url": "game.html?id=vector-shatter",
+      "name": "Verdant Echoes",
+      "short_name": "Verdant Echoes 2.1",
+      "url": "game.html?id=verdant-echoes",
       "icons": [
         {
-          "src": "covers/vector-shatter.svg",
+          "src": "covers/verdant-echoes.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Neon Serpent: Crown Coil",
+      "short_name": "Crown Coil 3.0",
+      "url": "game.html?id=neon-serpent",
+      "icons": [
+        {
+          "src": "covers/neon-serpent.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }

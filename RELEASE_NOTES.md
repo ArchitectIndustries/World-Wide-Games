@@ -1,5 +1,45 @@
 # WorldWideGames Release Notes
 
+## v62 — Emberfield Survival 2.0: Pyre Crown — 2026-10-05
+
+- Emberfield Survival advances from 1.0 to 2.0 with Ash Verge, Cinderstorm, and Pyre Crown campaign phases.
+- Adds Drifters, armored Brutes, ranged Wraiths, enemy projectiles, healing salvage, six build upgrades, a chargeable Ember Core, and Nova Burst.
+- Adds two Cinder Warden checkpoints and an 850-HP Pyre Regent finale with durable boss damage across animation frames.
+- Adds v2 persistent records, remapped keyboard/touch/gamepad play, campaign telemetry, and Pyre Crown / Nova Born achievements.
+- Catalog remains 82 games / 129 genre tags and advances to 152 achievements / 54 remappable releases.
+- Independent release QA passed 82/82 boots, 82/82 interaction checks, 82/82 rendered objective/control pages, 54/54 remappable profiles, and 172/172 local HTTP paths.
+
+## v61 — Orbit Breaker 2.0: Breaker Campaign — 2026-10-05
+
+- Orbit Breaker advances from 1.1 to 2.0 with Debris Corridor, Hunter Belt, and Breaker Core sectors.
+- Adds armored asteroids, hunter drones, enemy bolts, shield salvage, a chargeable Reactor, Pulse Burst, and a moving 24-HP Breaker Core finale.
+- Preserves the trust-critical rule that missed threats never damage shield; only direct collisions or hostile projectiles do.
+- Adds persistent campaign records plus Orbit Secured and Pulse Breaker achievements.
+- Full-catalog reliability regression remained green after the upgrade.
+
+## v60 — Catalog Reliability Audit — 2026-10-05
+
+- Completed an interaction-level Chromium audit across **all 82 catalog games**, extending beyond boot/static checks to exercise keyboard, pointer/canvas, start/action controls, pause/resume/restart safety, local asset references, unhandled errors, invalid visible numeric state, and 390px mobile overflow.
+- Fixed a real **Verdant Echoes 2.0** boss lifecycle defect: the Hollow Stag and Thorn Regent were recreated at full health every animation frame, effectively erasing normal paced combat damage.
+- Upgraded **Verdant Echoes to 2.1**. Living bosses now retain health and position across animation frames; map transitions explicitly reset boss state before evaluating the next area's spawn conditions.
+- Added a dedicated multi-frame Verdant regression proving Hollow Stag and Thorn Regent damage persists and both bosses can be defeated through spaced attacks.
+- Refreshed historical regression harnesses for Pulsevine Parkour, catalog-control metadata, Neon Serpent Classic Coil compatibility, and the v32 flagship bundle so obsolete assumptions do not create false failures.
+- Advanced the PWA cache to `wwg-v60`, rotated the install shortcut to Verdant Echoes 2.1, and synchronized homepage/detail cache-busters.
+- Catalog remains **82 games / 129 genre tags / 148 achievements / 54 remappable releases**.
+- **Build handoff:** READY FOR RELEASE TASK. Canonical GitHub `main` and production remain unchanged by this Build & QA task.
+
+
+## v59 — Neon Serpent 3.0: Crown Coil — 2026-10-05
+
+- Upgraded **Neon Serpent** into a five-contract campaign: Classic Coil, Drone Run, Relay Rush, Gridfall, and Crown Coil.
+- Added deterministic seeded layouts, escalating hunter drones, paired relay gates, combo scoring, advanced-contract gold sparks, and Crown hazards.
+- Added **Phase Drive**, v2→v3 save migration, synthesized audio, remapped keyboard/touch/gamepad support, telemetry, pause/restart, and mobile support.
+- Hardened spawn allocation so food, gold, drones, relay endpoints, hazards, and the starting snake cannot overlap initially; Classic Coil excludes the later-contract gold bonus.
+- Added **Crown Coil** and **Phase Architect**, raising the platform to **148 achievements**.
+- Advanced PWA/cache integration to v59.
+- Release QA passed: 82/82 game boots, 82/82 isolated runtime loads, 82/82 rendered objective/control pages, 54/54 remappable profiles, and 172/172 HTTP paths.
+
+
 ## v58 — Quiet Protocol 2.0: Ghostline — 2026-10-05
 
 - Rebuilds **Quiet Protocol** into a three-mission stealth-action campaign across Glass Intake, Archive Lattice, and Crown Node.

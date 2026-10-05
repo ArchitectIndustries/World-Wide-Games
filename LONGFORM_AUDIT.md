@@ -1,26 +1,22 @@
-# WorldWideGames Longform Audit — v58
+# WorldWideGames Longform Audit — v61
 
 Date: 2026-10-05
 Owner/operator: Architect Industries
 
 ## Production-quality focus
 
-v58 deepens an existing stealth game into a replayable campaign while preserving the independently verified v57 Glasswing Polo 2.0 work. The change favors authored depth, responsive controls, predictable recovery, persistence, mobile support, and regression safety over adding a shallow catalog clone.
+v61 deliberately deepens an existing classic rather than increasing catalog count. Orbit Breaker had previously received collision-safety repairs, so this cycle turns that trust-sensitive game into a more substantial campaign while retaining explicit regression coverage for the original problem.
 
-## Quiet Protocol 2.0 design audit
+## Orbit Breaker 2.0 campaign
 
-Ghostline contains three authored facilities with increasing patrol, wall, relay, and camera complexity. Vision is line-of-sight aware: walls occlude patrols and cameras rather than allowing detection through geometry. Guards can investigate movement noise, while sprinting trades speed for stealth risk.
+The former endless score chase is now a three-sector progression arc. Debris Corridor establishes the asteroid loop, Hunter Belt adds two-hit strafing drones and projectile pressure, and Breaker Core requires eight escort kills before exposing a moving 24-HP final target. Armored asteroids take three hits, threats contribute different scores/reactor values, and bounded shield salvage provides recoverability without removing risk.
 
-The player now has a deliberate stealth toolkit. Relay objectives require a sustained hack at close range, cloak energy can be toggled and recharges when inactive, and limited pulse jammers can interrupt nearby sensors while reducing alert. Full alert causes lockdown; clearing all relays opens extraction.
+The new Reactor system adds a strategic resource layer. Destroyed threats charge Reactor toward 100%; Secondary/E/gamepad-B/touch Pulse activates Pulse Burst, clearing nearby non-boss threats and heavily damaging the Core. Campaign progression and best score persist through a v2 save record that migrates the historical local-best key.
 
-Campaign state persists mission unlocks, best score, clear count, and clean progress. Telemetry distinguishes relay shutdowns, detections, jammer use, clean missions, mission completion, lockdown, and full-campaign completion. Touch, gamepad, remapped keyboard movement, pause, restart, and synthesized feedback are supported.
+The original collision rule remains explicit in UI copy and code: missed threats do not hurt the player. The historical regression test is retained and upgraded alongside the new campaign test so future feature work cannot silently reintroduce the credibility-damaging behavior.
 
-## Continuity and validation
+## Catalog-wide regression
 
-Glasswing Polo 2.0 Grand Circuit remains intact from v57 with three opponent styles, Wingdrive, bank goals, local two-player keyboard isolation, dual gamepad support, touch controls, persistence, and its platform achievements.
+After the Orbit upgrade, the completed v60 full-catalog interaction harness reran all 82 titles and remained green. The platform gate also retained 82/82 objective/control pages, 54/54 remappable profiles, and clean 390px homepage behavior. The local release server returned 200 for all 172 checked paths.
 
-Ghostline Complete and Clean Signal raise the platform total to 146 achievements. Quiet Protocol becomes featured, the new Infiltration tag raises the distinct catalog total to 129, PWA shortcuts rotate, and cache metadata advances to v58.
-
-Dedicated Quiet Protocol and Glasswing gameplay suites pass. Vector Shatter 2.0, Ironlight 4.0, Aegis 1.2, Aetherfoil, Skyvault, shared procedural-world regressions, full catalog boot, controls/objectives, isolated runtime, and 172-path local HTTP coverage also pass.
-
-The available Chromium environment uses the existing compatibility path where applicable; GPU-specific performance claims are not inferred from headless validation.
+Direct browser navigation to localhost is currently blocked by execution policy, so this run distinguishes self-contained Chromium interaction/rendering evidence from HTTP-path validation rather than claiming an origin-level browser test that did not occur.

@@ -48,7 +48,7 @@ function key(x,y){return x+','+y}
 function safeParse(raw,fallback){try{return raw?JSON.parse(raw):fallback}catch{return fallback}}
 function showToast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>el.classList.remove('show'),1500)}
 function addWallLine(x1,y1,x2,y2,gaps=[]){if(x1===x2){for(let y=Math.min(y1,y2);y<=Math.max(y1,y2);y++)if(!gaps.includes(y))walls.add(key(x1,y))}else{for(let x=Math.min(x1,x2);x<=Math.max(x1,x2);x++)if(!gaps.includes(x))walls.add(key(x,y1))}}
-function buildMap(which){area=which;const a=AREA[area];W=a.W;H=a.H;walls=new Set();cracks=new Set();for(let x=0;x<W;x++){walls.add(key(x,0));walls.add(key(x,H-1))}for(let y=0;y<H;y++){walls.add(key(0,y));walls.add(key(W-1,y))}
+function buildMap(which){area=which;boss=null;const a=AREA[area];W=a.W;H=a.H;walls=new Set();cracks=new Set();for(let x=0;x<W;x++){walls.add(key(x,0));walls.add(key(x,H-1))}for(let y=0;y<H;y++){walls.add(key(0,y));walls.add(key(W-1,y))}
   if(area==='grove'){
     addWallLine(6,8,38,8,[12,26]);addWallLine(18,9,18,23,[16]);addWallLine(20,20,40,20,[34]);
     ['12,8','18,16','34,20'].forEach(k=>{if(!broken.grove.has(k))cracks.add(k)});
@@ -61,7 +61,7 @@ function buildMap(which){area=which;const a=AREA[area];W=a.W;H=a.H;walls=new Set
   loadEnemies();spawnBossIfNeeded();
 }
 function loadEnemies(){enemies=[];for(const [id,x,y,type] of ENEMY_SPECS[area])if(!defeatedEnemies.has(id)){const stats=type==='wisp'?{hp:2,speed:.65,dmg:1}:{hp:type==='crawler'?4:3,speed:type==='crawler'?1.15:.9,dmg:1};enemies.push({id,x,y,type,hit:0,cool:0,...stats})}}
-function spawnBossIfNeeded(){boss=null;if(area==='rootvault'&&takenSeeds.size===3&&!defeatedBosses.has('stag'))boss={id:'stag',name:'Hollow Stag',x:26,y:15,hp:16,maxHp:16,hit:0,speed:1.35,dmg:1,cool:0};if(area==='grove'&&rootSigil&&takenRelics.size===4&&!defeatedBosses.has('regent')&&p.x>36&&p.y>21)boss={id:'regent',name:'Thorn Regent',x:40,y:24,hp:18,maxHp:18,hit:0,speed:1.15,dmg:1,cool:0}}
+function spawnBossIfNeeded(){if(boss&&boss.hp>0)return;if(area==='rootvault'&&takenSeeds.size===3&&!defeatedBosses.has('stag'))boss={id:'stag',name:'Hollow Stag',x:26,y:15,hp:16,maxHp:16,hit:0,speed:1.35,dmg:1,cool:0};else if(area==='grove'&&rootSigil&&takenRelics.size===4&&!defeatedBosses.has('regent')&&p.x>36&&p.y>21)boss={id:'regent',name:'Thorn Regent',x:40,y:24,hp:18,maxHp:18,hit:0,speed:1.15,dmg:1,cool:0};else boss=null}
 function init(){meta={...meta,...safeParse(localStorage.getItem(META_KEY),{})};const s=safeParse(localStorage.getItem(SAVE_KEY),null);if(s&&!s.won){area=s.area||'grove';p={...p,...s.p};bombs=s.bombs??3;takenRelics=new Set(s.takenRelics||[]);takenSeeds=new Set(s.takenSeeds||[]);defeatedEnemies=new Set(s.defeatedEnemies||[]);defeatedBosses=new Set(s.defeatedBosses||[]);broken={grove:new Set(s.broken?.grove||[]),rootvault:new Set(s.broken?.rootvault||[])};quest=s.quest||0;weapon=s.weapon||'reedblade';charm=s.charm||'none';rootSigil=!!s.rootSigil;deaths=s.deaths||0;if(charm==='barkguard'){p.maxHp=Math.max(p.maxHp||5,7);p.hp=Math.min(p.hp,p.maxHp)}}buildMap(area);sync();saveGame()}
 function saveGame(){if(won)return;localStorage.setItem(SAVE_KEY,JSON.stringify({area,p,bombs,takenRelics:[...takenRelics],takenSeeds:[...takenSeeds],defeatedEnemies:[...defeatedEnemies],defeatedBosses:[...defeatedBosses],broken:{grove:[...broken.grove],rootvault:[...broken.rootvault]},quest,weapon,charm,rootSigil,deaths,won:false}))}
 function saveMeta(){localStorage.setItem(META_KEY,JSON.stringify(meta))}

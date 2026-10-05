@@ -4,15 +4,15 @@ WorldWideGames is an Architect Industries browser-gaming platform focused on ins
 
 ## Current verified candidate
 
-**v58 — Quiet Protocol 2.0: Ghostline**
+**v62 — Emberfield Survival 2.0: Pyre Crown**
 
-Quiet Protocol now spans three stealth facilities with wall-occluded patrol/camera vision, investigation AI, noisy sprinting, relay hacking, rechargeable cloak energy, limited pulse jammers, persistent mission unlocks and records, touch/gamepad/remapped controls, and clean-extraction telemetry. The verified v57 Glasswing Polo 2.0 Grand Circuit remains intact.
+Emberfield Survival now runs as a three-phase roguelite campaign with multiple enemy roles, six build upgrades, healing salvage, a chargeable Nova Burst, two Cinder Warden checkpoints, a Pyre Regent finale, persistent records, and full remapped keyboard/touch/gamepad support. The completed 82-game interaction reliability gate remains green after the upgrade.
 
 ## Catalog
 
 - 82 registered games
 - 129 genre/tag values
-- 146 achievements
+- 152 achievements
 - 54 remappable releases
 - 82/82 explicit semantic game versions
 - Touch/pointer support throughout the catalog where appropriate

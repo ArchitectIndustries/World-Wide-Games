@@ -1,0 +1,26 @@
+const fs=require('fs'),path=require('path'),vm=require('vm'),root=path.resolve(__dirname,'..');
+const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const game=read('games/orbit-breaker/index.html'),catalog=read('js/games.js'),app=read('js/app.js'),sw=read('sw.js'),index=read('index.html'),detail=read('game.html'),manifest=JSON.parse(read('manifest.webmanifest'));
+const must=(ok,msg)=>{if(!ok)throw new Error(msg)};
+const ctx={window:{}};vm.createContext(ctx);vm.runInContext(catalog,ctx);const games=ctx.window.WWG_GAMES;
+const achievementBlock=app.slice(app.indexOf('const achievements = ['),app.indexOf('];',app.indexOf('const achievements = ['))+2),achievementIds=[...achievementBlock.matchAll(/\{id:'([^']+)'/g)].map(m=>m[1]);
+must(games.length===82,'game total mismatch '+games.length);
+must(new Set(games.map(g=>g.id)).size===82,'duplicate game id');
+must(new Set(games.flatMap(g=>g.genres)).size===129,'genre total mismatch');
+must(games.filter(g=>g.remappable).length===54,'remappable total mismatch');
+for(const g of games){must(Array.isArray(g.controls)&&g.controls.length>=3,'control metadata missing '+g.id);must(String(g.objective||g.description||'').trim().length>=30,'objective metadata missing '+g.id);must(fs.existsSync(path.join(root,g.path)),'missing game '+g.id);must(fs.existsSync(path.join(root,g.cover)),'missing cover '+g.id);must(/^\d+\.\d+(?:\.\d+)?$/.test(String(g.version||'')),'semantic version missing '+g.id)}
+must(achievementIds.length===150&&new Set(achievementIds).size===150,'achievement total mismatch '+achievementIds.length);
+const orbit=games.find(g=>g.id==='orbit-breaker');
+must(orbit&&orbit.version==='2.0'&&orbit.updated==='2026-10-05'&&orbit.featured,'Orbit Breaker 2.0 metadata missing');
+must(orbit.objective.includes('Breaker Core')&&orbit.controls.some(x=>x.includes('Pulse Burst')),'Orbit campaign objective/controls missing');
+for(const token of ['Orbit Breaker 2.0','Debris Corridor','Hunter Belt','Breaker Core','function pulseBurst()','function spawnBreakerCore()','function completeCampaign()','wwg:orbit-breaker:progress:v2','navigator.getGamepads'])must(game.includes(token),'Orbit game token missing '+token);
+const inline=[...game.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]).filter(Boolean);inline.forEach((src,i)=>{try{new Function(src)}catch(e){throw new Error('Orbit inline script '+i+' syntax: '+e.message)}});
+must(achievementIds.includes('orbit-secured')&&achievementIds.includes('pulse-breaker'),'Orbit achievements missing');
+must(app.includes("version:'v61'")&&app.includes('Orbit Breaker 2.0: Breaker Campaign'),'v61 release history missing');
+must(sw.includes("const CACHE='wwg-v61'"),'v61 cache missing');
+must(sw.includes('./covers/orbit-breaker.svg')&&sw.includes('./games/orbit-breaker/index.html'),'Orbit offline assets missing');
+must(index.includes('js/games.js?v61')&&index.includes('js/app.js?v61'),'homepage cache busters missing');
+must(detail.includes('js/games.js?v61'),'detail cache buster missing');
+must(manifest.shortcuts.some(s=>s.url==='game.html?id=orbit-breaker'),'Orbit PWA shortcut missing');
+must(fs.existsSync(path.join(root,'tests/v61_orbit_breaker.py')),'Orbit 2.0 regression missing');
+console.log(JSON.stringify({games:82,genres:129,achievements:150,remappable:54,upgrade:'orbit-breaker-2.0',cache:'wwg-v61',pwaShortcut:true}));

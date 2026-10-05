@@ -1,0 +1,13 @@
+{
+  "release": "v60",
+  "audit": "full-catalog interaction gate",
+  "executed_candidate_sha256": "324bd4a636100ca4d9f1f478a93db04e020da823feb267b5df54a6d85aadb310",
+  "games": 82,
+  "passed": 82,
+  "failed": 0,
+  "runtime_error_games": 0,
+  "missing_reference_games": 0,
+  "mobile_overflow_games": 0,
+  "invalid_visible_state_games": 0,
+  "note": "The complete per-title result set is preserved in the verified WorldWideGames_v60.zip Library candidate; this repository record is the compact release-gate result."
+}

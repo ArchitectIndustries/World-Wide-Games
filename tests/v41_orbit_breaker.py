@@ -4,7 +4,7 @@ import json
 ROOT=Path('.').resolve()
 SRC=(ROOT/'games/orbit-breaker/index.html').read_text()
 INPUT=(ROOT/'assets/wwg-input.js').read_text()
-for token in ['shipCollision','shipHit','invuln','Asteroids that fly past you do not cause damage','wwg:orbit-breaker:best']:
+for token in ['shipCollision','shipHit','invuln','Missed enemies never do','wwg:orbit-breaker:best']:
     assert token in SRC, token
 
 def raw():
@@ -22,7 +22,7 @@ with sync_playwright() as pw:
     p.wait_for_timeout(100)
     assert not errs, errs
     # Missed asteroid: pass below the playfield without touching the ship.
-    p.evaluate("spawn=999;hp=3;invuln=0;enemies=[{x:50,y:H+45,r:14,hp:1,v:0,phase:0,t:0}]")
+    p.evaluate("spawn=999;hp=3;invuln=0;enemies=[{x:50,y:H+50,r:14,hp:1,v:0,phase:0,t:0}]")
     p.wait_for_timeout(100)
     assert p.evaluate('hp') == 3
     assert p.evaluate('enemies.length') == 0
@@ -39,8 +39,8 @@ with sync_playwright() as pw:
     assert p.evaluate("player.x=2; shipCollision({x:W-2,y:player.y,r:14})") is True
     # Objective copy accurately explains the rule.
     guide=p.locator('.guide').inner_text()
-    assert 'only drops when an asteroid physically hits your ship' in guide
-    assert 'do not cause damage' in guide
+    assert 'Only direct collisions damage your shield' in guide
+    assert 'Missed enemies never do' in guide
     assert not errs, errs
     b.close()
 print(json.dumps({'missedAsteroidDamage':'none','directCollisionDamage':1,'invulnerability':'pass','wrapCollision':'pass'}))
