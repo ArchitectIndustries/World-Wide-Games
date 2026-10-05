@@ -3,7 +3,7 @@
   "title": "Command Bloom 1.1: Six-Map Integrity",
   "date": "2026-10-05",
   "owner": "Architect Industries",
-  "status": "RELEASE GATE VERIFIED — PENDING MAIN / PRODUCTION",
+  "status": "GITHUB GATE COMPLETE — PRODUCTION UNVERIFIED",
   "catalog": {
     "games": 82,
     "genres": 129,
@@ -34,17 +34,23 @@
   "github": {
     "repository": "ArchitectIndustries/World-Wide-Games",
     "mainBeforePromotion": "6e560401a99369355a2b0aa4c9dd142a8a8b5ede",
-    "baseVersion": "v62",
-    "releaseBranch": "release/v63-verified"
+    "verifiedSourceCommit": "9e12d0cea6ed9d74217c520b16c73f6d30b23bad",
+    "promotion": "SUCCESS_NON_FORCE_EXPECTED_HEAD"
   },
-  "production": {
+  "vercel": {
     "projectId": "prj_CgW1xTHIZOOe1R4RNzcByfvxantq",
     "domain": "https://worldwidegames.vercel.app",
-    "status": "PENDING MAIN PROMOTION"
+    "commitCheck": "SUCCESS",
+    "productionDeploymentId": null,
+    "productionDeploymentRequest": "BLOCKED_403_PERMISSION",
+    "deploymentList": "BLOCKED_403_PERMISSION",
+    "liveSmoke": "UNVERIFIED"
   },
   "library": {
-    "sourcePackageTarget": "/WorldWideGames/WorldWideGames_v63.zip",
-    "recordsPackageTarget": "/WorldWideGames/WorldWideGames_v63_records.zip",
-    "checksumRecordTarget": "/WorldWideGames/WorldWideGames_v63_SHA256.txt"
-  }
+    "sourcePackage": "/WorldWideGames/WorldWideGames_v63.zip",
+    "recordsPackage": "/WorldWideGames/WorldWideGames_v63_records.zip",
+    "checksumRecord": "/WorldWideGames/WorldWideGames_v63_SHA256.txt",
+    "persistence": "SUCCESS"
+  },
+  "nextAction": "Restore Vercel project visibility/write access for the existing project, resolve the exact v63 production deployment from canonical main, then run production smoke checks. Do not create a duplicate project."
 }
