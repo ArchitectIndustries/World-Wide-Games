@@ -7,7 +7,7 @@ games=json.loads(subprocess.check_output(['node','-e',node],text=True)); base=(R
 PRE="<script>Object.defineProperty(window,'localStorage',{value:(()=>{const s={};return{getItem:k=>s[k]||null,setItem:(k,v)=>s[k]=String(v),removeItem:k=>delete s[k]}})(),configurable:true});</script>"
 def doc(slug):
     js=page_js.replace("id=new URLSearchParams(location.search).get('id')",f"id='{slug}'")
-    h=base.replace('<link rel="stylesheet" href="assets/styles.css"/>','').replace('<script src="js/games.js"></script>',f'<script>{games_js}</script>').replace('<script src="js/game-page.js"></script>',f'<script>{js}</script>')
+    h=base.replace('<link rel="stylesheet" href="assets/styles.css"/>',''); h=re.sub(r'<script src="js/games\\.js(?:\\?v\\d+)?"></script>',f'<script>{games_js}</script>',h); h=h.replace('<script src="js/game-page.js"></script>',f'<script>{js}</script>')
     return h.replace('<body class="game-detail-page">','<body class="game-detail-page">'+PRE)
 with sync_playwright() as pw:
     b=pw.chromium.launch(headless=True,executable_path='/usr/bin/chromium',args=['--no-sandbox','--disable-gpu'])
