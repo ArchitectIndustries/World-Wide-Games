@@ -2,6 +2,7 @@ const fs=require('fs'),path=require('path'),root=path.resolve(__dirname,'..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const game=read('games/neon-serpent/index.html'), catalog=read('js/games.js'), app=read('js/app.js'), sw=read('sw.js'), index=read('index.html'), detail=read('game.html'), manifest=JSON.parse(read('manifest.webmanifest'));
 const must=(ok,msg)=>{if(!ok)throw new Error(msg)};
+const inline=[...game.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]).filter(Boolean); inline.forEach((src,i)=>{try{new Function(src)}catch(e){throw new Error('inline game script '+i+' syntax: '+e.message)}});
 must(game.includes('Neon Serpent 3.0')&&game.includes('Crown Coil'),'v59 title/finale missing');
 must(game.includes("hazards:8")&&game.includes('phaseDrive')&&game.includes('navigator.getGamepads'),'finale, Phase Drive, or gamepad missing');
 must(game.includes("META='wwg:neon-serpent:meta-v3'")&&game.includes('crown-coil-cleared'),'v3 persistence or telemetry missing');
