@@ -126,7 +126,7 @@ window.WWG_GAMES = [
     id: 'glasswing-polo', title: 'Glasswing Polo', tagline: 'Bank the wing. Charge the drive. Crown the circuit.',
     description: 'A fast hover-ball sport rebuilt around a three-rival Grand Circuit. Bank shots charge Wingdrive, Secondary unleashes a four-second speed-and-impact surge, three AI captains use distinct defensive, pressing, and adaptive styles, and local 2P remains available with conflict-free controls, touch play, gamepads, pause, synthesized audio, and persistent circuit records.',
     objective: 'Win first-to-three 60-second rounds against Harbor Warden, Slipstream Ace, and Mirrorwing Crown. Use bank shots to build Wingdrive, spend a full meter for a temporary surge, and defeat all three rivals to claim the Grand Circuit.',
-    genres: ['Hover Sport', 'Sports', 'Competitive', 'Physics'], added: '2026-09-30', updated: '2026-10-04', version: '2.0', featured: true, basePopularity: 480,
+    genres: ['Hover Sport', 'Sports', 'Competitive', 'Physics'], added: '2026-09-30', updated: '2026-10-04', version: '2.0', featured: false, basePopularity: 480,
     cover: 'covers/glasswing-polo.svg', path: 'games/glasswing-polo/index.html', accent: '#5eead4', remappable: true, modes: ['Grand Circuit','Solo Exhibition','Local Multiplayer'],
     scoreMeta: { unit: 'pts', direction: 'high', label: 'Circuit score' },
     controls: ['P1 uses remappable directional controls; Arrow keys and WASD work in solo modes', 'Primary / Space triggers a dash burst', 'Secondary / E activates Wingdrive at 100% charge for four seconds of extra speed and impact', 'Bank the ball off arena walls after your touch to build Wingdrive and score bank-goal bonuses', 'Grand Circuit contains three AI rivals with distinct defensive, pressing, and adaptive styles', 'Local 2P reserves Arrow keys + Enter dash + Right Shift or / Wingdrive for P2 so P1 movement no longer conflicts', 'Gamepad left stick moves, A dashes, and B activates Wingdrive; a second pad controls P2 locally', 'Touch pads support Dash and Wingdrive on mobile', 'P pauses; R restarts the current round', 'Win all three Grand Circuit rounds to claim the crown']
@@ -492,18 +492,14 @@ window.WWG_GAMES = [
   },
   {
     id: 'quiet-protocol',
-    title: 'Quiet Protocol',
-    tagline: 'Read the room. Cut the signal. Leave unseen.',
-    description: 'A compact stealth-puzzle infiltration game. Slip through vision cones, disable security relays, use short-lived signal cloaks, and extract before the facility reaches full alert.',
-    objective: 'Disable the required security relays and reach extraction without letting guard vision drive the facility to full alert.',
-    genres: ['Stealth', 'Puzzle', 'Action'],
-    added: '2026-09-30', version: '1.0',
-    featured: false,
-    basePopularity: 104,
-    cover: 'covers/quiet-protocol.svg',
-    path: 'games/quiet-protocol/index.html',
-    accent: '#5eead4', remappable: true,
-    controls: ['WASD / Arrow keys move', 'E hacks nearby relays', 'Space activates a signal cloak when charged', 'Avoid guard vision cones', 'Gamepad left stick + A/B supported']
+    title: 'Quiet Protocol: Ghostline',
+    tagline: 'Cut the relays. Break surveillance. Leave no signal.',
+    description: 'A three-mission stealth-action campaign with occluded guard vision, sweeping security cameras, investigation behavior, noise-aware sprinting, hold-to-hack relay objectives, rechargeable signal cloak, limited pulse jammers, persistent mission unlocks, touch controls, gamepad support, remappable movement, synthesized audio, and original runtime visuals.',
+    objective: 'Disable every security relay in each of three facilities, manage alert and cloak energy, disrupt nearby sensors with limited jammers, then reach extraction before the shared facility alert reaches lockdown.',
+    genres: ['Stealth', 'Action', 'Tactical', 'Infiltration'], added: '2026-09-30', updated: '2026-10-05', version: '2.0', featured: true, basePopularity: 735,
+    cover: 'covers/quiet-protocol.svg', path: 'games/quiet-protocol/index.html', accent: '#5eead4', remappable: true,
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Ghostline score' },
+    controls: ['Arrow keys or WASD always move; saved custom remaps remain valid', 'Hold Secondary / E near a relay to complete its signal hack', 'Primary / Space toggles the rechargeable signal cloak', 'Q spends a pulse jammer to disable nearby guards and cameras and reduce alert', 'Hold Shift to sprint; sprinting is faster but creates noise that nearby guards investigate', 'Guard and camera vision is blocked by walls; confirmed sightings raise the shared facility alert', 'P pauses and R restarts the current mission', 'Number keys 1-3 select unlocked missions', 'Touch movement, sprint, hack, cloak, jammer, and pause controls support mobile play', 'Gamepad left stick moves; A interacts, B toggles cloak, X jams, and Start pauses', 'Disable every relay and extract across all three facilities to complete Ghostline']
   },
   {
     id: 'forgeflow',
