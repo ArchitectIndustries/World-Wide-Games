@@ -15,6 +15,18 @@
   ],
   "shortcuts": [
     {
+      "name": "Vector Shatter",
+      "short_name": "Prism Reactor 2.0",
+      "url": "game.html?id=vector-shatter",
+      "icons": [
+        {
+          "src": "covers/vector-shatter.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
       "name": "Ironlight Breach",
       "short_name": "Retro FPS 4.0",
       "url": "game.html?id=ironlight-breach",
@@ -33,18 +45,6 @@
       "icons": [
         {
           "src": "covers/aegis-verge.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Aetherfoil Circuit",
-      "short_name": "Fencing Circuit",
-      "url": "game.html?id=aetherfoil-circuit",
-      "icons": [
-        {
-          "src": "covers/aetherfoil-circuit.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }
