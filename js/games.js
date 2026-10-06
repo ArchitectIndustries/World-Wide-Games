@@ -562,15 +562,16 @@ window.WWG_GAMES = [
     id: 'hexbound-tactics',
     title: 'Hexbound Tactics',
     tagline: 'Play the lane. Break the citadel.',
-    description: 'A compact card-battle tactics game with three contested lanes, an energy economy, a rotating hand, simultaneous combat resolution, and an AI rival that builds its own board each turn.',
+    description: 'A compact card-battle tactics game with three contested lanes, an energy economy, a rotating hand, simultaneous combat resolution, and an AI rival that builds its own board each turn. Simultaneous citadel destruction now resolves as a true stalemate instead of a false victory.',
+    objective: 'Break the rival citadel while keeping yours standing through eight turns. If both citadels fall in the same combat resolution, the match is a stalemate.',
     genres: ['Card', 'Strategy', 'Board'],
-    added: '2026-09-30', version: '1.0',
+    added: '2026-09-30', updated: '2026-10-05', version: '1.1',
     featured: false,
     basePopularity: 97,
     cover: 'covers/hexbound-tactics.svg',
     path: 'games/hexbound-tactics/index.html',
     accent: '#c4b5fd',
-    controls: ['Select a card from your hand', 'Choose a lane to deploy it', 'Spend up to 4 energy each turn', 'End Turn to resolve combat', 'Touch and mouse supported']
+    controls: ['Select a card from your hand', 'Choose a lane to deploy it', 'Spend up to 4 energy each turn', 'End Turn to resolve combat simultaneously', 'Win only if the rival citadel falls while yours remains standing; mutual destruction is a stalemate', 'Touch and mouse supported']
   },
   {
     id: 'harbor-pulse',
