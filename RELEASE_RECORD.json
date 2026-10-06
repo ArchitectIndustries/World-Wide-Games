@@ -1,10 +1,38 @@
 {
-  "version": "v69",
-  "title": "Platform 1.1: Completion Integrity",
+  "version": "v70",
+  "title": "Platform 1.2: Completion Coverage",
   "date": "2026-10-06",
   "owner": "Architect Industries",
-  "status": "RELEASE GATE VERIFIED",
-  "catalog": {"games":82,"genres":129,"achievements":152,"remappable":54},
-  "qa": {"status":"PASS","fullCatalogInteraction":"82/82","detailObjectivePages":"82/82","remappableProfiles":"54/54","localHttpPaths":"171/171"},
-  "library": {"sourcePackage":"/WorldWideGames/WorldWideGames_v69.zip","recordsPackage":"/WorldWideGames/WorldWideGames_v69_records.zip","checksumRecord":"/WorldWideGames/WorldWideGames_v69_SHA256.txt","persistenceStatus":"PERSISTED"}
+  "status": "READY FOR RELEASE TASK",
+  "catalog": {
+    "games": 82,
+    "genres": 129,
+    "achievements": 152,
+    "remappable": 54
+  },
+  "qa": {
+    "candidateIntegrity": "PASS",
+    "completionCoverage": "PASS",
+    "gameBootInteractionAudit": "82/82",
+    "controlObjectivePages": "82/82",
+    "remappableProfiles": "54/54",
+    "mobileHomepageCards": "82/82",
+    "localHttpPaths": "178/178",
+    "milestoneEvents": 124,
+    "completionEvents": 77
+  },
+  "github": {
+    "repository": "ArchitectIndustries/World-Wide-Games",
+    "canonicalMainAtBuildStart": "0fdb9a451149a77ffd02bfffcefe7771df64081d",
+    "candidateBranch": "release/v70-records",
+    "candidateCommit": "3714d0425788d3c89ccfbb8e0e279fbbb2e5337c"
+  },
+  "production": {
+    "projectId": "prj_CgW1xTHIZOOe1R4RNzcByfvxantq",
+    "domain": "https://worldwidegames.vercel.app",
+    "verified": false
+  },
+  "handoff": {
+    "ready": true
+  }
 }
