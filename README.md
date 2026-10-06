@@ -4,9 +4,9 @@ WorldWideGames is an Architect Industries browser-gaming platform focused on ori
 
 ## Current verified candidate
 
-**v66 — Pulse Archive 1.2: Clear Signal**
+**v69 — Platform 1.1: Completion Integrity**
 
-Pulse Archive now distinguishes finishing the song from successfully synchronizing it. A clear requires at least 70% final accuracy; lower-accuracy attempts display a desynchronization result and no longer emit false completion telemetry. v65 Parallax Accord majority integrity, v64 Hexbound stalemate integrity, and earlier reliability fixes remain intact.
+WorldWideGames now distinguishes raw game telemetry, achievement-backed milestones, and true game completions at the platform layer. Failure events such as system collapse, rhythm desynchronization, and race DNF remain recorded but no longer mark games cleared or inflate Daily Circuit milestone credit. Cleared discovery, catalog-clear percentage, Twenty Clears, and Catalog Master now use explicit completion semantics.
 
 ## Catalog
 

@@ -1,52 +1,10 @@
 {
-  "version": "v66",
-  "title": "Pulse Archive 1.2: Clear Signal",
+  "version": "v69",
+  "title": "Platform 1.1: Completion Integrity",
   "date": "2026-10-06",
   "owner": "Architect Industries",
-  "status": "READY FOR RELEASE TASK",
-  "catalog": {
-    "games": 82,
-    "genres": 129,
-    "achievements": 152,
-    "remappable": 54
-  },
-  "objective": {
-    "game": "pulse-archive",
-    "fromVersion": "1.1",
-    "toVersion": "1.2",
-    "summary": "Require at least 70% final accuracy for a successful archive synchronization while preserving replay and input behavior."
-  },
-  "qa": {
-    "status": "PASS",
-    "candidateIntegrity": "PASS",
-    "pulseArchive12": "PASS",
-    "parallax11": "PASS",
-    "hexbound11": "PASS",
-    "gameBoots": "82/82",
-    "fullInteractionAudit": "82/82",
-    "controlObjectivePages": "82/82",
-    "remappableProfiles": "54/54",
-    "localHttpPaths": "172/172"
-  },
-  "artifacts": {
-    "sourceSha256": "815142754f9ff1c80a36d6e1d384940f384f1329ff7e5e3c7783c03630e70e8a",
-    "recordsSha256": "4f43deb0d04bb310531c9c62eac747028dea585b611c9febff67fdc0ca0ff7ba"
-  },
-  "github": {
-    "repository": "ArchitectIndustries/World-Wide-Games",
-    "mainBeforePromotion": "1b609f6a79dff08cf59c8e842ff829e80cecb13a",
-    "baseVersion": "v64",
-    "releaseBranch": "release/v66-verified"
-  },
-  "production": {
-    "projectId": "prj_CgW1xTHIZOOe1R4RNzcByfvxantq",
-    "domain": "https://worldwidegames.vercel.app",
-    "status": "PENDING MAIN PROMOTION"
-  },
-  "library": {
-    "sourcePackageTarget": "/WorldWideGames/WorldWideGames_v66.zip",
-    "recordsPackageTarget": "/WorldWideGames/WorldWideGames_v66_records.zip",
-    "checksumRecordTarget": "/WorldWideGames/WorldWideGames_v66_SHA256.txt",
-    "persistenceStatus": "PERSISTED"
-  }
+  "status": "RELEASE GATE VERIFIED",
+  "catalog": {"games":82,"genres":129,"achievements":152,"remappable":54},
+  "qa": {"status":"PASS","fullCatalogInteraction":"82/82","detailObjectivePages":"82/82","remappableProfiles":"54/54","localHttpPaths":"171/171"},
+  "library": {"sourcePackage":"/WorldWideGames/WorldWideGames_v69.zip","recordsPackage":"/WorldWideGames/WorldWideGames_v69_records.zip","checksumRecord":"/WorldWideGames/WorldWideGames_v69_SHA256.txt","persistenceStatus":"PERSISTED"}
 }

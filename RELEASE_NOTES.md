@@ -1,5 +1,35 @@
 # WorldWideGames Release Notes
 
+## v69 — Platform 1.1: Completion Integrity — 2026-10-06
+
+- Fixes a platform-wide false-clear defect where any recorded game event, including failure telemetry, could mark a title cleared and inflate catalog-clear progress.
+- Adds a shared event-classification contract with 115 achievement-backed milestone events and 68 curated true-completion events.
+- Cleared discovery, catalog-clear percentage, Twenty Clears, and Catalog Master now require a true completion event rather than arbitrary telemetry.
+- Daily Circuit milestone credit now accepts only supported milestone events; failure telemetry remains recorded globally but earns no milestone credit.
+- Existing daily records that include `eventKeys` are normalized from the supported milestone allowlist on load, preventing stale failure events from keeping inflated milestone totals.
+- Preserves individual achievement event counters, score telemetry, input behavior, and all game-specific event transport.
+- Advances PWA/cache metadata to v69 and caches the new event-rules module.
+- Catalog remains 82 games / 129 genre tags / 152 achievements / 54 remappable releases.
+
+## v68 — Riftwake Regatta 1.1: Honest Finish — 2026-10-06
+
+- Fixes a false-completion defect where the 105-second heat timeout called the same finish path as clearing all seven gates.
+- Timeouts now emit `regatta-dnf`, report actual checkpoint progress, and submit no score, so unfinished heats cannot unlock Regatta Skipper or contaminate lower-is-better best times.
+- Legitimate completion now requires all seven gates; premature completion attempts are rejected.
+- Preserves adjusted-time scoring, rival comparison, remapped keyboard controls, gamepad/touch support, and restart behavior for valid finishes.
+- Clarifies objective/control copy around the 105-second heat limit and DNF semantics.
+- Advances PWA/cache metadata to v68 and rotates the leading install shortcut to Riftwake Regatta 1.1.
+- Catalog remains 82 games / 129 genre tags / 152 achievements / 54 remappable releases.
+
+## v67 — Solar Loom 1.1: Stable Horizon — 2026-10-06
+
+- Fixes a false-success path where a system collapsing below 25 stability still emitted `system-complete`, incorrectly satisfying the System Architect achievement condition.
+- Adds an explicit `system-collapse` failure event; only surviving all eight epochs emits `system-complete`.
+- Preserves solar-shock stability penalties across recalculation so the intended epoch hazard now has real gameplay consequences.
+- Adds keyboard access to orbital lane 6 via `0`; keys 5-9 continue to seed lanes 1-5.
+- Clarifies the objective/control copy around the 25-stability survival requirement and failed-collapse behavior.
+- Advances PWA/cache metadata to v67 and rotates the install shortcut to Solar Loom 1.1.
+
 ## v66 — Pulse Archive 1.2: Clear Signal — 2026-10-06
 
 - Fixes a false-success condition where reaching the end of Pulse Archive could report a successful synchronization even at 0% accuracy.

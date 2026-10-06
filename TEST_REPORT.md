@@ -1,17 +1,10 @@
-# WorldWideGames Test Report — v66
+# WorldWideGames Test Report — v69
 
 Date: 2026-10-06
 Owner/operator: Architect Industries
-Candidate: **v66 — Pulse Archive 1.2: Clear Signal**
-Status: **PASS — release gate independently verified.**
+Candidate: **v69 — Platform 1.1: Completion Integrity**
+Status: **PASS — RELEASE GATE VERIFIED**
 
-Release-critical validation:
-- Pulse Archive 1.2 regression — PASS: 0% and 60% fail, 70% clears, keyboard timing and 390px mobile controls pass.
-- Parallax Accord 1.1 regression — PASS: 1-1 plus tie is a deadlock; true two-district majority wins.
-- Hexbound Tactics 1.1 regression — PASS: simultaneous citadel destruction is a stalemate.
-- Catalog boot smoke — PASS, 82/82.
-- Full interaction audit — PASS, 82/82 with no tested runtime/page/missing-reference/mobile-overflow/invalid-visible-state failures.
-- Platform objective/control gate — PASS, 82/82 pages and 54/54 remappable profiles.
-- Local HTTP release paths — PASS, 172/172 HTTP 200.
+Independent verification from the persisted v69 candidate passed the dedicated completion-integrity browser regression, static event-classification checks, 82/82 detail/objective pages, 54/54 remappable profiles, 82/82 whole-catalog Chromium interaction checks, 171/171 local HTTP release paths, and the recent gameplay regression line.
 
-The temporary local HTTP server emitted isolated BrokenPipe traces only after clients closed completed responses; asserted HTTP outcomes remained 172/172.
+Browser interaction tests use real headless Chromium with self-contained documents; local-origin reachability is validated separately by the HTTP suite.

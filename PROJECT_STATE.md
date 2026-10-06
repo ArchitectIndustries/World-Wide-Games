@@ -2,22 +2,12 @@
 
 Last updated: 2026-10-06
 Owner/operator: Architect Industries
-Current verified release candidate: **v66 — Pulse Archive 1.2: Clear Signal**
+Current verified release candidate: **v69 — Platform 1.1: Completion Integrity**
 Catalog: **82 games / 129 genre tags / 152 achievements / 54 remappable releases**
-Release status: **RELEASE GATE VERIFIED — PENDING PRODUCTION**
+Release status: **RELEASE GATE VERIFIED — READY FOR PROMOTION**
 
-## Objective
+v69 separates raw telemetry, achievement-backed milestones, and true game completions. Failure events remain recorded but no longer mark games cleared or grant Daily Circuit milestone credit.
 
-Repair Pulse Archive's false-success path without expanding the catalog. Pulse Archive 1.1 could report a successful synchronization when the song ended even at 0% accuracy.
+Independent verification from the persisted candidate passed the completion-integrity regression, 82/82 full-catalog Chromium interaction checks, 82/82 detail/objective pages, 54/54 remappable profiles, 171/171 local HTTP paths, and the recent gameplay regression line.
 
-## Verification
-
-The v66 source and records archives match the supplied SHA-256 record. Focused release validation passed from the candidate source, including Pulse Archive 1.2, Parallax Accord 1.1, Hexbound Tactics 1.1, 82/82 game boots, 82/82 catalog interaction audits, 82/82 rendered objective/control pages, 54/54 remappable profiles, and 172/172 local HTTP paths.
-
-## Source continuity
-
-The release is reconciled from canonical v64 main while preserving the verified v65 Parallax Accord repair and v66 Pulse Archive repair. No unrelated source is intentionally removed.
-
-## Release boundary
-
-Fully shipped status requires canonical-main promotion, exact-version Vercel production deployment/promotion, production smoke verification, and durable release-state recording.
+Release promotion must remain non-force, preserve unrelated newer work, and use the established WorldWideGames production project.

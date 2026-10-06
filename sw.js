@@ -1,4 +1,4 @@
-const CACHE='wwg-v68';
+const CACHE='wwg-v69';
 const ASSETS=[
   "./",
   "./index.html",
@@ -8,6 +8,7 @@ const ASSETS=[
   "./assets/wwg-input.js",
   "./assets/wwg-webgl.js",
   "./js/games.js",
+  "./js/event-rules.js",
   "./js/app.js",
   "./js/game-page.js",
   "./manifest.webmanifest",
