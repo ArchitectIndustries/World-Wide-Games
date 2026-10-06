@@ -1,6 +1,6 @@
 {
-  "version": "v63",
-  "title": "Command Bloom 1.1: Six-Map Integrity",
+  "version": "v64",
+  "title": "Hexbound Tactics 1.1: True Stalemate",
   "date": "2026-10-05",
   "owner": "Architect Industries",
   "status": "RELEASE GATE VERIFIED — PENDING MAIN / PRODUCTION",
@@ -11,15 +11,15 @@
     "remappable": 54
   },
   "objective": {
-    "game": "command-bloom",
+    "game": "hexbound-tactics",
     "fromVersion": "1.0",
     "toVersion": "1.1",
-    "summary": "Require all six unique Command Bloom map clears before campaign completion and prevent duplicate-score replay of cleared maps."
+    "summary": "Mutual citadel destruction is a stalemate; false wins and inflated win records are prevented."
   },
   "qa": {
     "status": "PASS",
     "candidateIntegrity": "PASS",
-    "commandBloom11": "PASS",
+    "hexbound11": "PASS",
     "gameBoots": "82/82",
     "fullInteractionAudit": "82/82",
     "controlObjectivePages": "82/82",
@@ -33,9 +33,9 @@
   },
   "github": {
     "repository": "ArchitectIndustries/World-Wide-Games",
-    "mainBeforePromotion": "6e560401a99369355a2b0aa4c9dd142a8a8b5ede",
-    "baseVersion": "v62",
-    "releaseBranch": "release/v63-verified"
+    "mainBeforePromotion": "9e12d0cea6ed9d74217c520b16c73f6d30b23bad",
+    "baseVersion": "v63",
+    "releaseBranch": "release/v64-verified"
   },
   "production": {
     "projectId": "prj_CgW1xTHIZOOe1R4RNzcByfvxantq",
@@ -43,8 +43,9 @@
     "status": "PENDING MAIN PROMOTION"
   },
   "library": {
-    "sourcePackageTarget": "/WorldWideGames/WorldWideGames_v63.zip",
-    "recordsPackageTarget": "/WorldWideGames/WorldWideGames_v63_records.zip",
-    "checksumRecordTarget": "/WorldWideGames/WorldWideGames_v63_SHA256.txt"
+    "sourcePackageTarget": "/WorldWideGames/WorldWideGames_v64.zip",
+    "recordsPackageTarget": "/WorldWideGames/WorldWideGames_v64_records.zip",
+    "checksumRecordTarget": "/WorldWideGames/WorldWideGames_v64_SHA256.txt",
+    "persistenceStatus": "PERSISTED"
   }
 }
