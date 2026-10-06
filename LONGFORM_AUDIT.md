@@ -1,18 +1,20 @@
-# WorldWideGames Longform Audit — v63
+# WorldWideGames Longform Audit — v64
 
 Date: 2026-10-05
 Owner/operator: Architect Industries
 
 ## Production-quality focus
 
-v63 follows the public WorldWideGames development standard: player-facing correctness outranks catalog-count growth. This cycle fixes a progression-integrity defect in an existing game rather than adding another title.
+v64 applies the WorldWideGames development standard that correctness outranks catalog-count growth. No new game was added. The cycle targeted a false-win edge case in a simultaneous-resolution strategy title because outcome integrity directly affects player trust.
 
-## Command Bloom progression integrity
+## Hexbound Tactics 1.1
 
-Command Bloom is a six-map programming puzzle. The original stage selector intentionally allowed players to choose any map, but campaign state did not track which maps had actually been solved. The completion path treated clearing map 6 as finishing all six. A player could therefore choose map 6 first, solve only that map, and receive the terminal state and achievement event intended for complete campaign progression.
+Hexbound Tactics resolves both players' lane attacks in the same turn. The original terminal rule did not normalize destroyed citadels before comparing them. As a result, two destroyed citadels could be internally -1 and -2, render as 0–0, and still award the player victory because -1 > -2.
 
-The v63 implementation adds a unique-cleared-stage set, visible solved count, explicit six-map completion gate, automatic routing to another unsolved map after a clear, and lockout of cleared buttons. Open-order selection remains available for unsolved maps.
+The 1.1 rule explicitly detects `pcore <= 0 && ecore <= 0` before any winner comparison and classifies that state as a stalemate. Win persistence and telemetry stay inside the legitimate-win branch. Catalog copy now tells players the rule rather than leaving the outcome implicit.
 
-A state-space solver validates all six maps as reachable. Chromium regression reproduces the historical exploit path, verifies it no longer completes the campaign, completes all six maps, checks exactly one terminal event, exercises reset behavior, and validates the narrow mobile layout.
+## Review coverage
 
-No external libraries, art, audio, models, or network services were added. Full catalog interaction, platform-page, mobile, and HTTP regressions remain green.
+The fix was reviewed through game-design, catalog-QA, platform/discovery, input/accessibility, provenance, performance/reliability, and technology/genre lenses. No external dependencies or assets were required; keeping the deterministic rules engine dependency-light is lower risk than introducing new technology for a one-line state-classification problem.
+
+Full boot, interaction, detail/control, mobile, and HTTP regressions remain green, along with recent high-risk campaign regressions. The only unavailable evidence was a heavier origin-backed Chromium sweep blocked by execution policy; it is explicitly not counted as passing evidence.

@@ -1,4 +1,4 @@
-# WorldWideGames Catalog Audit — v63
+# WorldWideGames Catalog Audit — v64
 
 Date: 2026-10-05
 Owner/operator: Architect Industries
@@ -7,17 +7,15 @@ Owner/operator: Architect Industries
 - **129** distinct genre/tag values
 - **152** achievements
 - **54** remappable releases
-- **82/82** explicit semantic game versions
 - **82/82** game boots
-- **82/82** usable rendered objective/control pages
-- **82/82** interaction-level Chromium runs runtime-clean
-- **82/82** local asset-reference scans clean
-- **82/82** 390px game layouts free of horizontal overflow
+- **82/82** interaction-level Chromium audits runtime-clean
+- **82/82** rendered objective/control pages
+- **82/82** local-reference/mobile checks clean in the bounded catalog audit
 
-## v63 audit result
+## v64 audit result
 
-The full-catalog reliability baseline remains green after the Command Bloom fix. The bounded defect audit found a genuine campaign-integrity problem not detectable by boot-only testing: Command Bloom allowed the sixth map to be selected immediately and its original completion function equated that single clear with finishing all six programs.
+The v64 quality objective came from a rules-integrity audit rather than catalog expansion. Hexbound Tactics used simultaneous combat but its terminal comparison considered raw negative citadel values after overkill. That allowed a mutual destruction state displayed as 0–0 to be classified as a win when one internal value was numerically greater than the other.
 
-Command Bloom 1.1 now tracks six unique stage clears, requires the complete set before the terminal event, and locks already-cleared stage buttons against duplicate-score farming. Dedicated browser regression coverage demonstrates the old final-map-first exploit no longer completes the campaign.
+Hexbound Tactics 1.1 now treats any same-resolution destruction of both citadels as an explicit stalemate. Dedicated Chromium regression reproduces the historical exploit with unequal overkill, verifies no local win/telemetry inflation, and confirms legitimate win/loss/tie paths remain correct.
 
-No other reproducible catalog regression remained after the v63 gates. This is test evidence, not a claim that all future state/input combinations are mathematically bug-free.
+The completed 82-game interaction baseline remains green after the fix. This is evidence for the exercised states, not a mathematical claim that every possible future state is defect-free.

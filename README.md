@@ -4,9 +4,9 @@ WorldWideGames is an Architect Industries browser-gaming platform focused on ori
 
 ## Current verified candidate
 
-**v63 — Command Bloom 1.1: Six-Map Integrity**
+**v64 — Hexbound Tactics 1.1: True Stalemate**
 
-Command Bloom now tracks six unique stabilized maps correctly. Selecting and solving the final map early no longer falsely completes the campaign, cleared maps lock against duplicate-score farming, solved progress is visible, and dedicated browser regression proves the six-map completion contract. The v62 Emberfield Survival 2.0 and earlier reliability fixes remain intact.
+Hexbound Tactics now resolves simultaneous citadel destruction correctly. If both citadels fall during the same combat resolution, the match is a stalemate regardless of internal overkill values; it no longer awards a false player victory, increments the win counter, or emits win telemetry. The rule is also explicit in catalog objective/control text. v63 Command Bloom integrity and earlier reliability fixes remain intact.
 
 ## Catalog
 

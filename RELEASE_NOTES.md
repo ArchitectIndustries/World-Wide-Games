@@ -1,5 +1,15 @@
 # WorldWideGames Release Notes
 
+## v64 — Hexbound Tactics 1.1: True Stalemate — 2026-10-05
+
+- Fixes a false victory in Hexbound Tactics when both citadels are destroyed during the same simultaneous combat resolution with unequal overkill.
+- Mutual citadel destruction now always resolves as a stalemate; local win counters and win telemetry remain untouched for that outcome.
+- Preserves legitimate single-sided victory/defeat behavior and turn-limit ties.
+- Adds explicit objective/control text for the mutual-destruction rule plus dedicated browser regression covering outcome integrity, real card deployment, and 390px mobile use.
+- Advances PWA/cache metadata to v64 and rotates an install shortcut to Hexbound Tactics 1.1.
+- Bounded platform QA remains green at 82/82 boots, 82/82 interaction audits, 82/82 objective/control pages, 54/54 remappable profiles, and 172/172 local HTTP paths.
+- Catalog remains 82 games / 129 genre tags / 152 achievements / 54 remappable releases.
+
 ## v63 — Command Bloom 1.1: Six-Map Integrity — 2026-10-05
 
 - Fixes a false campaign-completion defect in Command Bloom: solving stage 6 alone can no longer award the six-program completion.
