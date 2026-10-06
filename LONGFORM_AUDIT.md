@@ -1,4 +1,4 @@
-# WorldWideGames Long-form / Regression Audit — v69
+# WorldWideGames Longform Audit — v70
 Date: 2026-10-06
 Owner/operator: Architect Industries
 
@@ -42,3 +42,6 @@ The v66 run deliberately prioritized a false-success defect in an existing rhyth
 Pulse Archive 1.2 separates run completion from successful synchronization. The song may end at any accuracy, but only 70% or better yields `archive-cleared`; lower results emit `archive-desynced` and display a failure state. Existing keyboard, touch, gamepad, scoring, replay, and procedural audio behavior remains intact.
 
 Regression coverage retains recent rules/progression repairs for Parallax Accord, Hexbound Tactics, Command Bloom, Emberfield Survival, Orbit Breaker, and Verdant Echoes, plus the bounded 82-title interaction baseline and local HTTP path validation.
+## v70 review summary
+
+The bounded review focused on progression semantics. Game-design rules were left unchanged; catalog QA verified success/failure distinctions; discovery and achievement-derived clear state now recognizes nine omitted wins; input/accessibility and provenance remain unchanged; Set-based classification has negligible performance cost; no new browser technology or genre expansion was justified for this correctness cycle.

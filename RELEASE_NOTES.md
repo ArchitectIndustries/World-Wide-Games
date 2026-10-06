@@ -1,5 +1,13 @@
 # WorldWideGames Release Notes
 
+## v70 — Platform 1.2: Completion Coverage — 2026-10-06
+
+- Fixes a v69 false-negative progression regression: nine legitimate finite-game success events were omitted from the explicit completion allowlist and therefore never appeared as cleared games.
+- Adds true-completion recognition for Crownline Tactics, Forgeflow, Hexbound Tactics, Lumen Relay, Pulse Archive, Rift Relay solo/duo campaigns, Skyhook Sprint, and Starweaver Drift.
+- Keeps failure, neutral end-state, and per-stage telemetry excluded from cleared-game and Daily Circuit milestone credit.
+- Advances PWA/cache metadata to v70 and adds dedicated false-negative completion regression coverage.
+- Catalog remains 82 games / 129 genre tags / 152 achievements / 54 remappable releases.
+
 ## v69 — Platform 1.1: Completion Integrity — 2026-10-06
 
 - Fixes a platform-wide false-clear defect where any recorded game event, including failure telemetry, could mark a title cleared and inflate catalog-clear progress.

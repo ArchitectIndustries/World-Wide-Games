@@ -1,4 +1,4 @@
-# WorldWideGames Catalog Audit — v69
+# WorldWideGames Catalog Audit — v70
 Date: 2026-10-06
 Owner/operator: Architect Industries
 
@@ -82,3 +82,6 @@ The v66 quality objective came from completion-integrity review rather than cata
 Pulse Archive 1.2 now requires at least 70% final accuracy for a successful synchronization. Lower-accuracy runs are explicit desynchronizations and emit failure telemetry instead of a clear event. Dedicated Chromium regression covers 0%, 60%, 70%, real keyboard timing input, and narrow mobile controls.
 
 The completed 82-game interaction baseline remains green after the fix. This is evidence for the exercised states, not a mathematical claim that every possible future state is defect-free.
+## v70 audit objective
+
+Completion Coverage repairs a platform false-negative discovered after v69: nine existing success events were legitimate finite-game completions but absent from the explicit completion contract. The audit intentionally excludes ambiguous or non-success terminal events such as Harbor Pulse `shift-complete`, Vector League `match-complete`, Echo Bazaar `market-closed`, and Gravity Foundry per-field clears. Catalog count and provenance are unchanged.

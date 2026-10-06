@@ -4,7 +4,7 @@ WorldWideGames is an Architect Industries browser-gaming platform focused on ori
 
 ## Current verified candidate
 
-**v69 — Platform 1.1: Completion Integrity**
+**v70 — Platform 1.2: Completion Coverage**
 
 WorldWideGames now distinguishes raw game telemetry, achievement-backed milestones, and true game completions at the platform layer. Failure events such as system collapse, rhythm desynchronization, and race DNF remain recorded but no longer mark games cleared or inflate Daily Circuit milestone credit. Cleared discovery, catalog-clear percentage, Twenty Clears, and Catalog Master now use explicit completion semantics.
 
