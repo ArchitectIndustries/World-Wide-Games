@@ -4,9 +4,9 @@ WorldWideGames is an Architect Industries browser-gaming platform focused on ori
 
 ## Current verified candidate
 
-**v64 — Hexbound Tactics 1.1: True Stalemate**
+**v66 — Pulse Archive 1.2: Clear Signal**
 
-Hexbound Tactics now resolves simultaneous citadel destruction correctly. If both citadels fall during the same combat resolution, the match is a stalemate regardless of internal overkill values; it no longer awards a false player victory, increments the win counter, or emits win telemetry. The rule is also explicit in catalog objective/control text. v63 Command Bloom integrity and earlier reliability fixes remain intact.
+Pulse Archive now distinguishes finishing the song from successfully synchronizing it. A clear requires at least 70% final accuracy; lower-accuracy attempts display a desynchronization result and no longer emit false completion telemetry. v65 Parallax Accord majority integrity, v64 Hexbound stalemate integrity, and earlier reliability fixes remain intact.
 
 ## Catalog
 

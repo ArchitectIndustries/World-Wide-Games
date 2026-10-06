@@ -1,20 +1,10 @@
-# WorldWideGames Longform Audit — v64
+# WorldWideGames Long-form / Regression Audit — v66
 
-Date: 2026-10-05
+Date: 2026-10-06
 Owner/operator: Architect Industries
 
-## Production-quality focus
+The v66 run deliberately prioritized a false-success defect in an existing rhythm game rather than catalog growth. Pulse Archive 1.1 treated elapsed song time as success regardless of accuracy; a zero-hit run could produce the same `archive-cleared` completion signal as skilled play.
 
-v64 applies the WorldWideGames development standard that correctness outranks catalog-count growth. No new game was added. The cycle targeted a false-win edge case in a simultaneous-resolution strategy title because outcome integrity directly affects player trust.
+Pulse Archive 1.2 separates run completion from successful synchronization. The song may end at any accuracy, but only 70% or better yields `archive-cleared`; lower results emit `archive-desynced` and display a failure state. Existing keyboard, touch, gamepad, scoring, replay, and procedural audio behavior remains intact.
 
-## Hexbound Tactics 1.1
-
-Hexbound Tactics resolves both players' lane attacks in the same turn. The original terminal rule did not normalize destroyed citadels before comparing them. As a result, two destroyed citadels could be internally -1 and -2, render as 0–0, and still award the player victory because -1 > -2.
-
-The 1.1 rule explicitly detects `pcore <= 0 && ecore <= 0` before any winner comparison and classifies that state as a stalemate. Win persistence and telemetry stay inside the legitimate-win branch. Catalog copy now tells players the rule rather than leaving the outcome implicit.
-
-## Review coverage
-
-The fix was reviewed through game-design, catalog-QA, platform/discovery, input/accessibility, provenance, performance/reliability, and technology/genre lenses. No external dependencies or assets were required; keeping the deterministic rules engine dependency-light is lower risk than introducing new technology for a one-line state-classification problem.
-
-Full boot, interaction, detail/control, mobile, and HTTP regressions remain green, along with recent high-risk campaign regressions. The only unavailable evidence was a heavier origin-backed Chromium sweep blocked by execution policy; it is explicitly not counted as passing evidence.
+Regression coverage retains recent rules/progression repairs for Parallax Accord, Hexbound Tactics, Command Bloom, Emberfield Survival, Orbit Breaker, and Verdant Echoes, plus the bounded 82-title interaction baseline and local HTTP path validation.

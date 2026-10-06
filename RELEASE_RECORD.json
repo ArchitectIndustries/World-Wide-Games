@@ -1,9 +1,9 @@
 {
-  "version": "v64",
-  "title": "Hexbound Tactics 1.1: True Stalemate",
-  "date": "2026-10-05",
+  "version": "v66",
+  "title": "Pulse Archive 1.2: Clear Signal",
+  "date": "2026-10-06",
   "owner": "Architect Industries",
-  "status": "RELEASE GATE VERIFIED — PENDING MAIN / PRODUCTION",
+  "status": "READY FOR RELEASE TASK",
   "catalog": {
     "games": 82,
     "genres": 129,
@@ -11,31 +11,32 @@
     "remappable": 54
   },
   "objective": {
-    "game": "hexbound-tactics",
-    "fromVersion": "1.0",
-    "toVersion": "1.1",
-    "summary": "Mutual citadel destruction is a stalemate; false wins and inflated win records are prevented."
+    "game": "pulse-archive",
+    "fromVersion": "1.1",
+    "toVersion": "1.2",
+    "summary": "Require at least 70% final accuracy for a successful archive synchronization while preserving replay and input behavior."
   },
   "qa": {
     "status": "PASS",
     "candidateIntegrity": "PASS",
+    "pulseArchive12": "PASS",
+    "parallax11": "PASS",
     "hexbound11": "PASS",
     "gameBoots": "82/82",
     "fullInteractionAudit": "82/82",
     "controlObjectivePages": "82/82",
     "remappableProfiles": "54/54",
-    "mobileHomepageCards": "82/82",
     "localHttpPaths": "172/172"
   },
   "artifacts": {
-    "sourceSha256": "ab73010b831e2d3935329e20ad0a3a1e69ce1e1cfcbd75c5b91b98726a04dafe",
-    "recordsSha256": "7609e2fc9e87d0bc44165d2bfe144f143067c9667c8143cad6218fc91aca62e3"
+    "sourceSha256": "815142754f9ff1c80a36d6e1d384940f384f1329ff7e5e3c7783c03630e70e8a",
+    "recordsSha256": "4f43deb0d04bb310531c9c62eac747028dea585b611c9febff67fdc0ca0ff7ba"
   },
   "github": {
     "repository": "ArchitectIndustries/World-Wide-Games",
-    "mainBeforePromotion": "9e12d0cea6ed9d74217c520b16c73f6d30b23bad",
-    "baseVersion": "v63",
-    "releaseBranch": "release/v64-verified"
+    "mainBeforePromotion": "1b609f6a79dff08cf59c8e842ff829e80cecb13a",
+    "baseVersion": "v64",
+    "releaseBranch": "release/v66-verified"
   },
   "production": {
     "projectId": "prj_CgW1xTHIZOOe1R4RNzcByfvxantq",
@@ -43,9 +44,9 @@
     "status": "PENDING MAIN PROMOTION"
   },
   "library": {
-    "sourcePackageTarget": "/WorldWideGames/WorldWideGames_v64.zip",
-    "recordsPackageTarget": "/WorldWideGames/WorldWideGames_v64_records.zip",
-    "checksumRecordTarget": "/WorldWideGames/WorldWideGames_v64_SHA256.txt",
+    "sourcePackageTarget": "/WorldWideGames/WorldWideGames_v66.zip",
+    "recordsPackageTarget": "/WorldWideGames/WorldWideGames_v66_records.zip",
+    "checksumRecordTarget": "/WorldWideGames/WorldWideGames_v66_SHA256.txt",
     "persistenceStatus": "PERSISTED"
   }
 }

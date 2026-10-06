@@ -1,6 +1,6 @@
-# WorldWideGames Catalog Audit — v64
+# WorldWideGames Catalog Audit — v66
 
-Date: 2026-10-05
+Date: 2026-10-06
 Owner/operator: Architect Industries
 
 - **82** registered games
@@ -12,10 +12,10 @@ Owner/operator: Architect Industries
 - **82/82** rendered objective/control pages
 - **82/82** local-reference/mobile checks clean in the bounded catalog audit
 
-## v64 audit result
+## v66 audit result
 
-The v64 quality objective came from a rules-integrity audit rather than catalog expansion. Hexbound Tactics used simultaneous combat but its terminal comparison considered raw negative citadel values after overkill. That allowed a mutual destruction state displayed as 0–0 to be classified as a win when one internal value was numerically greater than the other.
+The v66 quality objective came from completion-integrity review rather than catalog expansion. Pulse Archive 1.1 emitted `archive-cleared` whenever its song timer expired, including a reproduced 0%-accuracy, zero-hit run.
 
-Hexbound Tactics 1.1 now treats any same-resolution destruction of both citadels as an explicit stalemate. Dedicated Chromium regression reproduces the historical exploit with unequal overkill, verifies no local win/telemetry inflation, and confirms legitimate win/loss/tie paths remain correct.
+Pulse Archive 1.2 now requires at least 70% final accuracy for a successful synchronization. Lower-accuracy runs are explicit desynchronizations and emit failure telemetry instead of a clear event. Dedicated Chromium regression covers 0%, 60%, 70%, real keyboard timing input, and narrow mobile controls.
 
 The completed 82-game interaction baseline remains green after the fix. This is evidence for the exercised states, not a mathematical claim that every possible future state is defect-free.
