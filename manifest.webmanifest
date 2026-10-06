@@ -15,6 +15,30 @@
   ],
   "shortcuts": [
     {
+      "name": "Riftwake Regatta: Honest Finish",
+      "short_name": "Riftwake 1.1",
+      "url": "game.html?id=riftwake-regatta",
+      "icons": [
+        {
+          "src": "covers/riftwake-regatta.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Solar Loom: Stable Horizon",
+      "short_name": "Solar Loom 1.1",
+      "url": "game.html?id=solar-loom",
+      "icons": [
+        {
+          "src": "covers/solar-loom.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
       "name": "Pulse Archive: Clear Signal",
       "short_name": "Pulse Archive 1.2",
       "url": "game.html?id=pulse-archive",
@@ -33,30 +57,6 @@
       "icons": [
         {
           "src": "covers/parallax-accord.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Hexbound Tactics: True Stalemate",
-      "short_name": "Hexbound 1.1",
-      "url": "game.html?id=hexbound-tactics",
-      "icons": [
-        {
-          "src": "covers/hexbound-tactics.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Command Bloom: Six-Map Integrity",
-      "short_name": "Command Bloom 1.1",
-      "url": "game.html?id=command-bloom",
-      "icons": [
-        {
-          "src": "covers/command-bloom.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }

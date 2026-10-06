@@ -158,11 +158,12 @@ window.WWG_GAMES = [
   },
   {
     id: 'riftwake-regatta', title: 'Riftwake Regatta', tagline: 'Read the wind. Trim the sail. Beat the harbor rival.',
-    description: 'A wind-driven sailing race through seven harbor gates with sail-trim efficiency, shifting wind, rock hazards, a moving rival boat, touch controls, gamepad support, remappable steering, and lower-is-better adjusted time.',
-    genres: ['Sailing', 'Racing', 'Sports', 'Simulation'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 196,
+    description: 'A wind-driven sailing race through seven harbor gates with sail-trim efficiency, shifting wind, rock hazards, a moving rival boat, a 105-second heat limit, touch controls, gamepad support, remappable steering, and lower-is-better adjusted time.',
+    objective: 'Clear all seven harbor gates in order before the 105-second heat limit. Timing out is a DNF and never records a completion or best time; among legitimate finishes, lower adjusted time is better.',
+    genres: ['Sailing', 'Racing', 'Sports', 'Simulation'], added: '2026-09-30', updated: '2026-10-06', version: '1.1', featured: false, basePopularity: 196,
     cover: 'covers/riftwake-regatta.svg', path: 'games/riftwake-regatta/index.html', accent: '#67e8f9', remappable: true,
     scoreMeta: { unit: 'sec', direction: 'low', label: 'Regatta time' },
-    controls: ['Remappable Left / Right steers the hull', 'Remappable Up / Down adjusts sail trim', 'Primary / Space performs a quick tack', 'Gamepad left stick + A supported', 'Touch controls on mobile', 'Clear all seven gates in order; lower adjusted time is better']
+    controls: ['Remappable Left / Right steers the hull', 'Remappable Up / Down adjusts sail trim', 'Primary / Space performs a quick tack', 'Gamepad left stick + A supported', 'Touch controls on mobile', 'Clear all seven gates in order before 105 seconds; a timeout is a DNF and does not record a score', 'Among legitimate finishes, lower adjusted time is better']
   },
   {
     id: 'archive-alchemist', title: 'Archive Alchemist', tagline: 'Every failed brew is evidence.',
@@ -355,11 +356,12 @@ window.WWG_GAMES = [
   },
   {
     id: 'solar-loom', title: 'Solar Loom', tagline: 'Build a stable little universe.',
-    description: 'An experimental orbital sandbox about placing different world types, balancing gravitational mass, maximizing habitability, and shepherding a tiny solar system through eight epochs.',
-    genres: ['Sandbox', 'Experimental', 'Simulation', 'Strategy'], added: '2026-09-30', version: '1.0', featured: false, basePopularity: 121,
+    description: 'An experimental orbital sandbox about placing different world types, balancing gravitational mass, surviving solar instability, maximizing habitability, and shepherding a tiny solar system through eight epochs.',
+    objective: 'Keep system stability at or above 25 and survive all eight epochs. Orbital mass, neighboring mass differences, and solar shocks can reduce stability; a collapse is a failed system, not a completion.',
+    genres: ['Sandbox', 'Experimental', 'Simulation', 'Strategy'], added: '2026-09-30', updated: '2026-10-06', version: '1.1', featured: false, basePopularity: 121,
     cover: 'covers/solar-loom.svg', path: 'games/solar-loom/index.html', accent: '#93c5fd',
     scoreMeta: { unit: 'pts', direction: 'high', label: 'System score' },
-    controls: ['Tap or click an orbit to place the selected world', 'Buttons or keys 1-4 choose world types', 'Space advances an epoch', 'R restarts the system', 'Keep stability above 25 through eight epochs']
+    controls: ['Tap or click an orbit to place the selected world', 'Buttons or keys 1-4 choose world types', 'Keys 5-9 and 0 seed orbital lanes 1-6', 'Space advances an epoch', 'R restarts the system', 'Keep stability at or above 25 through all eight epochs; collapsed systems do not count as completions']
   },
   {
     id: 'atlas-below',
