@@ -4,9 +4,9 @@ WorldWideGames is an Architect Industries browser-gaming platform focused on ori
 
 ## Current verified candidate
 
-**v70 — Platform 1.2: Completion Coverage**
+**v72 — Harbor Pulse 1.1: Full Shift**
 
-WorldWideGames now distinguishes raw game telemetry, achievement-backed milestones, and true game completions at the platform layer. Failure events such as system collapse, rhythm desynchronization, and race DNF remain recorded but no longer mark games cleared or inflate Daily Circuit milestone credit. Cleared discovery, catalog-clear percentage, Twenty Clears, and Catalog Master now use explicit completion semantics.
+Vector League now emits explicit win/loss/draw result telemetry at the final whistle. Only a real victory marks the game cleared, grants platform milestone credit, and submits a best-score candidate; losses and draws remain observable without becoming false progression. WorldWideGames continues to keep raw telemetry, achievement-backed milestones, and true game completions distinct.
 
 ## Catalog
 

@@ -15,12 +15,24 @@
   ],
   "shortcuts": [
     {
-      "name": "Riftwake Regatta: Honest Finish",
-      "short_name": "Riftwake 1.1",
-      "url": "game.html?id=riftwake-regatta",
+      "name": "Harbor Pulse: Full Shift",
+      "short_name": "Harbor Pulse 1.1",
+      "url": "game.html?id=harbor-pulse",
       "icons": [
         {
-          "src": "covers/riftwake-regatta.svg",
+          "src": "covers/harbor-pulse.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Vector League: Decisive Whistle",
+      "short_name": "Vector League 1.2",
+      "url": "game.html?id=vector-league",
+      "icons": [
+        {
+          "src": "covers/vector-league.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }
@@ -45,18 +57,6 @@
       "icons": [
         {
           "src": "covers/pulse-archive.svg",
-          "sizes": "any",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Parallax Accord: True Majority",
-      "short_name": "Parallax Accord 1.1",
-      "url": "game.html?id=parallax-accord",
-      "icons": [
-        {
-          "src": "covers/parallax-accord.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }

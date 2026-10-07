@@ -1,3 +1,29 @@
+# WorldWideGames Catalog Audit — v72
+Date: 2026-10-06
+Owner/operator: Architect Industries
+
+- **82** registered games
+- **129** distinct genre/tag values
+- **152** achievements
+- **54** remappable releases
+- **82/82** whole-catalog Chromium interaction audit PASS
+- **82/82** rendered objective/control pages PASS
+- **54/54** remappable profiles PASS
+- **82/82** mobile homepage cards PASS
+- **178/178** local-origin/PWA paths HTTP 200
+
+## v72 audit objective
+
+Harbor Pulse 1.0 used one scored `shift-complete` event for both legitimate 90-second survival and early reputation collapse. That ambiguity meant a failed run could set the game-specific best score while the platform had to leave the event unclassified to avoid false clears. Harbor Pulse 1.1 now emits neutral compatibility telemetry plus explicit `shift-cleared` / `shift-failed` outcomes. Only `shift-cleared` is a platform milestone/completion and only successful clears can submit a score.
+
+## v71 audit objective
+
+Vector League 1.1 used `match-complete` for every terminal outcome, so v69/v70 had to leave the event unclassified to avoid false clears. That protected losses and draws but also made genuine wins impossible to recognize as cleared. Vector League 1.2 emits explicit win/loss/draw outcomes, retains neutral compatibility telemetry, and submits a score only on victory. The platform classifies only `vector-league:match-won`; `match-complete`, `match-lost`, and `match-draw` remain non-milestone/non-completion signals.
+
+No catalog, art/audio provenance, external dependency, or licensing change was introduced.
+
+---
+
 # WorldWideGames Catalog Audit — v70
 Date: 2026-10-06
 Owner/operator: Architect Industries
@@ -82,6 +108,7 @@ The v66 quality objective came from completion-integrity review rather than cata
 Pulse Archive 1.2 now requires at least 70% final accuracy for a successful synchronization. Lower-accuracy runs are explicit desynchronizations and emit failure telemetry instead of a clear event. Dedicated Chromium regression covers 0%, 60%, 70%, real keyboard timing input, and narrow mobile controls.
 
 The completed 82-game interaction baseline remains green after the fix. This is evidence for the exercised states, not a mathematical claim that every possible future state is defect-free.
+
 ## v70 audit objective
 
 Completion Coverage repairs a platform false-negative discovered after v69: nine existing success events were legitimate finite-game completions but absent from the explicit completion contract. The audit intentionally excludes ambiguous or non-success terminal events such as Harbor Pulse `shift-complete`, Vector League `match-complete`, Echo Bazaar `market-closed`, and Gravity Foundry per-field clears. Catalog count and provenance are unchanged.

@@ -1,3 +1,19 @@
+# WorldWideGames Long-form / Regression Audit — v72
+Date: 2026-10-06
+
+The v72 cycle targets a player-trust defect in Harbor Pulse rather than catalog growth. The same scored terminal signal represented both successful 90-second survival and reputation collapse, allowing failed runs to write a best score while preventing safe platform completion classification. The repair makes the game authoritative about its result: `shift-cleared` is success, `shift-failed` is failure, and neutral `shift-complete` remains unscored compatibility telemetry.
+
+Review lenses remain bounded: the published survival rule is unchanged; catalog QA reproduces and locks both endings; discovery recognizes only the clear event; pointer/touch routing and mobile layout remain intact; no art/audio/provenance change was introduced; one extra terminal event and Set key have negligible performance cost; and no new framework, asset pack, or genre technology is warranted for this correctness repair.
+Owner/operator: Architect Industries
+
+The v71 cycle prioritizes player-facing progression integrity over catalog expansion. Vector League's original terminal telemetry was outcome-ambiguous: the same event represented a win, loss, or draw. Treating that event as a completion would create false clears; excluding it entirely created a false negative for legitimate winners. The bounded repair moves result meaning into the game itself, where the actual score is authoritative, and lets the shared event-rules layer recognize only the explicit win.
+
+Review lenses stayed intentionally narrow. Game design preserves the published first-to-five/90-second sport; catalog QA verifies all three result branches plus restart; platform/discovery now recognizes legitimate wins without accepting non-wins; remapping/touch/mobile gates remain green; no art/audio or provenance changes were made; two terminal postMessage calls and one additional Set key have negligible performance impact; and no new framework, asset pack, or genre technology was justified for this correctness fix. The service worker includes the unchanged asset inventory under the v71 cache key.
+
+Historical v22 remapping and v42 static harnesses contain obsolete assumptions and fail on the pre-change baseline or historical catalog size respectively; current v71 gates provide the release evidence instead.
+
+---
+
 # WorldWideGames Longform Audit — v70
 Date: 2026-10-06
 Owner/operator: Architect Industries
@@ -42,6 +58,7 @@ The v66 run deliberately prioritized a false-success defect in an existing rhyth
 Pulse Archive 1.2 separates run completion from successful synchronization. The song may end at any accuracy, but only 70% or better yields `archive-cleared`; lower results emit `archive-desynced` and display a failure state. Existing keyboard, touch, gamepad, scoring, replay, and procedural audio behavior remains intact.
 
 Regression coverage retains recent rules/progression repairs for Parallax Accord, Hexbound Tactics, Command Bloom, Emberfield Survival, Orbit Breaker, and Verdant Echoes, plus the bounded 82-title interaction baseline and local HTTP path validation.
+
 ## v70 review summary
 
 The bounded review focused on progression semantics. Game-design rules were left unchanged; catalog QA verified success/failure distinctions; discovery and achievement-derived clear state now recognizes nine omitted wins; input/accessibility and provenance remain unchanged; Set-based classification has negligible performance cost; no new browser technology or genre expansion was justified for this correctness cycle.

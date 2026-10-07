@@ -580,15 +580,17 @@ window.WWG_GAMES = [
     id: 'harbor-pulse',
     title: 'Harbor Pulse',
     tagline: 'Route the fleet. Protect the harbor.',
-    description: 'A real-time harbor-management simulation. Assign color-coded arrivals to matching berths, prevent collisions, keep ships from abandoning the harbor, and build the highest 90-second credit total.',
+    description: 'A real-time harbor-management simulation. Assign color-coded arrivals to matching berths, prevent collisions, keep ships from abandoning the harbor, and survive the full 90-second shift while building the highest cleared-shift credit total.',
+    objective: 'Survive the full 90-second shift with at least 1 reputation remaining. Route ships to matching berths for credits; reaching zero reputation closes the harbor and the run does not count as cleared.',
     genres: ['Simulation', 'Management', 'Arcade'],
-    added: '2026-09-30', version: '1.0',
+    added: '2026-09-30', updated: '2026-10-06', version: '1.1',
     featured: false,
     basePopularity: 96,
     cover: 'covers/harbor-pulse.svg',
     path: 'games/harbor-pulse/index.html',
     accent: '#22d3ee',
-    controls: ['Tap or click a ship to select it', 'Tap its matching colored berth to route it', 'Avoid collisions and abandoned arrivals', 'Protect your reputation for 90 seconds']
+    scoreMeta: { unit: 'pts', direction: 'high', label: 'Harbor credits' },
+    controls: ['Tap or click a ship to select it', 'Tap its matching colored berth to route it', 'Avoid collisions, wrong berths, and abandoned arrivals because each costs reputation', 'Keep at least 1 reputation through the full 90-second shift; only a cleared shift records a best score and marks Harbor Pulse cleared', 'Tap the harbor after a result or use Restart to begin a fresh shift']
   },
   {
     id: 'rift-relay',
@@ -614,7 +616,7 @@ window.WWG_GAMES = [
     description: 'A momentum platformer built around jumps and a quick-release grappling hook. Chain swings between rooftop anchors, collect skyline stars, and race for a faster finish with safe ground-anchored checkpoints.',
     objective: 'Reach the far-right skyline finish as quickly as possible; collect up to nine stars for bonus score and use hooks to cross the voids.',
     genres: ['Platformer', 'Action', 'Speedrun'],
-    added: '2026-09-29', updated: '2026-10-02', version: '1.1',
+    added: '2026-09-29', updated: '2026-10-06', version: '1.2',
     featured: false,
     basePopularity: 95,
     cover: 'covers/skyhook-sprint.svg',
@@ -684,13 +686,13 @@ window.WWG_GAMES = [
     description: 'A fast one-on-one neon arena sport against an AI rival. Chase, bump, angle your shots, and score through the opposing gate before the clock expires; the final whistle now freezes play immediately.',
     objective: 'Outscore the AI before 90 seconds expire, or become the first side to reach five goals.',
     genres: ['Sports', 'Competitive', 'Arcade'],
-    added: '2026-09-29', updated: '2026-10-02', version: '1.1',
+    added: '2026-09-29', updated: '2026-10-06', version: '1.2',
     featured: false,
     basePopularity: 90,
     cover: 'covers/vector-league.svg',
     path: 'games/vector-league/index.html',
     remappable: true, accent: '#22d3ee',
-    controls: ['Remappable directions move', 'Space kicks when near the ball', 'Aim vertical shot angle while moving up/down', 'First to 5 or leader at 90 seconds wins', 'Gamepad left stick + A supported', 'Touch controls on mobile']
+    controls: ['Remappable directions move', 'Space kicks when near the ball', 'Aim vertical shot angle while moving up/down', 'First to 5 or leader at 90 seconds wins', 'Only a victory marks the match cleared; draws and losses remain replayable results', 'Gamepad left stick + A supported', 'Touch controls on mobile']
   },
   {
     id: 'orbit-breaker',

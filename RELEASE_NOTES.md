@@ -1,5 +1,25 @@
 # WorldWideGames Release Notes
 
+## v72 — Harbor Pulse 1.1: Full Shift — 2026-10-06
+
+- Fixes Harbor Pulse result ambiguity: reputation collapse and legitimate 90-second survival no longer share the same scored terminal event.
+- Adds explicit `shift-cleared` and `shift-failed` outcomes while retaining neutral, unscored `shift-complete` compatibility telemetry.
+- Only surviving the full 90-second shift with reputation remaining can mark Harbor Pulse cleared, earn Daily Circuit milestone credit, or submit a local best score.
+- Failed shifts no longer update `wwg:harbor-best` or enter platform score history.
+- Clarifies the objective/control copy and adds explicit Harbor score metadata.
+- Dedicated Chromium regression, 82/82 whole-catalog interaction audit, 82/82 objective/control pages, 54/54 remappable profiles, 82/82 mobile homepage cards, and 178/178 local-origin paths are green.
+- Catalog remains 82 games / 129 genre tags / 152 achievements / 54 remappable releases.
+- Build persistence note: the initial verified v72 package reached `/WorldWideGames`; a records-only final refresh could not overwrite those copies because the Library bridge returned `container_session_unavailable`, so the exact final handoff archives remain attached to this run for Release & Deploy verification.
+
+## v71 — Vector League 1.2: Decisive Whistle — 2026-10-06
+
+- Replaces Vector League's ambiguous all-outcome terminal signal with explicit `match-won`, `match-lost`, and `match-draw` result telemetry while retaining neutral `match-complete` compatibility telemetry.
+- Only `match-won` counts as a WorldWideGames milestone/true completion; losses and draws cannot mark the game cleared or inflate Daily Circuit milestone progress.
+- Only victories submit a numeric Vector League score, preventing losing/drawn runs from entering the local best-score channel.
+- Preserves first-to-five/90-second rules, final-whistle freeze behavior, restart, remapped keyboard, gamepad, and touch play.
+- Dedicated Chromium outcome regression, 82/82 catalog interaction audit, 82/82 objective/control pages, 54/54 remappable profiles, 82/82 mobile homepage cards, 178/178 local-origin paths, and the recent integrity regression line are green.
+- Catalog remains 82 games / 129 genre tags / 152 achievements / 54 remappable releases.
+
 ## v70 — Platform 1.2: Completion Coverage — 2026-10-06
 
 - Fixes a v69 false-negative progression regression: nine legitimate finite-game success events were omitted from the explicit completion allowlist and therefore never appeared as cleared games.
@@ -38,20 +58,26 @@
 - Clarifies the objective/control copy around the 25-stability survival requirement and failed-collapse behavior.
 - Advances PWA/cache metadata to v67 and rotates the install shortcut to Solar Loom 1.1.
 
+
 ## v66 — Pulse Archive 1.2: Clear Signal — 2026-10-06
 
-- Fixes a false-success condition where reaching the end of Pulse Archive could report a successful synchronization even at 0% accuracy.
-- Successful synchronization now requires at least 70% final accuracy.
-- Lower-accuracy runs display SIGNAL DESYNCHRONIZED and emit failure telemetry instead of archive-cleared.
-- Preserves keyboard, touch, gamepad, scoring, replay behavior, and procedural Web Audio.
-- Bounded release QA remains green at 82/82 boots, 82/82 interaction audits, 82/82 objective/control pages, 54/54 remappable profiles, and 172/172 local HTTP paths.
+- Fixes a false-success path where Pulse Archive emitted `archive-cleared` and displayed a synchronized result even after a zero-hit, 0%-accuracy run.
+- Requires at least 70% final accuracy for a legitimate archive clear; lower results display `SIGNAL DESYNCHRONIZED` and emit `archive-desynced` instead.
+- Preserves keyboard, touch, gamepad, scoring, replay, and procedural audio behavior, while adding explicit success criteria to the catalog objective/controls.
+- Adds dedicated Chromium regression for 0%, 60%, 70%, real keyboard timing input, mobile containment, and completion telemetry.
+- Advances PWA/cache metadata to v66 and rotates the leading install shortcut to Pulse Archive 1.2.
+- Bounded platform QA remains green at 82/82 boots, 82/82 interaction audits, 82/82 objective/control pages, 54/54 remappable profiles, and 172/172 local HTTP paths.
+- Catalog remains 82 games / 129 genre tags / 152 achievements / 54 remappable releases.
 
 ## v65 — Parallax Accord 1.1: True Majority — 2026-10-06
 
-- Enforces the published two-of-three district majority rule exactly.
-- A 1-1 split with one tied district is now a deadlock regardless of aggregate power.
-- Legitimate two-district wins still advance even when the rival has greater total power.
-- Prevents deadlocks from unlocking progression or emitting victory telemetry.
+- Fixes a false campaign victory in Parallax Accord when each side won one district, the third district tied, and aggregate player power happened to be higher.
+- Enforces the published rule exactly: a player must win at least two of three districts after round six to defeat a delegation.
+- A 1-1 split with one tied district is now an explicit **Accord deadlock**; aggregate power cannot override district majority.
+- Deadlocks no longer unlock the next delegation or emit `match-complete`; legitimate two-district wins still advance even when aggregate power is lower.
+- Adds explicit rules copy plus dedicated Chromium regression for deadlock, majority win/loss, keyboard commit flow, telemetry/progression protection, and 390px mobile use.
+- Advances PWA/cache metadata to v65 and rotates an install shortcut to Parallax Accord 1.1.
+- Catalog remains 82 games / 129 genre tags / 152 achievements / 54 remappable releases.
 
 ## v64 — Hexbound Tactics 1.1: True Stalemate — 2026-10-05
 
@@ -65,28 +91,42 @@
 
 ## v63 — Command Bloom 1.1: Six-Map Integrity — 2026-10-05
 
-- Fixes a false campaign-completion defect in Command Bloom: solving stage 6 alone can no longer award the six-program completion.
-- Tracks six unique stabilized maps, displays solved progress, preserves free selection among unsolved maps, and locks cleared maps against duplicate-score farming.
-- Adds dedicated solvability and browser regression coverage, including final-map-first exploit prevention, one-event completion, reset behavior, and 390px layout.
-- Full release gate remains green at 82/82 boots, 82/82 interaction checks, 82/82 objective/control pages, 54/54 remappable profiles, and 172/172 local HTTP paths.
-- Catalog remains 82 games / 129 genre tags / 152 achievements / 54 remappable releases.
+- Fixed a real **Command Bloom** campaign-progression defect: selecting and solving stage 6 first could previously trigger the “All six programs stabilized” terminal state without clearing stages 1–5.
+- Added unique six-stage completion tracking and a visible **Solved X/6** HUD counter.
+- Preserved free selection among unsolved maps while requiring all six unique clears before `program-complete` can fire.
+- Cleared map buttons now lock, preventing duplicate-score farming through repeated solved-stage play.
+- Added explicit objective/control metadata and upgraded Command Bloom **1.0 → 1.1**.
+- Added `tests/v63_command_bloom.py`, which reproduces the historical exploit path, verifies any-order six-map completion, validates all six maps are path-solvable, checks single-event completion/reset behavior, and verifies 390px mobile layout.
+- Added `tests/v63_static.js` to enforce catalog totals, Command Bloom 1.1 metadata/source wiring, PWA/cache versioning, and release-record artifact filenames.
+- Corrected release-record package targets so the current record points to **v63** artifacts rather than stale prior-version filenames.
+- Full regression remains green: **82/82 interaction audit**, **82/82 smoke boots**, **82/82 rendered objective/control pages**, **54/54 remappable profiles**, and **172/172 local HTTP paths**.
+- Advanced PWA/cache metadata to **v63** and promoted Command Bloom 1.1 to the first install shortcut.
+- **Build handoff:** READY FOR RELEASE TASK. Canonical GitHub `main` and production remain unchanged by this Build & QA task. Library upload-back was attempted twice but is currently blocked by `container_session_expired`; final artifacts are retained for the release handoff.
+
 
 ## v62 — Emberfield Survival 2.0: Pyre Crown — 2026-10-05
 
-- Emberfield Survival advances from 1.0 to 2.0 with Ash Verge, Cinderstorm, and Pyre Crown campaign phases.
-- Adds Drifters, armored Brutes, ranged Wraiths, enemy projectiles, healing salvage, six build upgrades, a chargeable Ember Core, and Nova Burst.
-- Adds two Cinder Warden checkpoints and an 850-HP Pyre Regent finale with durable boss damage across animation frames.
-- Adds v2 persistent records, remapped keyboard/touch/gamepad play, campaign telemetry, and Pyre Crown / Nova Born achievements.
-- Catalog remains 82 games / 129 genre tags and advances to 152 achievements / 54 remappable releases.
-- Independent release QA passed 82/82 boots, 82/82 interaction checks, 82/82 rendered objective/control pages, 54/54 remappable profiles, and 172/172 local HTTP paths.
+- Upgraded **Emberfield Survival 1.0 → 2.0** into a three-phase survival campaign: Ash Verge, Cinderstorm, and Pyre Crown.
+- Added Drifters, armored Brutes, ranged Wraiths, enemy projectiles, healing salvage, six build upgrades, and escalating encounter pressure.
+- Added a chargeable **0–100 Ember Core** and player-triggered **Nova Burst** on remappable Secondary/E, gamepad B, and touch.
+- Added two Cinder Warden encounters and an **850-HP Pyre Regent** finale with persistent boss damage.
+- Added v2 persistent best/clear/highest-level/Nova-use records, campaign telemetry, pause/restart, synthesized feedback, and responsive touch/gamepad play.
+- Added **Pyre Crown** and **Nova Born** achievements, raising the platform to **152 achievements**.
+- Reran the catalog reliability baseline: **82/82 interaction audit**, **82/82 smoke boots**, **82/82 rendered objective/control pages**, **54/54 remappable profiles**, and **172/172 local HTTP paths** pass.
+- Updated PWA/cache metadata to v62 and rotated the first install shortcut to Emberfield Survival 2.0.
+
 
 ## v61 — Orbit Breaker 2.0: Breaker Campaign — 2026-10-05
 
-- Orbit Breaker advances from 1.1 to 2.0 with Debris Corridor, Hunter Belt, and Breaker Core sectors.
-- Adds armored asteroids, hunter drones, enemy bolts, shield salvage, a chargeable Reactor, Pulse Burst, and a moving 24-HP Breaker Core finale.
-- Preserves the trust-critical rule that missed threats never damage shield; only direct collisions or hostile projectiles do.
-- Adds persistent campaign records plus Orbit Secured and Pulse Breaker achievements.
-- Full-catalog reliability regression remained green after the upgrade.
+- Upgraded **Orbit Breaker 1.1 → 2.0** into a three-sector campaign: Debris Corridor, Hunter Belt, and Breaker Core.
+- Added small and three-hit armored asteroids, two-hit hunter drones with projectile fire, shield-cell salvage, sector progression, and a moving **24-HP Breaker Core** finale.
+- Added a chargeable **0–100 Reactor** and player-triggered **Pulse Burst** on remappable Secondary/E, gamepad B, and touch. Pulse clears nearby threats and heavily damages the final Core.
+- Preserved and revalidated the trust-critical collision rule: missed enemies leaving the playfield do **not** damage shield; only direct collisions or enemy bolts can.
+- Added persistent v2 campaign records with legacy best-score migration, campaign clears, unlock state, score telemetry, pause/restart, responsive touch controls, gamepad support, and synthesized feedback honoring platform audio preferences.
+- Added **Orbit Secured** and **Pulse Breaker** achievements, bringing the platform to **150 achievements**.
+- Added a dedicated Orbit 2.0 regression covering migration, collision safety, progression, salvage, drones, Pulse Burst, persistent Core damage, campaign completion, remapping, pause/restart, and mobile layout.
+- Reran the completed catalog reliability baseline: **82/82** interaction-level browser audit, **82/82** smoke boots, **82/82** rendered objective/control pages, **54/54** remappable profiles, and **172/172** local HTTP release paths pass.
+- Updated PWA/cache metadata to v61 and added Orbit Breaker 2.0 to PWA shortcuts.
 
 ## v60 — Catalog Reliability Audit — 2026-10-05
 
@@ -99,17 +139,18 @@
 - Catalog remains **82 games / 129 genre tags / 148 achievements / 54 remappable releases**.
 - **Build handoff:** READY FOR RELEASE TASK. Canonical GitHub `main` and production remain unchanged by this Build & QA task.
 
-
 ## v59 — Neon Serpent 3.0: Crown Coil — 2026-10-05
 
-- Upgraded **Neon Serpent** into a five-contract campaign: Classic Coil, Drone Run, Relay Rush, Gridfall, and Crown Coil.
-- Added deterministic seeded layouts, escalating hunter drones, paired relay gates, combo scoring, advanced-contract gold sparks, and Crown hazards.
-- Added **Phase Drive**, v2→v3 save migration, synthesized audio, remapped keyboard/touch/gamepad support, telemetry, pause/restart, and mobile support.
-- Hardened spawn allocation so food, gold, drones, relay endpoints, hazards, and the starting snake cannot overlap initially; Classic Coil excludes the later-contract gold bonus.
-- Added **Crown Coil** and **Phase Architect**, raising the platform to **148 achievements**.
-- Advanced PWA/cache integration to v59.
-- Release QA passed: 82/82 game boots, 82/82 isolated runtime loads, 82/82 rendered objective/control pages, 54/54 remappable profiles, and 172/172 HTTP paths.
-
+- Upgraded **Neon Serpent** into a five-contract snake campaign: Classic Coil, Drone Run, Relay Rush, Gridfall, and Crown Coil.
+- Added deterministic seeded layouts, escalating hunter drones, paired relay gates, combo scoring, gold sparks in advanced contracts, and eight Crown hazards in the finale.
+- Added **Phase Drive**, a rechargeable collision-protection routing mechanic with keyboard remap, touch, and gamepad support.
+- Added v2→v3 local-save migration while preserving legacy unlock/best-score mirrors.
+- Added synthesized audio feedback, seed/length/phase HUD data, pause/restart controls, mobile layout support, and event telemetry.
+- Added **Crown Coil** and **Phase Architect** achievements, raising the platform to **148 achievements**.
+- Hardened initial placement so food, gold, drones, relay endpoints, hazards, and the starting snake do not overlap; Classic Coil no longer spawns the later-contract gold bonus.
+- Advanced the PWA cache to `wwg-v59`, rotated the first install shortcut to Neon Serpent, and advanced homepage/detail cache-busters to v59.
+- QA passed: 82/82 game boots, 82/82 isolated runtime loads, 82/82 rendered detail/objective/control pages, 54/54 remappable profiles, 172/172 HTTP paths, and all selected flagship regressions.
+- **Build handoff:** READY FOR RELEASE TASK. This Build & QA pass does not update canonical `main` or production.
 
 ## v58 — Quiet Protocol 2.0: Ghostline — 2026-10-05
 
@@ -154,4 +195,3 @@ Verified v57 source commit: `2ad2ef9d7eb04334afe21c4e165a02816652672f` on `relea
 ### Release gate status
 
 v56 is verified and staged but not fully shipped. The complete lineage is preserved on recovery branch `release/v56-staged` at `425a6d4011c668284029e2b76dc783594841c464`. The required non-force canonical `main` promotion remains blocked before acceptance, so Vercel production remains v55; no force update or duplicate Vercel project was attempted. The v56 source and records archives are persisted in `/WorldWideGames`.
-

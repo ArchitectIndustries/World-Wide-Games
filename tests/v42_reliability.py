@@ -53,8 +53,9 @@ with sync_playwright() as pw:
     p.wait_for_timeout(80)
     state=p.evaluate("()=>({events:window.__events,state:eval('({ys,as,over})')})")
     assert state['state']=={'ys':4,'as':0,'over':True},state
-    assert len(state['events'])==1 and state['events'][0]['event']=='match-complete',state
-    assert state['events'][0]['score']==2800,state
+    assert [e['event'] for e in state['events']]==['match-complete','match-won'],state
+    assert 'score' not in state['events'][0] and state['events'][0].get('meta',{}).get('outcome')=='match-won',state
+    assert state['events'][1]['score']==2800 and state['events'][1].get('meta',{}).get('outcome')=='match-won',state
     assert not errs,errs
     p.close()
 

@@ -1,4 +1,4 @@
-const CACHE='wwg-v70';
+const CACHE='wwg-v72';
 const ASSETS=[
   "./",
   "./index.html",
