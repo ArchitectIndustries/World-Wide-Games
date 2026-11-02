@@ -1,3 +1,4 @@
-# Bounded specialist delegation; parent session retains approval and sandbox controls.
-[agents]
-max_concurrent_threads_per_session = 3
+# Project-scoped Codex configuration. Loaded only when the local repository is trusted.
+# Actual multi-agent execution requires a compatible Codex session/runtime.
+[features]
+multi_agent = true
