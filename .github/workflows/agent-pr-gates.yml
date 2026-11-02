@@ -1,0 +1,31 @@
+name: Agent PR source gates
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: agent-source-gates-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  source-gates:
+    name: Repository source and specialist configuration
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout pull request
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Node 22 for dependency-free validation
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate specialist definitions and coordination contract
+        run: node tools/agent-readiness.mjs
+      - name: Static platform structure check (not browser gameplay QA)
+        run: node -e "const f=require('fs'); for(const p of ['index.html','games','DEVELOPMENT_STANDARDS.md']) if(!f.existsSync(p)) process.exitCode=1"
+
+# These CI checks do not establish physical-device gameplay, Unreal compilation,
+# engine rendering, production readiness, or authorization to deploy.
