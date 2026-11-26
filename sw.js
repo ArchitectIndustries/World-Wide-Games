@@ -1,4 +1,4 @@
-const CACHE='wwg-v2026112601';
+const CACHE='wwg-v2026112602';
 const OWNED_CACHE=/^wwg-v[0-9]+$/;
 const ASSETS=[
   "./assets/wwg-campaign.js",
@@ -214,7 +214,7 @@ const ASSETS=[
   "./games/tabletop-commons/game.js",
   "./games/tabletop-commons/index.html",
   "./games/tabletop-commons/style.css",
-  "./js/games.js?v2026112601",
+  "./js/games.js?v2026112602",
   "./js/event-rules.js?v2026112601",
   "./js/app.js?v72",
   "./js/game-page.js?v72"
