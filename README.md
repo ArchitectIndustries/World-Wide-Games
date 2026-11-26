@@ -2,24 +2,33 @@
 
 WorldWideGames is an Architect Industries browser-gaming platform focused on original, polished, no-install games across a broad range of genres.
 
-## Current verified candidate
+## Current source update
 
-**v72 — Harbor Pulse 1.1: Full Shift**
+**Arcade Nights — six original additions**
 
-Vector League now emits explicit win/loss/draw result telemetry at the final whistle. Only a real victory marks the game cleared, grants platform milestone credit, and submits a best-score candidate; losses and draws remain observable without becoming false progression. WorldWideGames continues to keep raw telemetry, achievement-backed milestones, and true game completions distinct.
+Aurora Hockey, Skyline Hoops, Lightline Circuit, Orchard Slice, Mosaic Memory, and Tabletop Commons extend the existing catalog. Tabletop Commons includes Four in a Row, Noughts & Crosses, English Checkers, and Domino Draw.
 
-## Catalog
+The source catalog contains **88 games: 82 existing entries plus six additions**. The existing catalog and legacy game files remain intact. The new games provide original covers, objectives, keyboard/pointer controls, replay, browser-local records, and earned-result event handling.
 
-- 82 playable browser games
-- 129 genre/tag values
-- 152 achievements
-- 54 remappable releases
-- Responsive homepage, discovery, favorites, ratings, local stats, PWA/offline support, controller/touch support where appropriate
+This source update and production publication are tracked separately. The existing WorldWideGames site is live; the additions require a verified deployment to that same project. See [the current integration record](docs/arcade-live-update-2026-11-26.md) for exact source, tests, and deployment observations.
+
+## Catalog and platform
+
+- 88 source catalog entries
+- Responsive homepage, discovery, categories, favorites, ratings, and local stats
+- PWA/offline support and controller/touch support where appropriate
+- Arcade Nights discovery shelf and six original game covers
 
 ## Development and release quality
 
-See `DEVELOPMENT_STANDARDS.md` for the public WorldWideGames development, QA, and release-quality contract.
+See `DEVELOPMENT_STANDARDS.md` for the development, QA, and release-quality contract. The dated v72 project/test/release records describe the prior base; the current arcade record above documents this additive change.
+
+Run the portable expansion tests with:
+
+```sh
+node --test tests/arcade-expansion/*.cjs tests/arcade-expansion/*.mjs
+```
 
 ## Ownership
 
-WorldWideGames is owned and operated by Architect Industries.
+WorldWideGames is owned and operated by **Architect Industries**.
