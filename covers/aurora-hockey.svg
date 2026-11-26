@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="title desc">
+<title id="title">Aurora Hockey</title><desc id="desc">A polished cyan striker sends a luminous puck across a dark aurora-lit hockey rink toward a coral rival.</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#17384a"/><stop offset=".5" stop-color="#071523"/><stop offset="1" stop-color="#18293e"/></linearGradient><radialGradient id="glow"><stop stop-color="#6df4e4" stop-opacity=".24"/><stop offset="1" stop-color="#6df4e4" stop-opacity="0"/></radialGradient><linearGradient id="cyan" x2=".4" y2="1"><stop stop-color="#c2fff3"/><stop offset=".3" stop-color="#6df4e4"/><stop offset="1" stop-color="#087e89"/></linearGradient><linearGradient id="coral" x2=".4" y2="1"><stop stop-color="#ffd2bd"/><stop offset=".4" stop-color="#ff8b87"/><stop offset="1" stop-color="#a84661"/></linearGradient><pattern id="air" width="23" height="23" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1" fill="#a6e4e9" opacity=".14"/></pattern><filter id="light"><feGaussianBlur stdDeviation="8"/></filter></defs>
+<path fill="url(#bg)" d="M0 0h960v600H0z"/><ellipse cx="705" cy="430" rx="400" ry="330" fill="url(#glow)"/>
+<path d="M410-70 1260 210 730 760-120 480Z" fill="#0b2638" stroke="#3a6474" stroke-width="18"/>
+<path d="M410-70 1260 210 730 760-120 480Z" fill="url(#air)" stroke="#83d5db" stroke-width="3"/>
+<path d="m180 250 849 277" stroke="#72c7d2" opacity=".3" stroke-width="3" stroke-dasharray="16 18"/>
+<ellipse cx="580" cy="380" rx="120" ry="68" transform="rotate(18 580 380)" stroke="#9ad7dd" fill="none" opacity=".24" stroke-width="3"/>
+<path d="M-40 406Q260 181 559 382T1053 240M-10 457Q330 269 579 412T1078 325" fill="none" stroke="#80efd4" stroke-width="30" opacity=".06"/>
+<path d="m890 41-218 227" stroke="#ff8b87" stroke-width="7" opacity=".8"/>
+<path d="m161 478 420 139" stroke="#6df4e4" stroke-width="7" opacity=".9"/>
+<ellipse cx="477" cy="456" rx="90" ry="47" fill="#6df4e4" opacity=".3" filter="url(#light)"/>
+<ellipse cx="477" cy="458" rx="78" ry="47" fill="#061420"/>
+<ellipse cx="477" cy="442" rx="75" ry="46" fill="url(#cyan)" stroke="#b0fff2" stroke-width="3"/>
+<ellipse cx="477" cy="442" rx="57" ry="34" fill="none" stroke="#124d64" stroke-width="4"/>
+<path d="M451 435v-30q26-24 52 0v30q-26 22-52 0" fill="url(#cyan)" stroke="#ccfff4" stroke-opacity=".4" stroke-width="2"/>
+<ellipse cx="477" cy="405" rx="26" ry="16" fill="#a0ffed"/>
+<ellipse cx="793" cy="197" rx="57" ry="35" fill="#051322"/><ellipse cx="793" cy="184" rx="55" ry="34" fill="url(#coral)" stroke="#ffc6bd" stroke-width="2"/><ellipse cx="793" cy="184" rx="42" ry="25" fill="none" stroke="#923a51" stroke-width="3"/><path d="M774 181v-24q19-16 38 0v24q-19 16-38 0" fill="url(#coral)"/><ellipse cx="793" cy="157" rx="19" ry="11" fill="#ffd5c7"/>
+<path d="m554 393 107-94" stroke="#e9fcff" opacity=".12" stroke-width="24" stroke-linecap="round"/><path d="m583 369 78-70" stroke="#e9fcff" opacity=".2" stroke-width="17" stroke-linecap="round"/><ellipse cx="669" cy="290" rx="26" ry="16" fill="#dfffff" filter="url(#light)"/><ellipse cx="669" cy="290" rx="24" ry="15" fill="#edfaff" stroke="#c4f7ff" stroke-width="2"/>
+<rect x="0" y="0" width="960" height="600" fill="#07111e" opacity=".12"/>
+<text x="50" y="64" fill="#6df4e4" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="700" letter-spacing="4">WORLDWIDEGAMES</text>
+<text x="47" y="146" fill="#f1fbff" font-family="Arial,Helvetica,sans-serif" font-size="68" font-weight="800" letter-spacing="-2">AURORA</text>
+<text x="49" y="201" fill="#9ddadf" font-family="Arial,Helvetica,sans-serif" font-size="46" font-weight="400" letter-spacing="9">HOCKEY</text>
+<text x="52" y="248" fill="#b2cad8" font-family="Arial,Helvetica,sans-serif" font-size="19">OWN THE ANGLES.</text>
+<rect x="49" y="533" width="190" height="31" rx="15" fill="#081925" stroke="#72adbd" stroke-opacity=".6"/>
+<text x="144" y="554" text-anchor="middle" fill="#d1edf0" font-family="Arial,Helvetica,sans-serif" font-size="14" letter-spacing="2">SOLO · LOCAL 2P</text>
+</svg>

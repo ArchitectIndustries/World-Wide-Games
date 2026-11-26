@@ -1,4 +1,5 @@
-const CACHE='wwg-v72';
+const CACHE='wwg-v2026112503';
+const OWNED_CACHE=/^wwg-v[0-9]+$/;
 const ASSETS=[
   "./",
   "./index.html",
@@ -160,8 +161,6 @@ const ASSETS=[
   "./games/hexbound-tactics/index.html",
   "./covers/harbor-pulse.svg",
   "./games/harbor-pulse/index.html",
-  "./covers/rift-relay.svg",
-  "./games/rift-relay/index.html",
   "./covers/skyhook-sprint.svg",
   "./games/skyhook-sprint/index.html",
   "./covers/neon-stack.svg",
@@ -177,10 +176,46 @@ const ASSETS=[
   "./covers/orbit-breaker.svg",
   "./games/orbit-breaker/index.html",
   "./covers/rune-depths.svg",
-  "./games/rune-depths/index.html"
+  "./games/rune-depths/index.html",
+  "./js/arcade-expansion.js",
+  "./js/arcade-expansion.js?v2026112503",
+  "./assets/arcade-commons.js",
+  "./assets/arcade-commons.css",
+  "./covers/aurora-hockey.svg",
+  "./games/aurora-hockey/engine.js",
+  "./games/aurora-hockey/game.js",
+  "./games/aurora-hockey/index.html",
+  "./games/aurora-hockey/style.css",
+  "./covers/skyline-hoops.svg",
+  "./games/skyline-hoops/game.js",
+  "./games/skyline-hoops/index.html",
+  "./games/skyline-hoops/style.css",
+  "./covers/lightline-circuit.svg",
+  "./games/lightline-circuit/engine.js",
+  "./games/lightline-circuit/game.js",
+  "./games/lightline-circuit/index.html",
+  "./games/lightline-circuit/style.css",
+  "./covers/orchard-slice.svg",
+  "./games/orchard-slice/engine.js",
+  "./games/orchard-slice/game.js",
+  "./games/orchard-slice/index.html",
+  "./covers/mosaic-memory.svg",
+  "./games/mosaic-memory/engine.js",
+  "./games/mosaic-memory/game.js",
+  "./games/mosaic-memory/index.html",
+  "./games/mosaic-memory/style.css",
+  "./covers/tabletop-commons.svg",
+  "./games/tabletop-commons/engine.js",
+  "./games/tabletop-commons/game.js",
+  "./games/tabletop-commons/index.html",
+  "./games/tabletop-commons/style.css",
+  "./js/games.js?v72",
+  "./js/event-rules.js?v72",
+  "./js/app.js?v72",
+  "./js/game-page.js?v72"
 ];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
-self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
+self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>OWNED_CACHE.test(key)&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
   const req=event.request;if(req.method!=='GET')return;
   if(req.mode==='navigate'){

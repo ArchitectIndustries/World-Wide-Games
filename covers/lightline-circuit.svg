@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc">
+<title id="title">Lightline Circuit</title><desc id="desc">Four glowing paths weave across an original midnight arena, led by a cyan triangular rider.</desc>
+<defs><radialGradient id="bg"><stop stop-color="#213652"/><stop offset="1" stop-color="#080e23"/></radialGradient><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#47718b" opacity=".22"/></pattern><filter id="glow"><feGaussianBlur stdDeviation="6"/></filter></defs>
+<rect width="960" height="600" fill="url(#bg)"/><rect width="960" height="600" fill="url(#grid)"/><rect x="30" y="30" width="900" height="540" rx="20" fill="none" stroke="#607b97" stroke-width="2"/>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"><path d="M105 475H415V365H595V245H765" stroke="#6de9ed"/><path d="M850 475H665V405H490V285H330V155H190" stroke="#ffa277"/><path d="M850 120H725V185H535V105H410" stroke="#cfa7ff"/><path d="M115 350H235V250H135V140" stroke="#d5ed7b"/></g>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="18" opacity=".5" filter="url(#glow)"><path d="M105 475H415V365H595V245H765" stroke="#6de9ed"/><path d="M850 475H665V405H490V285H330V155H190" stroke="#ffa277"/></g>
+<path d="m790 245-42-24 9 24-9 24z" fill="#b5ffff" stroke="#fff" stroke-width="2"/><path d="m190 155-17-17-17 17 17 17z" fill="#ffa277"/><rect x="394" y="89" width="32" height="32" rx="3" fill="#cfa7ff"/><circle cx="135" cy="140" r="16" fill="#d5ed7b"/>
+<rect x="64" y="48" width="284" height="58" rx="12" fill="#0a1329"/><text x="84" y="84" fill="#d4e7f5" font-family="system-ui,sans-serif" font-size="22" font-weight="700" letter-spacing="3">OUTROUTE THE ARENA</text>
+<rect x="60" y="500" width="650" height="60" rx="12" fill="#080e23" opacity=".93"/><text x="83" y="542" fill="#f1fbff" font-family="system-ui,sans-serif" font-size="40" font-weight="850" letter-spacing="-1">LIGHTLINE <tspan fill="#6de9ed">CIRCUIT</tspan></text>
+</svg>

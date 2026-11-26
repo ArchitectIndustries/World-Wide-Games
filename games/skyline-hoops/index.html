@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0a1926">
+  <meta name="description" content="Ten shots above the city. Shape your arc, bank it off the glass, and chase a perfect Skyline Hoops course.">
+  <title>Skyline Hoops · WorldWideGames</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div><a class="home" href="../../index.html#library">WorldWideGames</a><span class="division">STREET SPORTS</span></div>
+      <div class="utility"><button id="sound" class="quiet" type="button" aria-pressed="false">Sound off</button><button id="pause" class="quiet" type="button" aria-pressed="false">Pause</button></div>
+    </header>
+    <section class="title-row" aria-labelledby="title">
+      <div><p class="eyebrow">THE CITY IS YOUR COURT</p><h1 id="title">Skyline <span>Hoops.</span></h1></div>
+      <p class="intro">Ten spots. One perfect arc.<br>Take your time. Make it count.</p>
+    </section>
+    <section class="scoreboard" aria-label="Course score">
+      <div><span class="stat-label">SHOT</span><strong id="shot">1 <small>/ 10</small></strong></div>
+      <div><span class="stat-label">SCORE</span><strong id="score">0</strong></div>
+      <div><span class="stat-label">BUCKETS</span><strong id="buckets">0 <small>/ 0</small></strong></div>
+      <div aria-label="Personal best"><span class="stat-label">BEST</span><strong id="best">0</strong></div>
+    </section>
+    <p id="storage-notice" class="storage-notice" role="status" hidden></p>
+    <div class="play-layout">
+      <section class="court-card" aria-label="Basketball court">
+        <div class="court-caption"><span id="spot">01 · WARM-UP CORNER</span><span id="bonus">100 PER BASKET</span></div>
+        <canvas id="court" width="1000" height="600" aria-label="Basketball court. Set the labeled angle and power controls, then activate Shoot. You can also swipe up and right from the ball." role="img"></canvas>
+        <div class="court-footer"><span><i aria-hidden="true"></i> CITY COURT / DUSK SESSION</span><span>AIM. RELEASE. REPEAT.</span></div>
+      </section>
+      <aside class="control-card" aria-label="Shot controls">
+        <div class="session-heading"><span class="eyebrow">YOUR NEXT SHOT</span><span id="ready-badge" class="badge">READY</span></div>
+        <h2 id="shot-title">Find your arc.</h2>
+        <p id="status" class="status" aria-live="polite" aria-atomic="true">Adjust the dotted flight path toward the hoop. Space or Shoot sends the ball.</p>
+        <div class="range-group"><label for="angle">Launch angle <output id="angle-value" for="angle">62°</output></label><input id="angle" type="range" min="35" max="80" step="1" value="62"><div class="range-hint"><span>Flatter</span><span>Higher arc</span></div></div>
+        <div class="range-group"><label for="power">Shot power <output id="power-value" for="power">60%</output></label><input id="power" type="range" min="0" max="100" step="1" value="60"><div class="range-hint"><span>Soft touch</span><span>Deep range</span></div></div>
+        <button id="shoot" class="primary" type="button">Shoot <span>SPACE</span></button>
+        <button id="next" class="primary next" type="button" hidden>Next shot <span>ENTER</span></button>
+        <button id="retry" class="secondary" type="button">Restart course</button>
+        <div class="course-track" id="track" aria-label="Ten shot results"></div>
+        <div class="scoring"><h3>Every bucket counts.</h3><p><b>100</b> basket <em>+50</em> off the glass <em>+50</em> long range</p><p class="small">A basket counts only as the ball drops through the rim. The dotted guide uses the same ball physics as your shot.</p></div>
+      </aside>
+    </div>
+    <footer class="instructions"><p><b>KEYBOARD</b> A/D or Left/Right: angle · W/S or Up/Down: power · Space: shoot · Enter: next shot · P: pause</p><p><b>TOUCH / MOUSE</b> Use the sliders and Shoot, or swipe up and right from the ball and release.</p><p class="credit">An original WorldWideGames game · Architect Industries</p></footer>
+    <noscript><p>Enable JavaScript to play Skyline Hoops.</p></noscript>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#081524">
+  <meta name="description" content="Own the angles. An original air-hockey arena with three AI rivals and local two-player matches. First to seven wins.">
+  <title>Aurora Hockey · WorldWideGames</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="home" href="../../index.html#library" aria-label="Back to the WorldWideGames library">WWG<span> / PLAY</span></a>
+      <div class="wordmark"><span class="symbol" aria-hidden="true">◈</span><span>AURORA <strong>HOCKEY</strong></span></div>
+      <button id="sound" class="icon-button" type="button" aria-pressed="false" title="Toggle original game audio">Sound off</button>
+    </header>
+
+    <main class="arena">
+      <section class="play-area" aria-label="Aurora Hockey arena">
+        <div class="scoreboard" aria-label="Match scoreboard">
+          <div class="team cyan"><span class="team-marker" aria-hidden="true"></span><span id="player-name">YOU</span><strong id="player-score">0</strong></div>
+          <div class="match-label"><span>FIRST TO 7</span><span id="match-status">READY TO PLAY</span></div>
+          <div class="team coral"><strong id="rival-score">0</strong><span id="rival-name">CURRENT</span><span class="team-marker" aria-hidden="true"></span></div>
+        </div>
+        <div class="stage" id="stage">
+          <div class="rink-wrap" id="rink-wrap">
+            <canvas id="rink" width="600" height="860" tabindex="0" aria-label="Air hockey rink. Your cyan striker defends the lower goal." aria-describedby="controls-text">Aurora Hockey needs Canvas2D. Try a modern browser with canvas support.</canvas>
+            <div class="toast" id="toast" aria-hidden="true"></div>
+          </div>
+          <section id="overlay" class="overlay" aria-label="Match setup">
+            <div class="menu-card">
+              <div class="eyebrow" id="menu-eyebrow">AN ARCADE ORIGINAL</div>
+              <h1 id="menu-title">Own the <em>angles.</em></h1>
+              <p id="menu-description">Bank shots. Quick saves. First to seven wins.</p>
+              <div id="setup">
+                <fieldset class="mode-choice"><legend>Choose your match</legend>
+                  <label><input type="radio" name="mode" value="cpu" checked><span>Solo vs AI</span></label>
+                  <label><input type="radio" name="mode" value="local"><span>Local 2 player</span></label>
+                </fieldset>
+                <label class="difficulty-label" for="difficulty">Your rival</label>
+                <select id="difficulty"><option value="easy">Breeze · relaxed</option><option value="normal" selected>Current · balanced</option><option value="hard">Tempest · expert</option></select>
+                <p id="mode-hint" class="mode-hint">Pointer / touch / arrows / WASD.</p>
+              </div>
+              <div id="result-stats" class="result-stats" hidden></div>
+              <button id="start" class="primary" type="button">Start match</button>
+              <button id="new-match" class="secondary" type="button" hidden>Change match</button>
+            </div>
+          </section>
+        </div>
+        <div class="match-toolbar">
+          <span id="rally-label">BANK. DEFEND. REPEAT.</span>
+          <div><button id="pause" type="button" disabled>Pause <kbd>P</kbd></button><button id="restart" type="button" disabled>Restart <kbd>R</kbd></button></div>
+        </div>
+      </section>
+
+      <aside class="briefing">
+        <div class="briefing-heading"><span class="eyebrow">THE NIGHT SESSION</span><h2>A clean shot.<br>A better angle.</h2><p>Quick hands win points.<br>Smart banks win matches.</p></div>
+        <div class="instruction-card"><h3>Your game plan</h3><p>Drive the white puck into the <span class="coral-text">upper goal</span>. Keep your <span class="cyan-text">cyan striker</span> in front of the lower goal.</p><p>Use the side rails to turn defense into a bank shot.</p></div>
+        <details class="controls" open><summary>Controls &amp; local play</summary><div id="controls-text"><p><b>Solo:</b> move your pointer, drag with touch, or use arrows / WASD.</p><p><b>Two players:</b> cyan uses arrows; coral uses WASD. On touchscreens, each player drags in their own half. Mouse controls cyan.</p><p><b>P</b> pauses. <b>R</b> restarts. Play pauses when you leave the window.</p></div></details>
+        <div class="record"><span>SOLO WINS ON THIS DEVICE</span><strong id="wins">0</strong><span id="storage-note">Make your first mark.</span></div>
+        <p class="credit">WORLDWIDEGAMES<br><span>By Architect Industries</span></p>
+      </aside>
+    </main>
+    <p id="announcement" class="sr-only" role="status" aria-live="polite"></p>
+    <noscript><p class="noscript">Enable JavaScript to play Aurora Hockey.</p></noscript>
+  </div>
+  <script type="module" src="./game.js"></script>
+</body>
+</html>
