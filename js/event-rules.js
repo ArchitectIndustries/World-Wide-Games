@@ -10,3 +10,8 @@
     isCompletion: (gameId,event) => completionEvents.has(key(gameId,event))
   });
 })();
+// Only a completed three-operation campaign unlocks the completion milestone.
+for (const id of ['stormwake-rescue','iron-meridian']) {
+  window.WWG_EVENT_RULES.milestoneEvents.add(id+':campaign-complete');
+  window.WWG_EVENT_RULES.completionEvents.add(id+':campaign-complete');
+}

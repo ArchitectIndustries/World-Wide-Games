@@ -48,6 +48,7 @@ A game is not release-ready because it loads.
 
 For changed games/features validate, as applicable:
 - boot/loading
+- actual menu-to-gameplay transitions: click the launch/continue control, verify hidden overlays have no layout box or pointer interception, then verify gameplay input, pause/resume and retry
 - console/runtime errors
 - keyboard/controller/touch input
 - objective and control text

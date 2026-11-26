@@ -730,3 +730,82 @@ window.WWG_GAMES = [
 window.WWG_GAMES.forEach(game => {
   if (!game.scoreMeta) game.scoreMeta = { unit: 'pts', direction: 'high', label: 'Local score' };
 });
+// Original Dynamic Campaigns expansion.
+window.WWG_GAMES.push(...[
+  {
+    "added": "2026-11-26",
+    "updated": "2026-11-26",
+    "version": "1.0",
+    "featured": true,
+    "basePopularity": 0,
+    "remappable": true,
+    "modes": [
+      "Solo"
+    ],
+    "scoreMeta": {
+      "unit": "pts",
+      "direction": "high",
+      "label": "Campaign score"
+    },
+    "id": "stormwake-rescue",
+    "title": "Stormwake Rescue",
+    "tagline": "Race the tide. Bring everyone home.",
+    "description": "A three-zone maritime rescue campaign with inertial boat handling, dynamic currents, moving storm cells, reef collision damage, boost energy, two-person rescue capacity, time pressure and dock-based hull repair. Each launch randomizes survivor locations.",
+    "objective": "Collect survivors by sailing close to them, return to the marked dock to deliver up to two at a time, and rescue everyone in each of three operations before the timer or hull runs out.",
+    "genres": [
+      "Rescue",
+      "Simulation",
+      "Action",
+      "Vehicle",
+      "Adventure"
+    ],
+    "cover": "covers/stormwake-rescue.svg",
+    "path": "games/stormwake-rescue/index.html",
+    "accent": "#62e1dd",
+    "controls": [
+      "Arrow keys or WASD steer the rescue vessel; saved remaps also work.",
+      "Hold Space to boost while moving; boost energy regenerates.",
+      "Sail near survivors to collect them, then return to the illuminated dock to deliver them and repair hull integrity.",
+      "Avoid moving storm cells and reefs; rescue everyone before time expires.",
+      "P or Pause suspends the operation. R or Restart retries the current operation. Touch movement and Boost buttons are provided."
+    ]
+  },
+  {
+    "added": "2026-11-26",
+    "updated": "2026-11-26",
+    "version": "1.0",
+    "featured": true,
+    "basePopularity": 0,
+    "remappable": true,
+    "modes": [
+      "Solo"
+    ],
+    "scoreMeta": {
+      "unit": "pts",
+      "direction": "high",
+      "label": "Campaign score"
+    },
+    "id": "iron-meridian",
+    "title": "Iron Meridian",
+    "tagline": "Build the line. Hold the relay.",
+    "description": "A three-operation real-time tactical defense campaign. Fight fast scouts, heavy attackers and standard hostiles, earn scrap, place automated turrets, balance positioning and repair, and defend the central relay.",
+    "objective": "Defeat each operation's entire enemy force while keeping your suit and the central relay intact. Use scrap to construct turrets and return to the central beacon to heal and repair.",
+    "genres": [
+      "Tower Defense",
+      "Strategy",
+      "Action",
+      "Shooter",
+      "Tactical"
+    ],
+    "cover": "covers/iron-meridian.svg",
+    "path": "games/iron-meridian/index.html",
+    "accent": "#ffc477",
+    "controls": [
+      "Arrow keys or WASD move; saved keyboard remaps also work.",
+      "Hold Space to fire at the nearest enemy within range.",
+      "Hold E to construct a turret at a clear location for 35 scrap; up to nine active turrets.",
+      "Defeat enemies to earn scrap. Near the central relay your suit heals and scrap repairs the relay.",
+      "P or Pause suspends the operation. R or Restart retries the current operation. Touch movement, Fire and Build buttons are provided."
+    ]
+  }
+]);
