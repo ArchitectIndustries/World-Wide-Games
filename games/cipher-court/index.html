@@ -1,6 +1,172 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cipher Court</title><style>*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 0,#30264e,#0d1020 62%);color:#f8fafc;font-family:system-ui,sans-serif;padding:18px}.wrap{max-width:1000px;margin:auto}.top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.stat,.panel,.suspect{background:#11182be8;border:1px solid #394468;border-radius:14px}.stat{padding:8px 12px}.panel{padding:15px;margin-top:12px}.clues{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}.clue{background:#171f36;border:1px solid #3f4c70;border-radius:10px;padding:10px;color:#dbeafe;min-height:64px}.suspects{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:10px}.suspect{padding:12px;cursor:pointer;transition:.15s}.suspect:hover,.suspect.selected{border-color:#c084fc;transform:translateY(-2px)}.suspect h3{margin:0 0 7px}.traits{font-size:12px;color:#cbd5e1;line-height:1.55}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}button{border:1px solid #64748b;background:#1e293b;color:white;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}.primary{background:#7c3aed;border-color:#a78bfa}.danger{background:#7f1d1d}.message{min-height:42px;color:#fde68a;font-weight:700}.case-title{font-size:26px;margin:4px 0}.meta{color:#a5b4fc;font-size:12px}</style></head><body><div class="wrap"><div class="top"><div><div class="meta">ARCHITECT INDUSTRIES · WORLDWIDEGAMES</div><h1 class="case-title">Cipher Court</h1></div><div class="stat">Case <b id="caseNo">1/4</b> · Score <b id="score">0</b> · Strikes <b id="strikes">0</b></div></div><div class="panel"><h2 id="title">Loading case…</h2><p id="brief"></p><div class="clues" id="clues"></div><div class="actions"><button id="reveal">Reveal another clue (-120)</button><button id="accuse" class="primary">Accuse selected suspect</button><button id="restart" class="danger">Restart docket</button></div><p class="message" id="message"></p></div><div class="panel"><h2>Suspects</h2><div class="suspects" id="suspects"></div></div></div><script>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cipher Court 1.3 — Evidence-Bound Dockets</title><style>*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 0,#30264e,#0d1020 62%);color:#f8fafc;font-family:system-ui,sans-serif;padding:18px}.wrap{max-width:1000px;margin:auto}.top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.stat,.panel,.suspect{background:#11182be8;border:1px solid #394468;border-radius:14px}.stat{padding:8px 12px}.panel{padding:15px;margin-top:12px}.clues{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}.clue{background:#171f36;border:1px solid #3f4c70;border-radius:10px;padding:10px;color:#dbeafe;min-height:64px}.suspects{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:10px}.suspect{padding:12px;cursor:pointer;transition:.15s}.suspect:hover,.suspect.selected{border-color:#c084fc;transform:translateY(-2px)}.suspect .suspect-name{display:block;margin:0 0 7px;font-size:1.17em;font-weight:700}.traits{font-size:12px;color:#cbd5e1;line-height:1.55}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}button{border:1px solid #64748b;background:#1e293b;color:white;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}.primary{background:#7c3aed;border-color:#a78bfa}.danger{background:#7f1d1d}.message{min-height:42px;color:#fde68a;font-weight:700}.case-title{font-size:26px;margin:4px 0}.meta{color:#a5b4fc;font-size:12px}button:focus-visible{outline:3px solid #fde68a;outline-offset:3px}.suspect{display:block;width:100%;text-align:left;font:inherit;min-height:92px}.suspect[aria-pressed="true"]{border-color:#f0abfc;background:#2c2150;box-shadow:inset 0 0 0 2px #b794f8}.suspect:disabled{opacity:.68;cursor:default;transform:none}.instruction{margin:10px 0;font-size:13px;color:#dbeafe;line-height:1.5}kbd{background:#252449;border:1px solid #756eaa;border-radius:5px;padding:1px 4px;color:#fff}@media(prefers-reduced-motion:reduce){.suspect{transition:none}.suspect:hover,.suspect.selected{transform:none}}@media(max-width:480px){body{padding:10px}.suspects{grid-template-columns:repeat(2,minmax(0,1fr))}.suspect{min-width:0;min-height:112px}.panel{padding:12px}.case-title{font-size:22px}}
+</style></head><body><div class="wrap"><div class="top"><div><div class="meta">ARCHITECT INDUSTRIES · WORLDWIDEGAMES</div><h1 class="case-title">Cipher Court</h1></div><div class="stat">Case <b id="caseNo">1/4</b> · Score <b id="score">0</b> · Strikes <b id="strikes">0</b>/4</div></div><div class="panel"><h2 id="title">Loading case…</h2><p id="brief"></p><p class="instruction" id="guide">Choose a suspect with touch or pointer, or <kbd>Tab</kbd> to a suspect and <kbd>Enter</kbd>/<kbd>Space</kbd> to select. <kbd>Arrow keys</kbd>/<kbd>WASD</kbd> move and select suspects; <kbd>C</kbd> accuses, <kbd>E</kbd> reveals a clue, <kbd>R</kbd> restarts. Controller: D-pad or stick selects, A accuses, X reveals, Start restarts. After reconnecting or returning to the tab, release all controller inputs before acting. Four incorrect accusations close the docket unranked; use evidence to keep your strike count below four.</p><div class="clues" id="clues"></div><div class="actions"><button id="reveal">Reveal another clue (-120)</button><button id="accuse" class="primary">Accuse selected suspect</button><button id="restart" class="danger">Restart docket</button></div><p class="message" id="message" role="status" aria-live="polite" aria-atomic="true">Select a suspect to begin.</p></div><div class="panel"><h2>Suspects</h2><div class="suspects" id="suspects" role="group" aria-label="Suspects; choose one before accusing" aria-describedby="guide"></div></div></div><script>
 const cases=[{title:'The Violet Seal',brief:'A sealed design vanished during a four-minute blackout. Cross-reference access, location, and the residue report.',culprit:'Mira Voss',sus:[['Mira Voss','Violet badge','Archive','Copper dust'],['Oren Pike','Amber badge','Foundry','Oil'],['Sela Thorn','Violet badge','Gallery','Glass'],['Juno Hale','Cyan badge','Archive','Ink']],clues:['The thief wore a violet badge.','Archive sensors logged the thief during the blackout.','Copper dust was found inside the broken seal.','The Gallery remained fully illuminated.']},{title:'The Silent Lift',brief:'A courier capsule was redirected from the east lift. Only one operator satisfies every authenticated trace.',culprit:'Pax Neri',sus:[['Pax Neri','Night shift','East lift','Key 7'],['Ava Kest','Day shift','East lift','Key 2'],['Roan Mere','Night shift','West lift','Key 7'],['Tess Arlo','Night shift','East lift','Key 4']],clues:['The redirect happened during the night shift.','The command came from the east lift.','Authentication used Key 7.','West-lift terminals were physically disconnected.']},{title:'The Glass Orchard',brief:'A prototype seed was swapped with an inert copy. Match glove trace, greenhouse row, and transit log.',culprit:'Niko Vale',sus:[['Niko Vale','Silver gloves','Row C','Tram'],['Ember Sol','Green gloves','Row C','Foot'],['Rhea Moss','Silver gloves','Row A','Tram'],['Cal Ire','Black gloves','Row C','Tram']],clues:['Microscope fibers came from silver gloves.','The exchange occurred in Row C.','The culprit arrived by tram.','Row A was under continuous camera coverage.']},{title:'The Echo Ledger',brief:'A ledger was altered between two audit pulses. Identify the only analyst matching terminal, cipher family, and access window.',culprit:'Yara Quill',sus:[['Yara Quill','Terminal 3','Helix cipher','Window B'],['Kade Rune','Terminal 1','Helix cipher','Window B'],['Lio Crest','Terminal 3','Spiral cipher','Window B'],['Fenn Oris','Terminal 3','Helix cipher','Window A']],clues:['The edit came from Terminal 3.','The forged checksum used the Helix cipher.','The access timestamp falls inside Window B.','Window A closed before the first audit pulse.']}];
-let idx=0,revealed=2,selected='',score=0,strikes=0,start=performance.now(),done=false;const $=s=>document.querySelector(s),CASE=$('#caseNo'),SCORE=$('#score'),STRIKES=$('#strikes'),TITLE=$('#title'),BRIEF=$('#brief'),CLUES=$('#clues'),SUS=$('#suspects'),MSG=$('#message');function render(){const c=cases[Math.min(idx,cases.length-1)];CASE.textContent=Math.min(idx+1,cases.length)+'/4';SCORE.textContent=score;STRIKES.textContent=strikes;TITLE.textContent=c.title;BRIEF.textContent=c.brief;CLUES.innerHTML=c.clues.slice(0,revealed).map((x,i)=>`<div class="clue"><b>Evidence ${i+1}</b><br>${x}</div>`).join('');SUS.innerHTML=c.sus.map(s=>`<div class="suspect ${selected===s[0]?'selected':''}" data-name="${s[0]}"><h3>${s[0]}</h3><div class="traits">${s.slice(1).join('<br>')}</div></div>`).join('');SUS.querySelectorAll('.suspect').forEach(el=>el.onclick=()=>{selected=el.dataset.name;render()});$('#reveal').disabled=revealed>=c.clues.length||done;$('#accuse').disabled=done}
-function finish(){done=true;const secs=Math.max(1,Math.round((performance.now()-start)/1000));score=Math.max(200,score+1200-strikes*160);MSG.textContent=`Docket solved. Final score ${score.toLocaleString()}.`;render();try{parent.postMessage({type:'wwg:game-event',game:'cipher-court',event:'docket-solved',score,duration:secs,meta:{unit:'pts',direction:'high',cases:4,strikes}},'*')}catch{}}
-$('#reveal').onclick=()=>{if(done)return;if(revealed<cases[idx].clues.length){revealed++;score=Math.max(0,score-120);MSG.textContent='Additional evidence disclosed.';render()}};$('#accuse').onclick=()=>{if(done)return;if(!selected){MSG.textContent='Select a suspect first.';return}const c=cases[idx];if(selected===c.culprit){score+=1000+(c.clues.length-revealed)*180;MSG.textContent=`Correct. ${selected} is responsible.`;idx++;selected='';revealed=2;if(idx>=cases.length){finish();return}setTimeout(()=>{MSG.textContent='Next case opened.';render()},300);render()}else{strikes++;score=Math.max(0,score-250);MSG.textContent=`Incorrect. ${selected} does not fit every clue.`;selected='';render()}};function restart(){idx=0;revealed=2;selected='';score=0;strikes=0;start=performance.now();done=false;MSG.textContent='Docket reset.';render()}$('#restart').onclick=restart;addEventListener('keydown',e=>{if(e.code==='KeyR')restart();if(e.code==='Enter')$('#accuse').click();if(e.code==='Space'){e.preventDefault();$('#reveal').click()}});render();
+const STRIKE_LIMIT=4;let idx=0,revealed=2,selected='',score=0,strikes=0,start=performance.now(),done=false;
+const $=s=>document.querySelector(s);
+const CASE=$('#caseNo'),SCORE=$('#score'),STRIKES=$('#strikes'),TITLE=$('#title'),BRIEF=$('#brief'),CLUES=$('#clues'),SUS=$('#suspects'),MSG=$('#message');
+const announce=text=>{MSG.textContent=text};
+function syncStats(){CASE.textContent=Math.min(idx+1,cases.length)+'/4';SCORE.textContent=score;STRIKES.textContent=strikes}
+function syncSelection(){
+  SUS.querySelectorAll('.suspect').forEach(button=>{
+    const active=button.dataset.name===selected;
+    button.classList.toggle('selected',active);
+    button.setAttribute('aria-pressed',String(active));
+  });
+}
+function choose(index,{focus=false}={}){
+  if(done)return false;
+  const suspect=cases[idx].sus[index];
+  if(!suspect)return false;
+  selected=suspect[0];
+  syncSelection();
+  const button=SUS.querySelectorAll('.suspect')[index];
+  if(focus&&button)button.focus({preventScroll:true});
+  announce(`${selected} selected. Compare the evidence, then press C or the Accuse button.`);
+  return true;
+}
+function render(){
+  const c=cases[Math.min(idx,cases.length-1)];
+  syncStats();TITLE.textContent=c.title;BRIEF.textContent=c.brief;
+  CLUES.replaceChildren(...c.clues.slice(0,revealed).map((clue,i)=>{
+    const node=document.createElement('div');node.className='clue';
+    const heading=document.createElement('b');heading.textContent=`Evidence ${i+1}`;
+    node.append(heading,document.createElement('br'),document.createTextNode(clue));
+    return node;
+  }));
+  SUS.replaceChildren(...c.sus.map((suspect,i)=>{
+    const button=document.createElement('button');
+    button.type='button';button.className='suspect';button.dataset.name=suspect[0];button.dataset.index=String(i);
+    button.setAttribute('aria-pressed',String(suspect[0]===selected));
+    button.disabled=done;
+    const name=document.createElement('span');name.className='suspect-name';name.textContent=suspect[0];
+    const traits=document.createElement('span');traits.className='traits';traits.textContent=suspect.slice(1).join(' · ');
+    button.append(name,traits);
+    button.addEventListener('click',()=>choose(i));
+    return button;
+  }));
+  syncSelection();$('#reveal').disabled=revealed>=c.clues.length||done;$('#accuse').disabled=done;
+}
+function finish(){
+  if(done)return;
+  done=true;
+  const secs=Math.max(1,Math.round((performance.now()-start)/1000));
+  score=Math.max(200,score+1200-strikes*160);
+  render();
+  announce(`Docket solved. All four cases completed. Final score ${score.toLocaleString()}. Press Restart docket to play again.`);
+  $('#restart').focus({preventScroll:true});
+  try{parent.postMessage({type:'wwg:game-event',game:'cipher-court',event:'docket-solved',score,duration:secs,meta:{unit:'pts',direction:'high',cases:4,strikes}},'*')}catch{}
+}
+function fail(){
+  if(done)return;
+  done=true;
+  const secs=Math.max(1,Math.round((performance.now()-start)/1000));
+  const attemptValue=score;
+  render();
+  announce(`Docket closed: ${strikes}/${STRIKE_LIMIT} incorrect accusations, ${idx} of ${cases.length} cases solved. ${attemptValue.toLocaleString()} attempt points are unranked. Press Restart docket to try again.`);
+  $('#restart').focus({preventScroll:true});
+  // Failure is telemetry only: no score property, no ranked completion event.
+  try{parent.postMessage({type:'wwg:game-event',game:'cipher-court',event:'docket-failed',duration:secs,meta:{unit:'pts',direction:'high',strikes,casesSolved:idx,outcome:'failed',attemptValue}},'*')}catch{}
+}
+function reveal(){
+  if(done)return;
+  if(revealed>=cases[idx].clues.length){announce('All evidence for this case is already visible.');return}
+  revealed++;score=Math.max(0,score-120);render();
+  announce(`Evidence ${revealed} revealed. 120-point penalty. ${cases[idx].clues.length-revealed} clues remain hidden.`);
+}
+function accuse(){
+  if(done)return;
+  if(!selected){announce('Select a suspect before accusing. Use Tab, Arrow keys or WASD to find the suspects.');return}
+  const c=cases[idx];
+  if(selected===c.culprit){
+    score+=1000+(c.clues.length-revealed)*180;
+    const solved=selected;
+    idx++;selected='';revealed=2;
+    if(idx>=cases.length){finish();return}
+    render();
+    announce(`Correct: ${solved}. Case ${idx+1} of ${cases.length}, ${cases[idx].title}, is now open. Select the next suspect.`);
+  }else{
+    strikes++;score=Math.max(0,score-250);
+    const accused=selected;selected='';syncStats();syncSelection();
+    if(strikes>=STRIKE_LIMIT){fail();return}
+    announce(`Incorrect: ${accused} does not match all evidence. ${STRIKE_LIMIT-strikes} strikes remain before this docket closes unranked. Compare the clues and choose again.`);
+  }
+}
+function restart(){
+  disarmPad();
+  idx=0;revealed=2;selected='';score=0;strikes=0;start=performance.now();done=false;
+  render();announce('Docket reset. Case 1 of 4 is open. Choose a suspect.');
+}
+function navigate(delta){
+  if(done)return;
+  const buttons=Array.from(SUS.querySelectorAll('.suspect'));
+  const focused=buttons.indexOf(document.activeElement);
+  const active=focused>=0?focused:cases[idx].sus.findIndex(s=>s[0]===selected);
+  const next=active<0?(delta>0?0:buttons.length-1):(active+delta+buttons.length)%buttons.length;
+  choose(next,{focus:true});
+}
+$('#reveal').addEventListener('click',reveal);
+$('#accuse').addEventListener('click',accuse);
+$('#restart').addEventListener('click',restart);
+document.addEventListener('keydown',e=>{
+  if(e.altKey||e.ctrlKey||e.metaKey||e.isComposing||e.repeat)return;
+  const focusedSuspect=document.activeElement?.classList?.contains('suspect');
+  const backgroundFocus=document.activeElement===document.body;
+  const inActions=document.activeElement?.closest?.('.actions');
+  const delta=({ArrowLeft:-1,ArrowUp:-1,KeyA:-1,KeyW:-1,ArrowRight:1,ArrowDown:1,KeyD:1,KeyS:1})[e.code];
+  if(delta&&(focusedSuspect||backgroundFocus)){
+    e.preventDefault();navigate(delta);return;
+  }
+  if(/^Digit[1-4]$/.test(e.code)&&!inActions){
+    e.preventDefault();choose(Number(e.code.slice(-1))-1,{focus:true});return;
+  }
+  if(e.code==='KeyC'){e.preventDefault();accuse()}
+  else if(e.code==='KeyE'){e.preventDefault();reveal()}
+  else if(e.code==='KeyR'){e.preventDefault();restart()}
+  // Enter and Space remain native button activation: no global shortcut steals them.
+});
+// A gamepad can remain physically pressed while its browser page loses focus or
+// the device disconnects. That old input must never become a new Accuse, Reveal,
+// Restart or selection when the page resumes. Require one fully neutral sample.
+let previousPad=[],heldDirection=0,lastNavigationAt=0,padNeedsNeutral=true,padIdentity=null,windowBlurred=false;
+function disarmPad(){
+  previousPad=[];heldDirection=0;lastNavigationAt=0;padNeedsNeutral=true;
+}
+addEventListener('blur',()=>{windowBlurred=true;disarmPad()});
+addEventListener('focus',()=>{windowBlurred=false;disarmPad()});
+document.addEventListener('visibilitychange',disarmPad);
+addEventListener('gamepadconnected',disarmPad);
+addEventListener('gamepaddisconnected',()=>{padIdentity=null;disarmPad()});
+function pollGamepad(now){
+  try{
+    const pad=!document.hidden&&!windowBlurred&&typeof navigator.getGamepads==='function'
+      ?Array.from(navigator.getGamepads()||[]).find(p=>p&&p.connected!==false):null;
+    if(pad){
+      const identity=`${pad.index??0}:${pad.id??''}`;
+      if(identity!==padIdentity){padIdentity=identity;disarmPad()}
+      const held=n=>!!pad.buttons?.[n]?.pressed||(Number(pad.buttons?.[n]?.value)||0)>.5;
+      const axis=Number(pad.axes?.[0])||0;
+      const direction=(held(15)||axis>.55)?1:(held(14)||axis<-.55)?-1:(held(13)?1:held(12)?-1:0);
+      if(padNeedsNeutral){
+        // The complete controller, not only A, must release before rearming.
+        const neutral=Array.from(pad.buttons||[]).every((_,i)=>!held(i))
+          &&Array.from(pad.axes||[]).every(a=>Math.abs(Number(a)||0)<.25);
+        if(neutral)padNeedsNeutral=false;
+        return requestAnimationFrame(pollGamepad);
+      }
+      const edge=n=>held(n)&&!previousPad[n];
+      if(direction&&(direction!==heldDirection||now-lastNavigationAt>300)){
+        navigate(direction);lastNavigationAt=now;
+      }
+      heldDirection=direction;
+      if(edge(0))accuse();
+      if(edge(2))reveal();
+      if(edge(9))restart();
+      previousPad=Array.from(pad.buttons||[],(_,i)=>held(i));
+    }else{
+      padIdentity=null;disarmPad();
+    }
+  }catch{padIdentity=null;disarmPad()}
+  requestAnimationFrame(pollGamepad);
+}
+render();requestAnimationFrame(pollGamepad);
 </script></body></html>

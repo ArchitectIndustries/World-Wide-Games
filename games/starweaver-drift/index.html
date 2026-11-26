@@ -1,7 +1,130 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Starweaver Drift</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#030714;color:#fff;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;left:12px;right:12px;top:12px;display:flex;gap:8px;justify-content:space-between;pointer-events:none;flex-wrap:wrap}.hud div{background:#071126dd;border:1px solid #29446f;border-radius:12px;padding:8px 11px;font-size:11px}.hud b{font-size:16px;margin-left:4px}.tip{position:fixed;left:12px;bottom:12px;max-width:420px;background:#071126dd;border:1px solid #29446f;border-radius:12px;padding:9px 11px;color:#b9c9e8;font-size:11px}.mobile{display:none;position:fixed;right:12px;bottom:12px;grid-template-columns:repeat(3,54px);gap:7px}.mobile button{height:54px;border-radius:14px;border:1px solid #395b8c;background:#0a1830e8;color:white;font-weight:900}@media(pointer:coarse){.mobile{display:grid}.tip{right:190px}}</style></head><body><canvas id="c"></canvas><div class="hud"><div>Fuel <b id="fuel">100</b></div><div>Scans <b id="scans">0/6</b></div><div>Data <b id="data">0</b></div><div>Hull <b id="hull">3</b></div></div><div class="tip" id="tip">Chart six beacons, then return to the blue relay. Hold the remappable Secondary control near a beacon to scan it.</div><div class="mobile"><button data-k="ArrowUp">▲</button><button data-k="KeyE">SCAN</button><button data-k="Space">BOOST</button><button data-k="ArrowLeft">◀</button><button data-k="ArrowDown">▼</button><button data-k="ArrowRight">▶</button></div><script src="../../assets/wwg-input.js"></script><script>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Starweaver Drift 1.4 — Compact Survey Flight</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#030714;color:#fff;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;left:12px;right:12px;top:12px;display:flex;gap:8px;justify-content:space-between;pointer-events:none;flex-wrap:wrap}.hud div{background:#071126dd;border:1px solid #29446f;border-radius:12px;padding:8px 11px;font-size:11px}.hud b{font-size:16px;margin-left:4px}.tip{position:fixed;left:12px;bottom:12px;max-width:420px;background:#071126dd;border:1px solid #29446f;border-radius:12px;padding:9px 11px;color:#b9c9e8;font-size:11px}.mobile{display:none;position:fixed;right:12px;bottom:12px;grid-template-columns:repeat(3,54px);gap:7px}.mobile button{height:54px;border-radius:14px;border:1px solid #395b8c;background:#0a1830e8;color:white;font-weight:900}@media(pointer:coarse){.mobile{display:grid}.tip{right:190px}}.power-status{position:fixed;left:12px;bottom:83px;max-width:330px;padding:6px 10px;border:1px solid #3e718c;border-radius:10px;background:#081a2be8;color:#a5f3fc;font-size:11px;font-weight:700;z-index:3}.power-status.emergency{border-color:#f59e0b;color:#fed7aa}.power-status.docking{border-color:#34d399;color:#a7f3d0}.power-status.paused{border-color:#eab308;color:#fde68a}@media(pointer:coarse){.power-status{bottom:102px;max-width:calc(100vw - 200px)}}
+
+/* Short landscape: reserve real space for instructions, the world, and six controls.
+   A 44px bottom dock leaves the canvas unobstructed even at 320x240. */
+@media (max-width:700px) and (max-height:360px){
+ canvas{position:fixed;inset:76px 0 49px;width:100%;height:calc(100% - 125px)}
+ .hud{z-index:2;inset:0 0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;height:32px;padding:2px;background:#030714}
+ .hud div{min-width:0;padding:2px 1px;border-radius:5px;font-size:9px;line-height:11px;text-align:center;white-space:nowrap}
+ .hud b{display:block;margin:0;font-size:11px;line-height:12px}
+ .power-status,.storage-note:not([hidden])~.power-status{position:fixed;z-index:3;inset:32px 0 auto!important;max-width:none;height:20px;margin:0;padding:2px 6px;border-radius:0;font-size:10px;line-height:14px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .tip{position:fixed;z-index:3;inset:52px 0 auto;max-width:none;height:24px;margin:0;border-radius:0;padding:2px 7px;font-size:10px;line-height:18px;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;overscroll-behavior:contain;scrollbar-width:thin}
+ .mobile{z-index:4;display:grid;position:fixed;inset:auto 0 0;height:49px;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px;padding:2px;background:#030714;border-top:1px solid #29446f}
+ .mobile button{height:44px;min-width:0;width:100%;border-radius:7px;font-size:10px;padding:0 1px;touch-action:none}
+ .mobile button:focus-visible{outline:2px solid #fde68a;outline-offset:-3px}
+}
+</style></head><body><canvas id="c" role="img" aria-label="Starweaver Drift playable flight field. Fly with arrows or WASD, hold Scan near six beacons, then return to the blue relay. Touch control buttons follow below.">Your browser must support Canvas to fly this survey.</canvas><div class="hud"><div>Fuel <b id="fuel">100</b></div><div>Scans <b id="scans">0/6</b></div><div>Data <b id="data">0</b></div><div>Hull <b id="hull">3</b></div></div><div class="tip" id="tip" role="status" aria-live="polite">Chart six beacons, then return to the blue relay. Hold Secondary to scan. The relay refuels your ship; at zero fuel, emergency thrusters can return you safely at reduced speed.</div><div id="powerStatus" class="power-status" role="status" aria-live="polite" aria-atomic="true">THRUST · CRUISE</div><div class="mobile"><button type="button" aria-label="Fly up" data-k="ArrowUp">▲</button><button type="button" aria-label="Hold to scan" data-k="KeyE">SCAN</button><button type="button" aria-label="Hold boost" data-k="Space">BOOST</button><button type="button" aria-label="Fly left" data-k="ArrowLeft">◀</button><button type="button" aria-label="Fly down" data-k="ArrowDown">▼</button><button type="button" aria-label="Fly right" data-k="ArrowRight">▶</button></div><script src="../../assets/wwg-input.js"></script><script>
 const IN=window.WWGInput||{read:()=>({up:'KeyW',down:'KeyS',left:'KeyA',right:'KeyD',primary:'Space',secondary:'KeyE'}),is:(e,a,x=[])=>x.includes(e.code)};const MAP=IN.read?IN.read():{up:'KeyW',down:'KeyS',left:'KeyA',right:'KeyD',primary:'Space',secondary:'KeyE'};
-const C=document.getElementById('c'),X=C.getContext('2d'),VW=960,VH=540,W=2200,H=1500;let dpr=1,sc=1,ox=0,oy=0;function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=innerWidth*dpr;C.height=innerHeight*dpr;sc=Math.min(innerWidth/VW,innerHeight/VH);ox=(innerWidth-VW*sc)/2;oy=(innerHeight-VH*sc)/2}addEventListener('resize',resize);resize();const F=document.getElementById('fuel'),S=document.getElementById('scans'),D=document.getElementById('data'),HU=document.getElementById('hull'),TIP=document.getElementById('tip');let keys={},camX=0,camY=0,done=false,scanT=0,flash=0,runStart=performance.now();const ship={x:300,y:1080,vx:0,vy:0,a:0,fuel:100,hull:3,data:0};const relay={x:300,y:1080,r:42};const beacons=[[650,1120],[910,840],[1280,1130],[1670,900],[1820,420],[1120,300]].map((p,i)=>({x:p[0],y:p[1],r:28,scanned:false,progress:0,i}));const anomalies=[[780,1010,85],[1430,760,105],[1590,310,90],[1040,560,70]];const dust=Array.from({length:130},(_,i)=>({x:(i*197)%W,y:(i*83)%H,s:1+i%3}));function sync(){F.textContent=Math.max(0,Math.round(ship.fuel));S.textContent=beacons.filter(b=>b.scanned).length+'/6';D.textContent=ship.data;HU.textContent=ship.hull}function nearBeacon(){let best=null,bd=90;for(const b of beacons)if(!b.scanned){let d=Math.hypot(ship.x-b.x,ship.y-b.y);if(d<bd){bd=d;best=b}}return best}function reset(){Object.assign(ship,{x:300,y:1080,vx:0,vy:0,a:0,fuel:100,hull:3,data:0});beacons.forEach(b=>{b.scanned=false;b.progress=0});done=false;scanT=0;runStart=performance.now();TIP.textContent='Chart six beacons, then return to the blue relay. Hold the remappable Secondary control near a beacon to scan it.';sync()}
-addEventListener('keydown',e=>{keys[e.code]=true;if(IN.is(e,'up',['ArrowUp'])||IN.is(e,'down',['ArrowDown'])||IN.is(e,'left',['ArrowLeft'])||IN.is(e,'right',['ArrowRight'])||IN.is(e,'primary',['Space'])||IN.is(e,'secondary',['KeyE']))e.preventDefault();if(e.code==='KeyR')reset()});addEventListener('keyup',e=>keys[e.code]=false);document.querySelectorAll('[data-k]').forEach(b=>{let k=b.dataset.k;b.addEventListener('pointerdown',e=>{e.preventDefault();keys[k]=true});['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,()=>keys[k]=false))});
-let gpPrev=false,lt=performance.now();function step(t){let dt=Math.min(.03,(t-lt)/1000);lt=t;if(flash>0)flash-=dt;let gx=0,gy=0,gScan=false,gBoost=false;try{const g=navigator.getGamepads&&navigator.getGamepads()[0];if(g){gx=Math.abs(g.axes[0]||0)>.16?g.axes[0]:0;gy=Math.abs(g.axes[1]||0)>.16?g.axes[1]:0;gScan=!!g.buttons[0]?.pressed;gBoost=!!g.buttons[1]?.pressed}}catch{}if(!done){let dx=(keys[MAP.right]||keys.ArrowRight?1:0)-(keys[MAP.left]||keys.ArrowLeft?1:0)+gx,dy=(keys[MAP.down]||keys.ArrowDown?1:0)-(keys[MAP.up]||keys.ArrowUp?1:0)+gy,m=Math.hypot(dx,dy);if(m>1){dx/=m;dy/=m}let boost=(keys[MAP.primary]||keys.Space||gBoost)&&ship.fuel>0,acc=boost?310:190,max=boost?300:210;if((dx||dy)&&ship.fuel>0){ship.vx+=dx*acc*dt;ship.vy+=dy*acc*dt;ship.a=Math.atan2(dy,dx);ship.fuel-=dt*(boost?5.2:1.65)}ship.vx*=Math.pow(.986,dt*60);ship.vy*=Math.pow(.986,dt*60);let v=Math.hypot(ship.vx,ship.vy);if(v>max){ship.vx*=max/v;ship.vy*=max/v}ship.x=Math.max(35,Math.min(W-35,ship.x+ship.vx*dt));ship.y=Math.max(35,Math.min(H-35,ship.y+ship.vy*dt));for(const a of anomalies){let dd=Math.hypot(ship.x-a[0],ship.y-a[1]);if(dd<a[2]){let pull=(1-dd/a[2])*140,ang=Math.atan2(a[1]-ship.y,a[0]-ship.x);ship.vx+=Math.cos(ang)*pull*dt;ship.vy+=Math.sin(ang)*pull*dt;if(dd<30&&flash<=0){ship.hull--;flash=.8;ship.vx*=-1;ship.vy*=-1;if(ship.hull<=0){ship.hull=3;ship.x=relay.x;ship.y=relay.y;ship.vx=ship.vy=0;ship.data=Math.max(0,ship.data-120)}}}}let b=nearBeacon();if(b&&(keys[MAP.secondary]||keys.KeyE||gScan)){b.progress=Math.min(1,b.progress+dt/1.2);scanT=b.progress;if(b.progress>=1){b.scanned=true;ship.data+=150+Math.round(ship.fuel);TIP.textContent='Beacon charted. Continue the constellation.';scanT=0}}else scanT=0;let all=beacons.every(b=>b.scanned);if(all){TIP.textContent='Constellation complete. Return to the blue relay.';if(Math.hypot(ship.x-relay.x,ship.y-relay.y)<60){done=true;let score=Math.max(500,Math.round(ship.data+ship.fuel*10+ship.hull*250));TIP.textContent='Survey transmitted. Press R to chart again.';try{parent.postMessage({type:'wwg:game-event',game:'starweaver-drift',event:'survey-complete',score,duration:Math.max(1,Math.round((t-runStart)/1000)),meta:{unit:'pts',direction:'high'}},'*')}catch{}}}sync()}camX+=(Math.max(0,Math.min(W-VW,ship.x-VW/2))-camX)*Math.min(1,dt*4);camY+=(Math.max(0,Math.min(H-VH,ship.y-VH/2))-camY)*Math.min(1,dt*4);draw(t);requestAnimationFrame(step)}
-function draw(t){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle=flash>0?'#251020':'#020611';X.fillRect(0,0,innerWidth,innerHeight);X.save();X.translate(ox,oy);X.scale(sc,sc);X.fillStyle='#040a18';X.fillRect(0,0,VW,VH);X.save();X.translate(-camX,-camY);for(const s of dust){X.globalAlpha=.4+.2*(s.s-1);X.fillStyle='#dbeafe';X.fillRect(s.x,s.y,s.s,s.s)}X.globalAlpha=1;for(const a of anomalies){let g=X.createRadialGradient(a[0],a[1],4,a[0],a[1],a[2]);g.addColorStop(0,'#fb7185aa');g.addColorStop(.22,'#7c3aed66');g.addColorStop(1,'#0f172a00');X.fillStyle=g;X.beginPath();X.arc(a[0],a[1],a[2],0,7);X.fill();X.strokeStyle='#7c3aed55';X.beginPath();X.arc(a[0],a[1],a[2]*.55+Math.sin(t/400)*5,0,7);X.stroke()}X.fillStyle='#38bdf8';X.shadowColor='#38bdf8';X.shadowBlur=22;X.beginPath();X.arc(relay.x,relay.y,relay.r,0,7);X.strokeStyle='#93c5fd';X.lineWidth=4;X.stroke();X.shadowBlur=0;X.fillStyle='#bfdbfe';X.font='800 12px system-ui';X.fillText('RELAY',relay.x-20,relay.y+5);for(const b of beacons){X.save();X.translate(b.x,b.y);X.rotate(t/900+b.i);X.strokeStyle=b.scanned?'#34d399':'#fbbf24';X.lineWidth=3;X.shadowColor=X.strokeStyle;X.shadowBlur=12;X.strokeRect(-14,-14,28,28);X.shadowBlur=0;if(!b.scanned&&b.progress>0){X.strokeStyle='#fff';X.beginPath();X.arc(0,0,23,-Math.PI/2,-Math.PI/2+b.progress*Math.PI*2);X.stroke()}X.restore()}X.save();X.translate(ship.x,ship.y);X.rotate(ship.a);X.fillStyle='#e0f2fe';X.shadowColor='#67e8f9';X.shadowBlur=14;X.beginPath();X.moveTo(19,0);X.lineTo(-13,-10);X.lineTo(-7,0);X.lineTo(-13,10);X.closePath();X.fill();X.shadowBlur=0;X.restore();X.restore();if(done){X.fillStyle='rgba(2,5,14,.72)';X.fillRect(0,0,VW,VH);X.fillStyle='white';X.textAlign='center';X.font='900 42px system-ui';X.fillText('STARWEAVE COMPLETE',480,235);X.font='18px system-ui';X.fillText('Your survey has been transmitted.',480,274)}X.restore()}reset();requestAnimationFrame(step);
+const C=document.getElementById('c'),X=C.getContext('2d'),VW=960,VH=540,W=2200,H=1500;let dpr=1,sc=1,ox=0,oy=0,viewW=VW,viewH=VH,stageW=0,stageH=0,camX=0,camY=0;
+function resize(){
+ dpr=Math.min(2,devicePixelRatio||1);
+ const box=C.getBoundingClientRect();stageW=Math.max(1,box.width);stageH=Math.max(1,box.height);
+ C.width=Math.round(stageW*dpr);C.height=Math.round(stageH*dpr);
+ const compact=innerWidth<=700&&innerHeight<=360;
+ if(compact){viewH=340;sc=stageH/viewH;viewW=stageW/sc;ox=0;oy=0}
+ else{viewW=VW;viewH=VH;sc=Math.min(stageW/VW,stageH/VH);ox=(stageW-viewW*sc)/2;oy=(stageH-viewH*sc)/2}
+}
+addEventListener('resize',resize);resize();const F=document.getElementById('fuel'),S=document.getElementById('scans'),D=document.getElementById('data'),HU=document.getElementById('hull'),TIP=document.getElementById('tip');let keys={},done=false,scanT=0,flash=0,activeRunMs=0,runStarted=false,windowBlurred=false,gamepadRearm=false;const ship={x:300,y:1080,vx:0,vy:0,a:0,fuel:100,hull:3,data:0};const relay={x:300,y:1080,r:42};const beacons=[[650,1120],[910,840],[1280,1130],[1670,900],[1820,420],[1120,300]].map((p,i)=>({x:p[0],y:p[1],r:28,scanned:false,progress:0,i}));const anomalies=[[780,1010,85],[1430,760,105],[1590,310,90],[1040,560,70]];const dust=Array.from({length:130},(_,i)=>({x:(i*197)%W,y:(i*83)%H,s:1+i%3}));function sync(){F.textContent=Math.max(0,Math.round(ship.fuel));S.textContent=beacons.filter(b=>b.scanned).length+'/6';D.textContent=ship.data;HU.textContent=ship.hull}function nearBeacon(){let best=null,bd=90;for(const b of beacons)if(!b.scanned){let d=Math.hypot(ship.x-b.x,ship.y-b.y);if(d<bd){bd=d;best=b}}return best}function reset(){Object.assign(ship,{x:300,y:1080,vx:0,vy:0,a:0,fuel:100,hull:3,data:0});beacons.forEach(b=>{b.scanned=false;b.progress=0});done=false;scanT=0;activeRunMs=0;runStarted=false;keys={};gamepadRearm=false;lt=performance.now();TIP.textContent='Chart six beacons, then return to the blue relay. The relay refuels; emergency thrusters always allow a slow return.';powerMode='';updatePowerStatus();camX=Math.max(0,Math.min(W-viewW,ship.x-viewW/2));camY=Math.max(0,Math.min(H-viewH,ship.y-viewH/2));sync()}
+addEventListener('keydown',e=>{if(isInactive())return;keys[e.code]=true;if(IN.is(e,'up',['ArrowUp'])||IN.is(e,'down',['ArrowDown'])||IN.is(e,'left',['ArrowLeft'])||IN.is(e,'right',['ArrowRight'])||IN.is(e,'primary',['Space'])||IN.is(e,'secondary',['KeyE']))e.preventDefault();if(e.code==='KeyR')reset()});addEventListener('keyup',e=>keys[e.code]=false);document.querySelectorAll('[data-k]').forEach(b=>{
+ const k=b.dataset.k;
+ b.addEventListener('pointerdown',e=>{e.preventDefault();if(!isInactive())keys[k]=true});
+ ['pointerup','pointercancel','pointerleave','blur'].forEach(ev=>b.addEventListener(ev,()=>keys[k]=false));
+ // Native focused-button activation works without a mouse and never fires twice.
+ b.addEventListener('keydown',e=>{if(e.code!=='Enter'&&e.code!=='Space')return;e.stopPropagation();e.preventDefault();if(!isInactive())keys[k]=true});
+ b.addEventListener('keyup',e=>{if(e.code!=='Enter'&&e.code!=='Space')return;e.stopPropagation();e.preventDefault();keys[k]=false});
+});
+let lt=performance.now(),powerMode='';
+function isInactive(){return windowBlurred||document.hidden}
+function refreshActivity(){
+ // A lost keyup or pointerup must never become persistent thrust or scanning.
+ if(isInactive()){keys={};gamepadRearm=true}
+ // Discard background wall time; no hidden simulation or ranked-time charges.
+ lt=performance.now();powerMode='';updatePowerStatus();
+}
+addEventListener('blur',()=>{windowBlurred=true;refreshActivity()});
+addEventListener('focus',()=>{windowBlurred=false;refreshActivity()});
+document.addEventListener('visibilitychange',refreshActivity);
+function updatePowerStatus(docked=false){
+ const mode=isInactive()?'paused':docked&&ship.fuel<99.99?'docking':ship.fuel<=0?'emergency':ship.fuel<20?'reserve':'cruise';
+ if(mode===powerMode)return;
+ powerMode=mode;
+ const notice=document.getElementById('powerStatus');
+ notice.classList.toggle('emergency',mode==='emergency');
+ notice.classList.toggle('docking',mode==='docking');notice.classList.toggle('paused',mode==='paused');
+ notice.textContent=mode==='paused'?'SURVEY PAUSED · RETURN TO RESUME':mode==='docking'?'RELAY · REFUELING':mode==='emergency'?'EMERGENCY · SLOW THRUST':mode==='reserve'?'FUEL · LOW RESERVE':'THRUST · CRUISE';
+}
+function step(t){
+ let dt=Math.min(.03,Math.max(0,(t-lt)/1000));lt=t;
+ if(isInactive()){
+  updatePowerStatus();draw(t);requestAnimationFrame(step);return;
+ }
+ if(flash>0)flash-=dt;
+ let gx=0,gy=0,gScan=false,gBoost=false;
+ try{const g=(navigator.getGamepads?.()||[]).find(p=>p&&p.connected!==false);
+  if(g){
+   const ax=g.axes?.[0]||0,ay=g.axes?.[1]||0,scan=!!g.buttons?.[0]?.pressed,boost=!!g.buttons?.[1]?.pressed;
+   // On return from inactivity, a still-held controller must pass neutral
+   // before commanding flight; keyboards and touch stay independently usable.
+   if(gamepadRearm&&Math.abs(ax)<.16&&Math.abs(ay)<.16&&!scan&&!boost)gamepadRearm=false;
+   if(!gamepadRearm){gx=Math.abs(ax)>.16?ax:0;gy=Math.abs(ay)>.16?ay:0;gScan=scan;gBoost=boost}
+  }}
+ catch{}
+ if(!done){
+  let dx=(keys[MAP.right]||keys.ArrowRight?1:0)-(keys[MAP.left]||keys.ArrowLeft?1:0)+gx;
+  let dy=(keys[MAP.down]||keys.ArrowDown?1:0)-(keys[MAP.up]||keys.ArrowUp?1:0)+gy;
+  let m=Math.hypot(dx,dy);if(m>1){dx/=m;dy/=m}
+  // Fair elapsed time starts only with a deliberate flight/scan command,
+  // and excludes hidden or unfocused time entirely.
+  if(m>0||keys[MAP.secondary]||keys.KeyE||gScan||keys[MAP.primary]||keys.Space||gBoost)runStarted=true;
+  if(runStarted)activeRunMs+=dt*1000;
+  const powered=ship.fuel>0;
+  const boost=powered&&!!(keys[MAP.primary]||keys.Space||gBoost);
+  // Emergency reaction thrusters never strand a survey. They cannot boost and
+  // move at less than half standard cruise speed until the relay recharges.
+  const acc=powered?(boost?310:190):100;
+  const max=powered?(boost?300:210):80;
+  if(dx||dy){
+   ship.vx+=dx*acc*dt;ship.vy+=dy*acc*dt;ship.a=Math.atan2(dy,dx);
+   if(powered)ship.fuel=Math.max(0,ship.fuel-dt*(boost?5.2:1.65));
+  }
+  ship.vx*=Math.pow(.986,dt*60);ship.vy*=Math.pow(.986,dt*60);
+  let v=Math.hypot(ship.vx,ship.vy);if(v>max){ship.vx*=max/v;ship.vy*=max/v}
+  ship.x=Math.max(35,Math.min(W-35,ship.x+ship.vx*dt));
+  ship.y=Math.max(35,Math.min(H-35,ship.y+ship.vy*dt));
+  for(const a of anomalies){
+   let dd=Math.hypot(ship.x-a[0],ship.y-a[1]);
+   if(dd<a[2]){let pull=(1-dd/a[2])*140,ang=Math.atan2(a[1]-ship.y,a[0]-ship.x);
+    ship.vx+=Math.cos(ang)*pull*dt;ship.vy+=Math.sin(ang)*pull*dt;
+    if(dd<30&&flash<=0){ship.hull--;flash=.8;ship.vx*=-1;ship.vy*=-1;
+     if(ship.hull<=0){ship.hull=3;ship.x=relay.x;ship.y=relay.y;ship.vx=ship.vy=0;ship.data=Math.max(0,ship.data-120)}}
+   }
+  }
+  // The established blue relay is now a functional resupply station. No
+  // currency, progression, score or beacons are awarded by refueling.
+  const docked=Math.hypot(ship.x-relay.x,ship.y-relay.y)<=relay.r+20;
+  // Defer refueling until the remaining-objectives check so that a full
+  // survey scores fuel carried back, not a free final docking top-up.
+  let b=nearBeacon();
+  if(b&&(keys[MAP.secondary]||keys.KeyE||gScan)){
+   b.progress=Math.min(1,b.progress+dt/1.2);scanT=b.progress;
+   if(b.progress>=1){b.scanned=true;ship.data+=150+Math.round(ship.fuel);TIP.textContent='Beacon charted. Continue the constellation.';scanT=0}
+  }else scanT=0;
+  let all=beacons.every(b=>b.scanned);
+  if(all){TIP.textContent='Constellation complete. Return to the blue relay.';
+   if(Math.hypot(ship.x-relay.x,ship.y-relay.y)<60){
+    done=true;let score=Math.max(500,Math.round(ship.data+ship.fuel*10+ship.hull*250));
+    TIP.textContent='Survey transmitted. Press R to chart again.';
+    try{parent.postMessage({type:'wwg:game-event',game:'starweaver-drift',event:'survey-complete',score,duration:Math.max(1,Math.round(activeRunMs/1000)),meta:{unit:'pts',direction:'high'}},'*')}catch{}
+   }
+  }else if(docked&&ship.fuel<100){
+   ship.fuel=Math.min(100,ship.fuel+dt*45);
+  }
+  updatePowerStatus(docked&&!all);
+  sync();
+ }
+ camX+=(Math.max(0,Math.min(Math.max(0,W-viewW),ship.x-viewW/2))-camX)*Math.min(1,dt*4);
+ camY+=(Math.max(0,Math.min(Math.max(0,H-viewH),ship.y-viewH/2))-camY)*Math.min(1,dt*4);
+ draw(t);requestAnimationFrame(step);
+}
+function draw(t){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle=flash>0?'#251020':'#020611';X.fillRect(0,0,stageW,stageH);X.save();X.translate(ox,oy);X.scale(sc,sc);X.fillStyle='#040a18';X.fillRect(0,0,viewW,viewH);X.save();X.translate(-camX,-camY);for(const s of dust){X.globalAlpha=.4+.2*(s.s-1);X.fillStyle='#dbeafe';X.fillRect(s.x,s.y,s.s,s.s)}X.globalAlpha=1;for(const a of anomalies){let g=X.createRadialGradient(a[0],a[1],4,a[0],a[1],a[2]);g.addColorStop(0,'#fb7185aa');g.addColorStop(.22,'#7c3aed66');g.addColorStop(1,'#0f172a00');X.fillStyle=g;X.beginPath();X.arc(a[0],a[1],a[2],0,7);X.fill();X.strokeStyle='#7c3aed55';X.beginPath();X.arc(a[0],a[1],a[2]*.55+Math.sin(t/400)*5,0,7);X.stroke()}X.fillStyle='#38bdf8';X.shadowColor='#38bdf8';X.shadowBlur=22;X.beginPath();X.arc(relay.x,relay.y,relay.r,0,7);X.strokeStyle='#93c5fd';X.lineWidth=4;X.stroke();X.shadowBlur=0;X.fillStyle='#bfdbfe';X.font='800 12px system-ui';X.fillText('RELAY',relay.x-20,relay.y+5);for(const b of beacons){X.save();X.translate(b.x,b.y);X.rotate(t/900+b.i);X.strokeStyle=b.scanned?'#34d399':'#fbbf24';X.lineWidth=3;X.shadowColor=X.strokeStyle;X.shadowBlur=12;X.strokeRect(-14,-14,28,28);X.shadowBlur=0;if(!b.scanned&&b.progress>0){X.strokeStyle='#fff';X.beginPath();X.arc(0,0,23,-Math.PI/2,-Math.PI/2+b.progress*Math.PI*2);X.stroke()}X.restore()}X.save();X.translate(ship.x,ship.y);X.rotate(ship.a);X.fillStyle=ship.fuel<=0?'#fdba74':'#e0f2fe';X.shadowColor=ship.fuel<=0?'#f59e0b':'#67e8f9';X.shadowBlur=14;X.beginPath();X.moveTo(19,0);X.lineTo(-13,-10);X.lineTo(-7,0);X.lineTo(-13,10);X.closePath();X.fill();X.shadowBlur=0;X.restore();X.restore();if(done){X.fillStyle='rgba(2,5,14,.72)';X.fillRect(0,0,viewW,viewH);X.fillStyle='white';X.textAlign='center';X.font='900 42px system-ui';X.fillText('STARWEAVE COMPLETE',viewW/2,viewH*.42);X.font='18px system-ui';X.fillText('Your survey has been transmitted.',viewW/2,viewH*.54)}X.restore()}reset();requestAnimationFrame(step);
 </script></body></html>

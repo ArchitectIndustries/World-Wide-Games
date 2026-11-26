@@ -1,0 +1,27 @@
+const assert=require('node:assert/strict');
+const S=require('../games/aegis-verge/skyburst-suppression.js');
+const C=require('../games/aegis-verge/counterplay.js');
+let n=0;function check(v,msg){assert.ok(v,msg);n++;}
+const wind={hp:5,dead:false,state:'windup',windup:2,cool:0,type:'lancer',siegeTarget:{x:0,z:0}};
+check(S.apply(wind,C),'live windup interrupted');
+check(wind.state==='stagger','existing stagger state');
+check(wind.windup===0,'committed shot canceled');
+check(wind.staggerLeft===C.STAGGER_SECONDS,'existing vulnerability duration');
+check(C.shotDamage(wind)===2,'actual cannon double damage window');
+check(wind.cool>=C.STAGGER_SECONDS+.5,'stagger cooldown');
+check(wind.suppressedLeft===S.VISUAL,'visual indicator tied to real event');
+check(!S.apply(wind,C),'already staggered not repeatedly suppressed');
+const idle={hp:3,state:'seek',cool:0,type:'skirmisher'};
+check(S.apply(idle,C),'idle enemy delayed');
+check(idle.cool===S.DELAY&&idle.state==='recover','delay functional');
+check(C.shotDamage(idle)===1,'no invented damage buff against idle');
+S.tick(idle,.3);check(idle.suppressedLeft>0&&idle.suppressedLeft<S.VISUAL,'simulation visual timer');
+S.tick(idle,3);check(idle.suppressedLeft===0,'visual effect expires');
+check(!S.apply({hp:5,state:'seek',cool:2},C),'no shortening valid cooldown');
+check(!S.apply({hp:0,state:'windup'},C),'dead body rejected');
+check(!S.apply({hp:5,dead:true,state:'windup'},C),'dead flag rejected');
+check(!S.apply({hp:4,state:'stagger',staggerLeft:1},C),'existing stagger stays owned by original');
+check(!S.apply(null,C),'missing actor harmless');
+check(!S.apply({hp:5,state:'windup'},null),'no counterplay module fails closed');
+check(S.DELAY<=1&&S.VISUAL<=1,'bounded disruption and VFX');
+console.log(JSON.stringify({passed:n,total:n}));

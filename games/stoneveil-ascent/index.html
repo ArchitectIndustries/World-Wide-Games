@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Stoneveil Ascent</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#080a12;color:#fff;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;left:12px;right:12px;top:12px;display:flex;gap:8px;justify-content:space-between;pointer-events:none}.hud div{background:#0b1020dc;border:1px solid #3b4968;border-radius:12px;padding:8px 11px;font-size:11px;backdrop-filter:blur(8px)}.hud b{font-size:16px;margin-left:4px}.tip{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);max-width:560px;background:#0b1020e8;border:1px solid #3b4968;border-radius:999px;padding:8px 13px;text-align:center;font-size:11px;color:#cbd5e1}.touch{display:none;position:fixed;right:12px;bottom:12px;grid-template-columns:repeat(3,56px);gap:7px}.touch button{height:52px;border:1px solid #516487;background:#111a2ddd;color:#fff;border-radius:14px;font-weight:900}.touch .primary{grid-column:span 2;background:#4338ca}@media(pointer:coarse){.touch{display:grid}.tip{left:12px;right:202px;transform:none;border-radius:14px}}@media(max-width:650px){.hud{flex-wrap:wrap}.hud div{padding:6px 8px}.tip{font-size:10px}}</style></head><body><canvas id="c"></canvas><div class="hud"><div>Route <b id="route">1/5</b></div><div>Stamina <b id="stamina">100</b></div><div>Moves <b id="moves">0</b></div><div>Falls <b id="falls">0</b></div><div>Chalk <b id="chalk">1</b></div></div><div class="tip" id="tip">Choose a glowing hold, then climb. Click/tap a reachable hold or use Left/Right + Primary.</div><div class="touch"><button data-a="left">◀</button><button data-a="right">▶</button><button data-a="chalk">CHALK</button><button class="primary" data-a="climb">CLIMB</button><button data-a="reset">↻</button></div><script src="../../assets/wwg-input.js"></script><script>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Stoneveil Ascent 1.3 — Frame-Fair Summit</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#080a12;color:#fff;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;left:12px;right:12px;top:12px;display:flex;gap:8px;justify-content:space-between;pointer-events:none}.hud div{background:#0b1020dc;border:1px solid #3b4968;border-radius:12px;padding:8px 11px;font-size:11px;backdrop-filter:blur(8px)}.hud b{font-size:16px;margin-left:4px}.tip{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);max-width:560px;background:#0b1020e8;border:1px solid #3b4968;border-radius:999px;padding:8px 13px;text-align:center;font-size:11px;color:#cbd5e1}.touch{display:none;position:fixed;right:12px;bottom:12px;grid-template-columns:repeat(3,56px);gap:7px}.touch button{height:52px;border:1px solid #516487;background:#111a2ddd;color:#fff;border-radius:14px;font-weight:900}.touch .primary{grid-column:span 2;background:#4338ca}@media(pointer:coarse){.touch{display:grid}.tip{left:12px;right:202px;transform:none;border-radius:14px}}@media(max-width:650px){.hud{flex-wrap:wrap}.hud div{padding:6px 8px}.tip{font-size:10px}}</style></head><body><canvas id="c"></canvas><div class="hud"><div>Route <b id="route">1/5</b></div><div>Stamina <b id="stamina">100</b></div><div>Moves <b id="moves">0</b></div><div>Falls <b id="falls">0</b></div><div>Chalk <b id="chalk">1</b></div><div>Active time <b id="clock">0.0s</b></div></div><div class="tip" id="tip" role="status" aria-live="polite">Choose a glowing hold, then climb. Click/tap a reachable hold or use Left/Right + Primary.</div><div class="touch"><button data-a="left">◀</button><button data-a="right">▶</button><button data-a="chalk">CHALK</button><button class="primary" data-a="climb">CLIMB</button><button data-a="reset">↻</button></div><script src="../../assets/wwg-input.js"></script><script>
 const IN=window.WWGInput||{is:(e,a,x=[])=>({up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],left:['KeyA','ArrowLeft'],right:['KeyD','ArrowRight'],primary:['Space'],secondary:['KeyE']}[a]||[]).concat(x).includes(e.code)};
 const C=document.getElementById('c'),X=C.getContext('2d'),VW=960,VH=540;let dpr=1,sc=1,ox=0,oy=0;function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=innerWidth*dpr;C.height=innerHeight*dpr;sc=Math.min(innerWidth/VW,innerHeight/VH);ox=(innerWidth-VW*sc)/2;oy=(innerHeight-VH*sc)/2}addEventListener('resize',resize);resize();
 const ROUTES=[
@@ -8,19 +8,101 @@ const ROUTES=[
  {name:'Iron Rain',accent:'#fca5a5',holds:[[520,480,0],[462,431,1],[538,386,2],[450,335,2],[535,286,2],[430,232,2],[520,181,2],[444,128,2],[505,72,3]]},
  {name:'Veil Crown',accent:'#67e8f9',holds:[[380,480,0],[443,440,1],[515,402,2],[451,355,2],[548,314,2],[470,270,2],[574,224,2],[492,178,2],[590,132,2],[520,82,3]]}
 ];
-let ri=0,holds=[],cur=0,selected=0,stamina=100,moves=0,falls=0,chalk=1,completed=0,anim=null,flash='',flashT=0,start=performance.now();const R=document.getElementById('route'),ST=document.getElementById('stamina'),MV=document.getElementById('moves'),FA=document.getElementById('falls'),CH=document.getElementById('chalk'),TIP=document.getElementById('tip');
-function loadRoute(){holds=ROUTES[ri].holds.map((h,i)=>({x:h[0],y:h[1],type:h[2],i}));cur=0;selected=0;stamina=Math.max(72,100-ri*4);moves=0;chalk=1;anim=null;sync();selectBest('up')}
-function sync(){R.textContent=(ri+1)+'/5';ST.textContent=Math.max(0,Math.round(stamina));MV.textContent=moves;FA.textContent=falls;CH.textContent=chalk;TIP.textContent=flash||`Route ${ri+1}: ${ROUTES[ri].name}. ${reachable().length?'Choose a glowing hold, then climb.':'No safe hold — reset or chalk.'}`}
+let ri=0,holds=[],cur=0,selected=0,stamina=100,moves=0,falls=0,chalk=1,completed=0,anim=null,transitionLocked=false,flash='',flashT=0,activeMs=0,runStarted=false,focusPaused=false,windowBlurred=false,padNeedsNeutral=false,pendingTransitionMs=0,pendingFinalReset=false,clockLast=performance.now();const R=document.getElementById('route'),ST=document.getElementById('stamina'),MV=document.getElementById('moves'),FA=document.getElementById('falls'),CH=document.getElementById('chalk'),CLOCK=document.getElementById('clock'),TIP=document.getElementById('tip');
+function loadRoute(){transitionLocked=false;holds=ROUTES[ri].holds.map((h,i)=>({x:h[0],y:h[1],type:h[2],i}));cur=0;selected=0;stamina=Math.max(72,100-ri*4);moves=0;chalk=1;anim=null;sync();selectBest('up')}
+function sync(){R.textContent=(ri+1)+'/5';ST.textContent=Math.max(0,Math.round(stamina));MV.textContent=moves;FA.textContent=falls;CH.textContent=chalk;CLOCK.textContent=(activeMs/1000).toFixed(1)+'s';TIP.textContent=focusPaused?'Paused: return to the game to resume. Climbing, timers and controls are frozen.':flash||`Route ${ri+1}: ${ROUTES[ri].name}. ${reachable().length?'Choose a glowing hold, then climb.':'No safe hold — reset or chalk.'}`}
 function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}function reachable(){const here=holds[cur];return holds.filter(h=>h.i!==cur&&h.y<here.y+16&&dist(h,here)<=132&&h.i>cur-2)}
-function selectBest(dir){const list=reachable();if(!list.length){selected=cur;return}const here=holds[cur],sorted=[...list].sort((a,b)=>a.x-b.x);let idx=sorted.findIndex(h=>h.i===selected);if(dir==='left')idx=idx<=0?sorted.length-1:idx-1;else if(dir==='right')idx=idx<0||idx===sorted.length-1?0:idx+1;else{const target=[...list].sort((a,b)=>a.y-b.y||dist(a,here)-dist(b,here))[0];idx=sorted.indexOf(target)}selected=sorted[idx].i}
+function selectBest(dir){if(focusPaused||transitionLocked)return;const list=reachable();if(!list.length){selected=cur;return}const here=holds[cur],sorted=[...list].sort((a,b)=>a.x-b.x);let idx=sorted.findIndex(h=>h.i===selected);if(dir==='left')idx=idx<=0?sorted.length-1:idx-1;else if(dir==='right')idx=idx<0||idx===sorted.length-1?0:idx+1;else{const target=[...list].sort((a,b)=>a.y-b.y||dist(a,here)-dist(b,here))[0];idx=sorted.indexOf(target)}selected=sorted[idx].i}
 function fail(reason){falls++;flash=reason;flashT=1.2;stamina=Math.max(55,82-falls*3);selected=cur;sync()}
-function climb(){if(anim||selected===cur)return;const target=holds[selected],here=holds[cur];if(!reachable().some(h=>h.i===target.i)){fail('That hold is out of reach.');return}const d=dist(here,target),cost=d*.11+[2,4,7,0][target.type]+ri*.8;moves++;if(stamina<cost){fail('Grip failed — stamina was too low.');return}stamina-=cost;anim={from:{x:here.x,y:here.y},to:{x:target.x,y:target.y},t:0,target:target.i};sync()}
-function useChalk(){if(!chalk||anim)return;chalk=0;stamina=Math.min(100,stamina+34);flash='Chalked up: +34 stamina.';flashT=1.2;sync()}
-function finishRoute(){completed++;const routeScore=Math.max(450,2100-moves*85-falls*240+Math.round(stamina*5));try{parent.postMessage({type:'wwg:game-event',game:'stoneveil-ascent',event:'route-cleared',score:routeScore,meta:{route:ri+1,moves,falls,stamina:Math.round(stamina)}},'*')}catch{}if(ri<ROUTES.length-1){ri++;flash='Route cleared — next wall.';flashT=1.5;setTimeout(loadRoute,500)}else{const duration=Math.round((performance.now()-start)/1000),score=Math.max(1200,12500-falls*700-duration*18+completed*500);flash='STONEVEIL SUMMIT';flashT=3.5;try{parent.postMessage({type:'wwg:game-event',game:'stoneveil-ascent',event:'summit-complete',score,duration,meta:{falls,totalRoutes:completed}},'*')}catch{}setTimeout(()=>{ri=0;completed=0;falls=0;start=performance.now();loadRoute()},2400)}}
+function climb(){if(focusPaused||transitionLocked||anim||selected===cur)return;const target=holds[selected],here=holds[cur];if(!reachable().some(h=>h.i===target.i)){fail('That hold is out of reach.');return}const d=dist(here,target),cost=d*.11+[2,4,7,0][target.type]+ri*.8;moves++;if(stamina<cost){fail('Grip failed — stamina was too low.');return}stamina-=cost;runStarted=true;anim={from:{x:here.x,y:here.y},to:{x:target.x,y:target.y},t:0,target:target.i};sync()}
+function useChalk(){if(focusPaused||transitionLocked||!chalk||anim)return;chalk=0;stamina=Math.min(100,stamina+34);flash='Chalked up: +34 stamina.';flashT=1.2;sync()}
+function finishRoute(){
+ // A route is telemetry, not a competitive finish. Ignore repeated frame/input
+ // completions while the next wall (or the new campaign) is loading.
+ if(focusPaused||transitionLocked||cur!==holds.length-1)return false;
+ transitionLocked=true;
+ completed++;
+ const routeScore=Math.max(450,2100-moves*85-falls*240+Math.round(stamina*5));
+ try{parent.postMessage({type:'wwg:game-event',game:'stoneveil-ascent',event:'route-cleared',meta:{route:ri+1,moves,falls,stamina:Math.round(stamina),attemptScore:routeScore,ranked:false}},'*')}catch{}
+ if(ri<ROUTES.length-1){
+   ri++;flash='Route cleared. Unranked progress; finish all five for a summit score.';flashT=1.5;
+   pendingTransitionMs=500;pendingFinalReset=false;
+ }else{
+   const duration=Math.round(activeMs/1000),score=Math.max(1200,12500-falls*700-duration*18+completed*500);
+   flash=`STONEVEIL SUMMIT - ranked ${score} points!`;flashT=3.5;
+   try{parent.postMessage({type:'wwg:game-event',game:'stoneveil-ascent',event:'summit-complete',score,duration,meta:{falls,totalRoutes:completed,unit:'pts',direction:'high',ranked:true}},'*')}catch{}
+   pendingTransitionMs=2400;pendingFinalReset=true;
+ }
+ return true;
+}
 function commitArrival(){cur=anim.target;anim=null;if(cur===holds.length-1){finishRoute();return}selectBest('up');sync()}
-function reset(){falls++;stamina=Math.max(60,92-ri*4);cur=0;selected=0;anim=null;flash='Returned to the belay.';flashT=1;selectBest('up');sync()}
-function toWorld(e){const r=C.getBoundingClientRect();return{x:(e.clientX-r.left-ox)/sc,y:(e.clientY-r.top-oy)/sc}}C.addEventListener('pointerdown',e=>{if(anim)return;const p=toWorld(e),cand=reachable().filter(h=>dist(h,p)<30).sort((a,b)=>dist(a,p)-dist(b,p))[0];if(cand){selected=cand.i;sync();climb()}});
-addEventListener('keydown',e=>{if(IN.is(e,'left'))selectBest('left');else if(IN.is(e,'right'))selectBest('right');else if(IN.is(e,'up'))selectBest('up');else if(IN.is(e,'primary'))climb();else if(IN.is(e,'secondary'))useChalk();else if(e.code==='KeyR')reset();sync()});document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const a=b.dataset.a;if(a==='left'||a==='right')selectBest(a);if(a==='climb')climb();if(a==='chalk')useChalk();if(a==='reset')reset();sync()});
-let lt=performance.now();function step(t){const dt=Math.min(.033,(t-lt)/1000);lt=t;if(anim){anim.t=Math.min(1,anim.t+dt*3.3);if(anim.t>=1)commitArrival()}if(flashT>0){flashT-=dt;if(flashT<=0){flash='';sync()}}const gp=navigator.getGamepads?.()[0];if(gp&&!anim){if(gp.buttons[0]?.pressed&&!step.gpA){climb();step.gpA=1}if(!gp.buttons[0]?.pressed)step.gpA=0;if(gp.buttons[1]?.pressed&&!step.gpB){useChalk();step.gpB=1}if(!gp.buttons[1]?.pressed)step.gpB=0;if(gp.axes[0]<-.6&&!step.gpL){selectBest('left');step.gpL=1}if(gp.axes[0]>-.3)step.gpL=0;if(gp.axes[0]>.6&&!step.gpR){selectBest('right');step.gpR=1}if(gp.axes[0]<.3)step.gpR=0}draw(t);requestAnimationFrame(step)}
-function draw(t){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#050711';X.fillRect(0,0,innerWidth,innerHeight);X.save();X.translate(ox,oy);X.scale(sc,sc);const q=ROUTES[ri],g=X.createLinearGradient(0,0,0,VH);g.addColorStop(0,'#15172a');g.addColorStop(1,'#070912');X.fillStyle=g;X.fillRect(0,0,VW,VH);for(let i=0;i<18;i++){X.fillStyle=i%2?'#1c2336':'#171d2d';X.beginPath();X.moveTo(160+i*39,540);X.lineTo(330+i*17,0);X.lineTo(375+i*18,0);X.lineTo(205+i*39,540);X.fill()}X.fillStyle='#dbeafe';X.globalAlpha=.12;for(let i=0;i<40;i++)X.fillRect((i*137)%VW,(i*79)%VH,1.5,1.5);X.globalAlpha=1;X.textAlign='left';X.fillStyle='#94a3b8';X.font='800 12px system-ui';X.fillText(q.name.toUpperCase(),22,510);const reach=new Set(reachable().map(h=>h.i));for(const h of holds){const active=h.i===selected,done=h.i===cur;X.shadowColor=active?q.accent:'transparent';X.shadowBlur=active?20:0;X.fillStyle=done?'#f8fafc':h.type===3?'#fbbf24':h.type===2?'#fb7185':h.type===1?'#a78bfa':'#94a3b8';X.beginPath();X.ellipse(h.x,h.y,12+(h.type===2?2:0),8,Math.sin(h.i*2.2)*.35,0,7);X.fill();if(reach.has(h.i)){X.strokeStyle=active?q.accent:'#64748b';X.lineWidth=active?3:1;X.beginPath();X.arc(h.x,h.y,22+(active?Math.sin(t/160)*2:0),0,7);X.stroke()}X.shadowBlur=0}let px=holds[cur].x,py=holds[cur].y;if(anim){const e=anim.t*anim.t*(3-2*anim.t);px=anim.from.x+(anim.to.x-anim.from.x)*e;py=anim.from.y+(anim.to.y-anim.from.y)*e-Math.sin(Math.PI*e)*18}X.strokeStyle=q.accent;X.lineWidth=4;X.beginPath();X.moveTo(px,py+6);X.lineTo(px,py+30);X.stroke();X.fillStyle='#e2e8f0';X.beginPath();X.arc(px,py,10,0,7);X.fill();X.fillStyle=q.accent;X.beginPath();X.arc(px,py-2,5,0,7);X.fill();if(selected!==cur&&!anim){const h=holds[selected];X.strokeStyle=q.accent;X.setLineDash([5,5]);X.beginPath();X.moveTo(px,py);X.lineTo(h.x,h.y);X.stroke();X.setLineDash([])}X.restore()}loadRoute();requestAnimationFrame(step);
+function reset(){if(focusPaused||transitionLocked)return;falls++;stamina=Math.max(60,92-ri*4);cur=0;selected=0;anim=null;flash='Returned to the belay.';flashT=1;selectBest('up');sync()}
+function toWorld(e){const r=C.getBoundingClientRect();return{x:(e.clientX-r.left-ox)/sc,y:(e.clientY-r.top-oy)/sc}}C.addEventListener('pointerdown',e=>{if(focusPaused||transitionLocked||anim)return;const p=toWorld(e),cand=reachable().filter(h=>dist(h,p)<30).sort((a,b)=>dist(a,p)-dist(b,p))[0];if(cand){selected=cand.i;sync();climb()}});
+addEventListener('keydown',e=>{if(focusPaused)return;if(IN.is(e,'left')){e.preventDefault();if(!e.repeat)selectBest('left');}else if(IN.is(e,'right')){e.preventDefault();if(!e.repeat)selectBest('right');}else if(IN.is(e,'up')){e.preventDefault();if(!e.repeat)selectBest('up');}else if(IN.is(e,'primary')){e.preventDefault();if(!e.repeat)climb();}else if(IN.is(e,'secondary')){e.preventDefault();if(!e.repeat)useChalk();}else if(e.code==='KeyR'){e.preventDefault();if(!e.repeat)reset();}sync()});document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{if(focusPaused)return;const a=b.dataset.a;if(a==='left'||a==='right')selectBest(a);if(a==='climb')climb();if(a==='chalk')useChalk();if(a==='reset')reset();sync()});
+// Only an engaged, visible/focused run earns or loses competitive time.
+// Timer and route transitions use the same pause-aware foreground clock.
+function pauseForFocus(value){
+ if(focusPaused===value)return;
+ focusPaused=value;clockLast=performance.now();padNeedsNeutral=true;
+ step.gpA=step.gpB=step.gpL=step.gpR=0;
+ sync();
+}
+function syncFocus(){pauseForFocus(windowBlurred||document.hidden)}
+addEventListener('blur',()=>{windowBlurred=true;syncFocus()});
+addEventListener('focus',()=>{windowBlurred=false;syncFocus()});
+document.addEventListener('visibilitychange',syncFocus);
+// Advance grip travel and belay transitions on one foreground timeline.
+// A slow display callback must not charge 100 ms of ranked time while animating
+// only 33 ms of the actual climb; a frame cannot also pre-spend transition time
+// which did not exist until its grip arrived. Cap extraordinary stalls at 2 s.
+function advanceForeground(ms){
+ let remaining=Math.min(ms,2000);
+ while(remaining>0.00001){
+   if(pendingTransitionMs>0){
+     const used=Math.min(remaining,pendingTransitionMs);
+     pendingTransitionMs-=used;remaining-=used;
+     if(pendingTransitionMs<=0.00001){
+       pendingTransitionMs=0;
+       if(pendingFinalReset){ri=0;completed=0;falls=0;activeMs=0;runStarted=false;pendingFinalReset=false}
+       loadRoute();
+     }
+   }else if(anim){
+     const used=Math.min(remaining,(1-anim.t)*1000/3.3);
+     anim.t=Math.min(1,anim.t+used*3.3/1000);
+     if(runStarted&&!transitionLocked)activeMs+=used;
+     remaining-=used;
+     if(anim.t>=1-0.000000001){anim.t=1;commitArrival()}
+   }else{
+     if(runStarted&&!transitionLocked)activeMs+=remaining;
+     remaining=0;
+   }
+ }
+ // Foreground stalls over 2 s are still counted as wall time where eligible;
+ // physics parity after that exceptional boundary is NOT certified.
+ if(ms>2000&&runStarted&&!transitionLocked)activeMs+=ms-2000;
+}
+function step(t){
+ const wallDt=Math.max(0,t-clockLast),dt=Math.min(2,wallDt/1000);
+ clockLast=t;
+ if(!focusPaused){
+   advanceForeground(wallDt);
+   if(flashT>0){flashT-=dt;if(flashT<=0){flash='';sync()}}
+   let gp=null;try{gp=navigator.getGamepads?.()[0]||null}catch{}
+   if(padNeedsNeutral){
+     if(!gp||(!gp.buttons?.some(b=>b.pressed)&&Math.abs(gp.axes?.[0]||0)<.3)){padNeedsNeutral=false}
+   }else if(gp&&!anim&&!transitionLocked){
+     if(gp.buttons?.[0]?.pressed&&!step.gpA){climb();step.gpA=1}
+     if(!gp.buttons?.[0]?.pressed)step.gpA=0;
+     if(gp.buttons?.[1]?.pressed&&!step.gpB){useChalk();step.gpB=1}
+     if(!gp.buttons?.[1]?.pressed)step.gpB=0;
+     if((gp.axes?.[0]||0)<-.6&&!step.gpL){selectBest('left');step.gpL=1}
+     if((gp.axes?.[0]||0)>-.3)step.gpL=0;
+     if((gp.axes?.[0]||0)>.6&&!step.gpR){selectBest('right');step.gpR=1}
+     if((gp.axes?.[0]||0)<.3)step.gpR=0;
+   }
+ }
+ CLOCK.textContent=(activeMs/1000).toFixed(1)+'s';
+ draw(t);requestAnimationFrame(step)
+} 
+function draw(t){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#050711';X.fillRect(0,0,innerWidth,innerHeight);X.save();X.translate(ox,oy);X.scale(sc,sc);const q=ROUTES[ri],g=X.createLinearGradient(0,0,0,VH);g.addColorStop(0,'#15172a');g.addColorStop(1,'#070912');X.fillStyle=g;X.fillRect(0,0,VW,VH);for(let i=0;i<18;i++){X.fillStyle=i%2?'#1c2336':'#171d2d';X.beginPath();X.moveTo(160+i*39,540);X.lineTo(330+i*17,0);X.lineTo(375+i*18,0);X.lineTo(205+i*39,540);X.fill()}X.fillStyle='#dbeafe';X.globalAlpha=.12;for(let i=0;i<40;i++)X.fillRect((i*137)%VW,(i*79)%VH,1.5,1.5);X.globalAlpha=1;X.textAlign='left';X.fillStyle='#94a3b8';X.font='800 12px system-ui';X.fillText(q.name.toUpperCase(),22,510);const reach=new Set(reachable().map(h=>h.i));for(const h of holds){const active=h.i===selected,done=h.i===cur;X.shadowColor=active?q.accent:'transparent';X.shadowBlur=active?20:0;X.fillStyle=done?'#f8fafc':h.type===3?'#fbbf24':h.type===2?'#fb7185':h.type===1?'#a78bfa':'#94a3b8';X.beginPath();X.ellipse(h.x,h.y,12+(h.type===2?2:0),8,Math.sin(h.i*2.2)*.35,0,7);X.fill();if(reach.has(h.i)){X.strokeStyle=active?q.accent:'#64748b';X.lineWidth=active?3:1;X.beginPath();X.arc(h.x,h.y,22+(active?Math.sin(t/160)*2:0),0,7);X.stroke()}X.shadowBlur=0}let px=holds[cur].x,py=holds[cur].y;if(anim){const e=anim.t*anim.t*(3-2*anim.t);px=anim.from.x+(anim.to.x-anim.from.x)*e;py=anim.from.y+(anim.to.y-anim.from.y)*e-Math.sin(Math.PI*e)*18}X.strokeStyle=q.accent;X.lineWidth=4;X.beginPath();X.moveTo(px,py+6);X.lineTo(px,py+30);X.stroke();X.fillStyle='#e2e8f0';X.beginPath();X.arc(px,py,10,0,7);X.fill();X.fillStyle=q.accent;X.beginPath();X.arc(px,py-2,5,0,7);X.fill();if(selected!==cur&&!anim){const h=holds[selected];X.strokeStyle=q.accent;X.setLineDash([5,5]);X.beginPath();X.moveTo(px,py);X.lineTo(h.x,h.y);X.stroke();X.setLineDash([])}X.restore()}loadRoute();syncFocus();requestAnimationFrame(step);
 </script></body></html>

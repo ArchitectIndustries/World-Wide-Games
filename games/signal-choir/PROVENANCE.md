@@ -1,0 +1,3 @@
+# Signal Choir v1.8 provenance (2026-11-18)
+
+Game executable and five tone synthesized oscillator signals are existing original Architect Industries/WorldWideGames implementation; v1.8 adds first-party standard Gamepad API handling with zero third-party code, art, audio, source or runtime package imports. Study-only: 2048 `js/keyboard_input_manager.js` blob `ca01b3ce8995a5a20ac50219712d1ef95297ed99` (MIT root), WebSoccer `src/input.js` blob `7e56f6e18eecc5fc48e8f8c5f33021c2d7f8a3c5` (MIT root); media/dependency rights not independently cleared. Normative Gamepad API: https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API/Using_the_Gamepad_API . No upstream code or art reused. User-provided viral fan-port links are not use rights. No paid services.

@@ -72,7 +72,7 @@ with sync_playwright() as pw:
     assert p.evaluate('sector')==2 and p.evaluate('score')==777
     # Campaign completion updates persistent clear/best records and standardized event.
     p.evaluate('load(5);score=1234;finish()')
-    m=p.evaluate('JSON.parse(localStorage.getItem(META))'); assert m['best']>=1234 and m['clears']>=1
+    m=p.evaluate('JSON.parse(localStorage.getItem(META))'); assert m['best']==0 and m['clears']>=1  # Direct final-sector practice is not a ranked five-sector run
     ev=p.evaluate('window.__events'); assert any(e.get('event')=='campaign-complete' for e in ev),ev
     assert not errs, errs
     b.close()

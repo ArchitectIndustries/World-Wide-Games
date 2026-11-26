@@ -1,0 +1,6 @@
+dist/
+node_modules/
+.openai/
+.vercel/
+__pycache__/
+*.pyc

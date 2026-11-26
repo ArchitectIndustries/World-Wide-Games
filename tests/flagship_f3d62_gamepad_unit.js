@@ -1,0 +1,25 @@
+'use strict';
+const assert=require('node:assert/strict');
+const G=require('../games/aegis-verge/gamepad-neutral.js');
+let total=0;const ck=(ok,name)=>{assert.ok(ok,name);total++;};
+function pad(button=[],axes=[0,0],id='A',index=0){return {index,id,connected:true,axes,buttons:Array.from({length:17},(_,i)=>({pressed:button.includes(i),value:button.includes(i)?1:0}))};}
+ck(G.ACTION_BUTTONS.length===13,'all mapped actions enumerated');
+ck(G.ACTION_BUTTONS.includes(11),'cache activation is neutral gated');
+ck(G.neutral(pad()),'neutral pad arms');
+for(const i of G.ACTION_BUTTONS)ck(!G.neutral(pad([i])),'action '+i+' must be released');
+ck(!G.neutral(pad([],[-.25,0])),'left axis not neutral');
+ck(!G.neutral(pad([],[0,.2])),'down axis not neutral');
+ck(G.neutral(pad([],[.179,-.179])),'axes inside dead zone neutral');
+ck(!G.neutral(pad([],[Infinity,0])),'bad axis denied');
+ck(!G.neutral(pad([],[NaN,0])),'NaN axis denied');
+ck(!G.neutral({...pad(),connected:false}),'disconnected invalid');
+ck(!G.neutral({...pad(),index:-1}),'bad index invalid');
+ck(!G.neutral({...pad(),buttons:null}),'bad buttons invalid');
+const analog=pad();analog.buttons[11]={pressed:false,value:.8};ck(!G.neutral(analog),'analog pressed value must block arming');
+const below=pad();below.buttons[11]={pressed:false,value:.12};ck(G.neutral(below),'analog dead zone allowed');
+ck(G.identity(pad())==='0|A','stable pad key');
+ck(G.identity(pad([], [0,0], 'B'))!=='0|A','new device same index distinct');
+ck(G.identity({...pad(),connected:false})===null,'disconnected has no identity');
+ck(G.identity({...pad(),index:undefined})===null,'invalid index rejected');
+ck(Object.isFrozen(G),'interface immutable');
+console.log(JSON.stringify({name:'F3D62 gamepad safe hotplug',assertions:total,status:'PASS'}));

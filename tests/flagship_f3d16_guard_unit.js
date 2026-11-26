@@ -1,0 +1,23 @@
+/* Aegis Verge 2.16: original deterministic parry timing assertions. */
+const assert=require('node:assert/strict'),G=require('../games/aegis-verge/perfect-guard.js');
+let count=0;const ck=(t,msg)=>{assert.ok(t,msg);count++};
+const s=G.create();ck(s.window===0&&s.cooldown===0,'initial state');
+ck(G.press(s,true),'armed on valid press');ck(s.window===.24&&s.cooldown===2.4,'duration constants');
+ck(!G.press(s,true),'repeated shield hold cannot rearm');
+ck(G.intercept(s,false,{vx:1,vz:0})===null,'unshielded cannot intercept');
+ck(G.intercept(s,true,{vx:0,vz:0})===null,'zero-velocity cannot reflect');
+const rebound=G.intercept(s,true,{vx:0,vz:14});ck(rebound&&rebound.vz===-30&&rebound.vx===0,'reflects reverse projectile direction');
+ck(rebound.reflected===true&&rebound.life>1,'reflected projectile lifespan');ck(s.parries===1&&s.window===0,'single hit consumes window');
+ck(G.intercept(s,true,{vx:12,vz:0})===null,'cannot absorb second bolt');
+ck(!G.press(s,true),'cooldown prevents retrigger');
+G.tick(s,.5);ck(s.cooldown>1&&s.window===0,'cooldown advances without retrigger');
+G.tick(s,9);ck(s.cooldown===0,'cooldown expires safely');ck(G.press(s,true),'new deliberate shield press');
+G.tick(s,G.WINDOW+.01);ck(G.intercept(s,true,{vx:4,vz:0})===null,'too late parry denied');
+G.tick(s,G.COOLDOWN);ck(G.press(s,false)===false,'not eligible prevents parry');
+ck(G.press(s,true),'eligible rearm after cooldown');G.tick(s,-2);ck(s.window===G.WINDOW,'negative time does not alter guard');
+const a=G.create(),b=G.create();G.press(a,true);ck(b.window===0,'independent operation state');
+ck(G.intercept(null,true,{vx:1,vz:0})===null,'null safe intercept');
+ck(G.intercept(s,true,{vx:Infinity,vz:0})===null,'nonfinite input rejected');
+ck(G.intercept(s,true,{vx:3,vz:4}).vx===-18,'vector magnitude normalized');
+ck(s.parries===2,'exactly two single-shot intercepts across cooldowns');
+console.log(JSON.stringify({suite:'F3D16 perfect guard',passed:count,total:count}));

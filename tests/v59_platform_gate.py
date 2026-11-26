@@ -1,22 +1,47 @@
 from pathlib import Path
-import re
+from playwright.sync_api import sync_playwright
+import re, json, subprocess
 
-ROOT = Path(__file__).resolve().parents[1]
-games_js = (ROOT / 'js/games.js').read_text()
-index = (ROOT / 'index.html').read_text()
-detail = (ROOT / 'game.html').read_text()
-styles = (ROOT / 'assets/styles.css').read_text()
+ROOT=Path(__file__).resolve().parents[1]
+node="""const fs=require('fs'),vm=require('vm');const c={window:{}};vm.createContext(c);vm.runInContext(fs.readFileSync('js/games.js','utf8'),c);console.log(JSON.stringify(c.window.WWG_GAMES));"""
+games=json.loads(subprocess.check_output(['node','-e',node],cwd=ROOT,text=True))
+base=(ROOT/'game.html').read_text(); games_js=(ROOT/'js/games.js').read_text(); page_js=(ROOT/'js/game-page.js').read_text()
+PRE="<script>Object.defineProperty(window,'localStorage',{value:(()=>{const s={};return{getItem:k=>s[k]||null,setItem:(k,v)=>s[k]=String(v),removeItem:k=>delete s[k]}})(),configurable:true});</script>"
 
-ids = re.findall(r"id:'([^']+)'", games_js)
-assert len(ids) == 82, len(ids)
-assert len(set(ids)) == 82
-for game_id in ids:
-    assert (ROOT / 'games' / game_id / 'index.html').exists(), game_id
-    assert (ROOT / 'covers' / f'{game_id}.svg').exists(), game_id
+def detail_doc(slug):
+    js=page_js.replace("id=new URLSearchParams(location.search).get('id')",f"id='{slug}'")
+    h=base.replace('<link rel="stylesheet" href="assets/styles.css"/>','')
+    h=re.sub(r'<script src="js/games\.js(?:\?v\d+)?"></script>',lambda _:f'<script>{games_js}</script>',h)
+    h=h.replace('<script src="js/game-page.js"></script>',f'<script>{js}</script>')
+    h=h.replace('<body class="game-detail-page">','<body class="game-detail-page">'+PRE)
+    return h
 
-assert 'js/games.js?v59' in index
-assert 'js/app.js?v59' in index
-assert 'js/games.js?v59' in detail
-assert 'game-grid' in styles or 'gameGrid' in index
-
-print({'games':82,'catalogPaths':'pass','v59CacheBusters':'pass','platformShell':'pass'})
+with sync_playwright() as pw:
+    browser=pw.chromium.launch(headless=True,executable_path='/usr/bin/chromium',args=['--no-sandbox','--disable-gpu'])
+    page=browser.new_page(viewport={'width':1280,'height':900})
+    errors=[]
+    page.on('pageerror',lambda e:errors.append(str(e)))
+    for g in games:
+        errors.clear(); page.set_content(detail_doc(g['id']),wait_until='domcontentloaded',timeout=5000)
+        assert not errors,(g['id'],errors)
+        assert page.locator('#gameTitle').inner_text()==g['title'],g['id']
+        assert page.locator('#controlsList li').count()>=3,g['id']
+        obj=page.locator('#gameObjective').inner_text().strip()
+        assert obj.startswith('How to win:') and len(obj)>=40,(g['id'],obj)
+        if g.get('remappable'):
+            assert not page.locator('#keyboardProfile').evaluate('e=>e.hidden'),g['id']
+        else:
+            assert page.locator('#keyboardProfile').evaluate('e=>e.hidden'),g['id']
+    # Actual platform DOM/CSS at narrow width, with local assets inlined to avoid network dependence.
+    home=(ROOT/'index.html').read_text(); css=(ROOT/'assets/styles.css').read_text(); app=(ROOT/'js/app.js').read_text()
+    home=home.replace('<link rel=\"stylesheet\" href=\"assets/styles.css\" />',f'<style>{css}</style>')
+    home=re.sub(r'<script src=\"js/games\.js(?:\?v\d+)?\"></script>',lambda _:f'<script>{games_js}</script>',home)
+    home=re.sub(r'<script src=\"js/app\.js(?:\?v\d+)?\"></script>',lambda _:f'<script>{app}</script>',home)
+    home=home.replace('<body>','<body>'+PRE)
+    page.set_viewport_size({'width':390,'height':844}); errors.clear(); page.set_content(home,wait_until='domcontentloaded',timeout=8000); page.wait_for_timeout(120)
+    assert not errors,errors
+    dims=page.evaluate('({sw:document.documentElement.scrollWidth,iw:innerWidth})'); assert dims['sw']<=dims['iw']+2,dims
+    assert page.locator('#gameCount').inner_text()==str(len(games))
+    assert page.locator('#gameGrid .game-card').count()==len(games)
+    browser.close()
+print(json.dumps({'detailPages':len(games),'objectivePanels':len(games),'remappableProfiles':sum(bool(g.get('remappable')) for g in games),'homepageCards':len(games),'homepageMobile':dims,'pageErrors':0}))

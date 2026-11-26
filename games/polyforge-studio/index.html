@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Polyforge Studio 3.0</title>
+<title>Polyforge Studio 3.1</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#060910;color:#edf7ff;font-family:Inter,system-ui,sans-serif;touch-action:none}body{background:radial-gradient(circle at 50% 24%,#19233d,#05070d 70%)}canvas{display:block;background:#07101b;border:1px solid #314257;border-radius:18px;box-shadow:0 24px 90px #0009;max-width:96vw;max-height:76vh;width:min(94vw,940px);height:auto;aspect-ratio:16/10}.hud{position:fixed;left:12px;right:12px;top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;z-index:4;pointer-events:none}.pill{background:#07101bee;border:1px solid #314257;border-radius:999px;padding:7px 11px;font-size:11px;backdrop-filter:blur(8px)}.pill b{font-size:14px;margin-left:4px;color:#c4b5fd}.brand{position:fixed;left:12px;bottom:12px;max-width:560px;background:#07101bee;border:1px solid #314257;border-radius:13px;padding:9px 11px;font-size:11px;line-height:1.45;z-index:4}.brand strong{letter-spacing:.09em}.touch{display:none;position:fixed;right:12px;bottom:12px;grid-template-columns:repeat(3,52px);gap:6px;z-index:5}.touch button,.panel button,.card button{border:1px solid #4b5e77;background:#0d1928dd;color:#fff;border-radius:12px;font-weight:800}.touch button{height:52px}.touch .wide{grid-column:span 2;font-size:11px}.panel{position:fixed;right:12px;top:72px;z-index:5;background:#07101be9;border:1px solid #314257;border-radius:14px;padding:9px;display:flex;gap:6px;flex-wrap:wrap;max-width:560px;max-height:220px;overflow:auto}.panel button{padding:8px 9px;font-size:11px}.panel button.active{outline:2px solid #c4b5fd;background:#241843}.selected{position:fixed;left:12px;top:72px;z-index:5;background:#07101be9;border:1px solid #314257;border-radius:14px;padding:9px 11px;min-width:190px;max-width:230px;font-size:11px;line-height:1.5}.selected b{color:#ddd6fe}.overlay{position:fixed;inset:0;display:none;place-items:center;background:#03060bdc;z-index:12}.overlay.show{display:grid}.card{width:min(620px,calc(100vw - 30px));background:#0b1421;border:1px solid #47607a;border-radius:20px;padding:24px;text-align:center;box-shadow:0 30px 100px #000b}.card h2{margin:0 0 8px;font-size:30px}.card p{color:#b9c9db;line-height:1.55;white-space:pre-line}.card button{padding:11px 16px;margin:4px}.code{display:none;width:100%;min-height:150px;resize:vertical;margin:12px 0;background:#050a12;color:#dbeafe;border:1px solid #3b4d65;border-radius:12px;padding:12px;font:12px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace}.code.show{display:block}.code-actions{display:none;gap:8px;justify-content:center;flex-wrap:wrap}.code-actions.show{display:flex}.legend{position:fixed;left:12px;bottom:86px;z-index:4;background:#07101bc9;border:1px solid #314257;border-radius:12px;padding:7px 9px;font-size:10px;color:#b7c6da}.legend strong{color:#e9d5ff}@media(pointer:coarse){.touch{display:grid}.brand{right:190px}.panel{max-width:430px}.selected,.legend{display:none}}@media(max-width:700px){canvas{max-height:66vh}.brand{right:12px;bottom:180px;max-width:none}.hud{justify-content:flex-start}.panel{top:auto;bottom:12px;left:12px;right:auto;max-width:calc(100vw - 205px);max-height:156px;overflow:auto}.card{padding:18px}.card h2{font-size:24px}.code{min-height:120px}}
-</style>
+.storage-notice{position:fixed;left:12px;bottom:128px;z-index:7;max-width:min(520px,calc(100vw - 24px));padding:9px 11px;border:1px solid #fbbf24;border-radius:11px;background:#2b1e13f2;color:#fff0cb;font-size:12px;line-height:1.4;box-shadow:0 5px 24px #0008}.storage-notice[hidden]{display:none}@media(max-width:700px){.storage-notice{top:92px;bottom:auto;max-width:calc(100vw - 24px)}}</style>
 </head>
 <body>
 <canvas id="c" width="960" height="600" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)"></canvas>
@@ -19,7 +19,8 @@
 <button id="group">Group</button><button id="ungroup">Ungroup</button><button id="del">Delete</button><button id="undo">Undo</button><button id="redo">Redo</button>
 <button id="snap">Snap 0.50</button><button id="export">Export Code</button><button id="import">Import Code</button><button id="save">Save</button><button id="load">Load</button><button id="check">Certify</button>
 </div>
-<div class="brand"><strong>ARCHITECT INDUSTRIES · WORLDWIDEGAMES</strong><br>Polyforge Studio 3.0 · Multi-select and grouped assemblies, drag transform gizmos, scene-code import/export, seven certification briefs, persistent scenes, and 80-step undo/redo.</div>
+<div class="brand"><strong>ARCHITECT INDUSTRIES · WORLDWIDEGAMES</strong><br>Polyforge Studio 3.1 · Multi-select and grouped assemblies, drag transform gizmos, scene-code import/export, seven certification briefs, local scene saving (or exportable session-only edits when blocked), and 80-step undo/redo.</div>
+<p id="storageNotice" class="storage-notice" role="status" aria-live="polite" hidden></p>
 <div class="legend"><strong>Gizmo:</strong> drag a selected object · 1 Move · 2 Rotate · 3 Scale · Shift-click multi-select · G Group · U Ungroup</div>
 <div class="touch"><button data-a="left">◀ X</button><button data-a="up">▲ Z</button><button data-a="right">X ▶</button><button data-a="secondary">Y−</button><button data-a="down">Z ▼</button><button class="wide" data-a="primary">Y+</button></div>
 <div class="overlay" id="ov"><div class="card"><h2 id="ot"></h2><p id="op"></p><textarea class="code" id="codeBox" spellcheck="false"></textarea><div class="code-actions" id="codeActions"><button id="copyCode">Copy Code</button><button id="loadCode">Load Code</button></div><button id="next">Continue</button></div></div>
@@ -48,6 +49,10 @@ const blueprints=[
 const verts=[[-.5,-.5,-.5],[.5,-.5,-.5],[.5,.5,-.5],[-.5,.5,-.5],[-.5,-.5,.5],[.5,-.5,.5],[.5,.5,.5],[-.5,.5,.5]],edges=[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
 const sk='wwg:polyforge:scene-v3',legacyScene='wwg:polyforge:scene-v2',metaKey='wwg:polyforge:meta-v3',legacyMeta='wwg:polyforge:meta-v2';
 let objs=[],sel=-1,selected=new Set(),cam={yaw:.65,pitch:.45,dist:12},drag=null,bp=1,score=0,snap=.5,history=[],future=[],gizmo='move',nextGroup=1;
+let sessionScene=null,sessionMeta=null,sceneStorageFailed=false,metaStorageFailed=false;
+function updateStorageNotice(){const el=document.getElementById('storageNotice');el.hidden=!(sceneStorageFailed||metaStorageFailed);if(!el.hidden)el.textContent='Browser storage is unavailable. You can keep building and certifying in this tab. Export your scene code before leaving; reloading may lose your work.'}
+function storageNotice(area='scene'){if(area==='meta')metaStorageFailed=true;else sceneStorageFailed=true;updateStorageNotice()}
+
 const clone=v=>JSON.parse(JSON.stringify(v));
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const round=v=>Math.round(v/snap)*snap;
@@ -89,12 +94,34 @@ function draw(){const g=X.createLinearGradient(0,0,0,C.height);g.addColorStop(0,
 function pickIndex(mx,my){let best=-1,bd=999;objs.forEach((o,i)=>{const p=project(o),d=Math.hypot(mx-p.x,my-p.y);if(d<Math.max(30,p.s*.55*o.s)&&d<bd){best=i;bd=d}});return best}
 function action(a){if(a==='left')moveSelection(-snap,0,0);if(a==='right')moveSelection(snap,0,0);if(a==='up')moveSelection(0,0,-snap);if(a==='down')moveSelection(0,0,snap);if(a==='primary')moveSelection(0,snap,0);if(a==='secondary')moveSelection(0,-snap,0)}
 function counts(){const h={cube:0,pillar:0,orb:0};objs.forEach(o=>h[o.type]++);return h}
-function meta(){try{return JSON.parse(localStorage.getItem(metaKey)||localStorage.getItem(legacyMeta)||'{}')}catch{return{}}}
-function saveMeta(m){localStorage.setItem(metaKey,JSON.stringify(m))}
+function validMeta(value){
+ const m=value&&typeof value==='object'&&!Array.isArray(value)?value:{};
+ const safe=k=>Number.isSafeInteger(m[k])&&m[k]>=0?Math.min(m[k],100000000):0;
+ return{...m,best:safe('best'),bestBlueprint:Math.min(7,safe('bestBlueprint')),mastered:safe('mastered'),architected:safe('architected')}
+}
+function meta(){
+ if(sessionMeta)return clone(sessionMeta);
+ let raw;try{raw=localStorage.getItem(metaKey)||localStorage.getItem(legacyMeta)}catch{storageNotice('meta');return validMeta({})}
+ try{return validMeta(raw?JSON.parse(raw):{})}catch{return validMeta({})}
+}
+function saveMeta(m){
+ sessionMeta=validMeta(m);
+ try{localStorage.setItem(metaKey,JSON.stringify(sessionMeta));metaStorageFailed=false;updateStorageNotice();return true}catch{storageNotice('meta');return false}
+}
 function emit(event,detail={}){try{parent.postMessage({type:'wwg:game-event',game:'polyforge-studio',event,score,meta:detail},'*')}catch{}}
 function showOverlay(title,msg,mode='message',code=''){$('#ot').textContent=title;$('#op').textContent=msg;$('#codeBox').classList.toggle('show',mode!=='message');$('#codeActions').classList.toggle('show',mode!=='message');$('#copyCode').style.display=mode==='export'?'inline-block':'none';$('#loadCode').style.display=mode==='import'?'inline-block':'none';if(mode==='export')$('#codeBox').value=code;if(mode==='import'){$('#codeBox').value='';$('#codeBox').placeholder='Paste a Polyforge scene code here…'}$('#ov').classList.add('show');if(mode!=='message')setTimeout(()=>$('#codeBox').focus(),0)}
 function certify(){const have=counts(),want=blueprints[bp-1],exact=Object.keys(want.need).every(k=>have[k]===want.need[k]),ok=exact&&want.rule(objs);if(!ok){showOverlay('Blueprint mismatch',`Need C${want.need.cube}/P${want.need.pillar}/O${want.need.orb}. Current C${have.cube}/P${have.pillar}/O${have.orb}.\n${exact?'Counts match, but the spatial rule is not satisfied.':'Match the primitive count first.'}\n${want.tip}`);return}score+=1250+bp*450;let m=meta();m.best=Math.max(m.best||0,score);m.bestBlueprint=Math.max(m.bestBlueprint||0,bp);saveMeta(m);emit('blueprint-certified',{blueprint:bp,name:want.name});if(bp===5){m.mastered=(m.mastered||0)+1;saveMeta(m);emit('studio-mastered',{blueprints:5})}if(bp<7){checkpoint();const passed=bp;bp++;objs=[];selected.clear();sel=-1;nextGroup=1;showOverlay(passed===5?'Polyforge Master certification':'Blueprint certified',`${want.name} passed.\nNext: ${blueprints[bp-1].name}${passed===5?'\nAdvanced architect briefs unlocked.':''}`)}else{m.architected=(m.architected||0)+1;m.mastered=Math.max(m.mastered||0,1);saveMeta(m);emit('studio-architect',{blueprints:7,groups:groupCount()});showOverlay('Polyforge Architect certification',`All seven 3D briefs completed.\nScore ${score} · Best ${m.best||score}\nGrouped construction and scene exchange mastered.`)}sync();autoSave()}
-function autoSave(){localStorage.setItem(sk,JSON.stringify(snapshot()))}
+function autoSave(){
+ sessionScene=snapshot();
+ try{localStorage.setItem(sk,JSON.stringify(sessionScene));sceneStorageFailed=false;updateStorageNotice();return true}
+ catch{storageNotice();return false}
+}
+function readScene(){
+ if(sceneStorageFailed&&sessionScene)return clone(sessionScene);
+ let raw;try{raw=localStorage.getItem(sk)||localStorage.getItem(legacyScene)}catch{storageNotice();return sessionScene?clone(sessionScene):null}
+ if(!raw)return sessionScene?clone(sessionScene):null;
+ try{return JSON.parse(raw)}catch{return sessionScene?clone(sessionScene):null}
+}
 function encodeScene(payload){const json=JSON.stringify(payload),bytes=new TextEncoder().encode(json);let bin='';for(const b of bytes)bin+=String.fromCharCode(b);return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
 function decodeScene(code){let s=String(code||'').trim().replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const bin=atob(s),bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));return JSON.parse(new TextDecoder().decode(bytes))}
 function exportSceneCode(){const code=encodeScene({v:3,scene:snapshot(),title:'Polyforge Studio Scene'});emit('scene-exported',{objects:objs.length,groups:groupCount()});return code}
@@ -110,8 +137,8 @@ $('#export').onclick=()=>showOverlay('Scene code','Copy this portable scene code
 $('#import').onclick=()=>showOverlay('Import scene','Paste a scene code. Import replaces the current workspace but remains undoable.','import');
 $('#copyCode').onclick=async()=>{const box=$('#codeBox');box.select();try{await navigator.clipboard.writeText(box.value);$('#op').textContent='Scene code copied.'}catch{document.execCommand?.('copy');$('#op').textContent='Scene code selected. Copy it with your browser.'}};
 $('#loadCode').onclick=()=>{const code=$('#codeBox').value;if(importSceneCode(code))showOverlay('Scene imported',`Loaded ${objs.length} objects across ${groupCount()} groups.`)};
-$('#save').onclick=()=>{autoSave();showOverlay('Scene saved','Scene, grouping, blueprint progress, score, snap level, and gizmo mode are stored locally.')};
-$('#load').onclick=()=>{try{const s=JSON.parse(localStorage.getItem(sk)||localStorage.getItem(legacyScene)||'null');if(s){checkpoint();restore(s);autoSave();showOverlay('Scene loaded',`Loaded ${objs.length} objects.`)}}catch{showOverlay('Load failed','The stored scene could not be read.')}};
+$('#save').onclick=()=>{const saved=autoSave();showOverlay(saved?'Scene saved':'Session scene available',saved?'Scene, grouping, blueprint progress, score, snap level, and gizmo mode are stored locally.':'Edits are available in this tab only. Export your scene code before leaving; this browser did not save the scene durably.')};
+$('#load').onclick=()=>{const s=readScene();if(s&&Array.isArray(s.objs)){checkpoint();restore(s);const saved=autoSave();showOverlay('Scene loaded',`Loaded ${objs.length} objects.${saved?'':' Session copy only; export the scene code before leaving.'}`)}else showOverlay('No saved scene','No valid saved scene is available. You can continue building or import a portable scene code.')};
 $('#check').onclick=certify;$('#next').onclick=()=>{$('#ov').classList.remove('show');$('#codeBox').classList.remove('show');$('#codeActions').classList.remove('show')};
 
 addEventListener('keydown',e=>{if(document.activeElement===$('#codeBox')){if(e.code==='Escape')$('#next').click();return}if((e.ctrlKey||e.metaKey)&&e.code==='KeyZ'){e.preventDefault();e.shiftKey?redo():undo();return}if((e.ctrlKey||e.metaKey)&&e.code==='KeyY'){e.preventDefault();redo();return}if(e.code==='Delete'||e.code==='Backspace'){if(selection().length){e.preventDefault();deleteSelection()}return}if(e.code==='KeyM'){e.preventDefault();$('#mat').click();return}if(e.code==='BracketRight'){e.preventDefault();scaleSelection(1.25);return}if(e.code==='BracketLeft'){e.preventDefault();scaleSelection(.8);return}if(e.code==='KeyQ'){e.preventDefault();rotateSelection(Math.PI/12);return}if(e.code==='KeyG'){e.preventDefault();groupSelected();return}if(e.code==='KeyU'){e.preventDefault();ungroupSelected();return}if(e.code==='Digit1'){setGizmo('move');return}if(e.code==='Digit2'){setGizmo('rotate');return}if(e.code==='Digit3'){setGizmo('scale');return}for(const a of['up','down','left','right','primary','secondary'])if(WWGInput.is(e,a)){e.preventDefault();action(a);return}});
@@ -120,7 +147,7 @@ C.onpointerdown=e=>{const r=C.getBoundingClientRect(),x=(e.clientX-r.left)*C.wid
 addEventListener('pointermove',e=>{if(!drag)return;if(drag.kind==='orbit'){cam.yaw=drag.yaw+(e.clientX-drag.startX)*.008;cam.pitch=clamp(drag.pitch+(e.clientY-drag.startY)*.006,-.3,1.1);return}const dx=e.clientX-drag.startX,dy=e.clientY-drag.startY;if(Math.abs(dx)+Math.abs(dy)<3)return;drag.changed=true;objs=clone(drag.base);const ids=drag.indices,c=drag.center;if(drag.mode==='move'){const wx=Math.round(dx/22)*snap,wz=Math.round(dy/22)*snap;ids.forEach(i=>{objs[i].x=round(drag.base[i].x+wx);objs[i].z=round(drag.base[i].z+wz)})}else if(drag.mode==='rotate'){const angle=Math.round(dx/20)*(Math.PI/12),co=Math.cos(angle),si=Math.sin(angle);ids.forEach(i=>{const b=drag.base[i],x=b.x-c.x,z=b.z-c.z;objs[i].x=round(c.x+x*co-z*si);objs[i].z=round(c.z+x*si+z*co);objs[i].rot=(b.rot+angle)%(Math.PI*2)})}else{const factor=clamp(1-dy/160,.5,2);ids.forEach(i=>{const b=drag.base[i];objs[i].x=round(c.x+(b.x-c.x)*factor);objs[i].y=Math.max(0,round(c.y+(b.y-c.y)*factor));objs[i].z=round(c.z+(b.z-c.z)*factor);objs[i].s=clamp(Math.round(b.s*factor*4)/4,.5,3.5)})}sync()});
 addEventListener('pointerup',()=>{if(drag?.kind==='transform'&&drag.changed){history.push(drag.before);if(history.length>80)history.shift();future=[];autoSave();emit('gizmo-transform',{mode:drag.mode,count:drag.indices.length})}drag=null});
 C.onwheel=e=>{e.preventDefault();cam.dist=clamp(cam.dist+Math.sign(e.deltaY),6,22)};
-try{const s=JSON.parse(localStorage.getItem(sk)||localStorage.getItem(legacyScene)||'null');if(s&&s.objs)restore(s)}catch{}
+const initialScene=readScene();if(initialScene&&Array.isArray(initialScene.objs))restore(initialScene)
 function loop(){draw();requestAnimationFrame(loop)}sync();requestAnimationFrame(loop);
 </script>
 </body>

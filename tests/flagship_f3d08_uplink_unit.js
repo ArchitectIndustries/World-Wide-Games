@@ -1,0 +1,33 @@
+const assert=require('node:assert/strict');
+const U=require('../games/aegis-verge/signal-uplink.js');
+const C=require('../games/aegis-verge/checkpoint.js');
+let tests=0;
+function test(label,fn){fn();tests++;process.stdout.write('PASS '+label+'\n')}
+const sites=[{x:1,z:2},{x:5,z:9},{x:17,z:23}];
+test('Creates 3 original visible sites',()=>{const a=U.create(sites);assert.equal(a.sites.length,3);assert.deepEqual(a.used,[false,false,false])});
+test('Rejects invalid site count',()=>assert.throws(()=>U.create([])));
+test('Rejects NaN coordinates',()=>assert.throws(()=>U.create([{x:NaN,z:2},...sites.slice(1)])));
+test('Rejects sparse usage',()=>{const x=new Array(3);assert.equal(U.validUsed(x),false)});
+test('Rejects string usage',()=>assert.equal(U.validUsed([true,'false',false]),false));
+test('Rejects short usage array',()=>assert.equal(U.validUsed([true,false]),false));
+test('Ready within 3.6m',()=>assert.ok(U.ready(U.create(sites),0,1,5,30,true)));
+test('Cannot activate at distance',()=>assert.equal(U.activate(U.create(sites),0,25,25,100,true),false));
+test('Cannot activate without energy',()=>assert.equal(U.activate(U.create(sites),0,1,2,29.99,true),false));
+test('Cannot activate if all hostiles cleared',()=>assert.equal(U.activate(U.create(sites),0,1,2,100,false),false));
+test('Cannot activate locked later spire',()=>assert.equal(U.activate(U.create(sites),3,17,23,100,true),false));
+test('Activation consumes single use',()=>{const x=U.create(sites);assert.equal(U.activate(x,0,1,2,100,true),true);assert.equal(x.used[0],true);assert.equal(x.jamLeft,6);assert.equal(U.activate(x,0,1,2,100,true),false)});
+test('Tick decays only positive time',()=>{const x=U.create(sites);U.activate(x,0,1,2,100,true);U.tick(x,2.1);assert.ok(x.jamLeft<4);U.tick(x,-2);assert.ok(x.jamLeft<4)});
+test('Tick clamps at zero',()=>{const x=U.create(sites);U.activate(x,0,1,2,100,true);U.tick(x,20);assert.equal(x.jamLeft,0)});
+test('Snapshot is independent copy',()=>{const x=U.create(sites);const y=U.snapshot(x);y[0]=true;assert.equal(x.used[0],false)});
+const valid={op:0,relay:1,hull:90,energy:75,score:100,recoveriesLeft:1,elapsed:20,damageTaken:10,clean:false,barrierHp:[5,3,0],uplinkUsed:[true,false,false]};
+function storage(){const m=new Map();return{getItem:k=>m.get(k)||null,setItem:(k,v)=>m.set(k,String(v)),removeItem:k=>m.delete(k),raw:k=>m.get(k)}}
+test('Checkpoint saves uplink use',()=>{const s=storage();assert.ok(C.save(s,valid));assert.deepEqual(C.load(s).uplinkUsed,[true,false,false])});
+test('Checkpoint restores cover with uplink use',()=>{const s=storage();C.save(s,valid);assert.deepEqual(C.load(s).barrierHp,[5,3,0])});
+test('Legacy checkpoint defaults spires to unused',()=>{const s=storage();C.save(s,{...valid,uplinkUsed:undefined});assert.deepEqual(C.load(s).uplinkUsed,[false,false,false])});
+test('Reject tampered uplink array length',()=>{const s=storage();assert.equal(C.save(s,{...valid,uplinkUsed:[true,false]}),false)});
+test('Reject tampered uplink type',()=>{const s=storage();assert.equal(C.save(s,{...valid,uplinkUsed:[true,1,false]}),false)});
+test('Reject holes in uplink snapshot',()=>{const s=storage();assert.equal(C.save(s,{...valid,uplinkUsed:new Array(3)}),false)});
+test('Saved state does not trust arbitrary score',()=>{const s=storage();assert.equal(C.save(s,{...valid,score:1e12}),false)});
+test('Different operation remains invalid when locked',()=>{const s=storage();assert.ok(C.save(s,{...valid,op:2}));assert.equal(C.load(s,1),null)});
+test('Checkpoint does not persist temporary jam',()=>{const s=storage();const temp=U.create(sites);U.activate(temp,0,1,2,100,true);C.save(s,{...valid,uplinkUsed:U.snapshot(temp)});assert.equal(Object.hasOwn(C.load(s),'jamLeft'),false)});
+console.log('Passed',tests,'F3D08 isolated unit checks');

@@ -997,7 +997,8 @@
     ],
     "changed": false,
     "events": [],
-    "mobile_overflow": false,    "bad_text": false,
+    "mobile_overflow": false,
+    "bad_text": false,
     "canvas": 1,
     "ok": true
   },

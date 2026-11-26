@@ -1,5 +1,33 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Command Bloom</title><style>*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#07140f;color:#ecfdf5;font-family:system-ui,sans-serif;padding:12px}.wrap{max-width:1000px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:14px}.panel{background:#0a1e16;border:1px solid #28543f;border-radius:17px;padding:14px}canvas{width:100%;aspect-ratio:1;background:#07110d;border-radius:13px;display:block}.hud{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}.hud span{border:1px solid #2a5b43;background:#0c281c;border-radius:999px;padding:7px 10px;font-size:11px}.hud b{color:#86efac}.commands{display:grid;grid-template-columns:1fr 1fr;gap:7px}.commands button,.actions button{border:1px solid #347052;background:#123522;color:#fff;border-radius:11px;padding:11px;font-weight:900}.queue{min-height:76px;border:1px dashed #367254;border-radius:12px;padding:9px;margin:10px 0;display:flex;gap:5px;align-content:flex-start;flex-wrap:wrap}.queue span{background:#193c2b;border-radius:8px;padding:5px 7px;font-size:10px}.tip{color:#bbd8c7;line-height:1.45;font-size:13px}.actions{display:flex;gap:7px;flex-wrap:wrap}.actions button{flex:1}.levels{display:flex;gap:5px;flex-wrap:wrap}.levels button{border:1px solid #315c48;background:#0e2a1d;color:#c9f4dc;border-radius:8px;padding:6px 8px}.levels button.active{background:#166534}.levels button.cleared{background:#123f2b;border-color:#4ade80;color:#bbf7d0}.levels button.cleared::after{content:' ✓';color:#86efac;font-weight:900}.levels button:disabled{cursor:not-allowed;opacity:.65}@media(max-width:760px){.wrap{grid-template-columns:1fr}.panel:last-child{order:-1}.commands{grid-template-columns:repeat(4,1fr)}.commands button{padding:9px 5px;font-size:11px}}</style></head><body><div class="wrap"><section class="panel"><canvas id="c"></canvas></section><aside class="panel"><div class="hud"><span>Stage <b id="stage">1</b>/6</span><span>Solved <b id="solved">0</b>/6</span><span>Cores <b id="cores">0</b></span><span>Commands <b id="count">0</b>/14</span><span>Score <b id="score">0</b></span></div><p class="tip" id="tip">Program the bloom drone. Collect every core with PULSE, then finish on the green gate.</p><div class="commands"><button data-cmd="F">FWD</button><button data-cmd="L">LEFT</button><button data-cmd="R">RIGHT</button><button data-cmd="P">PULSE</button></div><div id="queue" class="queue"></div><div class="actions"><button id="run">Run</button><button id="undo">Undo</button><button id="clear">Clear</button></div><h4>Stages</h4><div id="levels" class="levels"></div><p class="tip">Keyboard: F/L/R/P add commands, Enter runs, Backspace removes. Reset the stage with Escape.</p></aside></div><script>
-const C=document.getElementById('c'),X=C.getContext('2d'),ST=document.getElementById('stage'),SO=document.getElementById('solved'),CO=document.getElementById('cores'),CT=document.getElementById('count'),SC=document.getElementById('score'),TIP=document.getElementById('tip'),QUEUE=document.getElementById('queue'),LEVELS=document.getElementById('levels');const N=8;let dpr=1;function resize(){dpr=Math.min(2,devicePixelRatio||1);let s=Math.min(innerWidth<760?innerWidth-28:650,650);C.width=s*dpr;C.height=s*dpr}addEventListener('resize',resize);resize();
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Command Bloom 1.7 — Foreground Program Integrity</title><style>*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#07140f;color:#ecfdf5;font-family:system-ui,sans-serif;padding:12px}.wrap{max-width:1000px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:14px}.panel{background:#0a1e16;border:1px solid #28543f;border-radius:17px;padding:14px}canvas{width:100%;aspect-ratio:1;background:#07110d;border-radius:13px;display:block}.hud{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}.hud span{border:1px solid #2a5b43;background:#0c281c;border-radius:999px;padding:7px 10px;font-size:11px}.hud b{color:#86efac}.commands{display:grid;grid-template-columns:1fr 1fr;gap:7px}.commands button,.actions button{border:1px solid #347052;background:#123522;color:#fff;border-radius:11px;padding:11px;font-weight:900}.queue{min-height:76px;border:1px dashed #367254;border-radius:12px;padding:9px;margin:10px 0;display:flex;gap:5px;align-content:flex-start;flex-wrap:wrap}.queue span{background:#193c2b;border-radius:8px;padding:5px 7px;font-size:10px}.queue span.active{background:#365d43;border:2px solid #fef08a;padding:3px 5px}.trace{color:#bbf7d0;background:#092318;border:1px solid #366750;border-radius:10px;margin:0 0 10px;padding:9px;font-size:12px;line-height:1.45;min-height:39px}.tip{color:#bbd8c7;line-height:1.45;font-size:13px}.actions{display:flex;gap:7px;flex-wrap:wrap}.actions button{flex:1;min-width:83px}.forecast{background:#09251e;color:#bbf7d0;border:1px solid #4f8b79;border-radius:9px;padding:8px 10px;margin:8px 0;font-size:12px;line-height:1.4}.forecast strong{color:#a7f3d0}.execution-state{background:#0c3021;color:#d1fae5;border:1px solid #347052;border-radius:9px;padding:8px 10px;margin:8px 0 10px;font-size:12px;line-height:1.4}.actions button:disabled{opacity:.54;cursor:not-allowed}.actions button:focus-visible,.commands button:focus-visible,.levels button:focus-visible{outline:3px solid #fef08a;outline-offset:2px}.levels{display:flex;gap:5px;flex-wrap:wrap}.levels button{border:1px solid #315c48;background:#0e2a1d;color:#c9f4dc;border-radius:8px;padding:6px 8px}.levels button.active{background:#166534}.levels button.cleared{background:#123f2b;border-color:#4ade80;color:#bbf7d0}.levels button.cleared::after{content:' ✓';color:#86efac;font-weight:900}.levels button:disabled{cursor:not-allowed;opacity:.65}@media(max-width:760px){.wrap{grid-template-columns:1fr}.panel:last-child{order:-1}.commands{grid-template-columns:repeat(4,1fr)}.commands button{padding:9px 5px;font-size:11px}}
+/* Short landscape: the board and program controls must remain visible together.
+   Keep normal portrait and desktop document flow unchanged. */
+@media (max-height:420px) and (max-width:760px) and (orientation:landscape){
+  html,body{height:100%;height:100dvh;overflow:hidden}
+  body{padding:4px}
+  .wrap{height:100%;height:calc(100dvh - 8px);max-width:none;display:grid;
+    grid-template-columns:minmax(108px,45%) minmax(0,1fr);
+    grid-template-rows:minmax(0,1fr);gap:6px;align-items:stretch}
+  .panel{min-width:0;min-height:0;padding:6px;border-radius:10px}
+  .panel:first-child{display:grid;place-items:center}
+  .panel:last-child{order:initial;overflow-x:hidden;overflow-y:auto;
+    overscroll-behavior:contain;scrollbar-gutter:stable}
+  canvas{width:min(100%,calc(100dvh - 26px));height:auto;
+    max-height:calc(100dvh - 26px);aspect-ratio:1}
+  .hud{gap:3px;margin-bottom:5px}
+  .hud span{padding:3px 5px;font-size:10px}
+  .tip{font-size:11px;line-height:1.32;margin:4px 0 7px}
+  .commands{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .commands button,.actions button{min-width:0;min-height:34px;
+    padding:6px 3px;font-size:11px}
+  .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .actions button{min-width:0}
+  .queue{min-height:42px;margin:6px 0;padding:5px;gap:3px}
+  .trace{padding:6px;margin:5px 0;font-size:11px;min-height:30px}
+  .execution-state,.forecast{padding:6px;margin:6px 0;font-size:11px}
+  .levels button{padding:5px}
+}
+</style></head><body><div class="wrap"><section class="panel"><canvas id="c" role="img" aria-label="Eight by eight bloom drone map. Movement and core status are described in the adjacent command trace."></canvas></section><aside class="panel" role="region" aria-label="Program console; scroll within this panel on short screens" tabindex="0"><div class="hud"><span>Stage <b id="stage">1</b>/6</span><span>Solved <b id="solved">0</b>/6</span><span>Cores <b id="cores">0</b></span><span>Commands <b id="count">0</b>/14</span><span>Score <b id="score">0</b></span></div><p class="tip" id="tip" role="status" aria-live="polite">Program the bloom drone. Collect every core with PULSE, then finish on the green gate.</p><div class="commands"><button data-cmd="F">FWD</button><button data-cmd="L">LEFT</button><button data-cmd="R">RIGHT</button><button data-cmd="P">PULSE</button></div><div class="actions"><button id="run">Run</button><button id="step" aria-label="Execute the next queued command">Step</button><button id="pauseExecution" disabled>Pause</button><button id="undo">Undo</button><button id="clear">Clear</button></div><div id="queue" class="queue" role="list" aria-label="Queued commands"></div><div id="forecast" class="forecast" role="status" aria-label="Projected route for queued commands" aria-live="polite" aria-atomic="true">Queue commands to preview the path before you commit.</div><p id="trace" class="trace" role="status" aria-live="polite">Run a program to trace each move, turn, core pulse and wall collision.</p><p class="execution-state" id="executionState" role="status" aria-live="polite" aria-atomic="true">Idle · build a program, then Run or Step through it.</p><h4>Stages</h4><div id="levels" class="levels"></div><p class="tip">Keyboard: F/L/R/P queue a command, Enter starts or resumes automatic Run, S executes one Step, K pauses an automatic run, Backspace removes. Focus buttons and use Enter or Space to activate them normally. Pause to inspect the highlighted instruction, Step to advance safely, or Run to resume. Escape cancels and resets the current stage. Core credits are banked only after the gate; changing maps forfeits pending credit. The cyan dashed line forecasts only the current queued program; the real drone does not move until Run or Step. Red crosses predict blocked moves. A queued program is charged once when started, whether stepped, run, or canceled; pause/resume never charges again. The ranked clock starts on your first execution and counts only foreground play. Switching tabs pauses automatic execution; return and press Run or Step to continue without losing a command.</p></aside></div><script>
+const C=document.getElementById('c'),X=C.getContext('2d'),TRACE=document.getElementById('trace'),ST=document.getElementById('stage'),SO=document.getElementById('solved'),CO=document.getElementById('cores'),CT=document.getElementById('count'),SC=document.getElementById('score'),TIP=document.getElementById('tip'),QUEUE=document.getElementById('queue'),LEVELS=document.getElementById('levels');const RUN_BUTTON=document.getElementById('run'),STEP_BUTTON=document.getElementById('step'),PAUSE_BUTTON=document.getElementById('pauseExecution'),EXECUTION_STATE=document.getElementById('executionState'),FORECAST=document.getElementById('forecast');const N=8;let dpr=1;function resize(){dpr=Math.min(2,devicePixelRatio||1);let s=Math.min(innerWidth<760?innerWidth-28:650,650);C.width=s*dpr;C.height=s*dpr}resize();
 const levels=[
  {s:[1,6,0],g:[6,1],c:[[3,6]],w:[[4,4],[4,5]]},
  {s:[1,1,1],g:[6,6],c:[[5,1],[6,4]],w:[[3,2],[3,3],[3,4],[5,5]]},
@@ -7,15 +35,115 @@ const levels=[
  {s:[1,6,0],g:[6,1],c:[[2,3],[5,5],[5,2]],w:[[3,3],[4,3],[3,4],[4,4]]},
  {s:[1,1,1],g:[6,6],c:[[2,6],[6,2],[4,5]],w:[[2,2],[3,2],[4,2],[5,4],[5,5]]},
  {s:[6,6,3],g:[1,1],c:[[6,3],[4,1],[2,4]],w:[[3,3],[4,3],[5,3],[3,5],[4,5]]}
-];let idx=0,queue=[],bot,cores,score=0,totalCommands=0,done=false,start=performance.now(),running=false,cleared=new Set();
-function resetStage(message='Program the bloom drone. Collect every core with PULSE, then finish on the green gate.'){const l=levels[idx];bot={x:l.s[0],y:l.s[1],dir:l.s[2]};cores=l.c.map(p=>({x:p[0],y:p[1],got:false}));queue=[];running=false;TIP.textContent=message;sync();draw()}
-function wall(x,y){return x<0||y<0||x>=N||y>=N||levels[idx].w.some(p=>p[0]===x&&p[1]===y)}function add(c){if(done||running||queue.length>=14)return;queue.push(c);sync()}function pulse(){const c=cores.find(c=>!c.got&&c.x===bot.x&&c.y===bot.y);if(c){c.got=true;score+=180;TIP.textContent='Core synchronized.'}else TIP.textContent='Pulse found no core.'}
-function step(cmd){if(cmd==='L')bot.dir=(bot.dir+3)%4;else if(cmd==='R')bot.dir=(bot.dir+1)%4;else if(cmd==='P')pulse();else{const ds=[[0,-1],[1,0],[0,1],[-1,0]],d=ds[bot.dir],nx=bot.x+d[0],ny=bot.y+d[1];if(!wall(nx,ny)){bot.x=nx;bot.y=ny}else{score=Math.max(0,score-20);TIP.textContent='The drone hit a root wall.'}}draw();sync()}
-function run(){if(done||running||!queue.length)return;running=true;const program=queue.slice();totalCommands+=program.length;let i=0;function next(){if(i<program.length){step(program[i++]);setTimeout(next,130);return}running=false;check();sync()}next()}
+];let idx=0,queue=[],bot,cores,score=0,totalCommands=0,done=false,running=false,cleared=new Set(),stageCredit=0,stageCommands=0,runToken=0,runTimer=null,traceCells=[],executingIndex=-1,activeProgram=null,nextInstruction=0,programPaused=false;
+// One monotonic foreground-play clock owns competitive timing. Preparing commands
+// and reading instructions before the first execution are free. Visibility and
+// window focus may overlap: an active segment is committed only once.
+let clockStarted=false,activeElapsed=0,activeSince=null,windowBlurred=false;
+function inactive(){return windowBlurred||document.hidden}
+function activePlayMs(){return activeElapsed+(clockStarted&&activeSince!==null&&!inactive()?Math.max(0,performance.now()-activeSince):0)}
+function beginClock(){if(!clockStarted){clockStarted=true;if(!inactive())activeSince=performance.now()}}
+function activityChanged(){
+ if(inactive()){
+  if(activeSince!==null){activeElapsed+=Math.max(0,performance.now()-activeSince);activeSince=null}
+  if(running&&!programPaused)pauseExecution();
+ }else if(clockStarted&&!done&&activeSince===null)activeSince=performance.now();
+ sync();
+}
+addEventListener('blur',()=>{windowBlurred=true;activityChanged()});
+addEventListener('focus',()=>{windowBlurred=false;activityChanged()});
+document.addEventListener('visibilitychange',activityChanged);
+function cancelProgram(){runToken++;if(runTimer!==null){clearTimeout(runTimer);runTimer=null}running=false;programPaused=false;activeProgram=null;nextInstruction=0;executingIndex=-1}
+function resetStage(message='Program the bloom drone. Collect every core with PULSE, then finish on the green gate.'){cancelProgram();stageCredit=0;stageCommands=0;const l=levels[idx];bot={x:l.s[0],y:l.s[1],dir:l.s[2]};traceCells=[];TRACE.textContent="Ready. Program the drone and run to see its command-by-command route.";cores=l.c.map(p=>({x:p[0],y:p[1],got:false}));queue=[];TIP.textContent=message;sync();draw()}
+function wall(x,y){return x<0||y<0||x>=N||y>=N||levels[idx].w.some(p=>p[0]===x&&p[1]===y)}function add(c){if(done||inactive()||running||queue.length>=14)return;queue.push(c);sync();draw()}
+// Pure forward model: preview exactly the queued instructions without changing
+// player position, collected cores, score, ranked completion, or wall state.
+function forecastRoute(){
+ if(!bot||!cores||running||done||!queue.length)return null;
+ let x=bot.x,y=bot.y,dir=bot.dir,blocked=0,emptyPulses=0;
+ const collected=new Set(cores.filter(c=>c.got).map(c=>`${c.x},${c.y}`));
+ const newCores=[],path=[{x,y}],blockedAt=[];
+ for(const command of queue){
+  if(command==='L')dir=(dir+3)%4;
+  else if(command==='R')dir=(dir+1)%4;
+  else if(command==='P'){
+   const core=cores.find(c=>!c.got&&c.x===x&&c.y===y);
+   const key=`${x},${y}`;
+   if(core&&!collected.has(key)){collected.add(key);newCores.push({x,y})}
+   else emptyPulses++;
+  }else if(command==='F'){
+   const [dx,dy]=[[0,-1],[1,0],[0,1],[-1,0]][dir],nx=x+dx,ny=y+dy;
+   if(wall(nx,ny)){blocked++;blockedAt.push({x,y,dx,dy})}
+   else{x=nx;y=ny;path.push({x,y})}
+  }
+ }
+ const atGate=x===levels[idx].g[0]&&y===levels[idx].g[1];
+ const allCores=cores.every(c=>collected.has(`${c.x},${c.y}`));
+ return {x,y,dir,path,blockedAt,blocked,emptyPulses,newCores,allCores,atGate,willClear:allCores&&atGate};
+}
+function updateForecast(){
+ if(done){FORECAST.textContent='Campaign complete. Press Escape to restart.';return}
+ if(running){FORECAST.textContent='Program in progress. Follow the highlighted command and live trace; no speculative path is shown.';return}
+ const plan=forecastRoute();
+ if(!plan){FORECAST.textContent='Queue FWD, LEFT, RIGHT or PULSE to preview the route without moving the drone.';return}
+ FORECAST.textContent=`Preview (not committed): column ${plan.x+1}, row ${plan.y+1}; ${plan.newCores.length} new core${plan.newCores.length===1?'':'s'} pulsed; ${plan.blocked} blocked move${plan.blocked===1?'':'s'}; ${plan.emptyPulses} empty pulse${plan.emptyPulses===1?'':'s'}. ${plan.willClear?'Ready to clear this stage at the end of this program.':plan.allCores?'All cores ready; finish at the green gate.':'Collect remaining cores with PULSE, then reach the gate.'}`;
+}
+function pulse(){const c=cores.find(c=>!c.got&&c.x===bot.x&&c.y===bot.y);if(c){c.got=true;stageCredit+=180;TIP.textContent='Core synchronized. Credit is pending until the gate is reached.'}else TIP.textContent='Pulse found no core.'}
+function step(cmd,position,total){const before={x:bot.x,y:bot.y,dir:bot.dir};let feedback="";if(cmd==='L'){bot.dir=(bot.dir+3)%4;feedback='Turned left.'}else if(cmd==='R'){bot.dir=(bot.dir+1)%4;feedback='Turned right.'}else if(cmd==='P'){const old=cores.filter(c=>c.got).length;pulse();feedback=cores.filter(c=>c.got).length>old?'Core synchronized.':'No core at this tile.'}else{const ds=[[0,-1],[1,0],[0,1],[-1,0]],d=ds[bot.dir],nx=bot.x+d[0],ny=bot.y+d[1];if(!wall(nx,ny)){bot.x=nx;bot.y=ny;traceCells.push({x:nx,y:ny});feedback=`Moved to column ${nx+1}, row ${ny+1}.`}else{score=Math.max(0,score-20);TIP.textContent='The drone hit a root wall.';feedback=`Root wall blocked forward movement at column ${before.x+1}, row ${before.y+1}.`;}}TRACE.textContent=`Command ${position}/${total}: ${{F:'FWD',L:'LEFT',R:'RIGHT',P:'PULSE'}[cmd]}. ${feedback}`;draw();sync()}
+// An execution session owns an immutable command snapshot. Starting it charges
+// commands once; stepping, pausing and resuming never duplicate costs.
+function beginProgram(){if(done||inactive()||running||!queue.length)return false;
+ beginClock();running=true;programPaused=true;activeProgram=queue.slice();nextInstruction=0;
+ traceCells=[{x:bot.x,y:bot.y}];executingIndex=-1;runToken++;
+ totalCommands+=activeProgram.length;stageCommands+=activeProgram.length;sync();return true}
+function finishProgram(){running=false;programPaused=false;activeProgram=null;nextInstruction=0;executingIndex=-1;runTimer=null;check();sync()}
+function executeInstruction(){if(!running||!programPaused||done||inactive()||!activeProgram)return;
+ const instruction=nextInstruction;executingIndex=instruction;
+ step(activeProgram[instruction],instruction+1,activeProgram.length);
+ nextInstruction++;
+ if(nextInstruction>=activeProgram.length){finishProgram();return}
+ sync();}
+function pauseExecution(){if(!running||programPaused||done)return;
+ programPaused=true;runToken++;
+ if(runTimer!==null){clearTimeout(runTimer);runTimer=null}
+ sync();}
+function autoAdvance(token){if(token!==runToken||!running||programPaused||done)return;
+ if(inactive()){pauseExecution();return}
+ // executeInstruction() shares one transition path with the manual debugger.
+ programPaused=true;executeInstruction();
+ if(!running)return;
+ programPaused=false;sync();
+ runTimer=setTimeout(()=>{runTimer=null;autoAdvance(token)},130);
+}
+function run(){if(done||inactive())return;
+ if(!running&&!beginProgram())return;
+ if(!programPaused)return;
+ programPaused=false;const token=++runToken;
+ if(runTimer!==null){clearTimeout(runTimer);runTimer=null}
+ autoAdvance(token);
+}
+function singleStep(){if(done||inactive()||running&&!programPaused)return;
+ if(!running&&!beginProgram())return;
+ executeInstruction();}
 function nextUncleared(from=idx){for(let step=1;step<=levels.length;step++){const candidate=(from+step)%levels.length;if(!cleared.has(candidate))return candidate}return from}
-function check(){const l=levels[idx],all=cores.every(c=>c.got),at=bot.x===l.g[0]&&bot.y===l.g[1];if(all&&at){const firstClear=!cleared.has(idx);if(firstClear){cleared.add(idx);score+=Math.max(200,900-queue.length*35)}if(cleared.size===levels.length){finish();return}const solvedStage=idx+1;idx=nextUncleared(idx);resetStage(firstClear?`Stage ${solvedStage} stabilized. ${cleared.size}/${levels.length} programs complete.`:`Stage ${solvedStage} already stabilized. Continue with an unsolved root map.`)}else TIP.textContent=`Program ended: ${cores.filter(c=>c.got).length}/${cores.length} cores, ${at?'at gate':'gate not reached'}.`}
-function finish(){if(done||cleared.size!==levels.length)return;done=true;const secs=Math.max(1,(performance.now()-start)/1000),final=Math.max(0,Math.round(score+3500-totalCommands*15-secs*3));score=final;TIP.textContent=`All six programs stabilized. Command score ${final.toLocaleString()}. Press Escape to restart.`;try{parent.postMessage({type:'wwg:game-event',game:'command-bloom',event:'program-complete',score:final,duration:Math.round(secs),meta:{unit:'pts',direction:'high',commands:totalCommands,stages:6}},'*')}catch{}sync()}
-function sync(){ST.textContent=idx+1;SO.textContent=cleared.size;CO.textContent=cores?`${cores.filter(c=>c.got).length}/${cores.length}`:'0';CT.textContent=queue.length;SC.textContent=Math.round(score);QUEUE.innerHTML=queue.map(x=>`<span>${x}</span>`).join('');LEVELS.innerHTML=levels.map((_,i)=>`<button class="${i===idx?'active':''} ${cleared.has(i)?'cleared':''}" data-level="${i}" aria-label="Stage ${i+1}${cleared.has(i)?', stabilized':''}" ${cleared.has(i)?'disabled':''}>${i+1}</button>`).join('');LEVELS.querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>{if(done||running||cleared.has(Number(b.dataset.level)))return;idx=Number(b.dataset.level);resetStage()})}
-function draw(){const S=C.width/dpr/N;X.setTransform(dpr,0,0,dpr,0,0);X.clearRect(0,0,C.width/dpr,C.height/dpr);for(let y=0;y<N;y++)for(let x=0;x<N;x++){X.fillStyle=(x+y)%2?'#0b2117':'#0e281c';X.fillRect(x*S,y*S,S,S);if(wall(x,y)){X.fillStyle='#244b36';X.fillRect(x*S+5,y*S+5,S-10,S-10)}}const l=levels[idx];X.fillStyle='#22c55e';X.fillRect(l.g[0]*S+10,l.g[1]*S+10,S-20,S-20);for(const c of cores)if(!c.got){X.fillStyle='#fde68a';X.beginPath();X.arc(c.x*S+S/2,c.y*S+S/2,S*.17,0,7);X.fill()}X.save();X.translate(bot.x*S+S/2,bot.y*S+S/2);X.rotate(bot.dir*Math.PI/2);X.fillStyle='#86efac';X.beginPath();X.moveTo(0,-S*.25);X.lineTo(S*.2,S*.2);X.lineTo(-S*.2,S*.2);X.closePath();X.fill();X.restore()}
-document.querySelectorAll('[data-cmd]').forEach(b=>b.onclick=()=>add(b.dataset.cmd));document.getElementById('run').onclick=run;document.getElementById('undo').onclick=()=>{if(!running){queue.pop();sync()}};document.getElementById('clear').onclick=()=>{if(!running){queue=[];sync()}};addEventListener('keydown',e=>{if(['KeyF','KeyL','KeyR','KeyP'].includes(e.code))add(e.code.at(-1));if(e.code==='Enter')run();if(e.code==='Backspace'&&!running){e.preventDefault();queue.pop();sync()}if(e.code==='Escape'){if(done){idx=0;score=0;totalCommands=0;done=false;cleared=new Set();start=performance.now()}resetStage()}});resetStage();
+function check(){const l=levels[idx],all=cores.every(c=>c.got),at=bot.x===l.g[0]&&bot.y===l.g[1];if(all&&at){const firstClear=!cleared.has(idx);if(firstClear){cleared.add(idx);score+=stageCredit+Math.max(200,900-stageCommands*35);stageCredit=0}if(cleared.size===levels.length){finish();return}const solvedStage=idx+1;idx=nextUncleared(idx);resetStage(firstClear?`Stage ${solvedStage} stabilized. ${cleared.size}/${levels.length} programs complete.`:`Stage ${solvedStage} already stabilized. Continue with an unsolved root map.`)}else TIP.textContent=`Program ended: ${cores.filter(c=>c.got).length}/${cores.length} cores, ${at?'at gate':'gate not reached'}.`}
+function finish(){if(done||cleared.size!==levels.length)return;const secs=Math.max(1,activePlayMs()/1000);activeElapsed=activePlayMs();activeSince=null;done=true;const final=Math.max(0,Math.round(score+3500-totalCommands*15-secs*3));score=final;TIP.textContent=`All six programs stabilized. Command score ${final.toLocaleString()}. Press Escape to restart.`;try{parent.postMessage({type:'wwg:game-event',game:'command-bloom',event:'program-complete',score:final,duration:Math.round(secs),meta:{unit:'pts',direction:'high',commands:totalCommands,stages:6}},'*')}catch{}sync()}
+function sync(){ST.textContent=idx+1;SO.textContent=cleared.size;CO.textContent=cores?`${cores.filter(c=>c.got).length}/${cores.length}`:'0';CT.textContent=queue.length;SC.textContent=Math.round(score+stageCredit);updateForecast();QUEUE.innerHTML=queue.map((x,i)=>`<span role="listitem" class="${running&&executingIndex===i?'active':''}" ${running&&executingIndex===i?'aria-current="step"':''}>${x}</span>`).join('');
+ RUN_BUTTON.textContent=running?(programPaused?'Resume':'Running…'):'Run';
+ RUN_BUTTON.disabled=done||inactive()||(running&&!programPaused)||(!running&&!queue.length);
+ STEP_BUTTON.disabled=done||inactive()||(running&&!programPaused)||(!running&&!queue.length);
+ PAUSE_BUTTON.disabled=inactive()||!running||programPaused;
+ EXECUTION_STATE.textContent=done?'Six programs complete · ranked result earned.':inactive()?'Window inactive · automatic execution suspended. Return and press Run or Step to continue.':running?`${programPaused?'Paused':'Running'} · ${nextInstruction}/${activeProgram.length} instructions executed. ${programPaused?'Step to inspect or Resume to continue.':'Pause to inspect the current command.'}`:'Idle · build a program, then Run or Step through it.';LEVELS.innerHTML=levels.map((_,i)=>`<button class="${i===idx?'active':''} ${cleared.has(i)?'cleared':''}" data-level="${i}" aria-label="Stage ${i+1}${cleared.has(i)?', stabilized':''}" ${cleared.has(i)?'disabled':''}>${i+1}</button>`).join('');LEVELS.querySelectorAll('[data-level]').forEach(b=>b.onclick=()=>{if(done||inactive()||running||cleared.has(Number(b.dataset.level)))return;idx=Number(b.dataset.level);resetStage()})}
+function draw(){const S=C.width/dpr/N;X.setTransform(dpr,0,0,dpr,0,0);X.clearRect(0,0,C.width/dpr,C.height/dpr);for(let y=0;y<N;y++)for(let x=0;x<N;x++){X.fillStyle=(x+y)%2?'#0b2117':'#0e281c';X.fillRect(x*S,y*S,S,S);if(wall(x,y)){X.fillStyle='#244b36';X.fillRect(x*S+5,y*S+5,S-10,S-10)}}if(traceCells.length>1){X.strokeStyle='#a7f3d0';X.lineWidth=Math.max(2,S*.06);X.lineJoin='round';X.beginPath();traceCells.forEach((q,i)=>{const px=(q.x+.5)*S,py=(q.y+.5)*S;if(i===0)X.moveTo(px,py);else X.lineTo(px,py)});X.stroke();X.lineWidth=1}const l=levels[idx];X.fillStyle='#22c55e';X.fillRect(l.g[0]*S+10,l.g[1]*S+10,S-20,S-20);
+ const plan=forecastRoute();if(plan){X.save();X.strokeStyle='#67e8f9';X.lineWidth=Math.max(2,S*.06);X.setLineDash([Math.max(3,S*.14),Math.max(2,S*.08)]);X.beginPath();plan.path.forEach((p,i)=>{const px=(p.x+.5)*S,py=(p.y+.5)*S;if(i===0)X.moveTo(px,py);else X.lineTo(px,py)});X.stroke();X.setLineDash([]);X.strokeStyle='#a5f3fc';X.lineWidth=Math.max(2,S*.05);X.beginPath();X.arc((plan.x+.5)*S,(plan.y+.5)*S,S*.27,0,2*Math.PI);X.stroke();X.strokeStyle='#fb7185';X.lineWidth=Math.max(2,S*.07);for(const p of plan.blockedAt){const px=(p.x+.5+p.dx*.27)*S,py=(p.y+.5+p.dy*.27)*S,r=S*.12;X.beginPath();X.moveTo(px-r,py-r);X.lineTo(px+r,py+r);X.moveTo(px+r,py-r);X.lineTo(px-r,py+r);X.stroke()}X.restore()}
+ for(const c of cores)if(!c.got){X.fillStyle='#fde68a';X.beginPath();X.arc(c.x*S+S/2,c.y*S+S/2,S*.17,0,7);X.fill()}X.save();X.translate(bot.x*S+S/2,bot.y*S+S/2);X.rotate(bot.dir*Math.PI/2);X.fillStyle='#86efac';X.beginPath();X.moveTo(0,-S*.25);X.lineTo(S*.2,S*.2);X.lineTo(-S*.2,S*.2);X.closePath();X.fill();X.restore()}
+document.querySelectorAll('[data-cmd]').forEach(b=>b.onclick=()=>add(b.dataset.cmd));RUN_BUTTON.onclick=run;STEP_BUTTON.onclick=singleStep;PAUSE_BUTTON.onclick=pauseExecution;document.getElementById('undo').onclick=()=>{if(!inactive()&&!running){queue.pop();sync();draw()}};document.getElementById('clear').onclick=()=>{if(!inactive()&&!running){queue=[];sync();draw()}};addEventListener('keydown',e=>{if(inactive()||e.altKey||e.ctrlKey||e.metaKey||e.isComposing)return;
+ const interactive=e.target?.closest?.('button,input,select,textarea,a,[contenteditable=true]');
+ if(['KeyF','KeyL','KeyR','KeyP'].includes(e.code)){if(!e.repeat&&!interactive)add(e.code.at(-1));return}
+ if(e.code==='Enter'){if(!interactive&&!e.repeat){e.preventDefault();run()}return}
+ if(e.code==='KeyS'&&!interactive){e.preventDefault();if(!e.repeat)singleStep();return}
+ if(e.code==='KeyK'&&!interactive){e.preventDefault();if(!e.repeat)pauseExecution();return}
+ if(e.code==='Backspace'&&!running&&!interactive){e.preventDefault();if(!e.repeat){queue.pop();sync();draw()}return}
+ if(e.code==='Escape'&&!e.repeat){e.preventDefault();if(done){idx=0;score=0;totalCommands=0;done=false;cleared=new Set();clockStarted=false;activeElapsed=0;activeSince=null}resetStage()}
+});resetStage();addEventListener('resize',()=>{resize();draw()});
 </script></body></html>

@@ -1,17 +1,18 @@
+from v352_vector_fixture import instrument
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 import json,re
 ROOT=Path(__file__).resolve().parents[1]
 SRC=(ROOT/'games/vector-shatter/index.html').read_text(); INPUT=(ROOT/'assets/wwg-input.js').read_text()
-for token in ['meta-v2','meta-v1','activateReactor','reactorTime=6','prism-reactor-destroyed','core-exposed','LEGACY_META','touchReactor','window.__vectorShatter']:
+for token in ['meta-v2','meta-v1','activateReactor','reactorTime=6','prism-reactor-destroyed','core-exposed','LEGACY_META','touchReactor',"post('campaign-complete'"]:
     assert token in SRC,token
 chunk=SRC.split('const LEVELS=[',1)[1].split('];',1)[0]
 rows=re.findall(r"'([.123P]+)'",chunk); expected=[4,5,5,6,7]; levels=[];i=0
 for n in expected: levels.append(rows[i:i+n]); i+=n
 assert len(levels)==5 and i==len(rows)
-PRE="""<script>const __s={'wwg:keymap':JSON.stringify({up:'KeyI',down:'KeyK',left:'KeyJ',right:'KeyL',primary:'KeyF',secondary:'KeyH'}),'wwg:vector-shatter:meta-v1':JSON.stringify({best:7000,clears:2,bestSector:5,powerups:9})};Object.defineProperty(window,'localStorage',{value:{getItem:k=>Object.prototype.hasOwnProperty.call(__s,k)?__s[k]:null,setItem:(k,v)=>__s[k]=String(v),removeItem:k=>delete __s[k]},configurable:true});window.__events=[];window.postMessage=d=>{if(d&&d.type==='wwg:game-event')window.__events.push(d)};</script>"""
+PRE="""<script>const __s={'wwg:keymap':JSON.stringify({up:'KeyI',down:'KeyK',left:'KeyJ',right:'KeyL',primary:'KeyF',secondary:'KeyE'}),'wwg:vector-shatter:meta-v1':JSON.stringify({best:7000,clears:2,bestSector:5,powerups:9})};Object.defineProperty(window,'localStorage',{value:{getItem:k=>Object.prototype.hasOwnProperty.call(__s,k)?__s[k]:null,setItem:(k,v)=>__s[k]=String(v),removeItem:k=>delete __s[k]},configurable:true});window.__events=[];window.postMessage=d=>{if(d&&d.type==='wwg:game-event')window.__events.push(d)};</script>"""
 def raw():
-    h=SRC.replace('<script src="../../assets/wwg-input.js"></script>',f'<script>{INPUT}</script>'); i=h.lower().find('<script'); return h[:i]+PRE+h[i:]
+    h=instrument(SRC).replace('<script src="../../assets/wwg-input.js"></script>',f'<script>{INPUT}</script>'); i=h.lower().find('<script'); return h[:i]+PRE+h[i:]
 with sync_playwright() as pw:
     b=pw.chromium.launch(headless=True,executable_path='/usr/bin/chromium',args=['--no-sandbox','--disable-gpu'])
     p=b.new_page(viewport={'width':390,'height':844}); errs=[]; p.on('pageerror',lambda e:errs.append(str(e)))
@@ -25,7 +26,7 @@ with sync_playwright() as pw:
     assert p.evaluate('window.__vectorShatter.activateReactor()') is True
     st=p.evaluate('window.__vectorShatter.state()'); assert st['reactor']==0 and st['reactorTime']>5.8 and st['balls']>=3 and st['power']['pierce']>0,st
     ev=p.evaluate('window.__events'); assert any(e.get('event')=='reactor-activated' for e in ev),ev
-    p.evaluate('window.__vectorShatter.addCharge(100)'); p.keyboard.press('KeyH'); assert p.evaluate('window.__vectorShatter.state().reactor')==0
+    p.evaluate('window.__vectorShatter.addCharge(100)'); p.keyboard.press('KeyE'); assert p.evaluate('window.__vectorShatter.state().reactor')==0
     p.evaluate('window.__vectorShatter.setSector(4)'); st=p.evaluate('window.__vectorShatter.state()'); assert st['core']['hp']==14 and st['brickCount']>0
     x=p.evaluate('window.__vectorShatter.state().core.x'); p.evaluate('window.__vectorShatter.step(.5)'); assert p.evaluate('window.__vectorShatter.state().core.x')!=x
     p.evaluate('window.__vectorShatter.forcePanels()'); assert p.evaluate('window.__vectorShatter.state().brickCount')==0

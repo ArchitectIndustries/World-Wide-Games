@@ -29,6 +29,7 @@ with sync_playwright() as pw:
     page.set_content(instrumented_html(), wait_until='domcontentloaded')
     page.wait_for_timeout(40)
 
+    # Historical false-clear path: zero accuracy must not emit archive-cleared.
     zero = force_result(page, 0, 10)
     assert zero['ended'] and not zero['cleared'], zero
     assert zero['events'] and zero['events'][-1]['event']=='archive-desynced', zero
@@ -36,10 +37,12 @@ with sync_playwright() as pw:
     assert zero['acc']=='0%', zero
     assert zero['events'][-1]['meta']['accuracy']==0, zero
 
+    # Below threshold remains a failed synchronization.
     low = force_result(page, 6, 10)
     assert not low['cleared'] and low['events'][-1]['event']=='archive-desynced', low
     assert low['acc']=='60%', low
 
+    # Published 70% threshold clears and preserves completion telemetry.
     good = force_result(page, 7, 10)
     assert good['cleared'] and good['events'][-1]['event']=='archive-cleared', good
     assert good['acc']=='70%' and good['events'][-1]['meta']['accuracy']==70, good
@@ -47,6 +50,7 @@ with sync_playwright() as pw:
     assert not errors and not console, (errors, console)
     page.close()
 
+    # Real keyboard timing path still records a hit in a fresh document.
     page = browser.new_page(viewport={'width':960,'height':700})
     errors=[]; console=[]
     page.on('pageerror', lambda e: errors.append(str(e)))
@@ -57,6 +61,7 @@ with sync_playwright() as pw:
     live = page.evaluate("()=>({hits,judged,hit:notes[0].hit,score,acc:document.querySelector('#acc').textContent})")
     assert live['hits']==1 and live['judged']==1 and live['hit'] and live['score']>0 and live['acc']=='100%', live
 
+    # Narrow viewport: lane buttons remain accessible and no horizontal overflow.
     page.set_viewport_size({'width':390,'height':844}); page.wait_for_timeout(20)
     mobile = page.evaluate("""()=>({sw:document.documentElement.scrollWidth,iw:innerWidth,buttons:[...document.querySelectorAll('[data-lane]')].map(b=>{const r=b.getBoundingClientRect();return {w:r.width,h:r.height,l:r.left,r:r.right}})})""")
     assert mobile['sw'] <= mobile['iw'] + 2, mobile

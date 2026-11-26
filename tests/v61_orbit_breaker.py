@@ -6,7 +6,7 @@ SRC=(ROOT/'games/orbit-breaker/index.html').read_text()
 INPUT=(ROOT/'assets/wwg-input.js').read_text()
 
 for token in [
-    'Orbit Breaker 2.0', 'SECTORS=[', 'Debris Corridor', 'Hunter Belt', 'Breaker Core',
+    'Orbit Breaker 2.1', 'SECTORS=[', 'Debris Corridor', 'Hunter Belt', 'Breaker Core',
     'pulseBurst', "emit('campaign-complete'", "emit('pulse-burst'", SAVE_KEY if False else "wwg:orbit-breaker:progress:v2",
     'Missed enemies never do', 'shipCollision', 'shipHit', 'spawnBreakerCore'
 ]:
@@ -118,4 +118,4 @@ with sync_playwright() as pw:
     assert m.locator('[data-act="pulse"]').is_visible()
     m.close(); b.close()
 
-print(json.dumps({'orbitBreaker':'2.0','campaignSectors':3,'pulseBurst':'pass','collisionRule':'pass','persistence':'pass','mobile':'pass'}))
+print(json.dumps({'orbitBreaker':'2.1','campaignSectors':3,'pulseBurst':'pass','collisionRule':'pass','persistence':'pass','mobile':'pass'}))

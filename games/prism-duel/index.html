@@ -1,8 +1,181 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Prism Duel</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#090b16;color:white;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;inset:10px 10px auto;display:flex;justify-content:center;gap:10px;align-items:center;pointer-events:none}.hud span,.hud button{background:#10152ae8;border:1px solid #38436b;border-radius:12px;padding:8px 12px;color:#fff}.hud b{font-size:20px;margin-left:5px}.hud button{pointer-events:auto;font-weight:800;cursor:pointer}.controls{position:fixed;inset:auto 10px 10px;display:flex;justify-content:space-between;pointer-events:none}.pad{display:grid;grid-template-columns:repeat(3,48px);gap:5px;pointer-events:auto}.pad button{height:46px;border:1px solid #45558b;border-radius:12px;background:#111a35dd;color:#fff;font-weight:900}.pad .up{grid-column:2}.pad .left{grid-column:1}.pad .fire{grid-column:2}.pad .right{grid-column:3}.pad .down{grid-column:2}.pad.ai-hidden{visibility:hidden}@media(min-width:900px){.controls{opacity:.4}}</style></head><body><canvas id="c"></canvas><div class="hud"><span>Amber <b id="s1">0</b></span><button id="mode">Mode: 2 Players</button><span>First to 5</span><span>Azure <b id="s2">0</b></span></div><div class="controls"><div class="pad" data-p="1"><button class="up" data-k="u">▲</button><button class="left" data-k="l">◀</button><button class="fire" data-k="f">●</button><button class="right" data-k="r">▶</button><button class="down" data-k="d">▼</button></div><div class="pad" data-p="2"><button class="up" data-k="u">▲</button><button class="left" data-k="l">◀</button><button class="fire" data-k="f">●</button><button class="right" data-k="r">▶</button><button class="down" data-k="d">▼</button></div></div><script>
-const C=document.getElementById('c'),X=C.getContext('2d'),VW=960,VH=540;const qp=new URLSearchParams(location.search),muted=qp.get('muted')==='1',volume=Math.max(0,Math.min(1,Number(qp.get('volume')??.7)));let audio=null;function tone(freq,dur=.04,vol=.022,type='square'){if(muted||volume<=0)return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.type=type;o.frequency.value=freq;g.gain.value=vol*volume;o.connect(g).connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+dur);o.stop(audio.currentTime+dur)}catch{}}let dpr=1,sc=1,ox=0,oy=0;function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=innerWidth*dpr;C.height=innerHeight*dpr;sc=Math.min(innerWidth/VW,innerHeight/VH);ox=(innerWidth-VW*sc)/2;oy=(innerHeight-VH*sc)/2}addEventListener('resize',resize);resize();let p1,p2,shots=[],s1=0,s2=0,over=false,last=performance.now(),matchStart=performance.now(),keys={},mode=localStorage.getItem('wwg:prism-mode')||'duo';const walls=[{x:440,y:80,w:80,h:150},{x:440,y:310,w:80,h:150},{x:250,y:230,w:130,h:80},{x:580,y:230,w:130,h:80}];
-function resetRound(){p1={x:120,y:270,a:0,cd:0};p2={x:840,y:270,a:Math.PI,cd:0};shots=[]}function reset(){s1=s2=0;over=false;matchStart=performance.now();resetRound();sync()}function sync(){document.getElementById('s1').textContent=s1;document.getElementById('s2').textContent=s2;const m=document.getElementById('mode');m.textContent=mode==='ai'?'Mode: VS AI':'Mode: 2 Players';document.querySelector('[data-p="2"]').classList.toggle('ai-hidden',mode==='ai')}function hitWall(x,y,r=7){return x<r||x>VW-r||y<r||y>VH-r||walls.some(w=>x+r>w.x&&x-r<w.x+w.w&&y+r>w.y&&y-r<w.y+w.h)}function fire(p,owner){if(over||p.cd>0)return;p.cd=.32;shots.push({x:p.x+Math.cos(p.a)*22,y:p.y+Math.sin(p.a)*22,vx:Math.cos(p.a)*360,vy:Math.sin(p.a)*360,owner,life:3});tone(owner===1?260:340,.03,.018,'square')}function playerInput(p,up,down,left,right,fireKey,dt,owner,gp){let turn=(keys[right]?1:0)-(keys[left]?1:0),th=(keys[up]?1:0)-(keys[down]?1:0);if(gp){let ax=gp.axes[0]||0,ay=gp.axes[1]||0;if(Math.abs(ax)>.16)turn=ax;if(Math.abs(ay)>.16)th=-ay}p.a+=turn*2.8*dt;let nx=p.x+Math.cos(p.a)*th*150*dt,ny=p.y+Math.sin(p.a)*th*150*dt;if(!hitWall(nx,ny,14)){p.x=nx;p.y=ny}if(keys[fireKey]||gp?.buttons[0]?.pressed)fire(p,owner);p.cd=Math.max(0,p.cd-dt)}
-function norm(a){while(a>Math.PI)a-=Math.PI*2;while(a<-Math.PI)a+=Math.PI*2;return a}function aiInput(p,target,dt){const desired=Math.atan2(target.y-p.y,target.x-p.x),delta=norm(desired-p.a),dist=Math.hypot(target.x-p.x,target.y-p.y);p.a+=Math.sign(delta)*Math.min(Math.abs(delta),2.25*dt);let th=dist>150?1:.35,nx=p.x+Math.cos(p.a)*th*128*dt,ny=p.y+Math.sin(p.a)*th*128*dt;if(!hitWall(nx,ny,14)){p.x=nx;p.y=ny}else p.a+=1.9*dt;if(Math.abs(delta)<.16&&dist<650)fire(p,2);p.cd=Math.max(0,p.cd-dt)}
-function score(owner){if(owner===1)s1++;else s2++;tone(owner===1?520:640,.09,.03,'sine');sync();if(s1>=5||s2>=5){over=true;tone(760,.18,.04,'triangle');let winner=s1>s2?1:2,points=5000+Math.abs(s1-s2)*400;const event=mode==='ai'&&winner===1?'ai-duel-won':'duel-complete';try{parent.postMessage({type:'wwg:game-event',game:'prism-duel',event,score:points,duration:Math.max(1,Math.round((performance.now()-matchStart)/1000)),meta:{unit:'pts',direction:'high',mode,winner}},'*')}catch{}}else resetRound()}
-function step(t){let dt=Math.min(.03,(t-last)/1000);last=t;if(!over){let pads=[];try{pads=Array.from(navigator.getGamepads?.()||[])}catch{}playerInput(p1,'KeyW','KeyS','KeyA','KeyD','KeyF',dt,1,pads[0]);if(mode==='ai')aiInput(p2,p1,dt);else playerInput(p2,'ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Slash',dt,2,pads[1]);for(const q of shots){q.life-=dt;let nx=q.x+q.vx*dt,ny=q.y+q.vy*dt;if(nx<7||nx>VW-7){q.vx*=-1;nx=q.x+q.vx*dt}if(ny<7||ny>VH-7){q.vy*=-1;ny=q.y+q.vy*dt}for(const w of walls){if(nx+7>w.x&&nx-7<w.x+w.w&&ny+7>w.y&&ny-7<w.y+w.h){let px=q.x,py=q.y;if(px<=w.x||px>=w.x+w.w)q.vx*=-1;else q.vy*=-1;nx=q.x+q.vx*dt;ny=q.y+q.vy*dt}}q.x=nx;q.y=ny;if(q.owner!==1&&Math.hypot(q.x-p1.x,q.y-p1.y)<17){q.life=-1;score(2);break}if(q.owner!==2&&Math.hypot(q.x-p2.x,q.y-p2.y)<17){q.life=-1;score(1);break}}shots=shots.filter(q=>q.life>0)}draw();requestAnimationFrame(step)}addEventListener('keydown',e=>{keys[e.code]=true;if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Slash'].includes(e.code))e.preventDefault();if(e.code==='KeyR')reset();if(e.code==='KeyM'){mode=mode==='ai'?'duo':'ai';localStorage.setItem('wwg:prism-mode',mode);reset()}});addEventListener('keyup',e=>keys[e.code]=false);document.getElementById('mode').onclick=()=>{mode=mode==='ai'?'duo':'ai';localStorage.setItem('wwg:prism-mode',mode);reset()};document.querySelectorAll('.pad button').forEach(b=>{let map=b.closest('.pad').dataset.p==='1'?{u:'KeyW',d:'KeyS',l:'KeyA',r:'KeyD',f:'KeyF'}:{u:'ArrowUp',d:'ArrowDown',l:'ArrowLeft',r:'ArrowRight',f:'Slash'},code=map[b.dataset.k];b.addEventListener('pointerdown',()=>{keys[code]=true;if(b.dataset.k==='f')fire(b.closest('.pad').dataset.p==='1'?p1:p2,Number(b.closest('.pad').dataset.p))});for(const ev of['pointerup','pointercancel','pointerleave'])b.addEventListener(ev,()=>keys[code]=false)});
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Prism Duel 1.5 — Cover-Consistent Ricochets</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#090b16;color:white;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;inset:10px 10px auto;display:flex;justify-content:center;gap:10px;align-items:center;pointer-events:none}.hud span,.hud button{background:#10152ae8;border:1px solid #38436b;border-radius:12px;padding:8px 12px;color:#fff}.hud b{font-size:20px;margin-left:5px}.hud button{pointer-events:auto;font-weight:800;cursor:pointer}.controls{position:fixed;inset:auto 10px 10px;display:flex;justify-content:space-between;pointer-events:none}.pad{display:grid;grid-template-columns:repeat(3,48px);gap:5px;pointer-events:auto}.pad button{height:46px;border:1px solid #45558b;border-radius:12px;background:#111a35dd;color:#fff;font-weight:900}.pad .up{grid-column:2}.pad .left{grid-column:1}.pad .fire{grid-column:2}.pad .right{grid-column:3}.pad .down{grid-column:2}.pad.ai-hidden{visibility:hidden}@media(min-width:900px){.controls{opacity:.4}}#playStatus{position:fixed;top:88px;left:50%;transform:translateX(-50%);z-index:5;width:min(92vw,560px);padding:10px 13px;border:1px solid #8baff0;border-radius:12px;background:#111a35e8;color:#eff6ff;text-align:center;font-size:13px;line-height:1.4;pointer-events:none}#playStatus[data-state="active"]{display:none}.hud button:focus-visible,.pad button:focus-visible{outline:3px solid #facc15;outline-offset:2px}.hud{flex-wrap:wrap}.hud button{min-height:44px}#aiStatus{color:#a5f3fc;font-size:12px;min-width:120px;text-align:center}#aiStatus[hidden]{display:none}#coverStatus{color:#fde68a;font-size:12px;max-width:150px;text-align:center}#playStatus:not([data-state="active"]){box-shadow:0 12px 28px #0008}@media(max-width:640px){#playStatus{top:124px}.hud{gap:5px}.hud span,.hud button{padding:7px 9px;font-size:12px}.pad button{min-width:46px;min-height:46px}}.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}#storageNotice{position:fixed;z-index:4;left:12px;right:12px;top:68px;max-width:700px;margin:0 auto;padding:9px 13px;background:#232037f5;border:2px solid #f5c36c;border-radius:9px;color:#fff;font-size:14px;text-align:center;pointer-events:none}#storageNotice[hidden]{display:none}</style></head><body><canvas id="c"></canvas><div class="hud"><span>Amber <b id="s1">0</b></span><button id="mode" type="button" aria-label="Switch between two-player and computer opponent">Mode: 2 Players</button><button id="start" type="button">Start Match</button><button id="pause" type="button">P Pause</button><button id="restart" type="button">R Reset</button><span>First to 5</span><span id="coverStatus" role="status" aria-live="polite">Shots bank off cover</span><span id="aiStatus" role="status" aria-live="polite" hidden>AI: READY</span><span>Azure <b id="s2">0</b></span></div><div id="playStatus" role="status" aria-live="polite" data-state="ready">READY — Choose VS AI or 2 Players, then select Start Match (or press Space). Amber: W/S move, A/D turn, F fire. Azure: arrows move/turn, / fire. P pauses, R resets. First to five wins. VS AI: the rival navigates cover and signals when it is lining up a shot. Shots ricochet off solid cover; line up a bank shot. Games freeze when inactive.</div><p id="storageNotice" role="status" aria-live="polite" hidden></p><p id="resultNotice" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p><div class="controls"><div class="pad" data-p="1"><button class="up" data-k="u">▲</button><button class="left" data-k="l">◀</button><button class="fire" data-k="f">●</button><button class="right" data-k="r">▶</button><button class="down" data-k="d">▼</button></div><div class="pad" data-p="2"><button class="up" data-k="u">▲</button><button class="left" data-k="l">◀</button><button class="fire" data-k="f">●</button><button class="right" data-k="r">▶</button><button class="down" data-k="d">▼</button></div></div><script>
+const C=document.getElementById('c'),X=C.getContext('2d'),VW=960,VH=540,AI_STATUS=document.getElementById('aiStatus');const qp=new URLSearchParams(location.search),muted=qp.get('muted')==='1',volume=Math.max(0,Math.min(1,Number(qp.get('volume')??.7)));let audio=null;function tone(freq,dur=.04,vol=.022,type='square'){if(muted||volume<=0)return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.type=type;o.frequency.value=freq;g.gain.value=vol*volume;o.connect(g).connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+dur);o.stop(audio.currentTime+dur)}catch{}}let dpr=1,sc=1,ox=0,oy=0;function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=innerWidth*dpr;C.height=innerHeight*dpr;sc=Math.min(innerWidth/VW,innerHeight/VH);ox=(innerWidth-VW*sc)/2;oy=(innerHeight-VH*sc)/2}addEventListener('resize',resize);resize();function modeStorageWarning(){const el=document.getElementById('storageNotice');el.hidden=false;el.textContent='Browser storage is unavailable. Your mode choice is session-only and may reset when you reload.'}
+function readMode(){try{return localStorage.getItem('wwg:prism-mode')==='ai'?'ai':'duo'}catch{modeStorageWarning();return 'duo'}}
+function saveMode(){try{localStorage.setItem('wwg:prism-mode',mode)}catch{modeStorageWarning()}}
+let p1,p2,shots=[],s1=0,s2=0,over=false,last=performance.now(),activeMs=0,keys={},mode=readMode(),state='ready',windowBlurred=false,padNeedsNeutral=true,padStartHeld=false;const walls=[{x:440,y:80,w:80,h:150},{x:440,y:310,w:80,h:150},{x:250,y:230,w:130,h:80},{x:580,y:230,w:130,h:80}];
+function resetRound(){p1={x:120,y:270,a:0,cd:0};p2={x:840,y:270,a:Math.PI,cd:0,nav:[],navClock:0,navTarget:null,lastKnown:{x:120,y:270},aimHold:0,tactic:''};shots=[];setAiTactic('COVER ROUTE')}function setStatus(message){const el=document.getElementById('playStatus');el.dataset.state=state;el.textContent=message}
+function clearInputs(){keys={};padStartHeld=false;padNeedsNeutral=true}
+function active(){return state==='active'&&!windowBlurred&&!document.hidden}
+function startMatch(){if(over||windowBlurred||document.hidden||state==='active')return;state='active';clearInputs();last=performance.now();setStatus('PLAYING');sync()}
+function suspend(reason){if(state!=='active')return;state='suspended';clearInputs();last=performance.now();setStatus(reason+' — controls and active match time frozen. Select Resume Match, press Space, or press gamepad Start after releasing its buttons.');sync()}
+function reset(){s1=s2=0;over=false;activeMs=0;state='ready';clearInputs();last=performance.now();document.getElementById('resultNotice').textContent='';resetRound();setStatus('READY — Choose 2 Players or VS AI, then Start Match or press Space. The AI navigates cover before locking a shot. Amber: W/S advance, A/D turn, F fire. Azure: arrows advance/turn, / fire. P pause, R reset. First to five wins. Background time never counts.');sync()}function sync(){document.getElementById('s1').textContent=s1;document.getElementById('s2').textContent=s2;const m=document.getElementById('mode');m.textContent=mode==='ai'?'Mode: VS AI':'Mode: 2 Players';document.querySelector('[data-p="2"]').classList.toggle('ai-hidden',mode==='ai');AI_STATUS.hidden=mode!=='ai';document.getElementById('start').textContent=state==='ready'?'Start Match':state==='suspended'?'Resume Match':state==='finished'?'Match Complete':'Playing';document.getElementById('start').disabled=state==='finished';document.getElementById('pause').textContent=state==='suspended'?'Resume (P)':'P Pause';document.getElementById('pause').disabled=state==='ready'||state==='finished'}function hitWall(x,y,r=7){return x<r||x>VW-r||y<r||y>VH-r||walls.some(w=>x+r>w.x&&x-r<w.x+w.w&&y+r>w.y&&y-r<w.y+w.h)}function fire(p,owner){if(!active()||over||p.cd>0)return;
+ p.cd=.32;const dx=Math.cos(p.a),dy=Math.sin(p.a),mx=p.x+dx*22,my=p.y+dy*22;
+ // The muzzle must never materialize a projectile beyond the solid wall beside a ship.
+ const open=clearSegment(p.x,p.y,mx,my,7)&&!hitWall(mx,my,7);
+ shots.push({x:open?mx:p.x,y:open?my:p.y,vx:dx*360,vy:dy*360,owner,life:3});
+ tone(owner===1?260:340,.03,.018,'square')}
+// Earliest swept collision along one physical ball path; cover includes the shot's radius.
+// Walls win a tie against a ship, so a target behind solid cover cannot receive damage.
+function coverContact(x,y,dx,dy,r=7){let best=null;
+ const choose=(t,nx,ny)=>{if(t>=-1e-8&&t<=1+1e-8&&(!best||t<best.t))best={t:Math.max(0,t),nx,ny}};
+ for(const w of walls){let near=-Infinity,far=Infinity,nx=0,ny=0,valid=true;
+  for(const [p,d,min,max,axis] of [[x,dx,w.x-r,w.x+w.w+r,'x'],[y,dy,w.y-r,w.y+w.h+r,'y']]){
+   if(Math.abs(d)<1e-9){if(p<min||p>max){valid=false;break}continue}
+   const entry=Math.min((min-p)/d,(max-p)/d),exit=Math.max((min-p)/d,(max-p)/d);
+   if(entry>near){near=entry;nx=axis==='x'?(d>0?-1:1):0;ny=axis==='y'?(d>0?-1:1):0}
+   far=Math.min(far,exit);if(near>far){valid=false;break}
+  }
+  if(valid&&far>=0&&near>=-1e-8)choose(near,nx,ny)
+ }
+ if(dx<0)choose((r-x)/dx,1,0);if(dx>0)choose((VW-r-x)/dx,-1,0);
+ if(dy<0)choose((r-y)/dy,0,1);if(dy>0)choose((VH-r-y)/dy,0,-1);
+ return best
+}
+function shipContact(x,y,dx,dy,p){const rx=x-p.x,ry=y-p.y,c=rx*rx+ry*ry-17*17;
+ if(c<=0)return 0;const a=dx*dx+dy*dy;if(a<1e-12)return null;
+ const b=2*(rx*dx+ry*dy),disc=b*b-4*a*c;if(disc<0)return null;
+ const t=(-b-Math.sqrt(disc))/(2*a);return t>=0&&t<=1?t:null
+}
+function advanceShot(q,dt){q.life-=dt;if(q.life<=0)return false;
+ let remaining=dt;const target=q.owner===1?p2:p1;
+ for(let bounce=0;bounce<4&&remaining>1e-7;bounce++){
+  const dx=q.vx*remaining,dy=q.vy*remaining;
+  const wall=coverContact(q.x,q.y,dx,dy),player=shipContact(q.x,q.y,dx,dy,target);
+  if(player!==null&&(!wall||player<wall.t-1e-7)){
+   q.x+=dx*player;q.y+=dy*player;q.life=-1;score(q.owner);return true
+  }
+  if(!wall){q.x+=dx;q.y+=dy;return false}
+  q.x+=dx*wall.t+wall.nx*.05;q.y+=dy*wall.t+wall.ny*.05;
+  if(wall.nx)q.vx=-q.vx;if(wall.ny)q.vy=-q.vy;
+  remaining*=1-wall.t;
+  const notice=document.getElementById('coverStatus');if(notice.textContent!=='Cover rebound')notice.textContent='Cover rebound';
+ }
+ return false
+}function playerInput(p,up,down,left,right,fireKey,dt,owner,gp){let turn=(keys[right]?1:0)-(keys[left]?1:0),th=(keys[up]?1:0)-(keys[down]?1:0);if(gp){let ax=gp.axes[0]||0,ay=gp.axes[1]||0;if(Math.abs(ax)>.16)turn=ax;if(Math.abs(ay)>.16)th=-ay}p.a+=turn*2.8*dt;let nx=p.x+Math.cos(p.a)*th*150*dt,ny=p.y+Math.sin(p.a)*th*150*dt;if(!hitWall(nx,ny,14)){p.x=nx;p.y=ny}if(keys[fireKey]||gp?.buttons[0]?.pressed)fire(p,owner);p.cd=Math.max(0,p.cd-dt)}
+function norm(a){while(a>Math.PI)a-=Math.PI*2;while(a<-Math.PI)a+=Math.PI*2;return a}
+function setAiTactic(tactic){if(!p2||p2.tactic===tactic)return;p2.tactic=tactic;AI_STATUS.textContent='AI: '+tactic}
+// A segment is blocked if it crosses a wall enlarged by the moving body's radius.
+// Slab intersection avoids skipping narrow corners between animation frames.
+function clearSegment(ax,ay,bx,by,radius=14){const dx=bx-ax,dy=by-ay;
+ for(const wall of walls){let lo=0,hi=1;
+  for(const [origin,delta,min,max] of [[ax,dx,wall.x-radius,wall.x+wall.w+radius],[ay,dy,wall.y-radius,wall.y+wall.h+radius]]){
+   if(Math.abs(delta)<1e-8){if(origin>=min&&origin<=max){continue}lo=2;break}
+   const a=(min-origin)/delta,b=(max-origin)/delta;lo=Math.max(lo,Math.min(a,b));hi=Math.min(hi,Math.max(a,b));
+   if(lo>hi)break;
+  }
+  if(lo<=hi&&hi>=0&&lo<=1)return false;
+ }
+ return true}
+const navCorners=walls.flatMap(w=>{const gap=21;return[
+ {x:w.x-gap,y:w.y-gap},{x:w.x+w.w+gap,y:w.y-gap},
+ {x:w.x-gap,y:w.y+w.h+gap},{x:w.x+w.w+gap,y:w.y+w.h+gap}]
+ }).filter(v=>v.x>20&&v.x<VW-20&&v.y>20&&v.y<VH-20&&!hitWall(v.x,v.y,16));
+// Tiny fixed-arena visibility graph: shortest clear route around cover, no external library.
+// Recomputed at most about twice per second, so it cannot become a per-frame cost.
+function routeAroundCover(start,goal){const nodes=[{x:start.x,y:start.y},...navCorners,{x:goal.x,y:goal.y}],end=nodes.length-1;
+ const costs=nodes.map(()=>Infinity),prev=nodes.map(()=>-1),used=new Set;costs[0]=0;
+ for(let turn=0;turn<nodes.length;turn++){
+  let current=-1;for(let i=0;i<nodes.length;i++)if(!used.has(i)&&(current<0||costs[i]<costs[current]))current=i;
+  if(current<0||!Number.isFinite(costs[current])||current===end)break;used.add(current);
+  for(let j=1;j<nodes.length;j++){if(j===current||used.has(j))continue;
+   const a=nodes[current],b=nodes[j];if(!clearSegment(a.x,a.y,b.x,b.y,14))continue;
+   const cost=costs[current]+Math.hypot(b.x-a.x,b.y-a.y);
+   if(cost+1e-6<costs[j]){costs[j]=cost;prev[j]=current}
+  }
+ }
+ if(!Number.isFinite(costs[end]))return [];
+ const path=[];for(let at=end;at>0&&at!==-1;at=prev[at])path.unshift(nodes[at]);return path
+}
+function aiInput(p,target,dt){const sight=clearSegment(p.x,p.y,target.x,target.y,7);
+ if(sight)p.lastKnown={x:target.x,y:target.y}; // No tracking unseen player movement through cover.
+ const pursuit=sight?target:p.lastKnown,dx=target.x-p.x,dy=target.y-p.y,dist=Math.hypot(dx,dy);
+ const direct=clearSegment(p.x,p.y,pursuit.x,pursuit.y,14);
+ let destination=pursuit;
+ if(!direct){p.navClock=(p.navClock||0)-dt;
+  if(p.navClock<=0||!p.nav?.length||!p.navTarget||Math.hypot(pursuit.x-p.navTarget.x,pursuit.y-p.navTarget.y)>48){
+   p.nav=routeAroundCover(p,pursuit);p.navTarget={x:pursuit.x,y:pursuit.y};p.navClock=.65;
+  }
+  while(p.nav.length>1&&Math.hypot(p.nav[0].x-p.x,p.nav[0].y-p.y)<13)p.nav.shift();
+  if(p.nav.length)destination=p.nav[0];
+ }else{p.nav=[];p.navClock=0;p.navTarget=null}
+ const desired=Math.atan2(pursuit.y-p.y,pursuit.x-p.x);
+ const moveAngle=Math.atan2(destination.y-p.y,destination.x-p.x);
+ // Close-range strafe gives a readable counterplay window without tracking through cover.
+ let heading=moveAngle,speed=128;
+ if(direct&&sight&&dist<215){heading=desired+(dist<125?Math.PI:Math.PI/2);speed=dist<125?85:52}
+ let nx=p.x+Math.cos(heading)*speed*dt,ny=p.y+Math.sin(heading)*speed*dt;
+ if(!hitWall(nx,ny,14)){p.x=nx;p.y=ny}
+ else{ // Safe axis sliding if a waypoint is just beyond a corner.
+  if(!hitWall(nx,p.y,14))p.x=nx;else if(!hitWall(p.x,ny,14))p.y=ny;
+  p.navClock=0;
+ }
+ const aimAngle=sight?desired:moveAngle;
+ p.a+=Math.max(-2.25*dt,Math.min(2.25*dt,norm(aimAngle-p.a)));
+ const aligned=Math.abs(norm(desired-p.a))<.12;
+ p.aimHold=sight&&aligned&&dist<650?Math.min(.45,(p.aimHold||0)+dt):0;
+ if(!sight)setAiTactic('FLANKING COVER');else if(p.aimHold<.28)setAiTactic('LOCKING TARGET');else setAiTactic('FIRING LANE');
+ if(p.aimHold>=.28&&p.cd<=0){fire(p,2);p.aimHold=0}
+ p.cd=Math.max(0,p.cd-dt)
+}
+function score(owner){
+ if(over)return;
+ if(owner===1)s1++;else s2++;
+ tone(owner===1?520:640,.09,.03,'sine');sync();
+ if(s1<5&&s2<5){resetRound();return}
+ over=true;state='finished';clearInputs();setStatus('MATCH COMPLETE — press R or Reset for a new match.');sync();tone(760,.18,.04,'triangle');
+ const winner=s1>s2?1:2,points=5000+Math.abs(s1-s2)*400;
+ const ranked=mode==='ai'&&winner===1;
+ const event=ranked?'ai-duel-won':'duel-complete';
+ document.getElementById('resultNotice').textContent=mode==='ai'
+   ?(ranked?'Amber defeated the AI. Press R to rematch.':'The AI wins. Press R to rematch.')
+   :(winner===1?'Amber wins the local duel. Press R to rematch.':'Azure wins the local duel. Press R to rematch.');
+ const message={type:'wwg:game-event',game:'prism-duel',event,
+   duration:Math.max(1,Math.round(activeMs/1000)),
+   meta:{unit:'pts',direction:'high',mode,winner,ranked,attemptPoints:points}};
+ if(ranked)message.score=points;
+ try{parent.postMessage(message,'*')}catch{}
+}
+// A neutral-armed Start button prevents an already-held controller from resuming unexpectedly.
+function gamepads(){let pads=[];try{pads=Array.from(navigator.getGamepads?.()||[])}catch{return []}
+ const pad0=pads.find(g=>g&&g.connected!==false);
+ if(padNeedsNeutral){if(!pad0)return [];const buttons=pad0.buttons||[],axes=pad0.axes||[];
+  const neutral=![0,1,6,7,9,14,15].some(i=>buttons[i]?.pressed)&&Math.abs(axes[0]||0)<.16&&Math.abs(axes[1]||0)<.16;
+  if(!neutral)return [];padNeedsNeutral=false;padStartHeld=false;return []}
+ if(!windowBlurred&&!document.hidden){const pressed=!!pad0?.buttons?.[9]?.pressed;
+  if(pressed&&!padStartHeld&&(state==='ready'||state==='suspended'))startMatch();padStartHeld=pressed}
+ return active()?pads:[]}
+function step(t){const dt=Math.max(0,Math.min(.03,(t-last)/1000));last=t;const pads=gamepads();
+ if(active()&&!over){activeMs+=dt*1000;
+  playerInput(p1,'KeyW','KeyS','KeyA','KeyD','KeyF',dt,1,pads[0]);
+  if(mode==='ai')aiInput(p2,p1,dt);else playerInput(p2,'ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Slash',dt,2,pads[1]);
+  let roundScored=false;
+  for(const q of shots)if(advanceShot(q,dt)){roundScored=true;break}
+  if(!roundScored)shots=shots.filter(q=>q.life>0)}draw();requestAnimationFrame(step)}
+function togglePause(){if(state==='active')suspend('PAUSED');else if(state==='suspended')startMatch()}
+addEventListener('blur',()=>{windowBlurred=true;suspend('WINDOW INACTIVE');clearInputs()});
+addEventListener('focus',()=>{windowBlurred=false;last=performance.now()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){suspend('TAB INACTIVE');clearInputs()}else last=performance.now()});
+addEventListener('keydown',e=>{if(e.ctrlKey||e.altKey||e.metaKey)return;
+ if(e.code==='KeyR'&&!e.repeat){e.preventDefault();reset();return}
+ if(e.code==='KeyM'&&!e.repeat){mode=mode==='ai'?'duo':'ai';saveMode();reset();return}
+ if(e.code==='KeyP'&&!e.repeat&&state!=='ready'&&state!=='finished'){e.preventDefault();togglePause();return}
+ // Native focused controls own Enter/Space; never override their click behavior.
+ if(e.target?.closest?.('button'))return;
+ if(e.code==='Space'&&!e.repeat&&(state==='ready'||state==='suspended')){e.preventDefault();startMatch();return}
+ if(!active())return;
+ if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Slash','Space'].includes(e.code))e.preventDefault();
+ keys[e.code]=true});
+addEventListener('keyup',e=>{delete keys[e.code]});
+document.getElementById('mode').addEventListener('click',()=>{mode=mode==='ai'?'duo':'ai';saveMode();reset()});
+document.getElementById('start').addEventListener('click',startMatch);
+document.getElementById('pause').addEventListener('click',togglePause);
+document.getElementById('restart').addEventListener('click',reset);
+document.querySelectorAll('.pad button').forEach(b=>{let map=b.closest('.pad').dataset.p==='1'?{u:'KeyW',d:'KeyS',l:'KeyA',r:'KeyD',f:'KeyF'}:{u:'ArrowUp',d:'ArrowDown',l:'ArrowLeft',r:'ArrowRight',f:'Slash'},code=map[b.dataset.k];
+ b.setAttribute('aria-label',(b.closest('.pad').dataset.p==='1'?'Amber':'Azure')+' '+({u:'forward',d:'reverse',l:'turn left',r:'turn right',f:'fire'}[b.dataset.k]));
+ b.addEventListener('pointerdown',e=>{if(!active()||(e.pointerType==='mouse'&&e.button!==0))return;e.preventDefault();keys[code]=true;try{b.setPointerCapture(e.pointerId)}catch{}});
+ for(const ev of['pointerup','pointercancel','lostpointercapture','pointerleave'])b.addEventListener(ev,()=>delete keys[code]);
+ // Native keyboard/assistive activation of a button must have an equivalent action.
+ b.addEventListener('click',e=>{if(e.detail===0&&active()&&b.dataset.k==='f')fire(b.closest('.pad').dataset.p==='1'?p1:p2,Number(b.closest('.pad').dataset.p))});
+});
 function ship(p,col){X.save();X.translate(p.x,p.y);X.rotate(p.a);X.fillStyle=col;X.beginPath();X.moveTo(20,0);X.lineTo(-14,-12);X.lineTo(-7,0);X.lineTo(-14,12);X.closePath();X.fill();X.restore()}function draw(){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#080b16';X.fillRect(0,0,innerWidth,innerHeight);X.save();X.translate(ox,oy);X.scale(sc,sc);let g=X.createLinearGradient(0,0,960,540);g.addColorStop(0,'#15172b');g.addColorStop(1,'#090b15');X.fillStyle=g;X.fillRect(0,0,VW,VH);for(const w of walls){X.fillStyle='#29304d';X.fillRect(w.x,w.y,w.w,w.h);X.strokeStyle='#64748b';X.strokeRect(w.x,w.y,w.w,w.h)}for(const q of shots){X.fillStyle=q.owner===1?'#f59e0b':'#38bdf8';X.beginPath();X.arc(q.x,q.y,7,0,7);X.fill()}ship(p1,'#f59e0b');ship(p2,'#38bdf8');if(over){X.fillStyle='rgba(4,5,12,.78)';X.fillRect(0,0,VW,VH);X.textAlign='center';X.fillStyle=s1>s2?'#fbbf24':'#7dd3fc';X.font='900 46px system-ui';X.fillText((s1>s2?'AMBER':'AZURE')+' WINS',480,240);X.fillStyle='#fff';X.font='18px system-ui';X.fillText(mode==='ai'?(s1>s2?'AI defeated. Press R to rematch.':'The AI takes it. Press R to rematch.'):'Press R to reset the duel.',480,278);X.textAlign='start'}X.restore()}reset();requestAnimationFrame(step);
 </script></body></html>

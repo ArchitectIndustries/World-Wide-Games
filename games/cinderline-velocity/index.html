@@ -1,31 +1,294 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Cinderline Velocity</title><style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#040812;color:#eef8ff;font-family:Inter,system-ui,sans-serif;touch-action:none}canvas{position:absolute;inset:0;width:100%;height:100%;display:block;background:linear-gradient(#0a1725,#03060b)}.hud{position:fixed;inset:10px 10px auto;z-index:5;display:flex;justify-content:center;gap:7px;flex-wrap:wrap;pointer-events:none}.pill{padding:7px 10px;border-radius:999px;border:1px solid #35506c;background:#07111cdd;backdrop-filter:blur(8px);font-size:10px}.pill b{color:#67e8f9;font-size:14px;margin-left:5px}.objective{position:fixed;top:62px;left:12px;z-index:5;width:min(420px,calc(100vw - 24px));padding:10px 12px;border:1px solid #35506c;border-radius:14px;background:#07111cdd;font-size:11px;line-height:1.45;pointer-events:none}.objective strong{display:block;letter-spacing:.08em}.bar{height:6px;margin-top:7px;border-radius:99px;background:#152435;overflow:hidden}.bar i{display:block;height:100%;width:50%;background:linear-gradient(90deg,#22d3ee,#f59e0b)}.brand{position:fixed;left:12px;bottom:12px;z-index:5;padding:8px 10px;border:1px solid #35506c;border-radius:12px;background:#07111cdd;font-size:9px;line-height:1.45;pointer-events:none}.vignette{position:fixed;inset:0;pointer-events:none;z-index:3;background:radial-gradient(circle,transparent 48%,rgba(0,0,0,.48) 100%)}.launch,.overlay{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:#02060be8}.card{width:min(680px,calc(100vw - 28px));padding:24px;border:1px solid #49647f;border-radius:22px;background:linear-gradient(160deg,#0a1724,#061019);box-shadow:0 35px 120px #000b}.card h1,.card h2{margin:0 0 10px}.card p{color:#b8cce0;line-height:1.55}.tracks{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}.tracks button,.card .primary,.overlay button,.touch button{border:1px solid #4c6781;background:#0c1a29;color:#f8fafc;border-radius:12px;font-weight:800}.tracks button{padding:12px 8px}.tracks button.locked{opacity:.45}.tracks button.active{border-color:#67e8f9;background:#113449}.primary,.overlay button{padding:12px 18px}.small{font-size:11px;color:#8da7c0}.overlay{display:none}.overlay.show{display:grid}.touch{display:none;position:fixed;inset:auto 10px 10px;z-index:10;justify-content:space-between;pointer-events:none}.steer,.actions{display:grid;gap:6px;pointer-events:auto}.steer{grid-template-columns:repeat(2,58px);align-items:end}.actions{grid-template-columns:repeat(2,68px)}.touch button{height:52px}.touch .boost{grid-column:span 2;background:#143142;border-color:#22d3ee}@media(pointer:coarse){.touch{display:flex}.brand{bottom:126px;right:12px}.objective{top:94px}.hud{justify-content:flex-start}}@media(max-width:650px){.tracks{grid-template-columns:1fr}.pill{padding:5px 7px}.pill b{font-size:11px}.objective{font-size:10px}.brand{font-size:8px}}
-</style></head><body><canvas id="c"></canvas><div class="vignette"></div><div class="hud"><div class="pill">Circuit <b id="course">1/3</b></div><div class="pill">Lap <b id="lap">1/2</b></div><div class="pill">Speed <b id="speed">0</b></div><div class="pill">Gate <b id="gate">1/3</b></div><div class="pill">Time <b id="time">0.0</b></div><div class="pill">Score <b id="score">0</b></div></div><div class="objective"><strong id="objTitle">CINDERLINE VELOCITY</strong><span id="objText">Select an unlocked circuit and launch.</span><div class="bar"><i id="boostBar"></i></div></div><div class="brand"><strong>ARCHITECT INDUSTRIES · WORLDWIDEGAMES</strong><br>WASD / arrows steer · Space/Primary boosts · E/Secondary or Shift drifts · P pauses · R restarts.</div><div class="touch"><div class="steer"><button data-k="left">◀</button><button data-k="right">▶</button><button data-k="down">BRAKE</button><button data-k="up">THRUST</button></div><div class="actions"><button data-action="drift">DRIFT</button><button data-action="reset">RESET</button><button class="boost" data-action="boost">BOOST</button></div></div><div class="launch" id="launch"><div class="card"><h1>Cinderline Velocity</h1><p>A procedural 3D hover-racing campaign. Thread reactor gates, manage drift charge, spend boost on the straights, and beat three increasingly technical Cinderline circuits.</p><div class="tracks" id="tracks"></div><button class="primary" id="start">Launch circuit</button><p class="small">WebGL2 world geometry, hovercraft, lighting variation, rivals, track infrastructure, particles, and audio are generated locally at runtime. No external game art assets.</p></div></div><div class="overlay" id="over"><div class="card"><h2 id="overTitle"></h2><p id="overText"></p><button id="continue">Continue</button></div></div><script src="../../assets/wwg-input.js"></script><script src="../../assets/wwg-webgl.js"></script><script>
-const $=s=>document.querySelector(s),C=$('#c'),A=WWG3D.synth(),clamp=WWG3D.clamp,rng=WWG3D.rng(0xc1d3e7);let engine=null;try{engine=new WWG3D.Engine(C,{fog:'#08121e',fogNear:34,fogFar:155,far:210,fov:Math.PI/2.9,quality:matchMedia('(pointer:coarse)').matches?.72:1})}catch(e){$('#objText').textContent='WebGL2 rendering is unavailable on this device. Game logic remains accessible for compatibility.'}
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Cinderline Velocity 1.9 — Deterministic racing</title><style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#040812;color:#eef8ff;font-family:Inter,system-ui,sans-serif;touch-action:none}canvas{position:absolute;inset:0;width:100%;height:100%;display:block;background:linear-gradient(#0a1725,#03060b)}.hud{position:fixed;inset:10px 10px auto;z-index:5;display:flex;justify-content:center;gap:7px;flex-wrap:wrap;pointer-events:none}.pill{padding:7px 10px;border-radius:999px;border:1px solid #35506c;background:#07111cdd;backdrop-filter:blur(8px);font-size:10px}.pill b{color:#67e8f9;font-size:14px;margin-left:5px}.objective{position:fixed;top:62px;left:12px;z-index:5;width:min(420px,calc(100vw - 24px));padding:10px 12px;border:1px solid #35506c;border-radius:14px;background:#07111cdd;font-size:11px;line-height:1.45;pointer-events:none}.objective strong{display:block;letter-spacing:.08em}.bar{height:6px;margin-top:7px;border-radius:99px;background:#152435;overflow:hidden}.bar i{display:block;height:100%;width:50%;background:linear-gradient(90deg,#22d3ee,#f59e0b)}.brand{position:fixed;left:12px;bottom:12px;z-index:5;padding:8px 10px;border:1px solid #35506c;border-radius:12px;background:#07111cdd;font-size:9px;line-height:1.45;pointer-events:none}.vignette{position:fixed;inset:0;pointer-events:none;z-index:3;background:radial-gradient(circle,transparent 48%,rgba(0,0,0,.48) 100%)}.launch,.overlay{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:#02060be8}.card{width:min(680px,calc(100vw - 28px));padding:24px;border:1px solid #49647f;border-radius:22px;background:linear-gradient(160deg,#0a1724,#061019);box-shadow:0 35px 120px #000b}.card h1,.card h2{margin:0 0 10px}.card p{color:#b8cce0;line-height:1.55}.tracks{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}.tracks button,.card .primary,.overlay button,.touch button{border:1px solid #4c6781;background:#0c1a29;color:#f8fafc;border-radius:12px;font-weight:800}.tracks button{padding:12px 8px}.tracks button.locked{opacity:.45}.tracks button.active{border-color:#67e8f9;background:#113449}.primary,.overlay button{padding:12px 18px}.small{font-size:11px;color:#8da7c0}.save-notice{position:fixed;right:12px;bottom:12px;z-index:30;max-width:min(400px,calc(100vw - 24px));padding:10px 13px;border:1px solid #fbbf24;border-radius:12px;background:#221909f2;color:#fff2ca;font-size:12px;line-height:1.4;pointer-events:none}.save-notice[hidden]{display:none}.overlay{display:none}.overlay.show{display:grid}.touch{display:none;position:fixed;inset:auto 10px 10px;z-index:10;justify-content:space-between;pointer-events:none}.steer,.actions{display:grid;gap:6px;pointer-events:auto}.steer{grid-template-columns:repeat(2,58px);align-items:end}.actions{grid-template-columns:repeat(2,68px)}.touch button{height:52px}.touch .boost{grid-column:span 2;background:#143142;border-color:#22d3ee}@media(pointer:coarse){.touch{display:flex}.brand{bottom:126px;right:12px}.save-notice{bottom:181px}.objective{top:94px}.hud{justify-content:flex-start}}@media(max-width:650px){.tracks{grid-template-columns:1fr}.pill{padding:5px 7px}.pill b{font-size:11px}.objective{font-size:10px}.brand{font-size:8px}}
+.drivePause{position:fixed;right:12px;top:103px;z-index:12;border:1px solid #7dd3fc;background:#0b3248;color:#f0fdff;border-radius:10px;padding:9px 14px;font-weight:800;cursor:pointer}.drivePause[hidden],.pausePanel[hidden]{display:none}.drivePause:focus-visible,.pausePanel button:focus-visible{outline:3px solid #fbbf24;outline-offset:3px}.pausePanel{position:fixed;inset:0;z-index:30;background:#02060be9;display:grid;place-items:center;padding:16px}.pausePanel .card{max-width:560px;text-align:center}.pausePanel button{border:1px solid #7dd3fc;background:#11516a;color:#fff;border-radius:12px;padding:12px 20px;font-size:15px;font-weight:800;cursor:pointer}@media(pointer:coarse){.drivePause{right:12px;top:125px}.pausePanel .card{padding:18px}}
+
+/* v362: contain the menu's scrolling; never require scrolling the fixed race canvas. */
+.launch,.overlay,.pausePanel{padding:12px;touch-action:pan-y;overscroll-behavior:contain}
+.launch .card,.overlay .card,.pausePanel .card{max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.launch .card{position:relative}
+.launch .primary,.launch .tracks button,.overlay button,.pausePanel button{cursor:pointer;touch-action:manipulation}
+.launch .primary:focus-visible,.launch .tracks button:focus-visible,.overlay button:focus-visible{outline:3px solid #fbbf24;outline-offset:3px}
+.launch-summary{margin:4px 0 10px}
+@media (max-height:480px) and (orientation:landscape){
+  .launch,.overlay,.pausePanel{padding:7px}
+  .launch .card,.overlay .card,.pausePanel .card{max-height:calc(100vh - 14px);max-height:calc(100dvh - 14px);padding:12px;border-radius:14px}
+  .launch .card h1{font-size:21px;margin-bottom:5px}
+  .launch-summary{font-size:12px;line-height:1.3!important;margin:2px 0 8px!important}
+  .launch .tracks{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:8px 0}
+  .launch .tracks button{padding:8px 4px;font-size:11px}
+  .launch .tracks .small{font-size:10px}
+  .launch .primary{padding:9px 16px}
+}
+@media (max-width:380px) and (orientation:portrait){
+ .launch .card{padding:14px}
+ .launch .card h1{font-size:23px}
+ .launch .tracks{margin:10px 0}
+ .launch .tracks button{padding:9px 7px}
+}
+</style></head><body><canvas id="c"></canvas><div class="vignette"></div><div class="hud"><div class="pill">Circuit <b id="course">1/3</b></div><div class="pill">Lap <b id="lap">1/2</b></div><div class="pill">Speed <b id="speed">0</b></div><div class="pill">Gate <b id="gate">1/3</b></div><div class="pill">Time <b id="time">0.0</b></div><div class="pill" role="group" aria-label="Race position among four racers">Place <b id="place">4/4</b></div><div class="pill">Score <b id="score">0</b></div><div class="pill" id="renderMode" role="status" aria-live="polite" hidden>2D compatible track</div></div><div class="objective"><strong id="objTitle">CINDERLINE VELOCITY</strong><span id="objText">Select an unlocked circuit and launch.</span><div class="bar"><i id="boostBar"></i></div></div><div class="brand"><strong>ARCHITECT INDUSTRIES · WORLDWIDEGAMES</strong><br>WASD / arrows steer and accelerate · Gamepad left stick steers, A boosts, B drifts, Start pauses · Cross each gate forward · Space boosts · E/Shift drifts · P pauses · R restarts (practice after a finish). Keyboard, touch and gamepad work together.</div><div id="saveNotice" class="save-notice" role="status" aria-live="polite" hidden></div><button id="pauseDrive" class="drivePause" type="button" hidden aria-label="Pause Cinderline race">Pause</button><div id="pausePanel" class="pausePanel" role="dialog" aria-modal="true" aria-labelledby="pauseHeading" aria-describedby="pauseDetail" hidden><div class="card"><h2 id="pauseHeading">Race paused</h2><p id="pauseDetail">The course, rivals and clock are frozen. Release held keys and gamepad controls, then choose Resume or press P. The race will not restart automatically when you return to this tab.</p><button id="resumeDrive" type="button">Resume race</button></div></div><div class="touch"><div class="steer"><button data-k="left">◀</button><button data-k="right">▶</button><button data-k="down">BRAKE</button><button data-k="up">THRUST</button></div><div class="actions"><button data-action="drift">DRIFT</button><button data-action="reset">RESET</button><button class="boost" data-action="boost">BOOST</button></div></div><div class="launch" id="launch"><div class="card"><h1>Cinderline Velocity</h1><p class="launch-summary">Race through ordered reactor gates, outpace three signal rivals, and clear three circuits. Choose an unlocked course to launch.</p><div class="tracks" id="tracks"></div><button class="primary" id="start">Launch circuit</button><p>An adaptive hover-racing campaign with WebGL2 3D and a playable Canvas2D track fallback. Cross numbered reactor gates in order and in the racing direction, manage drift charge, spend boost on the straights, and beat three increasingly technical Cinderline circuits. Race three deterministic signal rivals on each track: their lap progress and finishing positions now count. A first- or second-place finish is needed on every circuit for a ranked championship; slower finishes still unlock the next course for practice. Clearing a circuit unlocks the next; finished times are saved locally when browser storage permits.</p><p class="small">Only a consecutive circuit 1 → 2 → 3 championship with first- or second-place finishes in every race submits a browser-local competitive score. The three rivals have independent, deterministic corner-aware pace; they do not collide or use networking. Individual clears and practice runs save local best times but are unranked.</p><p class="small">WebGL2 draws the full 3D race. If WebGL2 is unavailable or lost, a readable top-down Canvas2D view still shows the real circuit, gates, opponents and moving craft. World geometry, racing physics and audio are generated locally; no external game art assets.</p></div></div><div class="overlay" id="over"><div class="card"><h2 id="overTitle"></h2><p id="overText" role="status" aria-live="polite"></p><button id="continue">Continue</button></div></div><script src="../../assets/wwg-input.js"></script><script src="../../assets/wwg-webgl.js"></script><script>
+(()=>{
+'use strict';
+const $=s=>document.querySelector(s),C=$('#c'),A=WWG3D.synth(),clamp=WWG3D.clamp,rng=WWG3D.rng(0xc1d3e7);let engine=null;try{engine=new WWG3D.Engine(C,{fog:'#08121e',fogNear:34,fogFar:155,far:210,fov:Math.PI/2.9,quality:matchMedia('(pointer:coarse)').matches?.72:1})}catch(e){engine=null}
 const TRACKS=[
  {name:'Foundry Ring',sky:'#08121e',road:'#263849',rail:'#6ee7ff',pts:[[-24,0],[-14,-18],[7,-23],[25,-13],[31,5],[21,23],[0,29],[-22,21],[-31,4]]},
  {name:'Ember Switchback',sky:'#160b0a',road:'#49352f',rail:'#f59e0b',pts:[[-28,2],[-19,-20],[2,-29],[24,-20],[34,-3],[22,11],[5,4],[-8,18],[10,31],[-17,29],[-33,15]]},
  {name:'Crown Furnace',sky:'#0b0713',road:'#3a3048',rail:'#c084fc',pts:[[-30,0],[-20,-24],[4,-34],[27,-26],[38,-5],[29,20],[8,34],[-10,20],[-27,31],[-40,10],[-20,2],[-8,-11]]}
 ];
-const GATES=[3,6,0],ROAD=8.6,LAPS=2,META='wwg:cinderline-velocity:meta-v1';let meta=(()=>{try{return Object.assign({unlocked:1,best:[0,0,0],clears:0},JSON.parse(localStorage.getItem(META)||'{}'))}catch{return{unlocked:1,best:[0,0,0],clears:0}}})();let course=0,track=TRACKS[0],car={x:-24,z:0,yaw:0,speed:0},lap=1,gate=0,elapsed=0,score=0,boost=55,active=false,paused=false,finished=false,drift=false,keys={},opStartScore=0,shake=0,last=performance.now(),lastOff=false,particles=[],rivals=[],cum=[],totalLen=0,gamepadPrev={a:false,b:false},clean=true;
-function save(){try{localStorage.setItem(META,JSON.stringify(meta))}catch{}}
-function post(event,detail={}){try{parent.postMessage({type:'wwg:game-event',game:'cinderline-velocity',gameId:'cinderline-velocity',event,score:Math.round(score),detail},'*')}catch{}}
+const GATES=[3,6,0],ROAD=8.6,LAPS=2,META='wwg:cinderline-velocity:meta-v1';
+let saveWarning='';
+const defaultMeta=()=>({unlocked:1,best:[0,0,0],clears:0});
+function showSaveWarning(message){saveWarning=message;const node=$('#saveNotice');node.textContent=message;node.hidden=!message}
+function validMeta(record){
+  if(!record||typeof record!=='object'||Array.isArray(record)||
+     !Number.isInteger(record.unlocked)||record.unlocked<1||record.unlocked>TRACKS.length||
+     !Number.isInteger(record.clears)||record.clears<0||record.clears>1000000||
+     !Array.isArray(record.best)||record.best.length!==TRACKS.length||
+     !record.best.every(t=>typeof t==='number'&&Number.isFinite(t)&&(t===0||(t>=1&&t<=1e9))))return false;
+  // An unlocked circuit requires an actual recorded clear of each predecessor.
+  // Local browser records are not authenticated and cannot be used for online authority.
+  if(record.unlocked>=2&&record.best[0]===0)return false;
+  if(record.unlocked>=3&&record.best[1]===0)return false;
+  if(record.unlocked<2&&record.best[0]>0)return false;
+  if(record.unlocked<3&&(record.best[1]>0||record.best[2]>0||record.clears>0))return false;
+  if((record.best[2]>0)!==(record.clears>0))return false;
+  return true;
+}
+function restoreMeta(){
+  let raw;
+  try{raw=localStorage.getItem(META)}catch{showSaveWarning('Browser storage is unavailable. Circuit progress is session-only.');return defaultMeta()}
+  if(raw===null)return defaultMeta();
+  try{const data=JSON.parse(raw);if(!validMeta(data))throw Error('Invalid campaign');return{unlocked:data.unlocked,best:[...data.best],clears:data.clears}}
+  catch{showSaveWarning('Saved circuit progress was invalid. A new campaign has been started.');return defaultMeta()}
+}
+let meta=restoreMeta();let course=0,track=TRACKS[0],car={x:-24,z:0,yaw:0,speed:0},lap=1,gate=0,elapsed=0,score=0,boost=55,active=false,paused=false,finished=false,drift=false,keys={},touchKeys={},padKeys={},padNeedsNeutral=true,padConnected=false,opStartScore=0,shake=0,last=performance.now(),lastOff=false,particles=[],rivals=[],cum=[],totalLen=0,gamepadPrev={a:false,b:false},clean=true,rankedChain=false,nextRankedCourse=0;
+function save(){try{localStorage.setItem(META,JSON.stringify(meta))}catch{showSaveWarning('Browser storage could not save this run. Progress is session-only.')}}
+function post(event,detail={},ranked=false){try{const tally=Math.round(score),packet={type:'wwg:game-event',game:'cinderline-velocity',gameId:'cinderline-velocity',event,detail};if(ranked&&Number.isSafeInteger(tally)&&tally>0)packet.score=tally;else packet.meta={ranked:false,attemptScore:Number.isFinite(tally)?tally:0};parent.postMessage(packet,'*')}catch{}}
 function segInfo(px,pz){let best={d:1e9,i:0,t:0,x:0,z:0};const p=track.pts;for(let i=0;i<p.length;i++){const a=p[i],b=p[(i+1)%p.length],n=WWG3D.nearestOnSegment(px,pz,a[0],a[1],b[0],b[1]);if(n.d<best.d)best={...n,i}}return best}
 function rebuildPath(){cum=[0];totalLen=0;for(let i=0;i<track.pts.length;i++){const a=track.pts[i],b=track.pts[(i+1)%track.pts.length];totalLen+=Math.hypot(b[0]-a[0],b[1]-a[1]);cum.push(totalLen)}}
 function along(d){d=((d%totalLen)+totalLen)%totalLen;let i=0;while(i<track.pts.length-1&&cum[i+1]<d)i++;const a=track.pts[i],b=track.pts[(i+1)%track.pts.length],len=cum[i+1]-cum[i]||1,t=(d-cum[i])/len;return{x:a[0]+(b[0]-a[0])*t,z:a[1]+(b[1]-a[1])*t,yaw:Math.atan2(b[0]-a[0],b[1]-a[1])}}
-function resetRace(i=course){course=clamp(i,0,meta.unlocked-1);track=TRACKS[course];rebuildPath();const a=track.pts[0],b=track.pts[1];car={x:a[0],z:a[1],yaw:Math.atan2(b[0]-a[0],b[1]-a[1]),speed:0};lap=1;gate=0;elapsed=0;boost=55;finished=false;paused=false;drift=false;particles=[];clean=true;opStartScore=score;rivals=[{d:4,s:12.4,c:'#fb7185'},{d:-5,s:11.8,c:'#facc15'},{d:10,s:12.8,c:'#a78bfa'}];sync()}
-function start(){active=true;score=0;$('#launch').style.display='none';resetRace(course);A.tone(150,.1,.04,'sawtooth',260);post('circuit-start',{course:course+1})}
-function sync(){$('#course').textContent=`${course+1}/3`;$('#lap').textContent=`${lap}/${LAPS}`;$('#gate').textContent=`${gate+1}/3`;$('#speed').textContent=Math.round(Math.max(0,car.speed)*12);$('#time').textContent=elapsed.toFixed(1);$('#score').textContent=Math.round(score).toLocaleString();$('#boostBar').style.width=clamp(boost,0,100)+'%';$('#objText').textContent=finished?'Circuit secured.':`Lap ${lap}: reach ${GATES[gate]===0?'the finish reactor':'reactor gate '+(gate+1)}. Drift at speed to rebuild boost.`}
-function input(action){return !!keys[action]}
-function update(dt){if(!active||paused||finished)return;elapsed+=dt;const accel=input('up')?18:0,brake=input('down')?23:0;car.speed+=accel*dt;brake&& (car.speed-=brake*dt);car.speed*=Math.pow(input('up')?.993:.975,dt*60);car.speed=clamp(car.speed,-5,drift?20:18.5);const boosting=input('boost')&&boost>0&&car.speed>1;if(boosting){car.speed=clamp(car.speed+28*dt,-5,25);boost=Math.max(0,boost-23*dt);if(rng()<dt*24)particles.push({x:car.x-Math.sin(car.yaw)*1.2,y:.35,z:car.z-Math.cos(car.yaw)*1.2,life:.45})}const steer=((input('left')?1:0)-(input('right')?1:0));const grip=drift?1.55:1;car.yaw+=steer*dt*1.45*grip*clamp(Math.abs(car.speed)/7,.2,1.25)*(car.speed>=0?1:-1);car.x+=Math.sin(car.yaw)*car.speed*dt;car.z+=Math.cos(car.yaw)*car.speed*dt;const n=segInfo(car.x,car.z),off=n.d>ROAD*.48;lastOff=off;if(off){car.speed*=Math.pow(.91,dt*60);shake=Math.max(shake,.18);clean=false}else if(drift&&Math.abs(steer)&&Math.abs(car.speed)>9){boost=clamp(boost+8*dt,0,100);score+=12*dt}for(const r of rivals){r.d+=r.s*dt*(1+.06*Math.sin(elapsed*.7+r.d));}const gi=GATES[gate],gp=track.pts[gi];if(Math.hypot(car.x-gp[0],car.z-gp[1])<5.2){gate++;score+=350+Math.round(car.speed*18);boost=clamp(boost+24,0,100);A.tone(420+gate*80,.08,.035,'square',160);if(gate>=GATES.length){gate=0;if(lap>=LAPS)finish();else{lap++;post('lap-complete',{course:course+1,lap:lap-1,time:+elapsed.toFixed(2)});}}}shake=Math.max(0,shake-dt*.8);for(const p of particles)p.life-=dt;particles=particles.filter(p=>p.life>0);sync()}
-function finish(){finished=true;const time=Math.max(1,elapsed),bonus=Math.round(4200+boost*12+Math.max(0,2800-time*42)+(clean?900:0));score+=bonus;const old=meta.best[course]||0;if(!old||time<old)meta.best[course]=+time.toFixed(2);meta.unlocked=Math.max(meta.unlocked,Math.min(3,course+2));if(course===2)meta.clears++;save();post('circuit-complete',{course:course+1,time:+time.toFixed(2),clean,best:meta.best[course]});if(clean)post('clean-circuit',{course:course+1});if(course===2)post('campaign-complete',{clears:meta.clears,best:meta.best});$('#overTitle').textContent=course===2?'Cinderline conquered':'Circuit cleared';$('#overText').textContent=`${track.name} · ${time.toFixed(2)}s · ${clean?'clean line':'barrier runoff'} · score ${Math.round(score).toLocaleString()}.`;$('#continue').textContent=course===2?'Replay campaign':'Next circuit';$('#over').classList.add('show');renderTrackButtons();sync()}
-function render(){if(!engine)return;const s=Math.sin(performance.now()*.03)*shake,fx=Math.sin(car.yaw),fz=Math.cos(car.yaw),eye={x:car.x-fx*9+s,y:5.2+s*.4,z:car.z-fz*9+s},target={x:car.x+fx*5,y:.7,z:car.z+fz*5};engine.fog=track.sky[0]==='#'?(()=>{let x=track.sky.slice(1);return[parseInt(x.slice(0,2),16)/255,parseInt(x.slice(2,4),16)/255,parseInt(x.slice(4,6),16)/255]})():engine.fog;engine.begin(eye,target);const pts=track.pts;for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length],dx=b[0]-a[0],dz=b[1]-a[1],len=Math.hypot(dx,dz),yaw=Math.atan2(dx,dz),mx=(a[0]+b[0])/2,mz=(a[1]+b[1])/2,px=Math.cos(yaw),pz=-Math.sin(yaw);engine.cube(mx,-.18,mz,ROAD,.35,len,track.road,yaw);engine.cube(mx+px*(ROAD*.53),.15,mz+pz*(ROAD*.53),.18,.55,len,track.rail,yaw,.32);engine.cube(mx-px*(ROAD*.53),.15,mz-pz*(ROAD*.53),.18,.55,len,track.rail,yaw,.32)}for(let i=0;i<pts.length;i++){if(i%2)continue;const a=pts[i],b=pts[(i+1)%pts.length],ang=Math.atan2(b[0]-a[0],b[1]-a[1]),px=Math.cos(ang),pz=-Math.sin(ang),side=i%4?1:-1;for(let j=0;j<2;j++){const d=11+j*5,x=a[0]+px*d*side,z=a[1]+pz*d*side,h=5+(i*7+j*5)%11;engine.cube(x,h/2-1,z,3+j*1.4,h,3+j*1.4,i%3?'#182534':'#2c1f2e',i*.33);engine.cube(x,h+.25,z,1.2,.5,1.2,i%3?track.rail:'#fb7185',0,.8)}}for(let k=0;k<GATES.length;k++){const q=pts[GATES[k]],prev=pts[(GATES[k]-1+pts.length)%pts.length],yaw=Math.atan2(q[0]-prev[0],q[1]-prev[1]),px=Math.cos(yaw),pz=-Math.sin(yaw),activeGate=k===gate;for(const side of[-1,1])engine.cube(q[0]+px*4.5*side,2.4,q[1]+pz*4.5*side,.45,5,.45,activeGate?'#67e8f9':'#64748b',0,activeGate?.8:.12);engine.cube(q[0],4.6,q[1],9,.35,.35,activeGate?'#67e8f9':'#64748b',yaw,activeGate?.8:.12)}for(const r of rivals){const q=along(r.d);engine.shadow(q.x,.02,q.z,2.4,4,q.yaw);engine.cube(q.x,.42,q.z,2.2,.42,3.8,r.c,q.yaw,.16);engine.cube(q.x,.72,q.z,1.25,.35,1.6,'#111827',q.yaw,.05)}engine.shadow(car.x,.02,car.z,2.7,4.5,car.yaw);engine.cube(car.x,.47,car.z,2.5,.48,4.2,'#dff7ff',car.yaw,.08);engine.cube(car.x,.78,car.z,1.25,.35,1.8,'#082c3b',car.yaw,.24);engine.cube(car.x-Math.sin(car.yaw)*1.45,.42,car.z-Math.cos(car.yaw)*1.45,1.45,.28,.7,boostingColor(),car.yaw,.8);for(const p of particles)engine.cube(p.x,p.y,p.z,.28,.28,.28,'#67e8f9',0,1.1)}
+function resetRace(i=course){const hadResult=$('#over').classList.contains('show');$('#over').classList.remove('show');physicsDebt=0;clearHeld();$('#pausePanel').hidden=true;$('#pauseDrive').hidden=!active;last=performance.now();course=clamp(i,0,meta.unlocked-1);track=TRACKS[course];rebuildPath();const a=track.pts[0],b=track.pts[1];car={x:a[0],z:a[1],yaw:Math.atan2(b[0]-a[0],b[1]-a[1]),speed:0};lap=1;gate=0;elapsed=0;boost=55;finished=false;paused=false;drift=false;particles=[];clean=true;opStartScore=score;rivals=[{d:4,s:12.4,c:'#fb7185',finished:false,finishTime:null,name:'Ember'},
+ {d:-5,s:11.8,c:'#facc15',finished:false,finishTime:null,name:'Forge'},
+ {d:10,s:12.8,c:'#a78bfa',finished:false,finishTime:null,name:'Crown'}];sync();if(hadResult&&active)$('#pauseDrive').focus()}
+function start(){active=true;score=0;rankedChain=course===0;nextRankedCourse=0;$('#launch').style.display='none';resetRace(course);A.tone(150,.1,.04,'sawtooth',260);post('circuit-start',{course:course+1})}
+function sync(){$('#course').textContent=`${course+1}/3`;$('#lap').textContent=`${lap}/${LAPS}`;$('#gate').textContent=`${gate+1}/3`;$('#speed').textContent=Math.round(Math.max(0,car.speed)*12);$('#time').textContent=elapsed.toFixed(1);$('#score').textContent=Math.round(score).toLocaleString();$('#place').textContent=position()+'/4';$('#boostBar').style.width=clamp(boost,0,100)+'%';$('#objText').textContent=finished?'Circuit secured.':`Lap ${lap}: cross ${GATES[gate]===0?'the finish reactor':'reactor gate '+(gate+1)} forward between its posts. Drift at speed to rebuild boost.`}
+// Race position is based on the nearest road segment but CAPPED by earned,
+// directed checkpoint gates. Off-road shortcuts can never skip a scoring sector.
+function playerDistance(){
+ if(finished)return LAPS*totalLen;
+ const next=GATES[gate],prev=gate===0?0:GATES[gate-1];
+ const startDistance=(lap-1)*totalLen+cum[prev];
+ const endDistance=(lap-1)*totalLen+(next===0?totalLen:cum[next]);
+ const near=segInfo(car.x,car.z),alongTrack=cum[near.i]+(cum[near.i+1]-cum[near.i])*near.t;
+ return clamp((lap-1)*totalLen+alongTrack,startDistance,endDistance-.001);
+}
+function position(){
+ if(finished)return 1+rivals.filter(r=>r.finished&&r.finishTime<=elapsed).length;
+ const d=playerDistance();return 1+rivals.filter(r=>r.d>d+.001).length;
+}
+function rivalCornerPace(d){
+ // Speed comes from the upcoming ORIGINAL road bends, not a rubber-band tied
+ // to the human player's position, keeping equivalent runs deterministic.
+ const a=along(d+8),b=along(d+19);const angle=Math.atan2(Math.sin(b.yaw-a.yaw),Math.cos(b.yaw-a.yaw));
+ return 1-clamp(Math.abs(angle)/1.9,0,.22);
+}
+function stepRivals(dt){
+ const finishDistance=LAPS*totalLen;
+ for(const r of rivals){if(r.finished)continue;
+  r.d+=r.s*rivalCornerPace(r.d)*dt;
+  if(r.d>=finishDistance){r.d=finishDistance;r.finished=true;r.finishTime=elapsed}
+ }
+}
+// Keep physical keyboard, touch pointers and gamepad independent. A neutral pad must
+// never clear a held key or touch control, and disconnects cannot leave ghost inputs.
+function input(action){return !!keys[action]||!!touchKeys[action]||!!padKeys[action]}
+function clearHeld(){keys={};touchKeys={};padKeys={};drift=false;padNeedsNeutral=true;gamepadPrev={a:false,b:false,start:false}}
+function setRacePaused(value,why='manual'){
+ if(!active||finished||value===paused)return false;
+ if(!value&&(document.hidden||!document.hasFocus()))return false;
+ paused=value;physicsDebt=0;clearHeld();last=performance.now();
+ $('#pausePanel').hidden=!value;$('#pauseDrive').hidden=value;
+ if(value){$('#pauseHeading').textContent=why==='focus'?'Race suspended — window inactive':'Race paused';$('#resumeDrive').focus()}
+ else {$('#pauseDrive').focus()}
+ return true;
+}
+function pauseOnLeave(){if(active&&!finished)setRacePaused(true,'focus');clearHeld()}
+addEventListener('blur',pauseOnLeave);document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseOnLeave()});
+$('#pauseDrive').addEventListener('click',()=>setRacePaused(true));
+$('#resumeDrive').addEventListener('click',()=>setRacePaused(false));
+// A numbered gate is a directed line across the real track, not a proximity pickup.
+// Test the swept craft centre to avoid awarding a parked/backwards crossing or
+// missing a valid crossing that advances entirely beyond the old circular radius.
+function gateCrossing(fromX,fromZ,toX,toZ,index,speed){
+ if(speed<=.5)return false;
+ const q=track.pts[index],p=track.pts[(index-1+track.pts.length)%track.pts.length];
+ const dx=q[0]-p[0],dz=q[1]-p[1],len=Math.hypot(dx,dz);
+ if(len<1e-6)return false;
+ const nx=dx/len,nz=dz/len;
+ const before=(fromX-q[0])*nx+(fromZ-q[1])*nz;
+ const after=(toX-q[0])*nx+(toZ-q[1])*nz;
+ if(before>0||after<=0||after-before<1e-6)return false;
+ const t=-before/(after-before);
+ if(t<0||t>1)return false;
+ const crossX=fromX+(toX-fromX)*t,crossZ=fromZ+(toZ-fromZ)*t;
+ const lateral=Math.abs((crossX-q[0])*(-nz)+(crossZ-q[1])*nx);
+ return lateral<=ROAD*.48;
+}
+function update(dt){if(!active||paused||finished)return;drift=input('drift');elapsed+=dt;const accel=input('up')?18:0,brake=input('down')?23:0;car.speed+=accel*dt;brake&& (car.speed-=brake*dt);car.speed*=Math.pow(input('up')?.993:.975,dt*60);car.speed=clamp(car.speed,-5,drift?20:18.5);const boosting=input('boost')&&boost>0&&car.speed>1;if(boosting){car.speed=clamp(car.speed+28*dt,-5,25);boost=Math.max(0,boost-23*dt);if(rng()<dt*24)particles.push({x:car.x-Math.sin(car.yaw)*1.2,y:.35,z:car.z-Math.cos(car.yaw)*1.2,life:.45})}const steer=((input('left')?1:0)-(input('right')?1:0));const grip=drift?1.55:1;car.yaw+=steer*dt*1.45*grip*clamp(Math.abs(car.speed)/7,.2,1.25)*(car.speed>=0?1:-1);const priorX=car.x,priorZ=car.z;car.x+=Math.sin(car.yaw)*car.speed*dt;car.z+=Math.cos(car.yaw)*car.speed*dt;const n=segInfo(car.x,car.z),off=n.d>ROAD*.48;lastOff=off;if(off){car.speed*=Math.pow(.91,dt*60);shake=Math.max(shake,.18);clean=false}else if(drift&&Math.abs(steer)&&Math.abs(car.speed)>9){boost=clamp(boost+8*dt,0,100);score+=12*dt}stepRivals(dt);const gi=GATES[gate],gp=track.pts[gi];if(gateCrossing(priorX,priorZ,car.x,car.z,gi,car.speed)){gate++;score+=350+Math.round(car.speed*18);boost=clamp(boost+24,0,100);A.tone(420+gate*80,.08,.035,'square',160);if(gate>=GATES.length){gate=0;if(lap>=LAPS)finish();else{lap++;post('lap-complete',{course:course+1,lap:lap-1,time:+elapsed.toFixed(2)});}}}shake=Math.max(0,shake-dt*.8);for(const p of particles)p.life-=dt;particles=particles.filter(p=>p.life>0);sync()}
+function finish(){
+ if(finished||!active)return;
+ finished=true;clearHeld();$('#pauseDrive').hidden=true;const finalPlace=1+rivals.filter(r=>r.finished).length,podium=finalPlace<=2;const time=Math.max(1,elapsed),bonus=Math.round(4200+boost*12+Math.max(0,2800-time*42)+(clean?900:0));score+=bonus+Math.max(0,4-finalPlace)*450;
+ const old=meta.best[course]||0;if(!old||time<old)meta.best[course]=+time.toFixed(2);
+ meta.unlocked=Math.max(meta.unlocked,Math.min(3,course+2));if(course===2)meta.clears++;
+ if(rankedChain&&podium&&course===nextRankedCourse)nextRankedCourse++;else rankedChain=false;
+ const championshipEarned=course===2&&rankedChain&&nextRankedCourse===3;
+ save();post('circuit-complete',{course:course+1,time:+time.toFixed(2),clean,best:meta.best[course],place:finalPlace,opponents:rivals.map(r=>({name:r.name,finished:r.finished,time:r.finishTime})),podium});
+ if(clean)post('clean-circuit',{course:course+1});
+ if(championshipEarned)post('campaign-complete',{clears:meta.clears,best:meta.best},true);
+ $('#overTitle').textContent=championshipEarned?'Cinderline conquered':'Circuit cleared';
+ const verdict=championshipEarned?'Three-circuit podium championship complete: earned score recorded locally.':!podium?'Podium missed: race is unranked, but your circuit is unlocked and your best time is saved. Try again to beat two signal rivals.':course===2?'Unranked practice clear. A fresh 1 → 2 → 3 podium championship is needed for a ranked result.':'Podium secured. Continue the fresh championship for a ranked score.';
+ $('#overText').textContent=`${track.name} · place ${finalPlace}/4 · ${time.toFixed(2)}s · ${clean?'clean line':'barrier runoff'} · score ${Math.round(score).toLocaleString()}. ${verdict} R retries this circuit as unranked practice.`;
+ $('#continue').textContent=course===2?'Replay campaign':'Next circuit';$('#over').classList.add('show');renderTrackButtons();sync();$('#continue').focus()
+}
+// No WebGL2 is not a blank-track mode: draw the same simulated race from above.
+// A separate canvas is required because HTML canvas context types cannot be switched
+// after a GPU context has successfully been created (for example, on context loss).
+let compatibilityCanvas=null,compatibilityCtx=null;
+// The shared engine's generic Canvas2D projection draws disconnected slabs here;
+// prefer a circuit-aware fallback with the real road, gate order and opponent poses.
+if(engine&&engine.mode==='canvas2d'){
+ compatibilityCanvas=C;compatibilityCtx=engine.ctx;engine=null;
+ $('#renderMode').hidden=false;$('#renderMode').textContent='2D race view';
+}
+function enableCanvasFallback(){
+ if(compatibilityCtx)return true;
+ try{
+  const node=document.createElement('canvas');node.id='compatCanvas';
+  node.style.zIndex='1';node.style.pointerEvents='none';
+  const ctx=node.getContext('2d',{alpha:false});if(!ctx)throw Error('Canvas2D unavailable');
+  C.after(node);compatibilityCanvas=node;compatibilityCtx=ctx;
+  $('#renderMode').hidden=false;$('#renderMode').textContent='2D race view';
+  return true;
+ }catch(e){$('#renderMode').hidden=false;$('#renderMode').textContent='No visual renderer';return false}
+}
+if(!engine)enableCanvasFallback();
+C.addEventListener('webglcontextlost',e=>{e.preventDefault();engine=null;enableCanvasFallback()});
+function renderFallback(){
+ const ctx=compatibilityCtx,node=compatibilityCanvas;
+ if(!ctx||!node)return;
+ const w=Math.max(1,innerWidth),h=Math.max(1,innerHeight);
+ // Keep this memory budget independent of the 3D quality tier.
+ const dpr=Math.min(devicePixelRatio||1,1.5,Math.sqrt(2400000/(w*h)));
+ const pw=Math.max(1,Math.floor(w*dpr)),ph=Math.max(1,Math.floor(h*dpr));
+ if(node.width!==pw||node.height!==ph){node.width=pw;node.height=ph}
+ ctx.setTransform(pw/w,0,0,ph/h,0,0);
+ ctx.clearRect(0,0,w,h);
+ const bg=ctx.createLinearGradient(0,0,0,h);bg.addColorStop(0,track.sky);bg.addColorStop(1,'#03070e');
+ ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+ const zoom=clamp(Math.min(w,h)/122,2.1,5.8),ox=w*.5,oy=h*.60;
+ const sn=Math.sin(car.yaw),cs=Math.cos(car.yaw);
+ function pt(x,z){const dx=x-car.x,dz=z-car.z;return{x:ox+(dx*cs-dz*sn)*zoom,y:oy-(dx*sn+dz*cs)*zoom}}
+ // Quiet reference grid, read as terrain rather than a racing surface.
+ ctx.lineWidth=1;ctx.strokeStyle='#94a3b815';ctx.beginPath();
+ for(let i=-80;i<=80;i+=10){let a=pt(i,-80),b=pt(i,80);ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);a=pt(-80,i);b=pt(80,i);ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y)}ctx.stroke();
+ const pts=track.pts;
+ // Far-side pylons echo the original first-party 3D structures, without external assets.
+ pts.forEach((a,i)=>{if(i%2)return;const prev=pts[(i+1)%pts.length],dir=Math.atan2(prev[0]-a[0],prev[1]-a[1]);
+  const nx=Math.cos(dir),nz=-Math.sin(dir);for(const side of[-1,1]){const q=pt(a[0]+nx*13*side,a[1]+nz*13*side),sz=clamp(zoom*2.3,4,13);
+   ctx.fillStyle=i%3?'#25354a':'#4a3042';ctx.fillRect(q.x-sz/2,q.y-sz/2,sz,sz);
+   ctx.fillStyle=track.rail;ctx.globalAlpha=.25;ctx.fillRect(q.x-sz*.18,q.y-sz*.18,sz*.36,sz*.36);ctx.globalAlpha=1;
+  }
+ });
+ function roadPath(){ctx.beginPath();pts.forEach((q,i)=>{const p=pt(q[0],q[1]);if(!i)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y)});ctx.closePath()}
+ ctx.lineCap='round';ctx.lineJoin='round';roadPath();ctx.lineWidth=ROAD*zoom+Math.max(3,zoom*1.35);ctx.strokeStyle=track.rail;ctx.globalAlpha=.60;ctx.stroke();ctx.globalAlpha=1;
+ roadPath();ctx.lineWidth=ROAD*zoom;ctx.strokeStyle=track.road;ctx.stroke();
+ roadPath();ctx.lineWidth=Math.max(1.5,zoom*.32);ctx.setLineDash([zoom*2,zoom*2.5]);ctx.strokeStyle='#d1e8f477';ctx.stroke();ctx.setLineDash([]);
+ // Draw all three gates and highlight only the next collision-eligible checkpoint.
+ GATES.forEach((index,k)=>{const q=pts[index],pre=pts[(index-1+pts.length)%pts.length],yaw=Math.atan2(q[0]-pre[0],q[1]-pre[1]),nx=Math.cos(yaw),nz=-Math.sin(yaw);
+  const a=pt(q[0]+nx*ROAD*.48,q[1]+nz*ROAD*.48),b=pt(q[0]-nx*ROAD*.48,q[1]-nz*ROAD*.48),m=pt(q[0],q[1]),next=k===gate;
+  ctx.strokeStyle=next?'#67e8f9':'#9ca3af';ctx.lineWidth=next?Math.max(4,zoom*1.1):Math.max(2,zoom*.55);
+  ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+  ctx.fillStyle=next?'#e0faff':'#c5d1e0';ctx.font='bold 12px system-ui';ctx.textAlign='center';ctx.fillText(String(k+1),m.x,m.y-13);
+ });
+ // Opponents are at their actual track positions, not decorative markers.
+ function craft(p,yaw,col,player){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(yaw-car.yaw);
+  const scale=player?1.25:1;ctx.scale(scale,scale);
+  ctx.shadowColor=col;ctx.shadowBlur=player?16:7;ctx.fillStyle=col;
+  ctx.beginPath();ctx.moveTo(0,-13);ctx.lineTo(8,7);ctx.lineTo(3,5);ctx.lineTo(0,12);ctx.lineTo(-3,5);ctx.lineTo(-8,7);ctx.closePath();ctx.fill();
+  ctx.shadowBlur=0;ctx.fillStyle=player?'#0b2333':'#152132';ctx.fillRect(-2,-5,4,8);ctx.restore()}
+ for(const rival of rivals){const q=along(rival.finished?totalLen-.2:rival.d);craft(pt(q.x,q.z),q.yaw,rival.c,false)}
+ // Exhaust particles and current player directly reflect the live physics state.
+ ctx.fillStyle='#67e8f9';for(const particle of particles){const p=pt(particle.x,particle.z);ctx.globalAlpha=clamp(particle.life/.45,0,1);ctx.fillRect(p.x-2,p.y-2,4,4)}ctx.globalAlpha=1;
+ craft({x:ox,y:oy},car.yaw,'#ecfeff',true);
+ if(lastOff){ctx.lineWidth=3;ctx.strokeStyle='#f97373';ctx.beginPath();ctx.arc(ox,oy,22,0,Math.PI*2);ctx.stroke()}
+ const goal=pt(pts[GATES[gate]][0],pts[GATES[gate]][1]);const bearing=Math.atan2(goal.x-ox,oy-goal.y),arrowY=Math.min(h-135,oy+80);
+ ctx.save();ctx.translate(ox,arrowY);ctx.rotate(bearing);ctx.fillStyle='#67e8f9';ctx.beginPath();ctx.moveTo(0,-11);ctx.lineTo(8,8);ctx.lineTo(0,4);ctx.lineTo(-8,8);ctx.closePath();ctx.fill();ctx.restore();
+ ctx.textAlign='center';ctx.font='bold 11px system-ui';ctx.fillStyle='#d7f7fc';ctx.fillText('GATE '+(gate+1)+'  /  '+Math.round(Math.hypot(pts[GATES[gate]][0]-car.x,pts[GATES[gate]][1]-car.z))+'m',ox,arrowY+27);
+}
+function render(){if(!engine){renderFallback();return;}
+const s=Math.sin(performance.now()*.03)*shake,fx=Math.sin(car.yaw),fz=Math.cos(car.yaw),eye={x:car.x-fx*9+s,y:5.2+s*.4,z:car.z-fz*9+s},target={x:car.x+fx*5,y:.7,z:car.z+fz*5};engine.fog=track.sky[0]==='#'?(()=>{let x=track.sky.slice(1);return[parseInt(x.slice(0,2),16)/255,parseInt(x.slice(2,4),16)/255,parseInt(x.slice(4,6),16)/255]})():engine.fog;engine.begin(eye,target);const pts=track.pts;for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length],dx=b[0]-a[0],dz=b[1]-a[1],len=Math.hypot(dx,dz),yaw=Math.atan2(dx,dz),mx=(a[0]+b[0])/2,mz=(a[1]+b[1])/2,px=Math.cos(yaw),pz=-Math.sin(yaw);engine.cube(mx,-.18,mz,ROAD,.35,len,track.road,yaw);engine.cube(mx+px*(ROAD*.53),.15,mz+pz*(ROAD*.53),.18,.55,len,track.rail,yaw,.32);engine.cube(mx-px*(ROAD*.53),.15,mz-pz*(ROAD*.53),.18,.55,len,track.rail,yaw,.32)}for(let i=0;i<pts.length;i++){if(i%2)continue;const a=pts[i],b=pts[(i+1)%pts.length],ang=Math.atan2(b[0]-a[0],b[1]-a[1]),px=Math.cos(ang),pz=-Math.sin(ang),side=i%4?1:-1;for(let j=0;j<2;j++){const d=11+j*5,x=a[0]+px*d*side,z=a[1]+pz*d*side,h=5+(i*7+j*5)%11;engine.cube(x,h/2-1,z,3+j*1.4,h,3+j*1.4,i%3?'#182534':'#2c1f2e',i*.33);engine.cube(x,h+.25,z,1.2,.5,1.2,i%3?track.rail:'#fb7185',0,.8)}}for(let k=0;k<GATES.length;k++){const q=pts[GATES[k]],prev=pts[(GATES[k]-1+pts.length)%pts.length],yaw=Math.atan2(q[0]-prev[0],q[1]-prev[1]),px=Math.cos(yaw),pz=-Math.sin(yaw),activeGate=k===gate;for(const side of[-1,1])engine.cube(q[0]+px*4.5*side,2.4,q[1]+pz*4.5*side,.45,5,.45,activeGate?'#67e8f9':'#64748b',0,activeGate?.8:.12);engine.cube(q[0],4.6,q[1],9,.35,.35,activeGate?'#67e8f9':'#64748b',yaw,activeGate?.8:.12)}for(const r of rivals){const q=along(r.finished?totalLen-.2:r.d);engine.shadow(q.x,.02,q.z,2.4,4,q.yaw);engine.cube(q.x,.42,q.z,2.2,.42,3.8,r.c,q.yaw,.16);engine.cube(q.x,.72,q.z,1.25,.35,1.6,'#111827',q.yaw,.05)}engine.shadow(car.x,.02,car.z,2.7,4.5,car.yaw);engine.cube(car.x,.47,car.z,2.5,.48,4.2,'#dff7ff',car.yaw,.08);engine.cube(car.x,.78,car.z,1.25,.35,1.8,'#082c3b',car.yaw,.24);engine.cube(car.x-Math.sin(car.yaw)*1.45,.42,car.z-Math.cos(car.yaw)*1.45,1.45,.28,.7,boostingColor(),car.yaw,.8);for(const p of particles)engine.cube(p.x,p.y,p.z,.28,.28,.28,'#67e8f9',0,1.1)}
 function boostingColor(){return input('boost')&&boost>0?'#67e8f9':'#334155'}
-function keyMove(e,on){for(const k of['up','down','left','right'])if(WWGInput.is(e,k)){keys[k]=on;return true}return false}
-addEventListener('keydown',e=>{if(keyMove(e,true)){e.preventDefault();return}if(WWGInput.is(e,'primary')||e.code==='Space'){keys.boost=true;e.preventDefault()}if(WWGInput.is(e,'secondary')||e.code==='KeyE'||e.code==='ShiftLeft'||e.code==='ShiftRight'){drift=true;keys.drift=true}if(e.code==='KeyP')paused=!paused;if(e.code==='KeyR')resetRace(course);if(/^Digit[1-3]$/.test(e.code)){const i=+e.code.slice(-1)-1;if(i<meta.unlocked){course=i;resetRace(i)}}});addEventListener('keyup',e=>{if(keyMove(e,false))return;if(WWGInput.is(e,'primary')||e.code==='Space')keys.boost=false;if(WWGInput.is(e,'secondary')||e.code==='KeyE'||e.code==='ShiftLeft'||e.code==='ShiftRight'){drift=false;keys.drift=false}});
-function bindHold(el,fnDown,fnUp){el.addEventListener('pointerdown',e=>{e.preventDefault();fnDown();el.setPointerCapture?.(e.pointerId)});el.addEventListener('pointerup',fnUp);el.addEventListener('pointercancel',fnUp)}document.querySelectorAll('[data-k]').forEach(b=>bindHold(b,()=>keys[b.dataset.k]=true,()=>keys[b.dataset.k]=false));bindHold(document.querySelector('[data-action=boost]'),()=>keys.boost=true,()=>keys.boost=false);bindHold(document.querySelector('[data-action=drift]'),()=>{drift=true;keys.drift=true},()=>{drift=false;keys.drift=false});document.querySelector('[data-action=reset]').onclick=()=>resetRace(course);
-function renderTrackButtons(){const box=$('#tracks');box.innerHTML=TRACKS.map((t,i)=>`<button data-track="${i}" class="${i===course?'active':''} ${i>=meta.unlocked?'locked':''}" ${i>=meta.unlocked?'disabled':''}>${i+1}. ${t.name}<br><span class="small">${meta.best[i]?meta.best[i].toFixed(2)+'s':'unraced'}</span></button>`).join('');box.querySelectorAll('[data-track]').forEach(b=>b.onclick=()=>{course=+b.dataset.track;renderTrackButtons()})}renderTrackButtons();$('#start').onclick=start;$('#continue').onclick=()=>{if(course===2){score=0;course=0}else{course++;opStartScore=score}$('#over').classList.remove('show');resetRace(course)};
-function gamepad(){try{const g=navigator.getGamepads?.()[0];if(!g)return;const x=g.axes[0]||0,y=g.axes[1]||0;keys.left=x<-.22;keys.right=x>.22;keys.up=y<-.18;keys.down=y>.3;const a=!!g.buttons[0]?.pressed,b=!!g.buttons[1]?.pressed;keys.boost=a;drift=b;if(a&&!gamepadPrev.a)A.tone(200,.03,.02);gamepadPrev={a,b}}catch{}}
-function loop(t){const dt=Math.min(.04,(t-last)/1000);last=t;gamepad();update(dt);render();requestAnimationFrame(loop)}resetRace(0);requestAnimationFrame(loop);
-window.__cinderlineVelocity={state:()=>({course,lap,gate,elapsed,score,boost,active,paused,finished,clean,unlocked:meta.unlocked,best:[...meta.best],x:car.x,z:car.z,speed:car.speed}),start,resetRace,finish,setCourse:i=>{course=clamp(i,0,meta.unlocked-1);resetRace(course)},forceGate:()=>{const q=track.pts[GATES[gate]];car.x=q[0];car.z=q[1];update(.001)},forceFinish:()=>{lap=LAPS;gate=GATES.length-1;const q=track.pts[GATES[gate]];car.x=q[0];car.z=q[1];update(.001)},engineReady:()=>!!engine};
+// Retrying an already committed result is practice; only Continue can advance the ranked chain.
+function retryCircuit(i=course){if(paused)return;if(finished||i!==nextRankedCourse)rankedChain=false;score=opStartScore;resetRace(i)}
+function keyMove(e,on){for(const k of ['up','down','left','right'])if(WWGInput.is(e,k)){keys[k]=on;return true}return false}
+addEventListener('keydown',e=>{
+ if(e.code==='KeyP'&&!e.repeat){e.preventDefault();setRacePaused(!paused);return}
+ if(paused)return;
+ if(finished){if(e.code==='KeyR'&&!e.repeat){e.preventDefault();retryCircuit();}else if(/^Digit[1-3]$/.test(e.code)&&!e.repeat){const i=+e.code.slice(-1)-1;if(i<meta.unlocked){e.preventDefault();retryCircuit(i)}}return}
+ if(keyMove(e,true)){e.preventDefault();return}
+ if(WWGInput.is(e,'primary')||e.code==='Space'){keys.boost=true;e.preventDefault()}
+ if(WWGInput.is(e,'secondary')||e.code==='KeyE'||e.code==='ShiftLeft'||e.code==='ShiftRight'){keys.drift=true;e.preventDefault()}
+ if(e.code==='KeyR'&&!e.repeat){e.preventDefault();retryCircuit()}
+ if(/^Digit[1-3]$/.test(e.code)&&!e.repeat){const i=+e.code.slice(-1)-1;if(i<meta.unlocked){retryCircuit(i)}}
+});
+addEventListener('keyup',e=>{
+ if(keyMove(e,false))return;
+ if(WWGInput.is(e,'primary')||e.code==='Space')keys.boost=false;
+ if(WWGInput.is(e,'secondary')||e.code==='KeyE'||e.code==='ShiftLeft'||e.code==='ShiftRight')keys.drift=false;
+});
+function bindHold(el,action){
+ const release=e=>{touchKeys[action]=false;try{if(e.pointerId!==undefined&&el.hasPointerCapture?.(e.pointerId))el.releasePointerCapture(e.pointerId)}catch{}};
+ el.addEventListener('pointerdown',e=>{e.preventDefault();if(!active||paused||finished)return;touchKeys[action]=true;try{el.setPointerCapture?.(e.pointerId)}catch{}});
+ for(const type of ['pointerup','pointercancel','lostpointercapture'])el.addEventListener(type,release);
+}
+document.querySelectorAll('[data-k]').forEach(b=>bindHold(b,b.dataset.k));
+bindHold(document.querySelector('[data-action=boost]'),'boost');
+bindHold(document.querySelector('[data-action=drift]'),'drift');
+document.querySelector('[data-action=reset]').onclick=()=>retryCircuit();
+function renderTrackButtons(){const box=$('#tracks');box.innerHTML=TRACKS.map((t,i)=>`<button data-track="${i}" class="${i===course?'active':''} ${i>=meta.unlocked?'locked':''}" ${i>=meta.unlocked?'disabled':''}>${i+1}. ${t.name}<br><span class="small">${meta.best[i]?meta.best[i].toFixed(2)+'s':'unraced'}</span></button>`).join('');box.querySelectorAll('[data-track]').forEach(b=>b.onclick=()=>{course=+b.dataset.track;renderTrackButtons()})}renderTrackButtons();$('#start').onclick=start;$('#continue').onclick=()=>{if(!active||!finished)return;if(course===2){score=0;course=0;nextRankedCourse=0;rankedChain=true}else{course++;opStartScore=score}resetRace(course)};
+function gamepad(){
+ let g=null;try{g=Array.from(navigator.getGamepads?.()||[]).find(x=>x&&x.connected!==false)||null}catch{}
+ if(!g){if(padConnected){padKeys={};gamepadPrev={a:false,b:false,start:false};padNeedsNeutral=true}padConnected=false;return}
+ if(!padConnected){padConnected=true;padNeedsNeutral=true;padKeys={}}
+ const x=g.axes?.[0]||0,y=g.axes?.[1]||0;
+ const held=i=>!!g.buttons?.[i]?.pressed||Number(g.buttons?.[i]?.value||0)>.45;
+ const a=held(0),b=held(1),startHeld=held(9);
+ // Neutral rearm also applies after blur/pause/reset; no held-Start auto-resume.
+ if(padNeedsNeutral){padKeys={};gamepadPrev={a,b,start:startHeld};if(Math.abs(x)>.22||Math.abs(y)>.3||a||b||startHeld)return;padNeedsNeutral=false;return}
+ if(startHeld&&!gamepadPrev.start){if(!active){$('#start').click()}else if(finished){$('#continue').click()}else setRacePaused(!paused)}
+ if(paused){padKeys={};gamepadPrev={a,b,start:startHeld};return}
+ padKeys={left:x<-.22,right:x>.22,up:y<-.18,down:y>.3,boost:a,drift:b};
+ if(a&&!gamepadPrev.a)A.tone(200,.03,.02);
+ gamepadPrev={a,b,start:startHeld};
+}
+// v403: Steering, gates, rivals and scoring advance on the same clock on
+// 30/60/120+ Hz displays; rendering frequency is never the simulation rate.
+// Do not charge stalled, backgrounded or paused frames to the race clock.
+const PHYSICS_STEP=1/60, MAX_CATCHUP_STEPS=8;
+let physicsDebt=0;
+function loop(t){
+ const rawSeconds=Math.max(0,(t-last)/1000);
+ last=t;
+ gamepad();
+ if(!active||paused||finished){physicsDebt=0}
+ else if(rawSeconds>.25){physicsDebt=0}
+ else {
+  physicsDebt=Math.min(physicsDebt+rawSeconds,PHYSICS_STEP*MAX_CATCHUP_STEPS);
+  let steps=0;
+  while(physicsDebt+1e-9>=PHYSICS_STEP&&steps<MAX_CATCHUP_STEPS&&!finished&&!paused){
+   update(PHYSICS_STEP);physicsDebt=Math.max(0,physicsDebt-PHYSICS_STEP);steps++;
+  }
+ }
+ render();requestAnimationFrame(loop)
+}resetRace(0);requestAnimationFrame(loop);
+})();
 </script></body></html>

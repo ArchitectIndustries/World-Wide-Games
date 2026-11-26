@@ -1,7 +1,153 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Harbor Pulse</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#07131c;color:#fff;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;inset:12px 12px auto;display:flex;gap:8px;justify-content:space-between;pointer-events:none}.hud div{background:#06131ddd;border:1px solid #1f4b5c;border-radius:12px;padding:8px 11px;font-size:12px}.hud b{font-size:17px;margin-left:4px}.tip{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);background:#06131ddd;border:1px solid #1f4b5c;border-radius:999px;padding:8px 12px;color:#b7e4ef;font-size:12px}.restart{position:fixed;right:12px;bottom:12px;border:1px solid #2b6173;background:#0a2630;color:white;border-radius:12px;padding:9px 13px;font-weight:900}</style></head><body><canvas id="c"></canvas><div class="hud"><div>Time <b id="time">90</b></div><div>Credits <b id="credits">0</b></div><div>Reputation <b id="rep">5</b></div></div><div class="tip" id="tip">Tap a ship, then a matching dock.</div><button id="restart" class="restart">Restart</button><script>
-const C=document.getElementById('c'),X=C.getContext('2d'),VW=960,VH=540;let dpr=1,sc=1,ox=0,oy=0;function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=innerWidth*dpr;C.height=innerHeight*dpr;sc=Math.min(innerWidth/VW,innerHeight/VH);ox=(innerWidth-VW*sc)/2;oy=(innerHeight-VH*sc)/2}addEventListener('resize',resize);resize();const colors=['#22d3ee','#fbbf24','#f472b6'],names=['CYAN','GOLD','ROSE'];const docks=[{x:250,y:465,c:0},{x:480,y:465,c:1},{x:710,y:465,c:2}];let ships=[],selected=null,credits=0,rep=5,time=90,spawn=0,over=false,lt=performance.now();const T=document.getElementById('time'),CR=document.getElementById('credits'),R=document.getElementById('rep'),TIP=document.getElementById('tip');
-function reset(){ships=[];selected=null;credits=0;rep=5;time=90;spawn=0;over=false;lt=performance.now();sync()}function sync(){T.textContent=Math.ceil(time);CR.textContent=credits;R.textContent=rep}document.getElementById('restart').onclick=reset;
-function newShip(){let edge=Math.floor(Math.random()*3),c=Math.floor(Math.random()*3),x,y,vx=0,vy=0;if(edge===0){x=40;y=80+Math.random()*260;vx=28}else if(edge===1){x=920;y=80+Math.random()*260;vx=-28}else{x=110+Math.random()*740;y=40;vy=25}ships.push({id:Math.random(),x,y,vx,vy,c,target:null,r:13,done:false})}function world(e){return{x:(e.clientX-ox)/sc,y:(e.clientY-oy)/sc}}C.addEventListener('pointerdown',e=>{if(over){reset();return}const p=world(e);let ship=ships.find(s=>Math.hypot(s.x-p.x,s.y-p.y)<24&&!s.done);if(ship){selected=ship;TIP.textContent=`${names[ship.c]} ship selected. Choose its dock.`;return}if(selected){let dock=docks.find(d=>Math.hypot(d.x-p.x,d.y-p.y)<42);if(dock){if(dock.c!==selected.c){rep=Math.max(0,rep-1);TIP.textContent='Wrong berth! Reputation -1.';selected=null;sync()}else{selected.target=dock;TIP.textContent='Route locked. Manage the next arrival.';selected=null}}}});
-function lose(msg){rep=Math.max(0,rep-1);TIP.textContent=msg;sync()}function finishShift(cleared){if(over)return;over=true;time=Math.max(0,time);const duration=Math.max(0,Math.min(90,90-time)),outcome=cleared?'shift-cleared':'shift-failed';if(cleared){let b=Number(localStorage.getItem('wwg:harbor-best')||0);if(credits>b)localStorage.setItem('wwg:harbor-best',credits);TIP.textContent='Shift cleared. Harbor remains open. Tap the harbor or Restart to play again.'}else TIP.textContent='Harbor closed. Reputation reached zero. Tap the harbor or Restart to try again.';try{parent.postMessage({type:'wwg:game-event',game:'harbor-pulse',event:'shift-complete',duration,meta:{outcome}},'*');const result={type:'wwg:game-event',game:'harbor-pulse',event:outcome,duration,meta:{outcome,unit:'pts',direction:'high'}};if(cleared)result.score=credits;parent.postMessage(result,'*')}catch{}sync()}function step(t){let dt=Math.min(.035,(t-lt)/1000);lt=t;if(!over){time-=dt;spawn-=dt;if(spawn<=0){newShip();spawn=Math.max(1.1,3.2-(90-time)*.018)}for(const s of ships){if(s.done)continue;if(s.target){let dx=s.target.x-s.x,dy=s.target.y-s.y,d=Math.hypot(dx,dy)||1;let desired=76;s.vx+=(dx/d*desired-s.vx)*Math.min(1,dt*2.4);s.vy+=(dy/d*desired-s.vy)*Math.min(1,dt*2.4);if(d<18){s.done=true;credits+=10;TIP.textContent='Docked safely. +10 credits';sync()}}else{s.vx*=.999;s.vy*=.999}s.x+=s.vx*dt;s.y+=s.vy*dt;if(s.x<-35||s.x>995||s.y<-35||s.y>575){s.done=true;lose('A ship left harbor unassigned. Reputation -1.')}}for(let i=0;i<ships.length;i++)for(let j=i+1;j<ships.length;j++){let a=ships[i],b=ships[j];if(a.done||b.done)continue;if(Math.hypot(a.x-b.x,a.y-b.y)<22){a.done=b.done=true;lose('Collision! Two ships lost. Reputation -1.')}}ships=ships.filter(s=>!s.done||Math.random()>.08);if(rep<=0)finishShift(false);else if(time<=0)finishShift(true);sync()}draw(t);requestAnimationFrame(step)}
-function draw(t){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#06131b';X.fillRect(0,0,innerWidth,innerHeight);X.save();X.translate(ox,oy);X.scale(sc,sc);let g=X.createLinearGradient(0,0,0,VH);g.addColorStop(0,'#0a3040');g.addColorStop(1,'#06202a');X.fillStyle=g;X.fillRect(0,0,VW,VH);X.strokeStyle='rgba(125,211,252,.1)';for(let y=40;y<460;y+=38){X.beginPath();for(let x=0;x<VW;x+=16)X.lineTo(x,y+Math.sin((x+t*.03)/55)*3);X.stroke()}X.fillStyle='#1f2937';X.fillRect(0,450,VW,90);for(const d of docks){X.fillStyle='#283548';X.fillRect(d.x-54,440,108,100);X.fillStyle=colors[d.c];X.fillRect(d.x-50,444,100,5);X.fillStyle='#dbeafe';X.font='900 12px system-ui';X.textAlign='center';X.fillText(names[d.c]+' BERTH',d.x,490)}for(const s of ships){if(s.done)continue;X.save();X.translate(s.x,s.y);X.rotate(Math.atan2(s.vy,s.vx));X.fillStyle=s===selected?'#fff':colors[s.c];X.shadowColor=colors[s.c];X.shadowBlur=s===selected?22:10;X.beginPath();X.moveTo(16,0);X.lineTo(-10,-8);X.lineTo(-7,0);X.lineTo(-10,8);X.closePath();X.fill();X.shadowBlur=0;if(s.target){X.strokeStyle=colors[s.c];X.globalAlpha=.3;X.beginPath();X.moveTo(0,0);X.lineTo((s.target.x-s.x),s.target.y-s.y);X.stroke()}X.restore()}if(over){X.fillStyle='rgba(2,8,12,.72)';X.fillRect(0,0,VW,VH);X.fillStyle='white';X.textAlign='center';X.font='900 44px system-ui';X.fillText(rep<=0?'HARBOR CLOSED':'SHIFT CLEARED',VW/2,235);X.font='20px system-ui';X.fillText(`${credits} credits routed`,VW/2,276)}X.restore()}reset();requestAnimationFrame(step);
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Harbor Pulse</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#07131c;color:#fff;font-family:system-ui,sans-serif;touch-action:manipulation}canvas{width:100vw;height:100vh;display:block;touch-action:none}.hud{position:fixed;inset:12px 12px auto;display:flex;gap:8px;justify-content:space-between;pointer-events:none}.hud div{background:#06131ddd;border:1px solid #1f4b5c;border-radius:12px;padding:8px 11px;font-size:12px}.hud b{font-size:17px;margin-left:4px}.tip{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);background:#06131ddd;border:1px solid #1f4b5c;border-radius:999px;padding:8px 12px;color:#b7e4ef;font-size:12px}.storage-notice{position:fixed;left:50%;top:66px;transform:translateX(-50%);width:min(540px,calc(100vw - 24px));z-index:6;padding:8px 11px;border:1px solid #fbbf24;border-radius:10px;background:#23180de9;color:#fff3c4;font-size:12px;text-align:center;line-height:1.35;pointer-events:none}.storage-notice[hidden]{display:none}.restart{position:fixed;right:12px;bottom:12px;border:1px solid #2b6173;background:#0a2630;color:white;border-radius:12px;padding:9px 13px;font-weight:900}
+.routing-tools{position:fixed;z-index:5;left:12px;bottom:58px;width:min(425px,calc(100vw - 24px));background:#071b26eb;border:1px solid #398aa1;border-radius:12px;padding:8px 10px;font-size:12px;max-height:45vh;overflow-y:auto}
+.routing-tools summary{cursor:pointer;font-weight:800;color:#d7faff;line-height:1.5}
+body:has(.routing-tools[open]) .tip{top:60px;bottom:auto;z-index:3}.routing-tools[open]{background:#071b26f7}.route-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.route-row button{flex:1;min-width:60px;background:#113744;border:1px solid #4a8c9e;color:white;border-radius:7px;padding:8px 5px;font:700 12px system-ui}
+.route-row button:focus-visible,.routing-tools summary:focus-visible,.restart:focus-visible{outline:3px solid #fbbf24;outline-offset:2px}
+.route-row button[aria-pressed="true"]{background:#fbbf24;color:#0a1b23}.route-row button:disabled{opacity:.45}
+.route-hint{font-size:11px;line-height:1.4;color:#b8e6f0;margin:6px 0 0}
+.start-shift{position:fixed;z-index:9;left:50%;top:50%;transform:translate(-50%,-50%);border:2px solid #67e8f9;background:#103d4d;color:#fff;border-radius:15px;padding:15px 24px;font:800 19px system-ui;box-shadow:0 10px 48px #000b;cursor:pointer;max-width:calc(100vw - 32px)}
+.start-shift[hidden],.focus-notice[hidden]{display:none}.start-shift:focus-visible{outline:3px solid #fbbf24;outline-offset:4px}
+.focus-notice{position:fixed;z-index:8;left:50%;top:98px;transform:translateX(-50%);background:#06131cf5;border:2px solid #fbbf24;padding:14px;border-radius:12px;max-width:calc(100vw - 24px);text-align:center;font:700 14px system-ui;color:#fff3c4}
+.route-status{position:fixed;z-index:4;left:12px;bottom:12px;max-width:min(670px,calc(100vw - 115px));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#071b26d9;color:#d7faff;border-radius:8px;padding:9px;font-size:11px;pointer-events:none}
+@media(max-width:520px){.routing-tools{bottom:55px;max-height:35vh}.tip{bottom:114px;max-width:calc(100vw - 20px);width:max-content;border-radius:12px;text-align:center}.route-status{font-size:10px}}
+</style></head><body><canvas id="c"></canvas><div class="hud"><div>Time <b id="time">90</b></div><div>Credits <b id="credits">0</b></div><div>Reputation <b id="rep">5</b></div></div><div class="tip" id="tip">Tap a ship, then its matching dock. Keyboard: ←/→ ships, ↑/↓ berths, Enter to route.</div>
+<button type="button" id="startShift" class="start-shift">Start 90-second shift</button><div id="focusNotice" class="focus-notice" role="status" aria-live="polite" hidden>Shift suspended. Return to this window and release held controls to resume.</div>
+<details class="routing-tools" id="routingTools"><summary>Keyboard, controller & accessible routing</summary><div class="route-hint">←/→ select an unassigned ship; ↑/↓ choose a berth; Enter or Space to route. Keys 1/2/3 route directly to Cyan/Gold/Rose. Gamepad D-pad or left stick selects, A confirms. Mouse/touch still work.</div><div class="route-row"><button id="previousShip" type="button">◀ Previous ship</button><button id="nextShip" type="button">Next ship ▶</button></div><div class="route-row" aria-label="Berths"><button type="button" data-berth="0" aria-keyshortcuts="1">1 Cyan</button><button type="button" data-berth="1" aria-keyshortcuts="2">2 Gold</button><button type="button" data-berth="2" aria-keyshortcuts="3">3 Rose</button></div></details>
+<div id="routeStatus" class="route-status" role="status" aria-live="polite" aria-atomic="true">Route ships with touch/mouse or open keyboard routing.</div><div id="storageNotice" class="storage-notice" role="status" aria-live="polite" hidden></div><button id="restart" class="restart">Restart</button><script>
+const C=document.getElementById('c'),X=C.getContext('2d'),VW=960,VH=540;let dpr=1,sc=1,ox=0,oy=0;function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=innerWidth*dpr;C.height=innerHeight*dpr;sc=Math.min(innerWidth/VW,innerHeight/VH);ox=(innerWidth-VW*sc)/2;oy=(innerHeight-VH*sc)/2}addEventListener('resize',resize);resize();const colors=['#22d3ee','#fbbf24','#f472b6'],names=['CYAN','GOLD','ROSE'];const docks=[{x:250,y:465,c:0},{x:480,y:465,c:1},{x:710,y:465,c:2}];let ships=[],selected=null,credits=0,rep=5,time=90,spawn=0,over=false,lt=performance.now(),active=false,interrupted=false,skipDelta=true,sceneMs=0,gamepadNeedsNeutral=true,gamepadConnected=false;const T=document.getElementById('time'),CR=document.getElementById('credits'),R=document.getElementById('rep'),TIP=document.getElementById('tip');
+const ROUTE_STATUS=document.getElementById('routeStatus'), BERTH_BTNS=[...document.querySelectorAll('[data-berth]')],START=document.getElementById('startShift'),FOCUS_NOTICE=document.getElementById('focusNotice');
+let activeBerth=0,gamepadLatch=new Set();
+function selectableShips(){return ships.filter(ship=>!ship.done&&!ship.target)}
+function updateRoutingStatus(message){
+  const available=selectableShips();
+  if(selected&&!available.includes(selected))selected=null;
+  BERTH_BTNS.forEach((button,i)=>{button.setAttribute('aria-pressed',String(i===activeBerth));button.disabled=over||available.length===0});
+  document.getElementById('previousShip').disabled=document.getElementById('nextShip').disabled=over||available.length===0;
+  const chosen=selected?`${names[selected.c]} ship selected, ${available.indexOf(selected)+1} of ${available.length}`:`${available.length} unassigned ${available.length===1?'ship':'ships'}`;
+  ROUTE_STATUS.textContent=message?`${message} ${chosen}. Berth ${names[activeBerth]}.`:`${chosen}. Berth ${names[activeBerth]}.`;
+}
+function pickShip(delta){
+  if(over)return;
+  const available=selectableShips();
+  if(!available.length){selected=null;updateRoutingStatus('No unassigned ships yet.');return}
+  const old=available.indexOf(selected);
+  selected=available[old<0?(delta<0?available.length-1:0):(old+delta+available.length)%available.length];
+  TIP.textContent=`${names[selected.c]} ship selected. Pick a berth (1/2/3) or cycle berths and press Enter.`;
+  updateRoutingStatus('Ship selected.');
+}
+function chooseBerth(delta){if(over)return;activeBerth=(activeBerth+delta+3)%3;updateRoutingStatus('Berth changed.');}
+function routeSelected(dock){
+  if(over||!selected||selected.done||selected.target||!ships.includes(selected)){
+    selected=null;updateRoutingStatus('Select an available ship first.');return false;
+  }
+  const ship=selected;selected=null;activeBerth=dock.c;
+  if(dock.c!==ship.c){rep=Math.max(0,rep-1);TIP.textContent='Wrong berth! Reputation -1.';sync();updateRoutingStatus('Wrong color. Reputation lost.');return false}
+  ship.target=dock;TIP.textContent='Route locked. Manage the next arrival.';updateRoutingStatus(`${names[ship.c]} ship routed safely.`);return true;
+}
+function reset(){ships=[];selected=null;activeBerth=0;gamepadLatch.clear();gamepadNeedsNeutral=true;credits=0;rep=5;time=90;spawn=0;over=false;active=false;skipDelta=true;sceneMs=0;lt=performance.now();START.hidden=false;TIP.textContent='Start your 90-second shift, then select arriving ships and route each color to its berth.';sync();updateRoutingStatus('READY. Activate Start shift before arrivals begin.');}
+function startShift(){
+ if(active||over||interrupted||document.hidden)return false;
+ active=true;sceneMs=0;spawn=3.2;newShip();lt=performance.now();skipDelta=true;START.hidden=true;
+ TIP.textContent='Shift active. Select a ship, then route it to its matching berth.';
+ updateRoutingStatus('ACTIVE. First ship arrived.');return true;
+}
+function setInterrupted(value){
+ if(interrupted===value)return;
+ interrupted=value;gamepadLatch.clear();gamepadNeedsNeutral=true;
+ if(!value){lt=performance.now();skipDelta=true}
+ FOCUS_NOTICE.hidden=!value;
+ if(value)updateRoutingStatus('SUSPENDED. Shift time and ships frozen.');
+ else updateRoutingStatus(active?'ACTIVE. Shift resumed.':'READY. Start shift when prepared.');
+}
+function syncFocus(){setInterrupted(Boolean(document.hidden||!document.hasFocus()))}
+addEventListener('blur',()=>setInterrupted(true));addEventListener('focus',syncFocus);document.addEventListener('visibilitychange',syncFocus);
+START.addEventListener('click',()=>{syncFocus();startShift()});
+function sync(){T.textContent=Math.ceil(time);CR.textContent=credits;R.textContent=rep}
+document.getElementById('restart').onclick=reset;
+document.getElementById('previousShip').addEventListener('click',()=>pickShip(-1));
+document.getElementById('nextShip').addEventListener('click',()=>pickShip(1));
+BERTH_BTNS.forEach(button=>button.addEventListener('click',()=>routeSelected(docks[Number(button.dataset.berth)])));
+addEventListener('keydown',e=>{
+  if(e.altKey||e.ctrlKey||e.metaKey||e.repeat||/^(INPUT|TEXTAREA|SELECT|BUTTON|SUMMARY)$/.test(e.target.tagName)||e.target.isContentEditable)return;
+  const k=e.key;
+  if(interrupted)return;
+  if(over){if(k==='Enter'||k===' '){e.preventDefault();reset()}return}
+  if(!active){if(k==='Enter'||k===' '){e.preventDefault();startShift()}return}
+  if(k==='ArrowLeft'||k==='a'||k==='A'){e.preventDefault();pickShip(-1)}
+  else if(k==='ArrowRight'||k==='d'||k==='D'){e.preventDefault();pickShip(1)}
+  else if(k==='ArrowUp'||k==='w'||k==='W'){e.preventDefault();chooseBerth(-1)}
+  else if(k==='ArrowDown'||k==='s'||k==='S'){e.preventDefault();chooseBerth(1)}
+  else if(k==='1'||k==='2'||k==='3'){e.preventDefault();routeSelected(docks[Number(k)-1])}
+  else if(k==='Enter'||k===' '){e.preventDefault();routeSelected(docks[activeBerth])}
+});
+function pollController(){
+ let pads=[];
+ try{pads=Array.from(navigator.getGamepads?.()||[]).filter(p=>p&&p.connected!==false)}catch(_error){gamepadLatch.clear();gamepadConnected=false;gamepadNeedsNeutral=true;return}
+ if(!pads.length){gamepadLatch.clear();gamepadConnected=false;gamepadNeedsNeutral=true;return}
+ if(!gamepadConnected){gamepadConnected=true;gamepadNeedsNeutral=true;gamepadLatch.clear()}
+ const pressed=new Set();
+ for(const p of pads){
+   const b=i=>Boolean(p.buttons?.[i]?.pressed||p.buttons?.[i]?.value>0.5);
+   const x=Number(p.axes?.[0])||0,y=Number(p.axes?.[1])||0;
+   if(b(14)||x<-.65)pressed.add('prev');if(b(15)||x>.65)pressed.add('next');
+   if(b(12)||y<-.65)pressed.add('up');if(b(13)||y>.65)pressed.add('down');
+   if(b(0))pressed.add('route');
+ }
+ // A newly attached controller, or one returning after a focus interruption,
+ // must first report a neutral frame; held inputs cannot start or route ships.
+ if(gamepadNeedsNeutral){if(pressed.size===0){gamepadNeedsNeutral=false;gamepadLatch.clear()}return}
+ if(interrupted)return;
+ for(const key of pressed){if(gamepadLatch.has(key))continue;
+   if(key==='route'){if(over)reset();else if(!active)startShift();else routeSelected(docks[activeBerth])}
+   else if(active&&!over){if(key==='prev')pickShip(-1);else if(key==='next')pickShip(1);
+     else if(key==='up')chooseBerth(-1);else if(key==='down')chooseBerth(1)}
+ }
+ gamepadLatch=pressed;
+}
+
+function newShip(){let edge=Math.floor(Math.random()*3),c=Math.floor(Math.random()*3),x,y,vx=0,vy=0;if(edge===0){x=40;y=80+Math.random()*260;vx=28}else if(edge===1){x=920;y=80+Math.random()*260;vx=-28}else{x=110+Math.random()*740;y=40;vy=25}ships.push({id:Math.random(),x,y,vx,vy,c,target:null,r:13,done:false});if(!selected)updateRoutingStatus()}
+function world(e){return{x:(e.clientX-ox)/sc,y:(e.clientY-oy)/sc}}
+C.addEventListener('pointerdown',e=>{
+ if(over){reset();return}
+ if(interrupted)return;
+ if(!active){startShift();return}
+ const p=world(e),ship=ships.find(s=>Math.hypot(s.x-p.x,s.y-p.y)<24&&!s.done&&!s.target);
+ if(ship){selected=ship;TIP.textContent=`${names[ship.c]} ship selected. Choose its dock.`;updateRoutingStatus('Ship selected by pointer.');return}
+ if(selected){const dock=docks.find(d=>Math.hypot(d.x-p.x,d.y-p.y)<42);if(dock)routeSelected(dock)}
+});
+function lose(msg){rep=Math.max(0,rep-1);TIP.textContent=msg;sync()}const STORAGE_KEY='wwg:harbor-best',STORAGE_NOTICE=document.getElementById('storageNotice');
+// A browser can deny access to localStorage or run out of quota. Neither case
+// may prevent the earned shift result from reaching the WorldWideGames host.
+function recordLocalBest(value){
+  try{
+    const raw=window.localStorage.getItem(STORAGE_KEY);
+    const old=raw!==null&&/^(0|[1-9][0-9]*)$/.test(raw)?Number(raw):0;
+    const previous=Number.isSafeInteger(old)&&old>=0&&old<=1000000&&old%10===0?old:0;
+    if(value>previous)window.localStorage.setItem(STORAGE_KEY,String(value));
+  }catch(_error){
+    STORAGE_NOTICE.hidden=false;
+    STORAGE_NOTICE.textContent='Personal-best saving is unavailable on this device. This shift still counts now, but the local best may not persist.';
+  }
+}
+function finishShift(cleared){
+  if(over)return;
+  over=true;
+  time=Math.max(0,time);
+  const duration=Math.max(0,Math.min(90,90-time));
+  const outcome=cleared?'shift-cleared':'shift-failed';
+  if(cleared){
+    recordLocalBest(credits);
+    TIP.textContent='Shift cleared. Harbor remains open. Tap the harbor or Restart to play again.';
+  }else TIP.textContent='Harbor closed. Reputation reached zero. Tap the harbor or Restart to try again.';
+  // Emitted exactly once, regardless of whether browser-local storage is writable.
+  try{
+    parent.postMessage({type:'wwg:game-event',game:'harbor-pulse',event:'shift-complete',duration,meta:{outcome}},'*');
+    const result={type:'wwg:game-event',game:'harbor-pulse',event:outcome,duration,meta:{outcome,unit:'pts',direction:'high'}};
+    if(cleared)result.score=credits;
+    parent.postMessage(result,'*');
+  }catch(_error){}
+  sync();
+}function step(t){let dt=Math.min(.035,Math.max(0,(t-lt)/1000));if(interrupted||skipDelta)dt=0;skipDelta=false;lt=t;pollController();if(active&&!interrupted&&!over){sceneMs+=dt*1000;time-=dt;spawn-=dt;if(spawn<=0){newShip();spawn=Math.max(1.1,3.2-(90-time)*.018)}for(const s of ships){if(s.done)continue;if(s.target){let dx=s.target.x-s.x,dy=s.target.y-s.y,d=Math.hypot(dx,dy)||1;let desired=76;s.vx+=(dx/d*desired-s.vx)*Math.min(1,dt*2.4);s.vy+=(dy/d*desired-s.vy)*Math.min(1,dt*2.4);if(d<18){s.done=true;credits+=10;TIP.textContent='Docked safely. +10 credits';sync()}}else{s.vx*=.999;s.vy*=.999}s.x+=s.vx*dt;s.y+=s.vy*dt;if(s.x<-35||s.x>995||s.y<-35||s.y>575){s.done=true;lose('A ship left harbor unassigned. Reputation -1.')}}for(let i=0;i<ships.length;i++)for(let j=i+1;j<ships.length;j++){let a=ships[i],b=ships[j];if(a.done||b.done)continue;if(Math.hypot(a.x-b.x,a.y-b.y)<22){a.done=b.done=true;lose('Collision! Two ships lost. Reputation -1.')}}ships=ships.filter(s=>!s.done||Math.random()>.08);if(selected&&(selected.done||selected.target||!ships.includes(selected))){selected=null;updateRoutingStatus("Selected ship is no longer available.")}if(rep<=0)finishShift(false);else if(time<=0)finishShift(true);sync()}draw(sceneMs);requestAnimationFrame(step)}
+function draw(t){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#06131b';X.fillRect(0,0,innerWidth,innerHeight);X.save();X.translate(ox,oy);X.scale(sc,sc);let g=X.createLinearGradient(0,0,0,VH);g.addColorStop(0,'#0a3040');g.addColorStop(1,'#06202a');X.fillStyle=g;X.fillRect(0,0,VW,VH);X.strokeStyle='rgba(125,211,252,.1)';for(let y=40;y<460;y+=38){X.beginPath();for(let x=0;x<VW;x+=16)X.lineTo(x,y+Math.sin((x+t*.03)/55)*3);X.stroke()}X.fillStyle='#1f2937';X.fillRect(0,450,VW,90);for(const d of docks){X.fillStyle='#283548';X.fillRect(d.x-54,440,108,100);X.fillStyle=colors[d.c];X.fillRect(d.x-50,444,100,5);X.fillStyle='#dbeafe';X.font='900 12px system-ui';X.textAlign='center';X.fillText(names[d.c]+' BERTH',d.x,490);if(selected&&d.c===activeBerth){X.strokeStyle='#fef08a';X.lineWidth=4;X.strokeRect(d.x-56,438,112,102);X.lineWidth=1}}for(const s of ships){if(s.done)continue;X.save();X.translate(s.x,s.y);X.rotate(Math.atan2(s.vy,s.vx));X.fillStyle=s===selected?'#fff':colors[s.c];X.shadowColor=colors[s.c];X.shadowBlur=s===selected?22:10;X.beginPath();X.moveTo(16,0);X.lineTo(-10,-8);X.lineTo(-7,0);X.lineTo(-10,8);X.closePath();X.fill();X.shadowBlur=0;if(s.target){X.strokeStyle=colors[s.c];X.globalAlpha=.3;X.beginPath();X.moveTo(0,0);X.lineTo((s.target.x-s.x),s.target.y-s.y);X.stroke()}X.restore()}if(over){X.fillStyle='rgba(2,8,12,.72)';X.fillRect(0,0,VW,VH);X.fillStyle='white';X.textAlign='center';X.font='900 44px system-ui';X.fillText(rep<=0?'HARBOR CLOSED':'SHIFT CLEARED',VW/2,235);X.font='20px system-ui';X.fillText(`${credits} credits routed`,VW/2,276)}X.restore()}reset();requestAnimationFrame(step);
 </script></body></html>

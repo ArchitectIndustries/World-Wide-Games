@@ -1,0 +1,24 @@
+'use strict';
+const assert=require('node:assert/strict');const D=require('../games/aegis-verge/structural-debris.js');
+let n=0;function ck(name,fn){fn();n++;console.log('PASS '+name)}
+const b={id:0,x:4,z:-8,w:6,d:2,h:3};
+ck('module frozen',()=>assert.ok(Object.isFrozen(D)));
+ck('zero hp has no wall mesh',()=>assert.deepEqual(D.armor(b,0),[]));
+ck('invalid HP rejected',()=>assert.deepEqual(D.armor(b,NaN),[]));
+ck('full armor has visible primary box',()=>assert.equal(D.armor(b,5)[0].sx,b.w));
+ck('damage increases real fracture detail',()=>assert.ok(D.armor(b,1).length>D.armor(b,5).length));
+ck('faces retain whole solid body until breach',()=>{for(let hp=1;hp<=5;hp++)assert.equal(D.armor(b,hp)[0].sx,6)});
+ck('damaged plates have shifted height',()=>assert.notDeepEqual(D.armor(b,5),D.armor(b,2)));
+ck('same damage/replay has deterministic geometry',()=>assert.deepEqual(D.armor(b,3),D.armor({...b},3)));
+ck('visual geometry never mutates cover',()=>{const old={...b};D.armor(b,2);assert.deepEqual(b,old)});
+ck('live hit emits authored debris',()=>{const v=[];D.emit(v,b,1,false,false);assert.ok(v.length>=3&&v.every(p=>p.life>0))});
+ck('breach emission more visible than chip',()=>{const a=[],c=[];D.emit(a,b,1,false);D.emit(c,b,1,true);assert.ok(c.length>a.length)});
+ck('reduce effects bounds fragment count',()=>{const a=[];D.emit(a,b,1,true,true);assert.equal(a.length,3)});
+ck('list capped for mobile safe memory',()=>{const a=[];for(let i=0;i<40;i++)D.emit(a,b,1,true);assert.equal(a.length,D.MAX_PIECES)});
+ck('debris moves by simulation',()=>{const a=[];D.emit(a,b,1);const z=a[0].z;D.tick(a,.02);assert.notEqual(a[0].z,z)});
+ck('frozen simulation does not advance debris',()=>{const a=[];D.emit(a,b,1);const old=JSON.stringify(a);D.tick(a,0);assert.equal(JSON.stringify(a),old)});
+ck('negative time ignored',()=>{const a=[];D.emit(a,b,1);const old=JSON.stringify(a);D.tick(a,-1);assert.equal(JSON.stringify(a),old)});
+ck('expired fragments are removed',()=>{const a=[];D.emit(a,b,1);D.tick(a,1.35);for(let i=0;i<100;i++)D.tick(a,.03);assert.equal(a.length,0)});
+ck('fragment geometry finite',()=>{const a=[];D.emit(a,b,1);assert.ok(Object.values(D.geometry(a[0])).filter(v=>typeof v==='number').every(Number.isFinite))});
+ck('invalid input harmless',()=>{assert.deepEqual(D.emit([],null),[]);assert.deepEqual(D.tick(null,.2),null)});
+console.log(JSON.stringify({suite:'F3D22 structural damage 3D procedural geometry',passed:n,total:n}));

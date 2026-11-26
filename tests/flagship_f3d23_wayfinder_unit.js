@@ -1,0 +1,28 @@
+/* F3D23 original first-party route planner assertions: node tests only, not browser proof. */
+'use strict';
+const assert=require('node:assert/strict');
+const T=require('../games/aegis-verge/tactics.js');
+const W=require('../games/aegis-verge/wayfinder.js');
+let checks=0;const test=(name,fn)=>{fn();checks++;console.log('PASS '+name);};
+const start={x:0,z:-27},target={x:0,z:17};
+const cover=T.coverFor(2);
+test('parent direct distance points through actual third-operation cover',()=>{assert.ok(T.firstCover(start.x,start.z,target.x,target.z,cover,1.15));});
+test('third-operation exact beacon center is not player-reachable',()=>{assert.equal(T.free(target.x,target.z,cover,1.15),false);});
+test('reachable perimeter route exists despite inaccessible exact center',()=>{const route=W.calculate(start,target,cover,T,4.5);assert.ok(route);assert.ok(route.points.length>1);assert.ok(Math.hypot(route.arrival.x,target.x,route.arrival.z-target.z)<5);});
+test('every path waypoint and segment respects real rig radius',()=>{const q=W.calculate(start,target,cover,T,4.5);let prev=start;for(const p of q.points){assert.ok(T.free(p.x,p.z,cover,1.15));assert.equal(T.firstCover(prev.x,prev.z,p.x,p.z,cover,1.15),null);prev=p;}});
+test('route never drives into occupied beacon center',()=>{const q=W.calculate(start,target,cover,T,4.5);assert.notDeepEqual(q.arrival,target);});
+test('without valid capture radius route refuses physically blocked beacon',()=>{assert.equal(W.calculate(start,target,cover,T),null);});
+test('direct clear route remains a direct path',()=>{let q=W.calculate({x:10,z:10},{x:10,z:15},[],T,4.5);assert.equal(q.direct,true);assert.equal(q.points.length,1);});
+test('path distance greater than line-of-sight Euclidean distance under cover',()=>{let c=T.coverFor(0),q=W.calculate(start,{x:20,z:-8},c,T,4.5);assert.ok(q.distance>Math.hypot(start.x-20,start.z+8));});
+test('cache does not recompute for a stationary player inside same phase',()=>{const s=W.create();W.update(s,start,target,cover,T,0,true,2,4.5);W.update(s,start,target,cover,T,12,true,2,4.5);assert.equal(s.computes,1);});
+test('cache recomputes after substantial player movement and time',()=>{const s=W.create();W.update(s,start,target,cover,T,0,true,2,4.5);W.update(s,{x:0,z:-23},target,cover,T,1,true,2,4.5);assert.equal(s.computes,2);});
+test('cache recomputes immediately on real cover change',()=>{const s=W.create();W.update(s,start,target,cover,T,0,true,2,4.5);W.update(s,start,target,cover.slice(0,-1),T,.01,true,2,4.5);assert.equal(s.computes,2);});
+test('cache recomputes immediately on next relay objective',()=>{const s=W.create();W.update(s,start,target,cover,T,0,true,2,4.5);W.update(s,start,{x:20,z:-8},cover,T,.01,true,1,4.5);assert.equal(s.computes,2);});
+test('enemy combat disables guide without retaining old visual',()=>{const s=W.create();W.update(s,start,target,cover,T,0,true,2,4.5);assert.ok(s.route);assert.equal(W.update(s,start,target,cover,T,.01,false,2,4.5),null);});
+test('invalid coordinates do not generate false waypoints',()=>{assert.equal(W.calculate(start,{x:Infinity,z:2},cover,T,4.5),null);});
+test('invalid player position does not generate false waypoints',()=>{assert.equal(W.calculate({x:NaN,z:0},target,cover,T,4.5),null);});
+test('unreachable target produces no false corridor',()=>{const blockers=[{id:1,x:0,z:0,w:80,d:2}];assert.equal(W.calculate({x:0,z:-20},{x:0,z:20},blockers,T,3.5),null);});
+test('marker rendering is bounded',()=>{const q={points:Array.from({length:120},(_,i)=>({x:i,z:i}))};const marks=W.markers(q);assert.ok(marks.length<=W.MAX_MARKERS);assert.deepEqual(marks.at(-1),q.points.at(-1));});
+test('reduced list preserves small routes',()=>{assert.equal(W.markers({points:[{x:1,z:2},{x:2,z:3}]}).length,2);});
+test('route does not mutate cover or start',()=>{const orig=JSON.stringify(cover),a={...start};W.calculate(start,target,cover,T,4.5);assert.equal(JSON.stringify(cover),orig);assert.deepEqual(start,a);});
+console.log('F3D23 Wayfinder unit: '+checks+'/'+checks+' PASSED');

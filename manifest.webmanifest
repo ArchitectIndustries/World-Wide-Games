@@ -15,48 +15,48 @@
   ],
   "shortcuts": [
     {
-      "name": "Harbor Pulse: Full Shift",
-      "short_name": "Harbor Pulse 1.1",
-      "url": "game.html?id=harbor-pulse",
+      "name": "Kiteglass Drift: Rate-Stable Gliding",
+      "short_name": "Kiteglass Drift 1.5",
+      "url": "game.html?id=kiteglass-drift",
       "icons": [
         {
-          "src": "covers/harbor-pulse.svg",
+          "src": "covers/kiteglass-drift.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }
       ]
     },
     {
-      "name": "Vector League: Decisive Whistle",
-      "short_name": "Vector League 1.2",
-      "url": "game.html?id=vector-league",
+      "name": "Cyber Wars: Viridia Archive",
+      "short_name": "Cyber Wars",
+      "url": "game.html?id=cyber-wars",
       "icons": [
         {
-          "src": "covers/vector-league.svg",
+          "src": "covers/cyber-wars.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }
       ]
     },
     {
-      "name": "Solar Loom: Stable Horizon",
-      "short_name": "Solar Loom 1.1",
-      "url": "game.html?id=solar-loom",
+      "name": "Signal Choir: Honest Harmony",
+      "short_name": "Signal Choir 1.2",
+      "url": "game.html?id=signal-choir",
       "icons": [
         {
-          "src": "covers/solar-loom.svg",
+          "src": "covers/signal-choir.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }
       ]
     },
     {
-      "name": "Pulse Archive: Clear Signal",
-      "short_name": "Pulse Archive 1.2",
-      "url": "game.html?id=pulse-archive",
+      "name": "Deepwater Signal: Honest Return",
+      "short_name": "Deepwater 1.2",
+      "url": "game.html?id=deepwater-signal",
       "icons": [
         {
-          "src": "covers/pulse-archive.svg",
+          "src": "covers/deepwater-signal.svg",
           "sizes": "any",
           "type": "image/svg+xml"
         }

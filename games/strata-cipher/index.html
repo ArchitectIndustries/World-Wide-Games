@@ -1,6 +1,43 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Strata Cipher</title><style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#100d0a;color:#fff7ed;font-family:system-ui,sans-serif;touch-action:none}.wrap{height:100%;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,#422006,#100d0a 64%)}canvas{width:min(92vw,690px);height:min(92vw,690px);max-height:74vh;object-fit:contain;border:1px solid #a16207;border-radius:20px;background:#160f09;box-shadow:0 24px 90px #000a}.hud{position:fixed;left:12px;right:12px;top:12px;display:flex;justify-content:center;gap:7px;flex-wrap:wrap;pointer-events:none}.hud div{background:#1c120ae8;border:1px solid #92400e;border-radius:12px;padding:7px 10px;font-size:11px}.hud b{color:#fde68a;font-size:15px;margin-left:4px}.tip{position:fixed;left:12px;bottom:12px;max-width:490px;background:#1c120af0;border:1px solid #92400e;border-radius:12px;padding:9px 11px;color:#fed7aa;font-size:11px;line-height:1.45}.mobile{display:none;position:fixed;right:12px;bottom:12px;grid-template-columns:repeat(3,52px);gap:6px}.mobile button{height:52px;border:1px solid #b45309;border-radius:13px;background:#451a03dc;color:#fff7ed;font-size:18px;font-weight:900}.mobile .dig,.mobile .scan{font-size:11px}.banner{position:fixed;inset:0;display:none;place-items:center;background:#120c08df;z-index:9}.banner.show{display:grid}.card{width:min(460px,calc(100vw - 32px));background:#241509;border:1px solid #b45309;border-radius:18px;padding:22px;text-align:center}.card h2{margin:0 0 9px;font-size:28px}.card p{color:#fed7aa;line-height:1.55}.card button{border:1px solid #f59e0b;background:#92400e;color:white;border-radius:11px;padding:10px 15px;font-weight:900}.legend{display:flex;gap:10px;justify-content:center;font-size:10px;color:#fdba74;margin-top:8px}@media(pointer:coarse){.mobile{display:grid}.tip{right:190px}}@media(max-width:620px){canvas{width:96vw;height:96vw;max-height:60vh}.tip{right:12px;bottom:184px}.hud{justify-content:flex-start}}
-</style></head><body><div class="wrap"><canvas id="c" width="600" height="600"></canvas></div><div class="hud"><div>Site <b id="site">1/6</b></div><div>Fragments <b id="frag">0/3</b></div><div>Integrity <b id="integrity">12</b></div><div>Survey charges <b id="charges">5</b></div><div>Digs <b id="digs">0</b></div></div><div class="tip" id="tip"><b style="color:#fff;letter-spacing:.08em">ARCHITECT INDUSTRIES · WORLDWIDEGAMES</b><br>Read the buried pattern before you dig. <b>Primary</b> excavates the selected tile. <b>Secondary</b> surveys nearby strata; numbers show how many artifact fragments touch that tile. Fault pockets damage site integrity.<div class="legend"><span>◆ artifact</span><span>✕ fault</span><span>0–3 survey signal</span></div></div><div class="mobile"><button data-a="left">◀</button><button data-a="up">▲</button><button data-a="right">▶</button><button class="scan" data-a="secondary">SURVEY</button><button data-a="down">▼</button><button class="dig" data-a="primary">EXCAVATE</button></div><div class="banner" id="banner"><div class="card"><h2 id="bannerTitle"></h2><p id="bannerText"></p><button id="continueBtn">Continue</button></div></div><script src="../../assets/wwg-input.js"></script><script>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Strata Cipher 1.5 — Deliberate Excavation Controls</title><style>
+
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:#100d0a;color:#fff7ed;font-family:system-ui,sans-serif}
+body{overflow-x:hidden;overflow-y:auto;touch-action:pan-y}
+.wrap{min-height:100dvh;max-width:940px;margin:0 auto;padding:8px 8px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;background:radial-gradient(circle at 50% 35%,#422006,#100d0a 64%)}
+.stage{flex:1;min-height:0;width:100%;display:grid;place-items:center}
+canvas{display:block;width:min(100%,690px,calc(100dvh - 210px));height:auto;aspect-ratio:1/1;object-fit:contain;border:1px solid #a16207;border-radius:16px;background:#160f09;box-shadow:0 18px 55px #0009;touch-action:none}
+.hud{position:static;width:100%;display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.hud div{background:#1c120ae8;border:1px solid #92400e;border-radius:10px;padding:6px 9px;font-size:11px;white-space:nowrap}
+.hud b{color:#fde68a;font-size:15px;margin-left:4px}
+.readout{width:min(100%,690px);display:flex;align-items:center;gap:8px;background:#24170a;border:1px solid #a16207;border-radius:10px;padding:7px 9px;color:#fef3c7;font-size:12px;line-height:1.45}.readout p{flex:1;margin:0}.readout button{min-height:44px;border:1px solid #f59e0b;border-radius:9px;background:#713f12;color:#fff7ed;font-weight:800;padding:8px 12px;cursor:pointer}.readout button:focus-visible{outline:3px solid #fde68a;outline-offset:2px}@media(max-width:620px){.readout{font-size:11px;align-items:flex-start}.readout button{flex:none}}
+.tip{position:static;width:min(100%,690px);background:#1c120af0;border:1px solid #92400e;border-radius:10px;padding:7px 10px;color:#fed7aa;font-size:12px;line-height:1.4;text-align:center}
+.guide{width:min(100%,690px);border:1px solid #92400e;border-radius:10px;background:#1c120a;color:#fed7aa;font-size:12px;line-height:1.45}
+.guide summary{display:block;cursor:pointer;padding:8px 11px;min-height:34px;font-weight:700;touch-action:manipulation}
+.guide summary:focus-visible,.mobile button:focus-visible{outline:3px solid #fde68a;outline-offset:2px}
+.guide summary::before{content:'▸';margin-right:8px}
+.guide[open] summary::before{content:'▾'}
+.guide-content{padding:4px 11px 11px;border-top:1px solid #78350f}
+.guide-content p{margin:5px 0 8px}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:#fdba74}
+.mobile{display:none;width:min(100%,260px);grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.mobile button{min-height:44px;border:1px solid #b45309;border-radius:11px;background:#451a03;color:#fff7ed;font-size:18px;font-weight:900;touch-action:manipulation;cursor:pointer}
+.mobile .dig,.mobile .scan{font-size:11px}
+.banner{position:fixed;inset:0;display:none;place-items:center;background:#120c08df;z-index:9;overflow-y:auto}
+.banner.show{display:grid}.card{width:min(460px,calc(100vw - 32px));background:#241509;border:1px solid #b45309;border-radius:18px;padding:22px;text-align:center}
+.card h2{margin:0 0 9px;font-size:28px}.card p{color:#fed7aa;line-height:1.55}.card .storage-warning{color:#fef3c7;border:1px solid #f59e0b;border-radius:10px;padding:10px;background:#78350f55;font-size:13px}
+.card button{border:1px solid #f59e0b;background:#92400e;color:white;border-radius:11px;padding:10px 15px;font-weight:900}
+@media(pointer:coarse){.mobile{display:grid}}
+@media(max-width:620px){.wrap{gap:6px}.hud{gap:4px}.hud div{padding:5px 7px;font-size:10px}.hud b{font-size:14px}.stage{flex:0 0 auto}canvas{width:min(100%,calc(100dvh - 300px))}.tip{font-size:11px}.guide summary{min-height:32px}}
+@media(max-height:470px){canvas{width:min(100%,250px)}}
+</style></head><body><main class="wrap">
+<div class="hud" aria-label="Excavation progress"><div>Site <b id="site">1/6</b></div><div>Fragments <b id="frag">0/3</b></div><div>Integrity <b id="integrity">12</b></div><div>Survey charges <b id="charges">5</b></div><div>Digs <b id="digs">0</b></div></div>
+<div class="stage"><canvas id="c" width="600" height="600" tabindex="0" aria-label="Six by six excavation grid. Use arrows or WASD to move, Primary to dig, Secondary to survey, and I to inspect." aria-describedby="cellReadout"></canvas></div>
+<div class="readout"><p id="cellReadout" role="status" aria-live="polite" aria-atomic="true">Selected tile: row 1, column 1. Uncharted.</p><button id="inspectBtn" type="button" aria-label="Inspect selected tile without spending a charge">Inspect (I)</button></div>
+<div class="tip" id="tip" role="status" aria-live="polite">Recover three fragments at each of six sites without exhausting site integrity. Survey before excavating.</div>
+<div class="mobile" aria-label="Excavation controls"><button type="button" aria-label="Move left" data-a="left">◀</button><button type="button" aria-label="Move up" data-a="up">▲</button><button type="button" aria-label="Move right" data-a="right">▶</button><button type="button" class="scan" data-a="secondary">SURVEY</button><button type="button" aria-label="Move down" data-a="down">▼</button><button type="button" class="dig" data-a="primary">EXCAVATE</button></div>
+<details class="guide"><summary>Objective &amp; controls · open guide</summary><div class="guide-content"><p><b>ARCHITECT INDUSTRIES · WORLDWIDEGAMES</b></p><p>Read the buried pattern before you dig. Recover <b>three artifacts</b> from each of <b>six sites</b>. Primary excavates the selected tile; Secondary surveys nearby strata. Numbers show how many fragments touch a tile. Fault pockets damage integrity. Losing all integrity collapses only the current site; retrying discards that failed attempt’s survey cost from the final expedition ranking.</p><p>Arrow keys/WASD move the selection. Use your configured Primary and Secondary action keys, or the on-screen controls. Select a tile directly by tapping the grid. The Selected Tile readout speaks row, column and only clues you have earned: uncharted, surveyed signal or excavated contents. I or Inspect repeats the selected tile without using a survey charge. R restarts the expedition. Survey, excavate and restart act once per press; directional movement can be held.</p><div class="legend"><span>◆ artifact</span><span>✕ fault</span><span>0–3 survey signal</span></div></div></details>
+</main><div class="banner" id="banner"><div class="card"><h2 id="bannerTitle"></h2><p id="bannerText"></p><p id="storageNotice" class="storage-warning" role="status" aria-live="polite" hidden></p><button id="continueBtn" type="button">Continue</button></div></div>
+<script src="../../assets/wwg-input.js"></script><script>
 const SITES=[
 ["..X...",".A....","....X.","..A...","X.....",".X..A."],
 ["A...X.","..X...",".....A",".X....","...A..","X....."],
@@ -9,17 +46,68 @@ const SITES=[
 ["..A.X.","X.....","....A.","..X...","A.....","....X."],
 ["X....A","..A...","...X..","......",".X.A..","....X."]
 ];
-const N=6,C=document.getElementById('c'),ctx=C.getContext('2d'),T=C.width/N,$=s=>document.querySelector(s);let site=0,cursor={x:0,y:0},dug=[],surveyed=[],recovered=0,integrity=12,charges=5,digs=0,totalIntegrity=0,totalDigs=0,totalScans=0,finished=false,locked=false,lastPad=0,start=performance.now();const META_KEY='wwg:strata-meta';function readMeta(){try{const m=JSON.parse(localStorage.getItem(META_KEY)||'{}');return{completions:Number(m.completions||0),bestIntegrity:Number(m.bestIntegrity||0),bestDigs:Number(m.bestDigs||0)}}catch{return{completions:0,bestIntegrity:0,bestDigs:0}}}let meta=readMeta();
-function blank(){return Array.from({length:N},()=>Array(N).fill(false))}function resetSite(){cursor={x:0,y:0};dug=blank();surveyed=blank();recovered=0;integrity=12;charges=5;digs=0;locked=false;sync();draw()}
+const N=6,C=document.getElementById('c'),ctx=C.getContext('2d'),T=C.width/N,$=s=>document.querySelector(s);let site=0,cursor={x:0,y:0},dug=[],surveyed=[],recovered=0,integrity=12,charges=5,digs=0,totalIntegrity=0,totalDigs=0,totalScans=0,siteScans=0,finished=false,locked=false,lastPad=0,start=performance.now();const META_KEY='wwg:strata-meta';function readMeta(){try{const m=JSON.parse(localStorage.getItem(META_KEY)||'{}');return{completions:Number(m.completions||0),bestIntegrity:Number(m.bestIntegrity||0),bestDigs:Number(m.bestDigs||0)}}catch{return{completions:0,bestIntegrity:0,bestDigs:0}}}let meta=readMeta();
+function blank(){return Array.from({length:N},()=>Array(N).fill(false))}function resetSite(){cursor={x:0,y:0};dug=blank();surveyed=blank();recovered=0;integrity=12;charges=5;digs=0;siteScans=0;locked=false;sync();draw();inspectTile()}
 function cell(x,y){return SITES[site][y][x]}function signal(x,y){let n=0;for(let yy=Math.max(0,y-1);yy<=Math.min(N-1,y+1);yy++)for(let xx=Math.max(0,x-1);xx<=Math.min(N-1,x+1);xx++)if(cell(xx,yy)==='A')n++;return n}
+// Describe only knowledge the player has earned; never expose hidden artifacts or faults.
+// A single live region gives canvas-only players coordinates and logical clues.
+function inspectTile(){
+ const x=cursor.x,y=cursor.y,location=`Site ${site+1}, row ${y+1}, column ${x+1}. `;
+ let clue='Uncharted tile. Survey to reveal a clue or excavate at risk.';
+ if(dug[y]?.[x]){
+  const v=cell(x,y);
+  clue=v==='A'?'Excavated: artifact fragment.':v==='X'?'Excavated: fault pocket.':'Excavated: empty stratum.';
+ }else if(surveyed[y]?.[x]){
+  const n=signal(x,y);
+  clue=`Surveyed: signal ${n} artifact fragment${n===1?'':'s'} in the adjacent three-by-three area, including this tile. Not excavated.`;
+ }
+ const status=finished?'Expedition complete.':locked?'Site closed. Use the Continue or Retry button.':`${charges} survey charge${charges===1?'':'s'} left. ${recovered} of 3 fragments recovered.`;
+ $('#cellReadout').textContent=location+clue+' '+status;
+}
 function sync(){$('#site').textContent=(site+1)+'/6';$('#frag').textContent=recovered+'/3';$('#integrity').textContent=integrity;$('#charges').textContent=charges;$('#digs').textContent=digs}
-function move(dx,dy){if(finished||locked)return;cursor.x=(cursor.x+dx+N)%N;cursor.y=(cursor.y+dy+N)%N;draw()}
-function survey(){if(finished||locked||charges<=0)return;charges--;totalScans++;for(let y=Math.max(0,cursor.y-2);y<=Math.min(N-1,cursor.y+2);y++)for(let x=Math.max(0,cursor.x-2);x<=Math.min(N-1,cursor.x+2);x++)if(Math.abs(x-cursor.x)+Math.abs(y-cursor.y)<=2)surveyed[y][x]=true;$('#tip').innerHTML=`Survey pulse mapped the nearby layer. Signal <b>${signal(cursor.x,cursor.y)}</b> touches the selected tile. ${charges} charge${charges===1?'':'s'} remain.`;sync();draw()}
-function excavate(){if(finished||locked||dug[cursor.y][cursor.x])return;dug[cursor.y][cursor.x]=true;digs++;const v=cell(cursor.x,cursor.y);if(v==='A'){recovered++;integrity=Math.min(12,integrity+1);$('#tip').innerHTML=`Artifact fragment ${recovered}/3 recovered. Careful excavation restored one integrity.`}else if(v==='X'){integrity-=3;$('#tip').innerHTML=`Fault pocket! Site integrity fell by 3. Use survey signals before the next cut.`}else{integrity-=1;$('#tip').innerHTML=`Empty stratum. Site integrity fell by 1.`}sync();draw();if(integrity<=0){locked=true;$('#bannerTitle').textContent='Excavation collapse';$('#bannerText').textContent='The trench became unstable before all three fragments were recovered. This site can be retried without losing earlier sites.';$('#continueBtn').textContent='Retry site';$('#banner').classList.add('show');return}if(recovered===3)completeSite()}
-function completeSite(){locked=true;totalIntegrity+=integrity;totalDigs+=digs;if(site<SITES.length-1){$('#bannerTitle').textContent=`Site ${site+1} archived`;$('#bannerText').textContent=`Three fragments recovered with ${integrity}/12 integrity remaining after ${digs} digs. The survey team moves to the next layer.`;$('#continueBtn').textContent='Next site';$('#banner').classList.add('show')}else finish()}
-function finish(){finished=true;locked=true;const score=Math.max(100,totalIntegrity*140+Math.max(0,120-totalDigs)*24+Math.max(0,30-totalScans)*18),delicate=totalIntegrity>=48;meta.completions++;meta.bestIntegrity=Math.max(meta.bestIntegrity,totalIntegrity);meta.bestDigs=meta.bestDigs?Math.min(meta.bestDigs,totalDigs):totalDigs;localStorage.setItem(META_KEY,JSON.stringify(meta));$('#bannerTitle').textContent='Strata cipher decoded';$('#bannerText').textContent=`Six sites archived. ${totalIntegrity}/72 integrity · ${totalDigs} digs · ${totalScans} surveys · score ${score.toLocaleString()}. ${delicate?'The expedition earned a delicate-hand citation.':''}`;$('#continueBtn').textContent='Begin new survey';$('#banner').classList.add('show');try{parent.postMessage({type:'wwg:game-event',game:'strata-cipher',event:'survey-complete',score,duration:Math.max(1,Math.round((performance.now()-start)/1000)),meta:{unit:'pts',direction:'high',sites:6,integrity:totalIntegrity,digs:totalDigs,surveys:totalScans}},'*');if(delicate)parent.postMessage({type:'wwg:game-event',game:'strata-cipher',event:'delicate-excavation',score,meta:{integrity:totalIntegrity}},'*')}catch{}}
+function move(dx,dy){if(finished||locked)return;cursor.x=(cursor.x+dx+N)%N;cursor.y=(cursor.y+dy+N)%N;draw();inspectTile()}
+function survey(){if(finished||locked||charges<=0)return;charges--;siteScans++;for(let y=Math.max(0,cursor.y-2);y<=Math.min(N-1,cursor.y+2);y++)for(let x=Math.max(0,cursor.x-2);x<=Math.min(N-1,cursor.x+2);x++)if(Math.abs(x-cursor.x)+Math.abs(y-cursor.y)<=2)surveyed[y][x]=true;$('#tip').innerHTML=`Survey pulse mapped the nearby layer. Signal <b>${signal(cursor.x,cursor.y)}</b> touches the selected tile. ${charges} charge${charges===1?'':'s'} remain.`;sync();draw();inspectTile()}
+function excavate(){if(finished||locked||dug[cursor.y][cursor.x])return;dug[cursor.y][cursor.x]=true;digs++;const v=cell(cursor.x,cursor.y);if(v==='A'){recovered++;integrity=Math.min(12,integrity+1);$('#tip').innerHTML=`Artifact fragment ${recovered}/3 recovered. Careful excavation restored one integrity.`}else if(v==='X'){integrity-=3;$('#tip').innerHTML=`Fault pocket! Site integrity fell by 3. Use survey signals before the next cut.`}else{integrity-=1;$('#tip').innerHTML=`Empty stratum. Site integrity fell by 1.`}sync();draw();inspectTile();if(integrity<=0){locked=true;$('#bannerTitle').textContent='Excavation collapse';$('#bannerText').textContent='The trench became unstable before all three fragments were recovered. This site can be retried without losing earlier sites.';$('#continueBtn').textContent='Retry site';$('#banner').classList.add('show');return}if(recovered===3)completeSite()}
+function completeSite(){locked=true;inspectTile();totalIntegrity+=integrity;totalDigs+=digs;totalScans+=siteScans;if(site<SITES.length-1){$('#bannerTitle').textContent=`Site ${site+1} archived`;$('#bannerText').textContent=`Three fragments recovered with ${integrity}/12 integrity remaining after ${digs} digs. The survey team moves to the next layer.`;$('#continueBtn').textContent='Next site';$('#banner').classList.add('show')}else finish()}
+function finish(){if(finished)return;finished=true;locked=true;inspectTile();const score=Math.max(100,totalIntegrity*140+Math.max(0,120-totalDigs)*24+Math.max(0,30-totalScans)*18),delicate=totalIntegrity>=48;meta.completions++;meta.bestIntegrity=Math.max(meta.bestIntegrity,totalIntegrity);meta.bestDigs=meta.bestDigs?Math.min(meta.bestDigs,totalDigs):totalDigs;
+// Browser policy or quota exhaustion must not hide an earned six-site result,
+// stop the Continue button, or prevent its one-time host completion event.
+const storageNotice=$('#storageNotice');
+try{localStorage.setItem(META_KEY,JSON.stringify(meta));storageNotice.hidden=true;storageNotice.textContent=''}
+catch(_storageError){storageNotice.textContent='Expedition complete, but browser storage refused the history update. Your local expedition history may not persist after reload.';storageNotice.hidden=false}
+$('#bannerTitle').textContent='Strata cipher decoded';$('#bannerText').textContent=`Six sites archived. ${totalIntegrity}/72 integrity · ${totalDigs} digs · ${totalScans} surveys · score ${score.toLocaleString()}. ${delicate?'The expedition earned a delicate-hand citation.':''}`;$('#continueBtn').textContent='Begin new survey';$('#banner').classList.add('show');try{parent.postMessage({type:'wwg:game-event',game:'strata-cipher',event:'survey-complete',score,duration:Math.max(1,Math.round((performance.now()-start)/1000)),meta:{unit:'pts',direction:'high',sites:6,integrity:totalIntegrity,digs:totalDigs,surveys:totalScans}},'*');if(delicate)parent.postMessage({type:'wwg:game-event',game:'strata-cipher',event:'delicate-excavation',meta:{integrity:totalIntegrity}},'*')}catch{}}
 function advance(){if(finished){site=0;totalIntegrity=0;totalDigs=0;totalScans=0;finished=false;start=performance.now();$('#banner').classList.remove('show');resetSite();return}if(integrity<=0){$('#banner').classList.remove('show');resetSite();return}site++;$('#banner').classList.remove('show');resetSite()}$('#continueBtn').onclick=advance;
 function draw(){ctx.fillStyle='#160f09';ctx.fillRect(0,0,C.width,C.height);for(let y=0;y<N;y++)for(let x=0;x<N;x++){const px=x*T,py=y*T,isD=dug[y][x],isS=surveyed[y][x];ctx.fillStyle=isD?'#2b1b0f':isS?'#3b250f':'#21160e';ctx.fillRect(px+2,py+2,T-4,T-4);ctx.strokeStyle=isS?'#b45309':'#51301c';ctx.strokeRect(px+2.5,py+2.5,T-5,T-5);if(isD){const v=cell(x,y);ctx.font='bold 34px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=v==='A'?'#fde68a':v==='X'?'#fb7185':'#9ca3af';ctx.fillText(v==='A'?'◆':v==='X'?'✕':'·',px+T/2,py+T/2)}else if(isS){ctx.font='bold 24px system-ui';ctx.textAlign='center';ctx.textBaseline='middle';const n=signal(x,y);ctx.fillStyle=n>=2?'#fbbf24':n===1?'#fdba74':'#78716c';ctx.fillText(String(n),px+T/2,py+T/2)}}ctx.strokeStyle='#fff7ed';ctx.lineWidth=4;ctx.strokeRect(cursor.x*T+6,cursor.y*T+6,T-12,T-12);ctx.lineWidth=1}
-function action(a){if(a==='left')move(-1,0);if(a==='right')move(1,0);if(a==='up')move(0,-1);if(a==='down')move(0,1);if(a==='primary')excavate();if(a==='secondary')survey()}addEventListener('keydown',e=>{for(const a of ['left','right','up','down','primary','secondary'])if(WWGInput.is(e,a)){e.preventDefault();action(a);break}if(e.code==='KeyR'){site=0;totalIntegrity=0;totalDigs=0;totalScans=0;finished=false;start=performance.now();$('#banner').classList.remove('show');resetSite()}});document.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('pointerdown',()=>action(b.dataset.a)));C.addEventListener('pointerdown',e=>{if(finished||locked)return;const r=C.getBoundingClientRect();cursor.x=Math.max(0,Math.min(N-1,Math.floor((e.clientX-r.left)/r.width*N)));cursor.y=Math.max(0,Math.min(N-1,Math.floor((e.clientY-r.top)/r.height*N)));draw()});
-function padLoop(t){const gp=navigator.getGamepads&&navigator.getGamepads()[0];if(gp&&t-lastPad>180){let a='';if(gp.buttons[0]?.pressed)a='primary';else if(gp.buttons[1]?.pressed)a='secondary';else if(gp.axes[0]<-.55)a='left';else if(gp.axes[0]>.55)a='right';else if(gp.axes[1]<-.55)a='up';else if(gp.axes[1]>.55)a='down';if(a){action(a);lastPad=t}}requestAnimationFrame(padLoop)}resetSite();requestAnimationFrame(padLoop);
+function action(a){if(a==='left')move(-1,0);if(a==='right')move(1,0);if(a==='up')move(0,-1);if(a==='down')move(0,1);if(a==='primary')excavate();if(a==='secondary')survey()}
+// Movement may repeat, but costly dig/survey/restart actions require a fresh press.
+addEventListener('keydown',e=>{
+ if(e.altKey||e.ctrlKey||e.metaKey||e.isComposing)return;
+ if(e.target?.closest?.('button')&&(e.code==='Enter'||e.code==='Space'))return;
+ if(e.code==='KeyI'){e.preventDefault();if(!e.repeat)inspectTile();return}
+ for(const a of ['left','right','up','down','primary','secondary'])if(WWGInput.is(e,a)){
+  e.preventDefault();
+  if(!e.repeat||a==='left'||a==='right'||a==='up'||a==='down')action(a);
+  return;
+ }
+ if(e.code==='KeyR'){e.preventDefault();if(e.repeat)return;site=0;totalIntegrity=0;totalDigs=0;totalScans=0;finished=false;start=performance.now();$('#banner').classList.remove('show');resetSite()}
+});$('#inspectBtn').addEventListener('click',inspectTile);document.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('click',()=>action(b.dataset.a)));C.addEventListener('pointerdown',e=>{if(finished||locked)return;const r=C.getBoundingClientRect();cursor.x=Math.max(0,Math.min(N-1,Math.floor((e.clientX-r.left)/r.width*N)));cursor.y=Math.max(0,Math.min(N-1,Math.floor((e.clientY-r.top)/r.height*N)));draw();inspectTile()});
+// Button presses have independent edges; holding A/B must not spend multiple resources.
+// The analog stick retains its historical 180ms held-movement cadence.
+let padAHeld=false,padBHeld=false;
+function padLoop(t){
+ const gp=navigator.getGamepads&&navigator.getGamepads()[0];
+ const aHeld=!!gp?.buttons?.[0]?.pressed,bHeld=!!gp?.buttons?.[1]?.pressed;
+ if(aHeld&&!padAHeld)action('primary');
+ if(bHeld&&!padBHeld)action('secondary');
+ padAHeld=aHeld;padBHeld=bHeld;
+ if(gp&&t-lastPad>180){
+  const axes=gp.axes||[];
+  let a='';
+  if((axes[0]||0)<-.55)a='left';else if((axes[0]||0)>.55)a='right';
+  else if((axes[1]||0)<-.55)a='up';else if((axes[1]||0)>.55)a='down';
+  if(a){action(a);lastPad=t}
+ }
+ requestAnimationFrame(padLoop);
+}
+resetSite();requestAnimationFrame(padLoop);
 </script></body></html>

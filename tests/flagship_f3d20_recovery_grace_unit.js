@@ -1,0 +1,23 @@
+/* F3D20 first-party recovery grace module contract */
+const assert=require('node:assert/strict');const fs=require('node:fs'),vm=require('node:vm');
+const code=fs.readFileSync(require('node:path').join(__dirname,'../games/aegis-verge/recovery-grace.js'),'utf8');
+const ctx=vm.createContext({});vm.runInContext(code,ctx);
+const G=ctx.AegisRecoveryGrace;let n=0;
+const ck=(label,fn)=>{fn();n++;};
+ck('module exported',()=>assert.ok(G));
+ck('two-second constant',()=>assert.equal(G.DURATION,2));
+const s=G.create();ck('initially inactive',()=>assert.equal(G.protects(s),false));
+ck('initial countdown zero',()=>assert.equal(s.remaining,0));
+ck('starts at 2',()=>assert.equal(G.begin(s),2));
+ck('protects during grace',()=>assert.equal(G.protects(s),true));
+ck('tick proceeds',()=>assert.equal(G.tick(s,.25),1.75));
+ck('zero tick does nothing',()=>assert.equal(G.tick(s,0),1.75));
+ck('negative tick does nothing',()=>assert.equal(G.tick(s,-1),1.75));
+ck('NaN tick does nothing',()=>assert.equal(G.tick(s,NaN),1.75));
+ck('huge tick clamps zero',()=>assert.equal(G.tick(s,9),0));
+ck('expires',()=>assert.equal(G.protects(s),false));
+ck('begin rearms',()=>assert.equal(G.begin(s),2));
+ck('reset clears',()=>assert.equal(G.reset(s),undefined));
+ck('reset inactive',()=>assert.equal(G.protects(s),false));
+ck('finite duration bounded',()=>assert.ok(Number.isFinite(G.DURATION)));
+console.log(JSON.stringify({suite:'F3D20 recovery grace unit',passed:n,total:n}));

@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Quiet Protocol — Ghostline</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=yes">
+<title>Quiet Protocol 2.7 — Controller Outcome Navigation</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#02090a;color:#e6fffb;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;inset:10px 10px auto;display:grid;grid-template-columns:1.25fr .8fr .8fr .8fr;gap:7px;pointer-events:none}.panel{background:#06191be8;border:1px solid #184f50;border-radius:12px;padding:7px 10px;box-shadow:0 12px 30px #0008;backdrop-filter:blur(8px);min-width:0}.panel small{display:block;color:#8ddbd2;font-size:9px;letter-spacing:.11em;text-transform:uppercase}.panel b{display:block;margin-top:2px;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bar{height:5px;margin-top:5px;background:#092528;border-radius:99px;overflow:hidden}.bar i{height:100%;display:block;background:linear-gradient(90deg,#2dd4bf,#99f6e4);transition:width .12s}.alert i{background:linear-gradient(90deg,#fbbf24,#fb7185)}.mission{position:fixed;left:10px;bottom:10px;max-width:min(500px,calc(100vw - 20px));background:#06191be8;border:1px solid #184f50;border-radius:12px;padding:8px 11px;color:#a7f3d0;font-size:11px;line-height:1.35;pointer-events:none;box-shadow:0 10px 24px #0007}.mission strong{color:#fff}.brand{position:fixed;right:10px;bottom:10px;color:#5eead4;font-size:9px;text-transform:uppercase;letter-spacing:.14em;background:#06191bdd;border:1px solid #184f50;border-radius:999px;padding:5px 8px;pointer-events:none}.mobile{display:none;position:fixed;right:10px;bottom:10px;grid-template-columns:repeat(3,58px);gap:6px;z-index:5}.mobile button{height:52px;border:1px solid #28696b;border-radius:13px;background:#092426e8;color:#fff;font-weight:900;font-size:14px;touch-action:none}.mobile button.action{background:#12333a}.mobile button.cloak{background:#11342f}.mobile button.jam{background:#34223f;border-color:#81589c}.overlay{position:fixed;inset:0;display:none;place-items:center;background:#010707d9;padding:20px;z-index:8}.overlay.open{display:grid}.card{width:min(540px,94vw);border:1px solid #246267;border-radius:20px;background:#071a1df5;padding:20px;box-shadow:0 26px 80px #000b}.eyebrow{color:#5eead4;text-transform:uppercase;letter-spacing:.15em;font-size:10px;font-weight:800}.card h1{font-size:clamp(28px,7vw,44px);margin:7px 0 8px}.card p{color:#b8d9d5;line-height:1.55;margin:0}.card .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}.card button{min-height:48px;border-radius:12px;border:1px solid #2c7777;background:#0a292c;color:#fff;font-weight:900}.card button.primary{background:linear-gradient(135deg,#115e59,#0f766e);border-color:#5eead4}.toast{position:fixed;left:50%;top:82px;transform:translate(-50%,-10px);opacity:0;background:#071a1dee;border:1px solid #2dd4bf;border-radius:999px;padding:7px 12px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;pointer-events:none;transition:.22s;z-index:6}.toast.show{opacity:1;transform:translate(-50%,0)}
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#02090a;color:#e6fffb;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;inset:10px 10px auto;display:grid;grid-template-columns:1.25fr .8fr .8fr .8fr;gap:7px;pointer-events:none}.panel{background:#06191be8;border:1px solid #184f50;border-radius:12px;padding:7px 10px;box-shadow:0 12px 30px #0008;backdrop-filter:blur(8px);min-width:0}.panel small{display:block;color:#8ddbd2;font-size:9px;letter-spacing:.11em;text-transform:uppercase}.panel b{display:block;margin-top:2px;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bar{height:5px;margin-top:5px;background:#092528;border-radius:99px;overflow:hidden}.bar i{height:100%;display:block;background:linear-gradient(90deg,#2dd4bf,#99f6e4);transition:width .12s}.alert i{background:linear-gradient(90deg,#fbbf24,#fb7185)}.mission{position:fixed;left:10px;bottom:10px;max-width:min(500px,calc(100vw - 20px));background:#06191be8;border:1px solid #184f50;border-radius:12px;padding:8px 11px;color:#a7f3d0;font-size:11px;line-height:1.35;pointer-events:none;box-shadow:0 10px 24px #0007}.mission strong{color:#fff}.brand{position:fixed;right:10px;bottom:10px;color:#5eead4;font-size:9px;text-transform:uppercase;letter-spacing:.14em;background:#06191bdd;border:1px solid #184f50;border-radius:999px;padding:5px 8px;pointer-events:none}.mobile{display:none;position:fixed;right:10px;bottom:10px;grid-template-columns:repeat(3,58px);gap:6px;z-index:5}.mobile button{height:52px;border:1px solid #28696b;border-radius:13px;background:#092426e8;color:#fff;font-weight:900;font-size:14px;touch-action:none}.mobile button.action{background:#12333a}.mobile button.cloak{background:#11342f}.mobile button.jam{background:#34223f;border-color:#81589c}.overlay{position:fixed;inset:0;display:none;place-items:center;background:#010707d9;padding:20px;z-index:8}.overlay.open{display:grid}.card{width:min(540px,94vw);border:1px solid #246267;border-radius:20px;background:#071a1df5;padding:20px;box-shadow:0 26px 80px #000b;max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain}.eyebrow{color:#5eead4;text-transform:uppercase;letter-spacing:.15em;font-size:10px;font-weight:800}.card h1{font-size:clamp(28px,7vw,44px);margin:7px 0 8px}.card p{color:#b8d9d5;line-height:1.55;margin:0}.card .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}.card button{min-height:48px;border-radius:12px;border:1px solid #2c7777;background:#0a292c;color:#fff;font-weight:900}.card button.primary{background:linear-gradient(135deg,#115e59,#0f766e);border-color:#5eead4}.toast{position:fixed;left:50%;top:82px;transform:translate(-50%,-10px);opacity:0;background:#071a1dee;border:1px solid #2dd4bf;border-radius:999px;padding:7px 12px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;pointer-events:none;transition:.22s;z-index:6}.toast.show{opacity:1;transform:translate(-50%,0)}.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.mobile button:focus-visible{outline:3px solid #99f6e4;outline-offset:2px}.card button:focus-visible,.card button.pad-selected{outline:3px solid #99f6e4;outline-offset:3px}.controller-hint{margin-top:12px!important;font-size:12px;color:#99f6e4!important}
 @media(pointer:coarse),(max-width:760px){.mobile{display:grid}.mission{right:202px;bottom:10px}.brand{display:none}.hud{grid-template-columns:1.3fr .75fr .75fr .75fr;gap:4px;inset:6px 6px auto}.panel{padding:6px 7px;border-radius:9px}.panel small{font-size:7px}.panel b{font-size:12px}.toast{top:64px}}
 @media(max-width:470px){.mobile{grid-template-columns:repeat(3,50px);gap:4px}.mobile button{height:46px;font-size:12px}.mission{right:168px;font-size:9px;padding:6px 8px}.hud{grid-template-columns:1.35fr .65fr .65fr .65fr}.panel b{font-size:10px}.panel small{font-size:6px}}
 </style>
@@ -18,18 +18,22 @@
   <div class="panel"><small>Cloak</small><b id="cloakText">100%</b><div class="bar"><i id="cloakBar" style="width:100%"></i></div></div>
   <div class="panel"><small>Jammers</small><b id="jamText">2</b><div class="bar"><i id="jamBar" style="width:100%"></i></div></div>
 </div>
-<div class="mission" id="missionText"><strong>Objective:</strong> disable every relay, then extract. Stay unseen; sprinting creates noise.</div>
+<div class="mission" id="missionText"><strong>Objective:</strong> hold HACK or E for 1.15 seconds beside each unobstructed relay, then extract. Releasing cancels progress; sprinting creates noise.</div>
 <div class="brand">Architect Industries · WorldWideGames</div>
 <div class="mobile" aria-label="Touch controls">
-  <button data-hold="up" aria-label="Move up">▲</button><button class="action" data-tap="hack" aria-label="Hack or interact">HACK</button><button class="cloak" data-tap="cloak" aria-label="Toggle cloak">CLOAK</button>
+  <button data-hold="up" aria-label="Move up">▲</button><button class="action" data-tap="hack" aria-label="Hold to hack or interact; release cancels progress" type="button">HACK</button><button class="cloak" data-tap="cloak" aria-label="Toggle cloak">CLOAK</button>
   <button data-hold="left" aria-label="Move left">◀</button><button data-hold="down" aria-label="Move down">▼</button><button data-hold="right" aria-label="Move right">▶</button>
-  <button data-hold="sprint" aria-label="Sprint">RUN</button><button class="jam" data-tap="jam" aria-label="Pulse jammer">JAM</button><button data-tap="pause" aria-label="Pause">PAUSE</button>
+  <button data-hold="sprint" aria-label="Sprint">RUN</button><button class="jam" data-tap="jam" aria-label="Pulse jammer">JAM</button><button data-tap="pause" aria-label="Pause or resume">PAUSE</button>
 </div>
-<div class="toast" id="toast">Signal secure</div>
-<div class="overlay" id="overlay"><article class="card"><div class="eyebrow" id="overlayTag">Ghostline</div><h1 id="overlayTitle">Quiet Protocol</h1><p id="overlayBody"></p><div class="actions"><button class="primary" id="continueBtn">Continue</button><button id="restartBtn">Restart Mission</button></div></article></div>
+<div class="toast" id="toast">Signal secure</div><div class="sr-only" id="pauseStatus" role="status" aria-live="polite" aria-atomic="true">Game running.</div>
+<div class="storage-notice" id="storageNotice" role="status" aria-live="polite" hidden></div>
+<div class="overlay" id="overlay"><article class="card"><div class="eyebrow" id="overlayTag">Ghostline</div><h1 id="overlayTitle">Quiet Protocol</h1><p id="overlayBody"></p><p class="controller-hint">Gamepad: D-pad or left stick up/down to choose; A to confirm. Keyboard: Tab and Enter.</p><div class="actions"><button class="primary" id="continueBtn">Continue</button><button id="restartBtn">Restart Mission</button></div></article></div>
 <script src="../../assets/wwg-input.js"></script>
 <script>
 'use strict';
+// Keep production progression and ranked scoring in a private game scope.
+// Test-only controls are injected into an in-memory test fixture, never shipped.
+(()=>{
 const C=document.getElementById('c'),X=C.getContext('2d'),VW=960,VH=540;
 const IN=window.WWGInput||{is:(e,a,extra=[])=>({up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],left:['KeyA','ArrowLeft'],right:['KeyD','ArrowRight'],primary:['Space'],secondary:['KeyE']}[a]||[]).concat(extra).includes(e.code)};
 const qp=new URLSearchParams(location.search),muted=qp.get('muted')==='1',volume=Math.max(0,Math.min(1,Number(qp.get('volume')??.72)));
@@ -39,37 +43,175 @@ const MISSIONS=[
  {name:'Archive Lattice',brief:'Black out four archive relays. Cameras share alert with patrols; jammer pulses disable nearby sensors.',spawn:[70,70],exit:[892,470],relays:[[275,96],[824,115],[156,422],[660,432]],walls:[[0,0,960,20],[0,520,960,20],[0,0,20,540],[940,0,20,540],[120,130,260,24],[500,130,330,24],[120,130,24,170],[355,130,24,125],[500,130,24,200],[805,130,24,220],[120,300,270,24],[520,350,310,24],[260,300,24,140],[640,190,24,160],[395,235,105,24]],guards:[{path:[[170,95],[430,95]],speed:62},{path:[[555,195],[755,195]],speed:66},{path:[[100,385],[360,385]],speed:60},{path:[[535,450],[805,450]],speed:70}],cameras:[{x:470,y:205,a:.8,sweep:.75},{x:735,y:300,a:2.35,sweep:.82}],jam:2},
  {name:'Crown Node',brief:'Silence five Crown relays under layered patrol and camera coverage, then escape through the north gate.',spawn:[85,462],exit:[476,52],relays:[[110,130],[335,95],[642,112],[846,262],[520,430]],walls:[[0,0,960,20],[0,520,960,20],[0,0,20,540],[940,0,20,540],[150,65,24,180],[150,65,260,24],[385,65,24,115],[520,65,280,24],[776,65,24,135],[90,250,270,24],[360,180,24,190],[500,180,280,24],[500,180,24,165],[756,180,24,165],[110,395,280,24],[500,395,330,24],[625,274,24,121],[250,274,110,24]],guards:[{path:[[205,118],[350,118],[350,220],[205,220]],speed:66},{path:[[560,125],[740,125],[740,220],[560,220]],speed:70},{path:[[110,330],[330,330]],speed:72},{path:[[540,360],[790,360]],speed:74},{path:[[430,470],[690,470]],speed:78}],cameras:[{x:455,y:112,a:1.55,sweep:.9},{x:845,y:118,a:2.2,sweep:.72},{x:460,y:345,a:-.2,sweep:.88}],jam:3}
 ];
-const SAVE_KEY='wwg:quiet-protocol:meta-v2';let saved={unlocked:0,clears:0,best:0,clean:0};try{saved={...saved,...JSON.parse(localStorage.getItem(SAVE_KEY)||'{}')}}catch{}
-let missionIndex=Math.max(0,Math.min(2,Number(saved.unlocked||0))),mission=null,walls=[],relays=[],guards=[],cameras=[],exit={x:0,y:0,r:27},p={x:72,y:468,r:10,speed:150,cloak:100,cloaked:false},keys={up:false,down:false,left:false,right:false,sprint:false},alert=0,relayCount=0,detected=false,detections=0,time=0,won=false,failed=false,paused=false,hackTarget=null,hackProgress=0,jammers=2,jamFx=0,noise={x:0,y:0,r:0,life:0},particles=[],toastT=0,last=performance.now(),startAt=performance.now(),dpr=1,sc=1,ox=0,oy=0,padPrev={a:false,b:false,x:false,start:false},seed=0x57219ac1;
-const E={missionLabel:document.getElementById('missionLabel'),missionName:document.getElementById('missionName'),relayBar:document.getElementById('relayBar'),alertText:document.getElementById('alertText'),alertBar:document.getElementById('alertBar'),cloakText:document.getElementById('cloakText'),cloakBar:document.getElementById('cloakBar'),jamText:document.getElementById('jamText'),jamBar:document.getElementById('jamBar'),missionText:document.getElementById('missionText'),toast:document.getElementById('toast'),overlay:document.getElementById('overlay'),overlayTag:document.getElementById('overlayTag'),overlayTitle:document.getElementById('overlayTitle'),overlayBody:document.getElementById('overlayBody'),continueBtn:document.getElementById('continueBtn'),restartBtn:document.getElementById('restartBtn')};
+// Only gameplay-earned mission outcomes may advance the local campaign record.
+// These checks recover corrupt/untrusted browser-local JSON; this is not server anti-cheat.
+const SAVE_KEY='wwg:quiet-protocol:meta-v2',EMPTY_RECORD=()=>({unlocked:0,clears:0,best:0,clean:0});
+const storageNotice=document.getElementById('storageNotice');
+function warnStorage(message){storageNotice.textContent=message;storageNotice.hidden=false}
+function normalizeRecord(candidate){
+ if(!candidate||typeof candidate!=='object'||Array.isArray(candidate))return null;
+ const record={...EMPTY_RECORD()};
+ for(const key of Object.keys(record)){
+  const value=candidate[key];
+  if(value===undefined)continue;
+  if(!Number.isSafeInteger(value)||value<0)return null;
+  record[key]=value;
+ }
+ if(record.unlocked>2||record.clean>3||record.clears>1000000||record.best>7000)return null;
+ if((record.unlocked===0)!==(record.best===0))return null;
+ if(record.unlocked>0&&record.best<100)return null;
+ if(record.clean>record.unlocked&&!(record.clean===3&&record.unlocked===2&&record.clears>0))return null;
+ if(record.clears>0&&record.unlocked!==2)return null;
+ if(record.clean===3&&record.clears===0)return null;
+ return record;
+}
+function loadRecord(){
+ let raw;
+ try{raw=localStorage.getItem(SAVE_KEY)}
+ catch{warnStorage('Browser storage is blocked. Your mission progress will be session-only and may disappear on reload.');return EMPTY_RECORD()}
+ if(raw===null)return EMPTY_RECORD();
+ try{const result=normalizeRecord(JSON.parse(raw));if(result)return result}catch{}
+ warnStorage('Stored Quiet Protocol mission progress was invalid. Restored a playable fresh campaign; unlocks must be earned again.');
+ return EMPTY_RECORD();
+}
+let saved=loadRecord();
+let missionIndex=Math.max(0,Math.min(2,Number(saved.unlocked||0))),mission=null,walls=[],relays=[],guards=[],cameras=[],exit={x:0,y:0,r:27},p={x:72,y:468,r:10,speed:150,cloak:100,cloaked:false},keys={up:false,down:false,left:false,right:false,sprint:false},alert=0,relayCount=0,detected=false,detections=0,time=0,won=false,failed=false,paused=false,hackTarget=null,hackProgress=0,jammers=2,jamFx=0,noise={x:0,y:0,r:0,life:0},particles=[],toastT=0,last=performance.now(),startAt=performance.now(),dpr=1,sc=1,ox=0,oy=0,padPrev={a:false,b:false,x:false,start:false,up:false,down:false},overlayChoice=0,pauseKeyHeld=false,hackHeld={keyboard:false,touch:false,gamepad:false},hackPointer=null,seed=0x57219ac1;
+const E={missionLabel:document.getElementById('missionLabel'),missionName:document.getElementById('missionName'),relayBar:document.getElementById('relayBar'),alertText:document.getElementById('alertText'),alertBar:document.getElementById('alertBar'),cloakText:document.getElementById('cloakText'),cloakBar:document.getElementById('cloakBar'),jamText:document.getElementById('jamText'),jamBar:document.getElementById('jamBar'),missionText:document.getElementById('missionText'),toast:document.getElementById('toast'),pauseStatus:document.getElementById('pauseStatus'),overlay:document.getElementById('overlay'),overlayTag:document.getElementById('overlayTag'),overlayTitle:document.getElementById('overlayTitle'),overlayBody:document.getElementById('overlayBody'),continueBtn:document.getElementById('continueBtn'),restartBtn:document.getElementById('restartBtn')};
 function rng(){seed^=seed<<13;seed^=seed>>>17;seed^=seed<<5;return(seed>>>0)/4294967296}
 function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=Math.round(innerWidth*dpr);C.height=Math.round(innerHeight*dpr);sc=Math.min(innerWidth/VW,innerHeight/VH);ox=(innerWidth-VW*sc)/2;oy=(innerHeight-VH*sc)/2}addEventListener('resize',resize);resize();
-function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(saved))}catch{}}
-function emit(event,extra={}){const score=Math.max(0,Math.round(currentScore()));try{parent.postMessage({type:'wwg:game-event',game:'quiet-protocol',event,score,duration:Math.max(1,Math.round(time)),meta:{unit:'pts',direction:'high',mission:missionIndex+1,missionName:mission?.name||'',...extra}},'*')}catch{}}
+function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(saved));return true}catch{warnStorage('Saving is blocked or full. Mission progress will remain available for this session, but may disappear on reload.');return false}}
+function emit(event,extra={},rankedScore=null){
+ const message={type:'wwg:game-event',game:'quiet-protocol',event,duration:Math.max(1,Math.round(time)),meta:{unit:'pts',direction:'high',mission:missionIndex+1,missionName:mission?.name||'',...extra}};
+ // WorldWideGames ranks ANY finite top-level score. Telemetry is never a ranked run.
+ if(event==='mission-complete'&&Number.isSafeInteger(rankedScore)&&rankedScore>=100&&rankedScore<=7000)message.score=rankedScore;
+ try{parent.postMessage(message,'*')}catch{}
+}
 function toast(msg){E.toast.textContent=msg;E.toast.classList.add('show');toastT=1.25}
+function setPaused(next){if(won||failed)return false;paused=!!next;if(paused)clearHeldActions();E.pauseStatus.textContent=paused?'Paused. Press P, gamepad Start, or activate the PAUSE button to resume.':'Resumed. Disable relays and reach extraction.';return true}
 function currentScore(){return 1800+missionIndex*600+relayCount*180-Math.round(time*7)-detections*220+Math.round(p.cloak*2)+jammers*90}
-function cloneMission(i){const m=MISSIONS[i];mission=m;walls=m.walls.map(v=>v.slice());relays=m.relays.map((v,n)=>({x:v[0],y:v[1],off:false,id:n}));guards=m.guards.map((g,n)=>({x:g.path[0][0],y:g.path[0][1],path:g.path.map(v=>v.slice()),target:1,dir:0,speed:g.speed,state:'patrol',disabled:0,investigate:null,id:n,turn:0}));cameras=m.cameras.map((c,n)=>({...c,base:c.a,disabled:0,id:n}));exit={x:m.exit[0],y:m.exit[1],r:27};p.x=m.spawn[0];p.y=m.spawn[1];p.cloak=100;p.cloaked=false;relayCount=0;alert=0;detected=false;detections=0;time=0;won=failed=paused=false;hackTarget=null;hackProgress=0;jammers=m.jam;jamFx=0;noise={x:p.x,y:p.y,r:0,life:0};particles=[];seed=(0x57219ac1^(i*0x9e3779b9))>>>0;E.overlay.classList.remove('open');sync();toast(`Mission ${i+1}: ${m.name}`)}
+function cloneMission(i){const m=MISSIONS[i];mission=m;walls=m.walls.map(v=>v.slice());buildGuardGrid();relays=m.relays.map((v,n)=>({x:v[0],y:v[1],off:false,id:n}));guards=m.guards.map((g,n)=>({x:g.path[0][0],y:g.path[0][1],path:g.path.map(v=>v.slice()),target:1,dir:0,speed:g.speed,state:'patrol',disabled:0,investigate:null,id:n,turn:0}));cameras=m.cameras.map((c,n)=>({...c,base:c.a,disabled:0,id:n}));exit={x:m.exit[0],y:m.exit[1],r:27};p.x=m.spawn[0];p.y=m.spawn[1];p.cloak=100;p.cloaked=false;relayCount=0;alert=0;detected=false;detections=0;time=0;won=failed=paused=false;E.pauseStatus.textContent='Game running. Press P, gamepad Start, or activate PAUSE to pause.';hackTarget=null;hackProgress=0;hackHeld={keyboard:false,touch:false,gamepad:false};hackPointer=null;keys={up:false,down:false,left:false,right:false,sprint:false};padPrev={a:false,b:false,x:false,start:false,up:false,down:false};overlayChoice=0;jammers=m.jam;jamFx=0;noise={x:p.x,y:p.y,r:0,life:0};particles=[];seed=(0x57219ac1^(i*0x9e3779b9))>>>0;E.overlay.classList.remove('open');sync();toast(`Mission ${i+1}: ${m.name}`)}
 function loadMission(i){missionIndex=Math.max(0,Math.min(2,i));if(missionIndex>saved.unlocked)missionIndex=saved.unlocked;cloneMission(missionIndex);startAt=performance.now();tone(340+missionIndex*90,.08,.03,'triangle')}
 function pointInWall(x,y,pad=0){for(const w of walls)if(x>w[0]-pad&&x<w[0]+w[2]+pad&&y>w[1]-pad&&y<w[1]+w[3]+pad)return true;return false}
 function collide(x,y){return pointInWall(x,y,p.r)}
 function segmentBlocked(x1,y1,x2,y2){const dist=Math.hypot(x2-x1,y2-y1),steps=Math.max(1,Math.ceil(dist/10));for(let i=1;i<steps;i++){const t=i/steps;if(pointInWall(x1+(x2-x1)*t,y1+(y2-y1)*t,1))return true}return false}
+// Patrol and investigation share the player's solid walls. The 12 px navigation grid
+// is rebuilt only on mission load; no external AI/runtime dependency is needed.
+const GUARD_STEP=12, GUARD_COLS=VW/GUARD_STEP, GUARD_ROWS=Math.ceil(VH/GUARD_STEP), GUARD_RADIUS=10;
+let guardGrid=null;
+function guardFree(x,y){return Number.isFinite(x)&&Number.isFinite(y)&&x>20+GUARD_RADIUS&&x<940-GUARD_RADIUS&&y>20+GUARD_RADIUS&&y<520-GUARD_RADIUS&&!pointInWall(x,y,GUARD_RADIUS)}
+function guardClear(x1,y1,x2,y2){
+ const len=Math.hypot(x2-x1,y2-y1),n=Math.max(1,Math.ceil(len/5));
+ for(let i=0;i<=n;i++){const t=i/n;if(!guardFree(x1+(x2-x1)*t,y1+(y2-y1)*t))return false}
+ return true;
+}
+function buildGuardGrid(){
+ guardGrid=new Uint8Array(GUARD_COLS*GUARD_ROWS);
+ for(let y=0;y<GUARD_ROWS;y++)for(let x=0;x<GUARD_COLS;x++)guardGrid[y*GUARD_COLS+x]=guardFree((x+.5)*GUARD_STEP,(y+.5)*GUARD_STEP)&&!pointInWall((x+.5)*GUARD_STEP,(y+.5)*GUARD_STEP,GUARD_RADIUS+3)?1:0;
+}
+function guardNodeNear(x,y){
+ let best=-1,dist=Infinity;
+ for(let row=Math.max(0,Math.floor((y-45)/GUARD_STEP));row<Math.min(GUARD_ROWS,Math.ceil((y+45)/GUARD_STEP));row++)
+  for(let col=Math.max(0,Math.floor((x-45)/GUARD_STEP));col<Math.min(GUARD_COLS,Math.ceil((x+45)/GUARD_STEP));col++){
+   const id=row*GUARD_COLS+col,px=(col+.5)*GUARD_STEP,py=(row+.5)*GUARD_STEP,d=(px-x)**2+(py-y)**2;
+   if(guardGrid[id]&&d<dist&&guardClear(x,y,px,py)){best=id;dist=d}
+  }
+ return best;
+}
+// Bounded four-neighbor BFS is deterministic; LOS waypoint removal makes turns smooth.
+// A blocked or unreachable destination returns no route rather than phasing through cover.
+function guardRoute(sx,sy,tx,ty){
+ if(!guardFree(sx,sy)||!guardFree(tx,ty))return [];
+ if(guardClear(sx,sy,tx,ty))return [{x:tx,y:ty}];
+ const from=guardNodeNear(sx,sy),to=guardNodeNear(tx,ty);
+ if(from<0||to<0)return [];
+ const prev=new Int32Array(guardGrid.length);prev.fill(-1);
+ const queue=new Int32Array(guardGrid.length);let head=0,tail=0;
+ queue[tail++]=from;prev[from]=from;
+ while(head<tail&&prev[to]===-1){const at=queue[head++],cx=at%GUARD_COLS,cy=Math.floor(at/GUARD_COLS);
+  for(const [dx,dy] of [[0,-1],[-1,0],[1,0],[0,1]]){
+   const nx=cx+dx,ny=cy+dy;if(nx<0||nx>=GUARD_COLS||ny<0||ny>=GUARD_ROWS)continue;
+   const id=ny*GUARD_COLS+nx;if(!guardGrid[id]||prev[id]!==-1)continue;prev[id]=at;queue[tail++]=id;
+  }
+ }
+ if(prev[to]===-1)return [];
+ const raw=[{x:tx,y:ty}];let id=to;
+ while(id!==from){raw.push({x:((id%GUARD_COLS)+.5)*GUARD_STEP,y:(Math.floor(id/GUARD_COLS)+.5)*GUARD_STEP});id=prev[id]}
+ raw.push({x:((from%GUARD_COLS)+.5)*GUARD_STEP,y:(Math.floor(from/GUARD_COLS)+.5)*GUARD_STEP});raw.push({x:sx,y:sy});raw.reverse();
+ const route=[];let anchor=0;
+ while(anchor<raw.length-1){let next=anchor+1;
+  for(let j=anchor+2;j<raw.length;j++)if(guardClear(raw[anchor].x,raw[anchor].y,raw[j].x,raw[j].y))next=j;
+  route.push(raw[next]);anchor=next;
+ }
+ return route;
+}
 function sees(x,y,a,range,half){if(p.cloaked)return false;const dx=p.x-x,dy=p.y-y,dist=Math.hypot(dx,dy);if(dist>range)return false;const pa=Math.atan2(dy,dx),da=Math.atan2(Math.sin(pa-a),Math.cos(pa-a));if(Math.abs(da)>half)return false;return !segmentBlocked(x,y,p.x,p.y)}
 function burst(x,y,color,count=10){for(let i=0;i<count;i++){const a=rng()*Math.PI*2,s=30+rng()*100;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:.45+rng()*.35,color})}}
-function nearestRelay(){let best=null,bd=1e9;for(const r of relays){if(r.off)continue;const d=Math.hypot(p.x-r.x,p.y-r.y);if(d<48&&d<bd){best=r;bd=d}}return best}
-function interact(start=true){if(won||failed||paused)return false;const r=nearestRelay();if(!r){hackTarget=null;hackProgress=0;if(start)tone(160,.035,.018,'square');return false}hackTarget=r;if(start)tone(420,.035,.018,'triangle');return true}
-function finishHack(){if(!hackTarget||hackTarget.off)return false;hackTarget.off=true;relayCount++;burst(hackTarget.x,hackTarget.y,'#5eead4',15);tone(620,.07,.04,'square');emit('relay-disabled',{relay:relayCount,total:relays.length});toast(`Relay ${relayCount}/${relays.length} dark`);hackTarget=null;hackProgress=0;if(relayCount===relays.length){tone(880,.11,.045,'triangle');E.missionText.innerHTML='<strong>Extraction unlocked.</strong> Reach the luminous gate without triggering lockdown.'}sync();return true}
+// Relay controls require a physical approach to the same visible, reachable side of cover.
+// Sensor sight already treats the mission walls as opaque: interactions use the same rule.
+function canReachRelay(r,range=48){return !!r&&!r.off&&Math.hypot(p.x-r.x,p.y-r.y)<range&&!segmentBlocked(p.x,p.y,r.x,r.y)}
+function nearestRelay(){let best=null,bd=1e9;for(const r of relays){if(!canReachRelay(r))continue;const d=Math.hypot(p.x-r.x,p.y-r.y);if(d<bd){best=r;bd=d}}return best}
+// Relay progress is a held action, not a one-shot command. Any canceled input,
+// controller release or focus interruption must revoke the action before step().
+function releaseHack(source){hackHeld[source]=false;if(!Object.values(hackHeld).some(Boolean)){hackTarget=null;hackProgress=0}}
+function clearHeldActions(){hackHeld.keyboard=hackHeld.touch=hackHeld.gamepad=false;hackPointer=null;hackTarget=null;hackProgress=0}
+function beginHack(source){if(hackHeld[source]||won||failed||paused)return;hackHeld[source]=true;if(!hackTarget)interact(true)}
+function interact(start=true){if(won||failed||paused)return false;const r=nearestRelay();if(!r){hackTarget=null;hackProgress=0;if(start){if(relays.some(q=>!q.off&&Math.hypot(p.x-q.x,p.y-q.y)<48))toast('Solid cover blocks the relay. Reach its open side.');tone(160,.035,.018,'square')}return false}hackTarget=r;if(start)tone(420,.035,.018,'triangle');return true}
+function finishHack(){if(!canReachRelay(hackTarget,52)){hackTarget=null;hackProgress=0;return false}hackTarget.off=true;relayCount++;burst(hackTarget.x,hackTarget.y,'#5eead4',15);tone(620,.07,.04,'square');emit('relay-disabled',{relay:relayCount,total:relays.length});toast(`Relay ${relayCount}/${relays.length} dark`);hackTarget=null;hackProgress=0;if(relayCount===relays.length){tone(880,.11,.045,'triangle');E.missionText.innerHTML='<strong>Extraction unlocked.</strong> Reach the luminous gate without triggering lockdown.'}sync();return true}
 function toggleCloak(){if(won||failed||paused)return false;if(p.cloaked){p.cloaked=false;tone(240,.03,.015,'sine');return true}if(p.cloak<22){toast('Cloak charge too low');tone(120,.04,.018,'square');return false}p.cloaked=true;tone(300,.07,.028,'triangle');return true}
 function jammer(){if(won||failed||paused||jammers<=0)return false;jammers--;jamFx=.72;let hits=0;for(const g of guards){if(Math.hypot(p.x-g.x,p.y-g.y)<155){g.disabled=Math.max(g.disabled,3.8);g.state='disabled';hits++}}for(const c of cameras){if(Math.hypot(p.x-c.x,p.y-c.y)<190){c.disabled=Math.max(c.disabled,5);hits++}}alert=Math.max(0,alert-22);burst(p.x,p.y,'#c084fc',22);tone(190,.16,.05,'sawtooth');setTimeout(()=>tone(310,.12,.035,'triangle'),60);emit('jammer-used',{hits,jammersLeft:jammers});toast(hits?`Jammer disrupted ${hits} sensor${hits===1?'':'s'}`:'Jammer pulse cleared alert');sync();return true}
 function makeNoise(radius){noise={x:p.x,y:p.y,r:radius,life:.35};for(const g of guards){if(g.disabled>0)continue;const d=Math.hypot(g.x-p.x,g.y-p.y);if(d<radius&&!segmentBlocked(g.x,g.y,p.x,p.y)){g.investigate={x:p.x,y:p.y};g.state='investigate'}}}
 function setDetection(on){if(on&&!detected){detected=true;detections++;emit('detected',{detections});tone(110,.09,.035,'sawtooth')}else if(!on)detected=false}
-function lose(){if(failed||won)return;failed=true;p.cloaked=false;emit('lockdown',{detections});tone(80,.28,.08,'sawtooth');E.overlayTag.textContent='Lockdown';E.overlayTitle.textContent='Signal Compromised';E.overlayBody.textContent='The facility reached full alert. Retry this mission and use cover, cloak timing, and jammer pulses to break surveillance.';E.continueBtn.textContent='Retry Mission';E.overlay.classList.add('open')}
-function completeMission(){if(won||failed)return false;won=true;p.cloaked=false;const clean=detections===0;const score=Math.max(100,Math.round(currentScore()+900+(clean?700:0)));saved.unlocked=Math.max(saved.unlocked,Math.min(2,missionIndex+1));saved.best=Math.max(Number(saved.best||0),score);if(clean)saved.clean=Math.max(Number(saved.clean||0),missionIndex+1);persist();emit('mission-complete',{score,clean,detections});if(clean)emit('clean-mission',{mission:missionIndex+1});tone(680,.1,.05,'triangle');setTimeout(()=>tone(920,.16,.05,'sine'),90);if(missionIndex===2){saved.clears=Number(saved.clears||0)+1;persist();emit('campaign-complete',{score,cleanFinal:clean,clears:saved.clears});E.overlayTag.textContent='Ghostline Complete';E.overlayTitle.textContent='Crown Node Silent';E.overlayBody.textContent=`All three facilities are dark. Final mission score ${score.toLocaleString()} with ${detections} detection${detections===1?'':'s'}. The network never learned your name.`;E.continueBtn.textContent='Run Campaign Again'}else{E.overlayTag.textContent=clean?'Clean Extraction':'Mission Complete';E.overlayTitle.textContent=mission.name+' Secured';E.overlayBody.textContent=`Score ${score.toLocaleString()}. ${clean?'No confirmed detections.':'Detections: '+detections+'.'} Next: ${MISSIONS[missionIndex+1].name}.`;E.continueBtn.textContent='Next Mission'}E.overlay.classList.add('open');return true}
-function sync(){const total=relays.length||1;E.missionLabel.textContent=`Mission ${missionIndex+1} / 3`;E.missionName.textContent=mission?.name||'Ghostline';E.relayBar.style.width=`${relayCount/total*100}%`;E.alertText.textContent=Math.round(alert)+'%';E.alertBar.style.width=`${Math.max(0,Math.min(100,alert))}%`;E.cloakText.textContent=Math.round(p.cloak)+'%';E.cloakBar.style.width=`${Math.max(0,p.cloak)}%`;E.jamText.textContent=String(jammers);E.jamBar.style.width=`${Math.min(100,jammers/Math.max(1,mission?.jam||1)*100)}%`;if(!won&&!failed)E.missionText.innerHTML=`<strong>Objective:</strong> ${mission?.brief||''} Relays ${relayCount}/${relays.length}. ${hackTarget&&!hackTarget.off?'Hold interact to finish the hack.':''}`}
-function moveGuard(g,dt){if(g.disabled>0){g.disabled-=dt;g.state='disabled';return}let tx,ty;if(g.state==='investigate'&&g.investigate){tx=g.investigate.x;ty=g.investigate.y}else{const t=g.path[g.target];tx=t[0];ty=t[1]}const dx=tx-g.x,dy=ty-g.y,d=Math.hypot(dx,dy);if(d<5){if(g.state==='investigate'){g.state='patrol';g.investigate=null}else g.target=(g.target+1)%g.path.length;return}const sp=g.speed*(g.state==='investigate'?1.18:1);g.x+=dx/d*sp*dt;g.y+=dy/d*sp*dt;g.dir=Math.atan2(dy,dx)}
-function step(dt,t){if(paused||won||failed)return;time+=dt;let dx=(keys.right?1:0)-(keys.left?1:0),dy=(keys.down?1:0)-(keys.up?1:0),gp=null;try{gp=navigator.getGamepads?.()[0]||null}catch{}if(gp){const ax=gp.axes[0]||0,ay=gp.axes[1]||0;if(Math.abs(ax)>.16)dx=ax;if(Math.abs(ay)>.16)dy=ay;const a=!!gp.buttons?.[0]?.pressed,b=!!gp.buttons?.[1]?.pressed,x=!!gp.buttons?.[2]?.pressed,st=!!gp.buttons?.[9]?.pressed;if(a&&!padPrev.a)interact(true);if(b&&!padPrev.b)toggleCloak();if(x&&!padPrev.x)jammer();if(st&&!padPrev.start)paused=!paused;padPrev={a,b,x,start:st}}
+function selectOutcome(index){overlayChoice=index===1?1:0;[E.continueBtn,E.restartBtn].forEach((button,i)=>button.classList.toggle('pad-selected',i===overlayChoice));(overlayChoice?E.restartBtn:E.continueBtn).focus()}
+function lose(){if(failed||won)return;failed=true;p.cloaked=false;emit('lockdown',{detections});tone(80,.28,.08,'sawtooth');E.overlayTag.textContent='Lockdown';E.overlayTitle.textContent='Signal Compromised';E.overlayBody.textContent='The facility reached full alert. Retry this mission and use cover, cloak timing, and jammer pulses to break surveillance.';E.continueBtn.textContent='Retry Mission';E.overlay.classList.add('open');selectOutcome(0)}
+function completeMission(){if(won||failed)return false;won=true;p.cloaked=false;const clean=detections===0;const score=Math.max(100,Math.round(currentScore()+900+(clean?700:0)));saved.unlocked=Math.max(saved.unlocked,Math.min(2,missionIndex+1));saved.best=Math.max(Number(saved.best||0),score);if(clean)saved.clean=Math.max(saved.clean,missionIndex+1);if(missionIndex===2)saved.clears+=1;persist();emit('mission-complete',{clean,detections},score);if(clean)emit('clean-mission',{mission:missionIndex+1});tone(680,.1,.05,'triangle');setTimeout(()=>tone(920,.16,.05,'sine'),90);if(missionIndex===2){emit('campaign-complete',{score,cleanFinal:clean,clears:saved.clears});E.overlayTag.textContent='Ghostline Complete';E.overlayTitle.textContent='Crown Node Silent';E.overlayBody.textContent=`All three facilities are dark. Final mission score ${score.toLocaleString()} with ${detections} detection${detections===1?'':'s'}. The network never learned your name.`;E.continueBtn.textContent='Run Campaign Again'}else{E.overlayTag.textContent=clean?'Clean Extraction':'Mission Complete';E.overlayTitle.textContent=mission.name+' Secured';E.overlayBody.textContent=`Score ${score.toLocaleString()}. ${clean?'No confirmed detections.':'Detections: '+detections+'.'} Next: ${MISSIONS[missionIndex+1].name}.`;E.continueBtn.textContent='Next Mission'}E.overlay.classList.add('open');selectOutcome(0);return true}
+function sync(){const total=relays.length||1;E.missionLabel.textContent=`Mission ${missionIndex+1} / 3`;E.missionName.textContent=mission?.name||'Ghostline';E.relayBar.style.width=`${relayCount/total*100}%`;E.alertText.textContent=Math.round(alert)+'%';E.alertBar.style.width=`${Math.max(0,Math.min(100,alert))}%`;E.cloakText.textContent=Math.round(p.cloak)+'%';E.cloakBar.style.width=`${Math.max(0,p.cloak)}%`;E.jamText.textContent=String(jammers);E.jamBar.style.width=`${Math.min(100,jammers/Math.max(1,mission?.jam||1)*100)}%`;if(!won&&!failed)E.missionText.innerHTML=`<strong>Objective:</strong> ${mission?.brief||''} Relays ${relayCount}/${relays.length}. Approach relays from an unobstructed side; walls block hacking. ${hackTarget&&!hackTarget.off?'Hold interact to finish the hack.':''}`}
+function moveGuard(g,dt){
+ if(g.disabled>0){g.disabled=Math.max(0,g.disabled-dt);g.state='disabled';g.nav=null;return}
+ const investigating=g.state==='investigate'&&!!g.investigate;
+ const target=investigating?g.investigate:{x:g.path[g.target][0],y:g.path[g.target][1]};
+ if(Math.hypot(target.x-g.x,target.y-g.y)<5){
+  if(investigating){g.state='patrol';g.investigate=null}else g.target=(g.target+1)%g.path.length;
+  g.nav=null;return;
+ }
+ const sp=g.speed*(investigating?1.18:1);
+ // Refresh a changing last-known position at most three times per second.
+ if(g.nav){g.nav.age-=dt;if(g.nav.age<=0&&Math.hypot(target.x-g.nav.x,target.y-g.nav.y)>18)g.nav=null}
+ if(!g.nav){g.nav={x:target.x,y:target.y,age:.35,route:guardRoute(g.x,g.y,target.x,target.y)}}
+ const route=g.nav.route;
+ while(route.length&&Math.hypot(route[0].x-g.x,route[0].y-g.y)<4)route.shift();
+ if(!route.length){g.nav=null;return}
+ const waypoint=route[0],dx=waypoint.x-g.x,dy=waypoint.y-g.y,d=Math.hypot(dx,dy);
+ const amount=Math.min(sp*dt,d),nx=g.x+dx/d*amount,ny=g.y+dy/d*amount;
+ if(guardClear(g.x,g.y,nx,ny)){g.x=nx;g.y=ny;g.dir=Math.atan2(dy,dx)}
+ else g.nav=null; // Defensive collision gate, including after any dynamic retarget.
+ if(amount>=d-0.001)route.shift();
+}
+// Always poll Start even while paused: otherwise a controller can pause, but never resume.
+// Track all button releases during pause; never spend tools or advance game logic until resumed.
+function gamepadInput(){let gp=null;try{gp=navigator.getGamepads?.()[0]||null}catch{}
+ if(!gp){releaseHack('gamepad');padPrev={a:false,b:false,x:false,start:false,up:false,down:false};return null}
+ const a=!!gp.buttons?.[0]?.pressed,b=!!gp.buttons?.[1]?.pressed,x=!!gp.buttons?.[2]?.pressed,st=!!gp.buttons?.[9]?.pressed;
+ const up=!!gp.buttons?.[12]?.pressed||(gp.axes?.[1]??0)<-.65;
+ const down=!!gp.buttons?.[13]?.pressed||(gp.axes?.[1]??0)>.65;
+ const startEdge=st&&!padPrev.start;
+ if(won||failed){
+  // Outcome navigation is edge-triggered. Holding a gameplay button cannot
+  // automatically continue, and held A cannot trigger a hack after restart.
+  if(up&&!padPrev.up)selectOutcome(0);
+  else if(down&&!padPrev.down)selectOutcome(1);
+  if(a&&!padPrev.a)(overlayChoice?E.restartBtn:E.continueBtn).click();
+  padPrev={a,b,x,start:st,up,down};return gp;
+ }
+ if(!a)releaseHack('gamepad');
+ if(startEdge)setPaused(!paused);
+ if(!paused&&!won&&!failed&&!startEdge){if(a&&!padPrev.a)beginHack('gamepad');if(b&&!padPrev.b)toggleCloak();if(x&&!padPrev.x)jammer()}
+ padPrev={a,b,x,start:st,up,down};return gp;
+}
+function step(dt,t){const gp=gamepadInput();if(paused||won||failed)return;time+=dt;let dx=(keys.right?1:0)-(keys.left?1:0),dy=(keys.down?1:0)-(keys.up?1:0);
+ if(gp){const ax=gp.axes?.[0]||0,ay=gp.axes?.[1]||0;if(Math.abs(ax)>.16)dx=ax;if(Math.abs(ay)>.16)dy=ay;}
  const mag=Math.hypot(dx,dy),running=keys.sprint&&!p.cloaked&&p.cloak>5;const speed=p.speed*(running?1.55:1)*(p.cloaked?.82:1);if(mag>.05){const nx=p.x+dx/mag*speed*dt,ny=p.y+dy/mag*speed*dt;if(!collide(nx,p.y))p.x=nx;if(!collide(p.x,ny))p.y=ny;if(running){p.cloak=Math.max(0,p.cloak-dt*5);if(rng()<dt*5)makeNoise(115)}else if(!p.cloaked&&rng()<dt*.8)makeNoise(42)}
  if(p.cloaked){p.cloak-=dt*25;if(p.cloak<=0){p.cloak=0;p.cloaked=false;toast('Cloak depleted')}}else p.cloak=Math.min(100,p.cloak+dt*12);
- if(hackTarget){if(hackTarget.off||Math.hypot(p.x-hackTarget.x,p.y-hackTarget.y)>52){hackTarget=null;hackProgress=0}else{hackProgress+=dt;if(hackProgress>=1.15)finishHack()}}
+ if(hackTarget){if(!Object.values(hackHeld).some(Boolean)){hackTarget=null;hackProgress=0}else if(!canReachRelay(hackTarget,52)){hackTarget=null;hackProgress=0}else{hackProgress+=dt;if(hackProgress>=1.15)finishHack()}}
  let seen=false;for(const g of guards){moveGuard(g,dt);if(g.disabled<=0&&sees(g.x,g.y,g.dir,184,.47)){seen=true;g.state='investigate';g.investigate={x:p.x,y:p.y}}}for(const c of cameras){if(c.disabled>0)c.disabled-=dt;else{c.a=c.base+Math.sin(t/1000+c.id*1.7)*c.sweep;if(sees(c.x,c.y,c.a,205,.40))seen=true}}
  if(seen){alert=Math.min(100,alert+dt*(missionIndex===2?48:43));setDetection(true)}else{alert=Math.max(0,alert-dt*(detected?10:17));if(alert<12)setDetection(false)}if(alert>=100)lose();
  if(relayCount===relays.length&&Math.hypot(p.x-exit.x,p.y-exit.y)<exit.r+9)completeMission();if(jamFx>0)jamFx-=dt;if(noise.life>0){noise.life-=dt;noise.r*=.985}if(toastT>0){toastT-=dt;if(toastT<=0)E.toast.classList.remove('show')}for(const q of particles){q.x+=q.vx*dt;q.y+=q.vy*dt;q.vx*=Math.pow(.9,dt*60);q.vy*=Math.pow(.9,dt*60);q.life-=dt}particles=particles.filter(q=>q.life>0);sync()}
@@ -86,12 +228,18 @@ function draw(t){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#010708';X.fillRec
  X.globalAlpha=p.cloaked?.32:1;X.shadowColor=p.cloaked?'#5eead4':'#ccfbf1';X.shadowBlur=p.cloaked?22:9;X.fillStyle='#ccfbf1';X.beginPath();X.arc(p.x,p.y,p.r,0,Math.PI*2);X.fill();X.shadowBlur=0;X.globalAlpha=1;X.strokeStyle=p.cloaked?'#5eead4':'#164e52';X.lineWidth=2;X.beginPath();X.arc(p.x,p.y,p.r+5,0,Math.PI*2);X.stroke();
  if(detected&&!p.cloaked){X.fillStyle='rgba(239,68,68,.07)';X.fillRect(0,0,VW,VH)}if(paused){X.fillStyle='rgba(1,7,8,.82)';X.fillRect(0,0,VW,VH);X.fillStyle='#fff';X.textAlign='center';X.font='900 40px system-ui';X.fillText('PAUSED',VW/2,250);X.font='14px system-ui';X.fillStyle='#a7f3d0';X.fillText('Press P or Start to resume',VW/2,280)}X.restore()}
 function frame(t){const dt=Math.min(.033,Math.max(0,(t-last)/1000));last=t;step(dt,t);draw(t);requestAnimationFrame(frame)}
-addEventListener('keydown',e=>{if(IN.is(e,'up')){keys.up=true;e.preventDefault()}if(IN.is(e,'down')){keys.down=true;e.preventDefault()}if(IN.is(e,'left')){keys.left=true;e.preventDefault()}if(IN.is(e,'right')){keys.right=true;e.preventDefault()}if(IN.is(e,'primary')){e.preventDefault();toggleCloak()}if(IN.is(e,'secondary',['KeyE'])){e.preventDefault();interact(true)}if(e.code==='KeyQ'){e.preventDefault();jammer()}if(e.code==='ShiftLeft'||e.code==='ShiftRight')keys.sprint=true;if(e.code==='KeyP'){paused=!paused;e.preventDefault()}if(e.code==='KeyR'){loadMission(missionIndex);e.preventDefault()}if(/^Digit[1-3]$/.test(e.code)){const i=Number(e.code.slice(-1))-1;if(i<=saved.unlocked)loadMission(i)}});
-addEventListener('keyup',e=>{if(IN.is(e,'up'))keys.up=false;if(IN.is(e,'down'))keys.down=false;if(IN.is(e,'left'))keys.left=false;if(IN.is(e,'right'))keys.right=false;if(e.code==='ShiftLeft'||e.code==='ShiftRight')keys.sprint=false;if(IN.is(e,'secondary',['KeyE'])&&hackTarget){hackTarget=null;hackProgress=0}});
-document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;b.addEventListener('pointerdown',e=>{e.preventDefault();keys[k]=true});for(const ev of['pointerup','pointercancel','pointerleave'])b.addEventListener(ev,()=>keys[k]=false)});document.querySelector('[data-tap="hack"]').addEventListener('pointerdown',e=>{e.preventDefault();interact(true)});document.querySelector('[data-tap="hack"]').addEventListener('pointerup',()=>{hackTarget=null;hackProgress=0});document.querySelector('[data-tap="cloak"]').addEventListener('pointerdown',e=>{e.preventDefault();toggleCloak()});document.querySelector('[data-tap="jam"]').addEventListener('pointerdown',e=>{e.preventDefault();jammer()});document.querySelector('[data-tap="pause"]').addEventListener('pointerdown',e=>{e.preventDefault();paused=!paused});
+addEventListener('keydown',e=>{if(IN.is(e,'up')){keys.up=true;e.preventDefault()}if(IN.is(e,'down')){keys.down=true;e.preventDefault()}if(IN.is(e,'left')){keys.left=true;e.preventDefault()}if(IN.is(e,'right')){keys.right=true;e.preventDefault()}if(IN.is(e,'primary')&&!(e.target instanceof Element&&e.target.closest('button'))){e.preventDefault();toggleCloak()}if(IN.is(e,'secondary',['KeyE'])&&!e.repeat){e.preventDefault();beginHack('keyboard')}if(e.code==='KeyQ'){e.preventDefault();jammer()}if(e.code==='ShiftLeft'||e.code==='ShiftRight')keys.sprint=true;if(e.code==='KeyP'){e.preventDefault();if(!pauseKeyHeld&&!e.repeat)setPaused(!paused);pauseKeyHeld=true}if(e.code==='KeyR'){loadMission(missionIndex);e.preventDefault()}if(/^Digit[1-3]$/.test(e.code)){const i=Number(e.code.slice(-1))-1;if(i<=saved.unlocked)loadMission(i)}});
+addEventListener('keyup',e=>{if(IN.is(e,'up'))keys.up=false;if(IN.is(e,'down'))keys.down=false;if(IN.is(e,'left'))keys.left=false;if(IN.is(e,'right'))keys.right=false;if(e.code==='ShiftLeft'||e.code==='ShiftRight')keys.sprint=false;if(IN.is(e,'secondary',['KeyE']))releaseHack('keyboard');if(e.code==='KeyP')pauseKeyHeld=false});
+addEventListener('blur',()=>{pauseKeyHeld=false;clearHeldActions();for(const k of Object.keys(keys))keys[k]=false});document.addEventListener('visibilitychange',()=>{if(document.hidden){clearHeldActions();for(const k of Object.keys(keys))keys[k]=false}});
+document.querySelectorAll('[data-hold]').forEach(b=>{const k=b.dataset.hold;b.addEventListener('pointerdown',e=>{e.preventDefault();keys[k]=true});for(const ev of['pointerup','pointercancel','pointerleave'])b.addEventListener(ev,()=>keys[k]=false)});const hackButton=document.querySelector('[data-tap="hack"]');
+hackButton.addEventListener('pointerdown',e=>{if(hackPointer!==null)return;e.preventDefault();hackPointer=e.pointerId;try{hackButton.setPointerCapture(e.pointerId)}catch{}beginHack('touch')});
+for(const type of ['pointerup','pointercancel','pointerleave','lostpointercapture'])hackButton.addEventListener(type,e=>{if(hackPointer!==e.pointerId)return;hackPointer=null;releaseHack('touch')});
+// Holding focused Enter/Space is an accessible equivalent of holding the touch pad.
+hackButton.addEventListener('keydown',e=>{if(e.code!=='Enter'&&e.code!=='Space')return;e.preventDefault();e.stopPropagation();beginHack('keyboard')});
+hackButton.addEventListener('keyup',e=>{if(e.code!=='Enter'&&e.code!=='Space')return;e.preventDefault();e.stopPropagation();releaseHack('keyboard')});document.querySelector('[data-tap="cloak"]').addEventListener('pointerdown',e=>{e.preventDefault();toggleCloak()});document.querySelector('[data-tap="jam"]').addEventListener('pointerdown',e=>{e.preventDefault();jammer()});document.querySelector('[data-tap="pause"]').addEventListener('click',()=>setPaused(!paused));
 E.continueBtn.addEventListener('click',()=>{if(failed)loadMission(missionIndex);else if(won&&missionIndex<2)loadMission(missionIndex+1);else if(won)loadMission(0)});E.restartBtn.addEventListener('click',()=>loadMission(missionIndex));
-window.__quietProtocol={engineReady:()=>!!X,state:()=>({missionIndex,relayCount,relayTotal:relays.length,alert,cloak:p.cloak,cloaked:p.cloaked,jammers,detections,time,won,failed,paused,unlocked:saved.unlocked,player:{x:p.x,y:p.y}}),loadMission,interact,toggleCloak,jammer,step:(dt=.016)=>step(dt,performance.now()),forceHack:()=>{const r=relays.find(x=>!x.off);if(!r)return false;hackTarget=r;hackProgress=1.2;finishHack();return true},forceComplete:()=>{for(const r of relays)r.off=true;relayCount=relays.length;p.x=exit.x;p.y=exit.y;return completeMission()},save:()=>({...saved})};
 loadMission(missionIndex);requestAnimationFrame(frame);
+})();
 </script>
 </body>
 </html>

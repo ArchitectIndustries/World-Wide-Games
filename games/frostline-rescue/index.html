@@ -1,14 +1,145 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Frostline Rescue</title><style>
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 20%,#173253,#07101c 65%);color:#eef8ff;font-family:system-ui,sans-serif;overflow:hidden}.wrap{height:100vh;display:grid;grid-template-rows:auto 1fr auto;max-width:1100px;margin:auto;padding:10px;gap:8px}.hud{display:flex;gap:8px;flex-wrap:wrap}.pill{background:#09182bdc;border:1px solid #2d5a7b;border-radius:999px;padding:7px 11px;font-size:12px}.pill b{color:#7dd3fc;margin-left:4px}.stage{position:relative;min-height:0;border:1px solid #2e5d7a;border-radius:18px;overflow:hidden;background:#0a1a2b}canvas{width:100%;height:100%;display:block}.tip{position:absolute;left:12px;right:12px;bottom:12px;background:#07111ddd;border:1px solid #315b78;border-radius:12px;padding:9px 11px;font-size:12px}.touch{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}.touch button{border:1px solid #356982;background:#102840;color:#eaf8ff;border-radius:12px;padding:10px;font-weight:850}.touch .primary{background:#145d79}.touch .secondary{background:#6d3b42}@media(min-width:850px){.touch{max-width:760px;margin:auto}}@media(max-width:650px){.wrap{padding:6px}.pill{font-size:10px}.touch{grid-template-columns:repeat(3,1fr)}.tip{font-size:10px}}</style></head><body><div class="wrap"><div class="hud"><span class="pill">Rescued <b id="rescued">0</b>/6</span><span class="pill">Water <b id="water">100</b></span><span class="pill">Hull <b id="hull">100</b></span><span class="pill">Time <b id="time">75</b>s</span><span class="pill">Score <b id="score">0</b></span></div><div class="stage"><canvas id="c" width="960" height="600"></canvas><div class="tip" id="tip">Find stranded residents, press Secondary nearby to escort them, and hold Primary to suppress nearby fire. Refill at the blue hydrant.</div></div><div class="touch"><button data-a="left">◀</button><button data-a="up">▲</button><button data-a="down">▼</button><button data-a="right">▶</button><button class="primary" data-a="primary">SPRAY</button><button class="secondary" data-a="secondary">RESCUE</button></div></div><script src="../../assets/wwg-input.js"></script><script>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Frostline Rescue 1.5 - Warned Firelines</title><style>
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 20%,#173253,#07101c 65%);color:#eef8ff;font-family:system-ui,sans-serif;overflow:hidden}.wrap{height:100vh;height:100dvh;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto auto;max-width:1100px;margin:auto;padding:10px;gap:8px}.hud{display:flex;gap:8px;flex-wrap:wrap}.pill{background:#09182bdc;border:1px solid #2d5a7b;border-radius:999px;padding:7px 11px;font-size:12px}.pill b{color:#7dd3fc;margin-left:4px}.stage{position:relative;min-height:0;border:1px solid #2e5d7a;border-radius:18px;overflow:hidden;background:#0a1a2b}canvas{width:100%;height:100%;display:block;object-fit:contain}.tip{background:#07111ddd;border:1px solid #315b78;border-radius:12px;padding:7px 11px;font-size:12px;line-height:1.35;max-height:56px;overflow-y:auto;min-height:34px}.guide{flex:0 1 auto;max-width:100%;font-size:12px;color:#e1faff}.guide summary{list-style:revert;cursor:pointer;min-height:36px;display:list-item;align-content:center;border:1px solid #4b829e;background:#0a2a44;border-radius:9px;padding:7px 12px;font-weight:750}.guide[open]{max-height:min(180px,30dvh);overflow-y:auto}.guide p{margin:8px 0 2px;line-height:1.5}.touch{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}.touch button{border:1px solid #356982;background:#102840;color:#eaf8ff;border-radius:12px;padding:10px;font-weight:850}.touch .primary{background:#145d79}.touch .secondary{background:#6d3b42}@media(min-width:850px){.touch{max-width:760px;margin:auto}}@media(max-width:650px){.wrap{padding:6px;gap:5px}.pill{font-size:10px;padding:5px 8px}.touch{grid-template-columns:repeat(3,1fr)}.touch button{min-height:44px;padding:6px}.tip{font-size:11px;max-height:52px;min-height:31px;padding:5px 8px}}
+.actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.actions button{border:1px solid #6bb3c7;border-radius:10px;color:#f0fcff;background:#12516a;padding:9px 13px;font-weight:750;cursor:pointer}
+.actions button[hidden]{display:none}
+.actions .status{font-size:13px;line-height:1.4;color:#d8f3ff;flex:1;min-width:180px}.fireAlert{font-size:12px;line-height:1.35;color:#fff4cb;background:#583b12;border:1px solid #fbbf24;border-radius:9px;padding:7px 10px;flex-basis:100%}.fireAlert[hidden]{display:none}
+button:focus-visible,canvas:focus-visible{outline:3px solid #fde68a;outline-offset:3px}
+@media(max-width:650px){.actions{gap:5px}.actions button{min-height:44px}.actions .status{flex-basis:100%;font-size:11px;line-height:1.25}.guide{font-size:11px}.guide summary{min-height:44px}}
+/* v373: compact touch rescue HUD. Reserve real playfield height and keep all six
+   original pointer targets visible, rather than allowing the actions/status to
+   collapse the stage and clip the second row of touch buttons. */
+@media (max-width:700px) and (max-height:420px){
+ .wrap{padding:4px;gap:3px;grid-template-rows:23px 34px minmax(0,1fr) 22px 37px;overflow:hidden}
+ .hud{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;min-height:0;overflow:hidden}
+ .hud .pill{min-width:0;border-radius:6px;padding:4px 2px;font-size:9px;text-align:center;white-space:nowrap;line-height:14px}
+ .hud .pill b{margin-left:2px}
+ .actions{display:flex;align-items:center;flex-wrap:nowrap;gap:4px;min-height:0;overflow:visible}
+ .actions button{min-height:32px;padding:4px 8px;font-size:11px;white-space:nowrap}
+ .actions .status{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
+ .actions .fireAlert:not([hidden]){position:fixed;top:70px;left:8px;right:8px;z-index:3;max-height:36px;padding:4px 7px;overflow:hidden;font-size:10px;pointer-events:none}
+ .guide{flex:0 0 auto;min-width:0}
+ .guide summary{min-height:32px;font-size:10px;padding:4px 7px;white-space:nowrap}
+ .guide[open]{overflow:visible;max-height:none}
+ .guide[open] p{position:fixed;top:68px;left:8px;right:8px;z-index:8;max-height:calc(100dvh - 76px);overflow-y:auto;margin:0;padding:10px;border:1px solid #6bb3c7;border-radius:8px;background:#0b2438;color:#e1faff;box-shadow:0 4px 18px #000b;overscroll-behavior:contain}
+ .stage{min-height:0;border-radius:8px}
+ .tip{min-height:0;max-height:none;height:22px;padding:3px 6px;font-size:10px;line-height:14px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+ .touch{grid-template-columns:repeat(6,minmax(0,1fr));gap:3px;min-height:0}
+ .touch button{min-width:0;min-height:37px;padding:2px 0;border-radius:7px;font-size:10px;white-space:nowrap;touch-action:none}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+</style></head><body><div class="wrap"><div class="hud"><span class="pill">Rescued <b id="rescued">0</b>/6</span><span class="pill">Water <b id="water">100</b></span><span class="pill">Hull <b id="hull">100</b></span><span class="pill">Time <b id="time">75</b>s</span><span class="pill">Score <b id="score">0</b></span></div><div class="actions"><button id="startBtn" type="button">Start Rescue</button><button id="pauseBtn" type="button" hidden>Pause Shift</button><button id="restartBtn" type="button">Restart</button><span class="status" id="phaseStatus" role="status" aria-live="polite">READY - Begin when prepared. Time does not run before starting.</span><span class="fireAlert" id="fireAlert" role="status" aria-live="polite" hidden></span><details class="guide" id="helpPanel"><summary>Guide &amp; controls</summary><p>Rescue six residents before 75 active seconds elapse. Move with arrows/WASD, use Space to spray fire and E to escort. Both the resident and rescuer must reach the gold safety circle; press E again to secure each resident. Controller: left stick, A to spray, B to rescue, Start to pause. Mobile: directional buttons, SPRAY, RESCUE. Amber dashed rings warn of new spot fires about 1.35 seconds before ignition; spray the ring to prevent it or move away. P pauses, R restarts. Leaving this tab suspends the shift. Only a completed six-person rescue earns a ranked record.</p></details></div><div class="stage"><canvas id="c" width="960" height="600" tabindex="0" aria-label="Frostline Rescue playfield; move with arrows or WASD"></canvas></div><div class="tip" id="tip" role="status" aria-live="polite" aria-atomic="true">Rescue six residents in 75 seconds. Reach the gold safety circle together. Open Guide &amp; controls for help.</div><div class="touch"><button data-a="left">◀</button><button data-a="up">▲</button><button data-a="down">▼</button><button data-a="right">▶</button><button class="primary" data-a="primary">SPRAY</button><button class="secondary" data-a="secondary">RESCUE</button></div></div><script src="../../assets/wwg-input.js"></script><script>
 const canvas=document.getElementById('c'),ctx=canvas.getContext('2d'),Q=id=>document.getElementById(id),IN=window.WWGInput||{is:(e,a,x=[])=>({up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],left:['KeyA','ArrowLeft'],right:['KeyD','ArrowRight'],primary:['Space'],secondary:['KeyE']}[a]||[]).concat(x).includes(e.code)};const params=new URLSearchParams(location.search),MUTED=params.get('muted')==='1',VOL=Math.max(0,Math.min(1,Number(params.get('volume')||.7)));let ac;function tone(f,d=.06,v=.025,t='sine'){if(MUTED||!VOL)return;try{ac=ac||new AudioContext();const o=ac.createOscillator(),g=ac.createGain();o.type=t;o.frequency.value=f;g.gain.value=v*VOL;o.connect(g);g.connect(ac.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+d);o.stop(ac.currentTime+d)}catch{}}
-const world={w:1400,h:900,hydrant:{x:180,y:170,r:30},safe:{x:1220,y:740,r:70}},keys={},touch={};let player={x:230,y:180,r:15,hull:100,water:100};let civilians=[],fires=[],embers=[],rescued=0,score=0,start=performance.now(),last=start,lastSpread=start,done=false,carrying=null;
-function rnd(a,b){return a+Math.random()*(b-a)}function reset(){player={x:230,y:180,r:15,hull:100,water:100};civilians=[[380,250],[620,160],[830,300],[1050,210],[680,620],[1080,650]].map((p,i)=>({x:p[0],y:p[1],r:12,saved:false,id:i}));fires=[[470,180,42],[750,235,50],[930,410,45],[560,520,48],[890,690,46]].map((f,i)=>({x:f[0],y:f[1],r:f[2],heat:100,id:i}));embers=[];rescued=0;score=0;start=performance.now();last=start;lastSpread=start;done=false;carrying=null;Q('tip').textContent='Find stranded residents, press Secondary nearby to escort them, and hold Primary to suppress nearby fire. Refill at the blue hydrant.';sync()}
-function sync(){Q('rescued').textContent=rescued;Q('water').textContent=Math.max(0,Math.round(player.water));Q('hull').textContent=Math.max(0,Math.round(player.hull));Q('score').textContent=Math.round(score);Q('time').textContent=Math.max(0,Math.ceil(75-(performance.now()-start)/1000))}
-function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}function actionSecondary(){if(done)return;if(carrying){if(dist(player,world.safe)<85){carrying.saved=true;rescued++;score+=700+Math.round(player.hull*2);tone(720,.12,.04);Q('tip').textContent=`Resident secured. ${6-rescued} remaining.`;carrying=null;if(rescued>=6)finish(true)}return}let c=civilians.find(x=>!x.saved&&dist(player,x)<42);if(c){carrying=c;tone(440,.08,.03);Q('tip').textContent='Resident following. Escort them to the gold safe zone.'}}
-function spray(dt){if(done||player.water<=0)return;player.water=Math.max(0,player.water-dt*30);let hit=false;for(const f of fires){if(f.heat<=0)continue;const d=dist(player,f);if(d<150){f.heat-=dt*(95*(1-d/180));score+=dt*12;hit=true;if(f.heat<=0){score+=250;tone(580,.08,.03);}}}if(hit&&Math.random()<.1)tone(240,.025,.009,'triangle')}
-function spread(now){if(now-lastSpread<3200||fires.length>14)return;lastSpread=now;const src=fires.filter(f=>f.heat>25);if(!src.length)return;const f=src[Math.floor(Math.random()*src.length)],a=Math.random()*Math.PI*2,d=rnd(75,135),nf={x:Math.max(80,Math.min(world.w-80,f.x+Math.cos(a)*d)),y:Math.max(80,Math.min(world.h-80,f.y+Math.sin(a)*d)),r:rnd(30,45),heat:75};if(Math.hypot(nf.x-world.hydrant.x,nf.y-world.hydrant.y)>100&&Math.hypot(nf.x-world.safe.x,nf.y-world.safe.y)>110)fires.push(nf)}
-function finish(win){if(done)return;done=true;const secs=Math.max(1,(performance.now()-start)/1000);score=Math.max(0,Math.round(score+rescued*400+player.hull*6+(win?2200:0)-secs*5));Q('tip').textContent=win?`District cleared. Rescue score ${score.toLocaleString()}. Press R to restart.`:`Shift ended with ${rescued}/6 residents secured. Press R to retry.`;tone(win?780:110,.18,.04,win?'sine':'sawtooth');try{parent.postMessage({type:'wwg:game-event',game:'frostline-rescue',event:win?'district-cleared':'rescue-ended',score,duration:Math.round(secs),meta:{unit:'pts',direction:'high',rescued,hull:Math.round(player.hull)}},'*')}catch{}}
-function update(now){let dt=Math.min(.04,(now-last)/1000||.016);last=now;if(!done){let dx=(keys.right||touch.right?1:0)-(keys.left||touch.left?1:0),dy=(keys.down||touch.down?1:0)-(keys.up||touch.up?1:0),l=Math.hypot(dx,dy)||1;player.x=Math.max(30,Math.min(world.w-30,player.x+dx/l*220*dt));player.y=Math.max(30,Math.min(world.h-30,player.y+dy/l*220*dt));if(keys.primary||touch.primary)spray(dt);if(dist(player,world.hydrant)<55)player.water=Math.min(100,player.water+dt*45);for(const f of fires)if(f.heat>0&&dist(player,f)<f.r+24){player.hull-=dt*(9+f.heat*.025);if(Math.random()<.08)embers.push({x:player.x+rnd(-10,10),y:player.y+rnd(-10,10),life:1})}if(carrying){carrying.x+=(player.x-28-carrying.x)*Math.min(1,dt*5);carrying.y+=(player.y+18-carrying.y)*Math.min(1,dt*5)}spread(now);if(player.hull<=0||(now-start)/1000>=75)finish(false)}sync();draw();requestAnimationFrame(update)}
-function draw(){const W=canvas.width,H=canvas.height,cam={x:Math.max(0,Math.min(world.w-W,player.x-W/2)),y:Math.max(0,Math.min(world.h-H,player.y-H/2))};ctx.fillStyle='#0b2430';ctx.fillRect(0,0,W,H);ctx.save();ctx.translate(-cam.x,-cam.y);ctx.fillStyle='#123448';for(let x=0;x<world.w;x+=90)for(let y=0;y<world.h;y+=90){ctx.globalAlpha=.3;ctx.fillRect(x+8,y+8,62,62)}ctx.globalAlpha=1;ctx.fillStyle='#38bdf8';ctx.beginPath();ctx.arc(world.hydrant.x,world.hydrant.y,world.hydrant.r,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(world.safe.x,world.safe.y,world.safe.r,0,Math.PI*2);ctx.globalAlpha=.25;ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle='#fde68a';ctx.lineWidth=4;ctx.stroke();for(const f of fires){if(f.heat<=0)continue;const a=.35+.65*Math.max(0,f.heat)/100;ctx.fillStyle=`rgba(251,113,133,${a})`;ctx.beginPath();ctx.arc(f.x,f.y,f.r*(.65+.35*Math.sin(performance.now()/180+f.x)),0,Math.PI*2);ctx.fill();ctx.fillStyle='#f97316';ctx.beginPath();ctx.arc(f.x,f.y,f.r*.45,0,Math.PI*2);ctx.fill()}for(const c of civilians){if(c.saved)continue;ctx.fillStyle=c===carrying?'#fde68a':'#f8fafc';ctx.beginPath();ctx.arc(c.x,c.y,c.r,0,Math.PI*2);ctx.fill();ctx.fillStyle='#7dd3fc';ctx.fillRect(c.x-5,c.y+8,10,10)}ctx.fillStyle='#22d3ee';ctx.beginPath();ctx.arc(player.x,player.y,player.r,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#bae6fd';ctx.lineWidth=3;ctx.stroke();if(keys.primary||touch.primary){ctx.strokeStyle='#7dd3fc';ctx.globalAlpha=.45;ctx.lineWidth=8;ctx.beginPath();ctx.arc(player.x,player.y,130,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1}ctx.restore()}
-addEventListener('keydown',e=>{if(IN.is(e,'up')){keys.up=true;e.preventDefault()}if(IN.is(e,'down')){keys.down=true;e.preventDefault()}if(IN.is(e,'left')){keys.left=true;e.preventDefault()}if(IN.is(e,'right')){keys.right=true;e.preventDefault()}if(IN.is(e,'primary')){keys.primary=true;e.preventDefault()}if(IN.is(e,'secondary',['Enter'])){e.preventDefault();actionSecondary()}if(e.code==='KeyR')reset()});addEventListener('keyup',e=>{if(IN.is(e,'up'))keys.up=false;if(IN.is(e,'down'))keys.down=false;if(IN.is(e,'left'))keys.left=false;if(IN.is(e,'right'))keys.right=false;if(IN.is(e,'primary'))keys.primary=false});document.querySelectorAll('[data-a]').forEach(b=>{const a=b.dataset.a;b.addEventListener('pointerdown',e=>{e.preventDefault();if(a==='secondary')actionSecondary();else touch[a]=true});for(const ev of ['pointerup','pointercancel','pointerleave'])b.addEventListener(ev,()=>touch[a]=false)});function gp(){const g=navigator.getGamepads?.()[0];if(g&&!done){touch.left=g.axes[0]<-.35;touch.right=g.axes[0]>.35;touch.up=g.axes[1]<-.35;touch.down=g.axes[1]>.35;touch.primary=!!g.buttons[0]?.pressed;if(g.buttons[1]?.pressed&&!gp.b){actionSecondary();gp.b=true}else if(!g.buttons[1]?.pressed)gp.b=false}requestAnimationFrame(gp)}reset();requestAnimationFrame(update);requestAnimationFrame(gp);
+const world={w:1400,h:900,hydrant:{x:180,y:170,r:30},safe:{x:1220,y:740,r:70}},keys={},touch={};const FIRE_WARNING_SECONDS=1.35;let ignitionSeed=0x1b54f1e5,pendingIgnitions=[];function spreadRand(){ignitionSeed=(Math.imul(1664525,ignitionSeed)+1013904223)>>>0;return ignitionSeed/4294967296}function alertFire(text){const node=Q('fireAlert');node.hidden=!text;node.textContent=text||''}let player={x:230,y:180,r:15,hull:100,water:100};let civilians=[],fires=[],embers=[],rescued=0,score=0,last=performance.now(),elapsed=0,spreadElapsed=0,lastSpread=0,phase='ready',focusPaused=false,done=false,carrying=null,padX=0,padY=0,padPrimary=false,padConnected=false,padNeedsNeutral=true,padPrevB=false,padPrevStart=false;
+function resetInputs(){for(const k of ['up','down','left','right','primary']){keys[k]=false;touch[k]=false}padX=padY=0;padPrimary=false;padNeedsNeutral=true;padPrevB=padPrevStart=false}
+function active(){return phase==='active'&&!focusPaused&&!document.hidden}
+function status(){const ready=phase==='ready',paused=phase==='suspended',ended=phase==='done';Q('startBtn').hidden=!(ready||paused);Q('startBtn').textContent=ready?'Start Rescue':'Resume Shift';Q('pauseBtn').hidden=!active();Q('phaseStatus').textContent=ready?'READY - Time and fire are frozen until your first action.':ended?'SHIFT COMPLETE - Restart to try again.':paused?(focusPaused||document.hidden?'SUSPENDED - Window inactive; resume deliberately after returning.':'PAUSED - Time and fire are frozen. Select Resume Shift.'): 'ACTIVE - Rescue all six residents before 75 active seconds expire.'}
+function begin(){if(done||document.hidden||focusPaused)return false;if(phase==='ready'||phase==='suspended'){phase='active';last=performance.now();status()}return phase==='active'}
+function suspend(){if(phase==='active')phase='suspended';resetInputs();last=performance.now();status()}
+function focusLoss(){focusPaused=true;suspend()}
+function focusReturn(){focusPaused=!!document.hidden;last=performance.now();padNeedsNeutral=true;status()}
+window.addEventListener('blur',focusLoss);window.addEventListener('focus',focusReturn);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)focusLoss();else focusReturn()});
+function rnd(a,b){return a+Math.random()*(b-a)}function reset(){player={x:230,y:180,r:15,hull:100,water:100};civilians=[[380,250],[620,160],[830,300],[1050,210],[680,620],[1080,650]].map((p,i)=>({x:p[0],y:p[1],r:12,saved:false,id:i}));fires=[[470,180,42],[750,235,50],[930,410,45],[560,520,48],[890,690,46]].map((f,i)=>({x:f[0],y:f[1],r:f[2],heat:100,id:i}));embers=[];pendingIgnitions=[];ignitionSeed=0x1b54f1e5;alertFire('');rescued=0;score=0;last=performance.now();elapsed=0;spreadElapsed=0;lastSpread=-FIRE_WARNING_SECONDS;phase='ready';focusPaused=!!document.hidden;done=false;carrying=null;padConnected=false;resetInputs();Q('tip').textContent='Rescue six residents in 75 active seconds. Reach the gold safety circle together. Open Guide & controls for help.';sync();status()}
+function sync(){Q('rescued').textContent=rescued;Q('water').textContent=Math.max(0,Math.round(player.water));Q('hull').textContent=Math.max(0,Math.round(player.hull));Q('score').textContent=Math.round(score);Q('time').textContent=Math.max(0,Math.ceil(75-elapsed))}
+function dist(a,b){return Math.hypot(a.x-b.x,a.y-b.y)}
+// A rescued resident, not merely the rescuer, must actually reach shelter.
+// Require the resident's full radius inside the illustrated gold safety circle.
+function residentInsideShelter(c){return !!c&&!c.saved&&dist(c,world.safe)+c.r<=world.safe.r}
+function actionSecondary(){
+ if(!active()||done)return;
+ if(carrying){
+  if(dist(player,world.safe)<85){
+   if(!residentInsideShelter(carrying)){
+    Q('tip').textContent='Resident still outside safety. Lead them fully into the gold circle, then press RESCUE again.';
+    return;
+   }
+   carrying.saved=true;rescued++;score+=700+Math.round(player.hull*2);
+   tone(720,.12,.04);Q('tip').textContent=`Resident secured inside shelter. ${6-rescued} remaining.`;
+   carrying=null;if(rescued>=6)finish(true);
+  }else Q('tip').textContent='Reach the gold safe circle with your resident before pressing RESCUE.';
+  return;
+ }
+ const c=civilians.find(x=>!x.saved&&dist(player,x)<42);
+ if(c){carrying=c;tone(440,.08,.03);Q('tip').textContent='Resident following. Guide them fully into the gold safe circle; press RESCUE when you are both there.'}
+}
+function spray(dt){if(done||player.water<=0)return;player.water=Math.max(0,player.water-dt*30);let hit=false;for(const f of fires){if(f.heat<=0)continue;const d=dist(player,f);if(d<150){f.heat-=dt*(95*(1-d/180));score+=dt*12;hit=true;if(f.heat<=0){score+=250;tone(580,.08,.03);}}}
+ // Warning-stage hotspots can be prevented by sustained, accurately placed spray.
+ // This awards no ranked points; a player cannot farm warnings for a higher score.
+ for(const warning of pendingIgnitions){const d=dist(player,warning);if(d<150){warning.guard-=dt*(1-d/180);hit=true}}
+ if(hit&&Math.random()<.1)tone(240,.025,.009,'triangle')}
+function advanceIgnitions(dt){if(!pendingIgnitions.length)return;const still=[];for(const warning of pendingIgnitions){
+  if(warning.guard<=0){alertFire('Spot fire prevented. Keep moving toward the residents.');continue}
+  warning.remaining-=dt;
+  if(warning.remaining<=0){fires.push({x:warning.x,y:warning.y,r:warning.r,heat:75});alertFire('Spot fire ignited. Spray the flames or take another route.');continue}
+  still.push(warning)
+ }pendingIgnitions=still}
+
+function spread(){if(spreadElapsed-lastSpread<3.2||fires.length+pendingIgnitions.length>=15)return;lastSpread=spreadElapsed;const src=fires.filter(f=>f.heat>25);if(!src.length)return;
+ // Deterministic per-reset hotspot positions; telegraph the actual collision location.
+ // Original fires still ignite at the same 3.2-second cadence, after their warning.
+ const f=src[Math.floor(spreadRand()*src.length)],a=spreadRand()*Math.PI*2,d=75+spreadRand()*60;
+ const nf={x:Math.max(80,Math.min(world.w-80,f.x+Math.cos(a)*d)),y:Math.max(80,Math.min(world.h-80,f.y+Math.sin(a)*d)),r:30+spreadRand()*15,remaining:FIRE_WARNING_SECONDS,guard:.4};
+ if(Math.hypot(nf.x-world.hydrant.x,nf.y-world.hydrant.y)>100&&Math.hypot(nf.x-world.safe.x,nf.y-world.safe.y)>110){pendingIgnitions.push(nf);alertFire('EMBER WARNING: amber ring will ignite in 1.35 seconds. Spray it or move away.')}}
+function finish(win){if(done)return;done=true;phase='done';resetInputs();status();const secs=Math.max(1,elapsed);score=Math.max(0,Math.round(score+rescued*400+Math.max(0,player.hull)*6+(win?2200:0)-secs*5));Q('tip').textContent=win?`District cleared. Ranked rescue score ${score.toLocaleString()}. Press R to restart.`:`Shift ended with ${rescued}/6 residents secured. Unranked attempt (${score.toLocaleString()} points); no local record. Press R to retry.`;tone(win?780:110,.18,.04,win?'sine':'sawtooth');try{const payload={type:'wwg:game-event',game:'frostline-rescue',event:win?'district-cleared':'rescue-ended',duration:Math.round(secs),meta:{unit:'pts',direction:'high',rescued,hull:Math.round(Math.max(0,player.hull)),outcome:win?'cleared':'failed',...(win?{}:{attemptValue:score})}};if(win)payload.score=score;parent.postMessage(payload,'*')}catch{}}
+function readGamepad(){
+  let g=null;
+  try{g=Array.from(navigator.getGamepads?.()||[]).find(x=>x&&x.connected!==false)||null}catch{}
+  if(!g){padConnected=false;padNeedsNeutral=true;padX=padY=0;padPrimary=false;padPrevB=padPrevStart=false;return}
+  if(!padConnected){padConnected=true;padNeedsNeutral=true}
+  const x=Math.abs(g.axes?.[0]||0)>.25?Math.max(-1,Math.min(1,g.axes[0])):0;
+  const y=Math.abs(g.axes?.[1]||0)>.25?Math.max(-1,Math.min(1,g.axes[1])):0;
+  const a=!!g.buttons?.[0]?.pressed,b=!!g.buttons?.[1]?.pressed,start=!!g.buttons?.[9]?.pressed;
+  if(padNeedsNeutral){padX=padY=0;padPrimary=false;if(!x&&!y&&!a&&!b&&!start)padNeedsNeutral=false;padPrevB=b;padPrevStart=start;return}
+  if(start&&!padPrevStart){if(active())suspend();else begin()}
+  if(phase==='ready'&&(x||y||a||b))begin();
+  if(active()){padX=x;padY=y;padPrimary=a;if(b&&!padPrevB)actionSecondary()}
+  else {padX=padY=0;padPrimary=false}
+  padPrevB=b;padPrevStart=start;
+}
+function update(now){
+  const dt=Math.min(.04,Math.max(0,(now-last)/1000));last=now;
+  readGamepad();
+  if(active()&&!done){
+    elapsed+=dt;spreadElapsed+=dt;
+    let dx=(keys.right||touch.right?1:0)-(keys.left||touch.left?1:0)+padX;
+    let dy=(keys.down||touch.down?1:0)-(keys.up||touch.up?1:0)+padY;
+    const length=Math.hypot(dx,dy)||1;
+    player.x=Math.max(30,Math.min(world.w-30,player.x+dx/length*220*dt));
+    player.y=Math.max(30,Math.min(world.h-30,player.y+dy/length*220*dt));
+    if(keys.primary||touch.primary||padPrimary)spray(dt);advanceIgnitions(dt);
+    if(dist(player,world.hydrant)<55)player.water=Math.min(100,player.water+dt*45);
+    for(const f of fires)if(f.heat>0&&dist(player,f)<f.r+24){player.hull-=dt*(9+f.heat*.025);if(Math.random()<.08)embers.push({x:player.x+rnd(-10,10),y:player.y+rnd(-10,10),life:1})}
+    if(carrying){carrying.x+=(player.x-28-carrying.x)*Math.min(1,dt*5);carrying.y+=(player.y+18-carrying.y)*Math.min(1,dt*5)}
+    spread();
+    if(player.hull<=0||elapsed>=75)finish(false)
+  }
+  sync();draw();requestAnimationFrame(update)
+}
+function draw(){const W=canvas.width,H=canvas.height,cam={x:Math.max(0,Math.min(world.w-W,player.x-W/2)),y:Math.max(0,Math.min(world.h-H,player.y-H/2))};ctx.fillStyle='#0b2430';ctx.fillRect(0,0,W,H);ctx.save();ctx.translate(-cam.x,-cam.y);ctx.fillStyle='#123448';for(let x=0;x<world.w;x+=90)for(let y=0;y<world.h;y+=90){ctx.globalAlpha=.3;ctx.fillRect(x+8,y+8,62,62)}ctx.globalAlpha=1;ctx.fillStyle='#38bdf8';ctx.beginPath();ctx.arc(world.hydrant.x,world.hydrant.y,world.hydrant.r,0,Math.PI*2);ctx.fill();ctx.fillStyle='#fbbf24';ctx.beginPath();ctx.arc(world.safe.x,world.safe.y,world.safe.r,0,Math.PI*2);ctx.globalAlpha=.25;ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle=carrying&&residentInsideShelter(carrying)?'#86efac':'#fde68a';ctx.lineWidth=4;ctx.stroke();for(const f of fires){if(f.heat<=0)continue;const a=.35+.65*Math.max(0,f.heat)/100;ctx.fillStyle=`rgba(251,113,133,${a})`;ctx.beginPath();ctx.arc(f.x,f.y,f.r*(.65+.35*Math.sin(elapsed*1000/180+f.x)),0,Math.PI*2);ctx.fill();ctx.fillStyle='#f97316';ctx.beginPath();ctx.arc(f.x,f.y,f.r*.45,0,Math.PI*2);ctx.fill()}
+ for(const q of pendingIgnitions){ctx.save();ctx.setLineDash([9,6]);ctx.lineWidth=5;ctx.strokeStyle='#fef08a';ctx.fillStyle='rgba(251,191,36,.16)';ctx.beginPath();ctx.arc(q.x,q.y,q.r+12,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#fff4b2';ctx.font='bold 15px system-ui';ctx.textAlign='center';ctx.fillText(`HOTSPOT ${Math.max(0,q.remaining).toFixed(1)}s`,q.x,q.y-q.r-20);ctx.restore()}
+ for(const c of civilians){if(c.saved)continue;ctx.fillStyle=c===carrying?'#fde68a':'#f8fafc';ctx.beginPath();ctx.arc(c.x,c.y,c.r,0,Math.PI*2);ctx.fill();ctx.fillStyle='#7dd3fc';ctx.fillRect(c.x-5,c.y+8,10,10)}ctx.fillStyle='#22d3ee';ctx.beginPath();ctx.arc(player.x,player.y,player.r,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#bae6fd';ctx.lineWidth=3;ctx.stroke();if(keys.primary||touch.primary||padPrimary){ctx.strokeStyle='#7dd3fc';ctx.globalAlpha=.45;ctx.lineWidth=8;ctx.beginPath();ctx.arc(player.x,player.y,130,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1}ctx.restore()}
+function controlAction(e){for(const a of ['up','down','left','right','primary','secondary'])if(IN.is(e,a,a==='secondary'?['Enter']:[]))return a;return null}
+addEventListener('keydown',e=>{
+  if(e.code==='KeyR'&&!e.repeat){e.preventDefault();reset();return}
+  if(e.code==='KeyP'&&!e.repeat){e.preventDefault();if(active())suspend();else begin();return}
+  // Enter/Space on an actual button must activate that button natively.
+  if(e.target instanceof Element&&e.target.closest('button')&&(e.code==='Space'||e.code==='Enter'))return;
+  const a=controlAction(e);if(!a)return;
+  e.preventDefault();if(e.repeat&&a==='secondary')return;
+  if(!active()&&phase==='ready')begin();
+  if(!active())return;
+  if(a==='secondary')actionSecondary();else keys[a]=true
+});
+addEventListener('keyup',e=>{const a=controlAction(e);if(a&&a!=='secondary'){keys[a]=false;e.preventDefault()}});
+document.querySelectorAll('[data-a]').forEach(b=>{
+  const a=b.dataset.a;
+  b.addEventListener('pointerdown',e=>{e.preventDefault();if(!active()&&phase==='ready')begin();if(!active())return;if(a==='secondary')actionSecondary();else touch[a]=true});
+  for(const ev of ['pointerup','pointercancel','pointerleave','lostpointercapture'])b.addEventListener(ev,()=>touch[a]=false);
+  b.addEventListener('click',e=>{if(e.detail!==0)return;if(!active()&&phase==='ready')begin();if(!active())return;if(a==='secondary')actionSecondary();else{touch[a]=true;setTimeout(()=>touch[a]=false,150)}});
+});
+Q('startBtn').addEventListener('click',begin);
+Q('pauseBtn').addEventListener('click',suspend);
+Q('restartBtn').addEventListener('click',reset);
+reset();requestAnimationFrame(update);
 </script></body></html>

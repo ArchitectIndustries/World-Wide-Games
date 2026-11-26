@@ -1,18 +1,177 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Lantern Line</title><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Lantern Line 1.6 — Fair Braking</title><style>
 *{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#07121c;color:#f8fafc;font-family:Inter,system-ui,sans-serif;touch-action:none}canvas{display:block;width:100vw;height:100vh}.hud{position:fixed;left:12px;right:12px;top:12px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}.hud div{background:#07121ce8;border:1px solid #264b63;border-radius:12px;padding:8px 10px;font-size:11px}.hud b{display:block;font-size:16px}.message{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:min(620px,calc(100vw - 190px));background:#07121cec;border:1px solid #315b73;border-radius:14px;padding:10px 13px;text-align:center;font-size:12px;color:#cae9f6}.mobile{display:none;position:fixed;right:12px;bottom:12px;grid-template-columns:64px 64px;gap:8px}.mobile button{height:58px;border:1px solid #315b73;background:#0b283bdf;color:#fff;border-radius:13px;font-weight:900}.mobile .wide{grid-column:span 2}.credit{position:fixed;right:12px;top:74px;font-size:10px;color:#708da0}@media(pointer:coarse),(max-width:740px){.mobile{display:grid}.message{left:12px;transform:none;width:calc(100vw - 176px);text-align:left}.hud{flex-wrap:wrap}.credit{display:none}}
-</style></head><body><canvas id="c"></canvas><div class="hud"><div>Speed<b id="speed">0 km/h</b></div><div>Next stop<b id="stop">1/6</b></div><div>Delay<b id="delay">0 sec</b></div><div>Comfort<b id="comfort">100%</b></div></div><div class="credit">Architect Industries</div><div class="message" id="msg">Throttle up. Brake into the glowing stop zone and open the doors near zero speed.</div><div class="mobile"><button data-a="up">THROTTLE</button><button data-a="down">BRAKE</button><button class="wide" data-a="primary">OPEN DOORS</button></div><script src="../../assets/wwg-input.js"></script><script>
-const C=document.getElementById('c'),X=C.getContext('2d'),speedEl=document.getElementById('speed'),stopEl=document.getElementById('stop'),delayEl=document.getElementById('delay'),comfortEl=document.getElementById('comfort'),msg=document.getElementById('msg');const IN=window.WWGInput||{is:(e,a)=>({up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],primary:['Space']}[a]||[]).includes(e.code)};let DPR=1,W=960,H=540,keys={up:false,down:false},pad={up:false,down:false},running=true,start=performance.now(),speed=0,progress=0,nextStop=0,totalDelay=0,comfort=100,doors=0,penalty=0,last=performance.now(),done=false;
-const stopP=[.08,.23,.39,.56,.73,.9],schedule=[8,19,31,43,56,69];
+
+.shift-actions{position:fixed;z-index:7;right:12px;top:76px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;max-width:min(500px,calc(100vw - 24px));justify-content:flex-end}
+.shift-actions button{min-height:44px;cursor:pointer;border:1px solid #67e8f9;border-radius:10px;background:#10374b;color:#f2ffff;font-weight:800;padding:8px 12px}
+.shift-actions button:disabled{opacity:.55;cursor:default}
+.shift-actions button:focus-visible,.mobile button:focus-visible{outline:3px solid #fde68a;outline-offset:2px}
+.shift-actions button:first-child{background:#135b71}
+.shift-status{position:fixed;z-index:6;left:12px;top:78px;max-width:min(490px,calc(100vw - 24px));padding:9px 12px;background:#07121cf2;border:1px solid #315b73;border-radius:10px;color:#dcf6fc;font-size:12px;line-height:1.45}
+@media(max-width:740px){.shift-actions{top:115px;right:10px;left:10px;justify-content:flex-start}.shift-status{top:169px;left:10px;right:10px;max-width:none;font-size:11px}.message{bottom:12px;font-size:11px}}
+@media(max-width:350px){.shift-actions{top:133px}.shift-status{top:187px}}
+
+/* 1.3: keep real throttle/brake/door targets clear in short touch viewports.
+   A status element remains spoken by assistive technology, but cannot
+   cover the buttons or steal their pointer events. */
+@media (max-width:740px) and (max-height:380px){
+ .shift-actions{top:78px;right:auto;left:10px;max-width:calc(100vw - 20px);pointer-events:none}
+ .shift-actions button{pointer-events:auto}
+ .shift-status{position:absolute!important;width:1px!important;height:1px!important;
+   overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;
+   padding:0!important;border:0!important;margin:-1px!important;left:0!important;top:0!important;
+   pointer-events:none!important}
+ .message{pointer-events:none}
+}
+@media (max-width:380px) and (max-height:380px){
+ .hud{top:6px;left:6px;right:6px;gap:4px;justify-content:flex-start}
+ .hud div{padding:4px 5px;font-size:9px}
+ .hud b{font-size:12px}
+ .shift-actions{top:87px}
+ .message{bottom:8px;left:8px;width:calc(100vw - 176px);max-height:calc(100dvh - 145px);
+   min-height:0;padding:5px 6px;font-size:10px;line-height:1.25;overflow:hidden}
+ .mobile{right:8px;bottom:8px}
+}
+</style></head><body><canvas id="c"></canvas><div class="hud"><div>Time<b id="clock">88s</b></div><div>Speed<b id="speed">0 km/h</b></div><div>Next stop<b id="stop">1/6</b></div><div>Delay<b id="delay">0 sec</b></div><div>Comfort<b id="comfort">100%</b></div></div><div class="credit">Architect Industries</div><div class="shift-actions"><button id="shiftBtn" aria-label="Start, resume, or replay shift">Start shift</button><button id="resetBtn" aria-label="Reset shift to ready">Reset</button></div><div class="shift-status" id="shiftStatus" role="status" aria-live="polite">READY · The clock is stopped until your first deliberate action. Pause when this page is inactive.</div><div class="message" id="msg" role="status" aria-live="polite">Deliver passengers at all six glowing stations within 88 active seconds. Press Start, throttle or brake to begin; brake below walking speed to open doors. R resets.</div><div class="mobile"><button data-a="up">THROTTLE</button><button data-a="down">BRAKE</button><button class="wide" data-a="primary">OPEN DOORS</button></div><script src="../../assets/wwg-input.js"></script><script>
+const C=document.getElementById('c'),X=C.getContext('2d'),speedEl=document.getElementById('speed'),stopEl=document.getElementById('stop'),delayEl=document.getElementById('delay'),comfortEl=document.getElementById('comfort'),msg=document.getElementById('msg'),clockEl=document.getElementById('clock');const IN=window.WWGInput||{is:(e,a)=>({up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],primary:['Space']}[a]||[]).includes(e.code)};let DPR=1,W=960,H=540,keys={up:false,down:false},pad={up:false,down:false},running=false,phase='ready',activeMs=0,speed=0,progress=0,nextStop=0,totalDelay=0,comfort=100,doors=0,penalty=0,last=performance.now(),done=false,windowBlurred=false,padConnected=false,padNeedsNeutral=true,padDoor=false,padStart=false;
+const SHIFT_BUTTON=document.getElementById('shiftBtn'),RESET_BUTTON=document.getElementById('resetBtn'),SHIFT_STATUS=document.getElementById('shiftStatus');
+const stopP=[.08,.23,.39,.56,.73,.9],schedule=[8,19,31,43,56,69],SHIFT_LIMIT=88;
 function resize(){DPR=Math.min(2,devicePixelRatio||1);C.width=innerWidth*DPR;C.height=innerHeight*DPR}addEventListener('resize',resize);resize();
 function pos(p){p=(p%1+1)%1;const a=p*Math.PI*2,x=480+330*Math.cos(a),y=275+175*Math.sin(a);return{x,y,a}}
 function nearestStopDistance(){if(nextStop>=stopP.length)return 999;let d=Math.abs(progress-stopP[nextStop]);d=Math.min(d,1-d);return d}
-function elapsed(){return (performance.now()-start)/1000}
-function sync(){speedEl.textContent=Math.round(speed*5.4)+' km/h';stopEl.textContent=(Math.min(nextStop+1,6))+'/6';delayEl.textContent=Math.round(totalDelay+penalty)+' sec';comfortEl.textContent=Math.max(0,Math.round(comfort))+'%'}
-function openDoors(){if(done)return;const d=nearestStopDistance();if(d>.022){msg.textContent='No platform here. Keep moving to the next glowing station.';penalty+=1;return}if(speed>1.9){msg.textContent='Too fast to open safely. Brake below walking speed.';comfort=Math.max(0,comfort-5);penalty+=2;return}const now=elapsed(),late=Math.abs(now-schedule[nextStop]);totalDelay+=late;doors=.9;progress=stopP[nextStop];nextStop++;speed=0;comfort=Math.min(100,comfort+3);if(nextStop>=6){finish();return}msg.textContent=`Stop served. ${late.toFixed(1)} sec from schedule. Depart for stop ${nextStop+1}.`;sync()}
-function finish(){done=true;running=false;const final=Math.max(0,Math.round(totalDelay+penalty+(100-comfort)*.45));msg.textContent=`Route complete • service delay ${final} sec. Lower is better.`;try{parent.postMessage({type:'wwg:game-event',game:'lantern-line',event:'route-complete',score:final,duration:Math.round(elapsed()),meta:{unit:'sec',direction:'low',comfort:Math.round(comfort),stops:6}},'*')}catch{};sync()}
-function reset(){keys={up:false,down:false};running=true;start=performance.now();speed=0;progress=0;nextStop=0;totalDelay=0;comfort=100;doors=0;penalty=0;done=false;last=performance.now();msg.textContent='New shift started. Keep the line smooth and on schedule.';sync()}
-addEventListener('keydown',e=>{if(IN.is(e,'up')){keys.up=true;e.preventDefault()}if(IN.is(e,'down')){keys.down=true;e.preventDefault()}if(IN.is(e,'primary')){e.preventDefault();openDoors()}if(e.code==='KeyR')reset()});addEventListener('keyup',e=>{if(IN.is(e,'up'))keys.up=false;if(IN.is(e,'down'))keys.down=false});document.querySelectorAll('[data-a]').forEach(b=>{const a=b.dataset.a;b.addEventListener('pointerdown',e=>{e.preventDefault();if(a==='primary')openDoors();else keys[a]=true});['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,()=>{if(a!=='primary')keys[a]=false}))});
-function gamepad(){const g=navigator.getGamepads?.()[0];pad.up=!!g?.buttons[7]?.pressed;pad.down=!!g?.buttons[6]?.pressed;if(g?.buttons[0]?.pressed&&!gamepad.lock){gamepad.lock=true;openDoors()}if(!g?.buttons[0]?.pressed)gamepad.lock=false}gamepad.lock=false;
-function update(t){const dt=Math.min(.035,(t-last)/1000);last=t;if(running){gamepad();if(keys.up||pad.up)speed+=7.2*dt;if(keys.down||pad.down)speed-=13*dt;speed-=1.7*dt;speed=Math.max(0,Math.min(14,speed));progress=(progress+speed*dt/138)%1;if(speed>11){penalty+=dt*.6;comfort=Math.max(0,comfort-dt*.75)}if(keys.down&&speed>8)comfort=Math.max(0,comfort-dt*.8);if(nextStop<6&&progress>stopP[nextStop]+.035&&progress-stopP[nextStop]<.2){penalty+=dt*.9}if(elapsed()>88&&!done){penalty+=10;finish()}if(doors>0)doors-=dt;sync()}draw(t);requestAnimationFrame(update)}
-function draw(t){const r=C.getBoundingClientRect(),sx=r.width/W,sy=r.height/H;X.setTransform(DPR*sx,0,0,DPR*sy,0,0);X.fillStyle='#07121c';X.fillRect(0,0,W,H);X.fillStyle='#0c2030';for(let i=0;i<9;i++)for(let j=0;j<5;j++){X.fillStyle=(i+j)%3===0?'#16354a':'#102c3f';X.fillRect(45+i*108,35+j*103,66,55)}X.strokeStyle='#264b63';X.lineWidth=24;X.beginPath();X.ellipse(480,275,330,175,0,0,Math.PI*2);X.stroke();X.strokeStyle='#d1d5db';X.lineWidth=4;X.beginPath();X.ellipse(480,275,330,175,0,0,Math.PI*2);X.stroke();stopP.forEach((p,i)=>{const q=pos(p);X.beginPath();X.arc(q.x,q.y,i===nextStop?18:11,0,7);X.fillStyle=i<nextStop?'#34d399':i===nextStop?'#fbbf24':'#64748b';X.shadowColor=i===nextStop?'#fbbf24':'transparent';X.shadowBlur=i===nextStop?18:0;X.fill();X.shadowBlur=0;X.fillStyle='#cbd5e1';X.font='700 10px system-ui';X.fillText(String(i+1),q.x-3,q.y+4)});const q=pos(progress),ang=q.a+Math.PI/2;X.save();X.translate(q.x,q.y);X.rotate(ang);X.fillStyle=doors>0?'#67e8f9':'#fb7185';X.fillRect(-17,-10,34,20);X.fillStyle='#0f172a';X.fillRect(-10,-7,7,14);X.fillRect(4,-7,7,14);X.restore();X.fillStyle='#e2e8f0';X.font='800 13px system-ui';X.fillText('LANTERN LINE • CITY LOOP',355,275);X.fillStyle='#7894a8';X.font='11px system-ui';X.fillText('Brake into amber station • open doors near zero speed',330,296)}sync();requestAnimationFrame(update);
+function elapsed(){return activeMs/1000}
+function sync(){clockEl.textContent=Math.max(0,Math.ceil(SHIFT_LIMIT-elapsed()))+'s';speedEl.textContent=Math.round(speed*5.4)+' km/h';stopEl.textContent=(Math.min(nextStop+1,6))+'/6';delayEl.textContent=Math.round(totalDelay+penalty)+' sec';comfortEl.textContent=Math.max(0,Math.round(comfort))+'%'}
+function clearPad(){pad.up=pad.down=false;padDoor=false;padStart=false}
+// Native on-screen button holds and click-only pulses are separate from global movement.
+const buttonHeld={up:new Set(),down:new Set()},buttonPulse={up:0,down:0};
+function clearInput(){keys.up=keys.down=false;clearPad();for(const a of ['up','down']){buttonHeld[a].clear();buttonPulse[a]=0}}
+function buttonActive(a){return buttonHeld[a].size>0||buttonPulse[a]>1e-8}
+function startControl(){if(phase!=='active'&&phase!=='finished')beginShift();return phase==='active'&&!document.hidden&&!windowBlurred}
+function doorAction(){if(document.hidden||windowBlurred)return;if(phase==='finished')reset(true);else if(phase!=='active')beginShift();else openDoors()}
+const nativeTarget=e=>e.target?.closest?.('button,input,select,textarea,a,[contenteditable="true"]');
+function stateStatus(){
+ SHIFT_BUTTON.disabled=phase==='active';
+ SHIFT_BUTTON.textContent=phase==='ready'?'Start shift':phase==='paused'?'Resume shift':phase==='finished'?'Play another shift':'Running';
+ const nextStatus=phase==='ready'?'READY · 88 active seconds. Press Start, throttle or brake to begin. Open doors only when safely stopped.':phase==='active'?`LIVE · ${nextStop}/6 stops served, ${Math.max(0,Math.ceil(SHIFT_LIMIT-elapsed()))} active seconds remaining.`:phase==='paused'?'PAUSED · Your clock, train, and timetable are frozen. Resume deliberately; no held keys or gamepad inputs carry over.':`SHIFT ENDED · ${nextStop}/6 stops served. Use Play another shift or Reset to try again.`;
+ if(SHIFT_STATUS.textContent!==nextStatus)SHIFT_STATUS.textContent=nextStatus;
+}
+function beginShift(){
+ if(document.hidden||windowBlurred||phase==='active'||phase==='finished')return false;
+ phase='active';running=true;last=performance.now();padNeedsNeutral=true;clearInput();stateStatus();return true;
+}
+function pauseShift(){if(phase!=='active')return;phase='paused';running=false;last=performance.now();padNeedsNeutral=true;clearInput();stateStatus();msg.textContent='Shift paused while the page was inactive. Your active time and station schedule are preserved.';sync()}
+function openDoors(){
+ if(phase!=='active'||document.hidden||windowBlurred||done)return;
+ if(elapsed()>=SHIFT_LIMIT){finish();return}
+ const d=nearestStopDistance();
+ if(d>.022){msg.textContent='No platform here. Keep moving to the next glowing station.';penalty+=1;sync();return}
+ if(speed>1.9){msg.textContent='Too fast to open safely. Brake below walking speed.';comfort=Math.max(0,comfort-5);penalty+=2;sync();return}
+ const now=elapsed(),late=Math.abs(now-schedule[nextStop]);totalDelay+=late;doors=.9;progress=stopP[nextStop];nextStop++;speed=0;comfort=Math.min(100,comfort+3);
+ if(nextStop>=6){finish();return}
+ msg.textContent=`Stop served. ${late.toFixed(1)} sec from schedule. Depart for stop ${nextStop+1}.`;sync();stateStatus();
+}
+function finish(){
+ if(done||phase!=='active')return;
+ done=true;running=false;phase='finished';clearInput();padNeedsNeutral=true;
+ const serviced=nextStop,cleared=serviced===stopP.length&&elapsed()<SHIFT_LIMIT,final=Math.max(0,Math.round(totalDelay+penalty+(100-comfort)*.45));
+ if(cleared)msg.textContent=`Route complete • six stations served. Ranked service delay ${final} sec; lower is better. Play another shift to improve.`;
+ else msg.textContent=`Shift expired or incomplete: ${serviced}/6 stations served. This attempt is unranked; Play another shift or press R.`;
+ try{const packet={type:'wwg:game-event',game:'lantern-line',event:cleared?'route-complete':'route-failed',duration:Math.round(elapsed()),meta:{unit:'sec',direction:'low',comfort:Math.round(comfort),stops:serviced,requiredStops:stopP.length,outcome:cleared?'cleared':'incomplete',...(cleared?{}:{attemptDelay:final})}};if(cleared)packet.score=final;parent.postMessage(packet,'*')}catch{}
+ sync();stateStatus();
+}
+function reset(begin=false){
+ clearInput();keys={up:false,down:false};pad={up:false,down:false};running=false;phase='ready';activeMs=0;speed=0;progress=0;nextStop=0;totalDelay=0;comfort=100;doors=0;penalty=0;done=false;last=performance.now();padNeedsNeutral=true;padDoor=false;padStart=false;
+ msg.textContent='Ready for a new six-station shift. The 88-second clock starts on your first deliberate action.';sync();stateStatus();
+ if(begin)beginShift();
+}
+SHIFT_BUTTON.addEventListener('click',()=>{if(phase==='finished')reset(true);else beginShift()});
+RESET_BUTTON.addEventListener('click',()=>reset());
+addEventListener('blur',()=>{windowBlurred=true;pauseShift()});
+addEventListener('focus',()=>{windowBlurred=false;last=performance.now()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseShift();last=performance.now()});
+addEventListener('keydown',e=>{
+ if(document.hidden||windowBlurred||e.defaultPrevented)return;
+ // Preserve native focused button activation rather than opening tram doors behind it.
+ if((e.code==='Space'||e.code==='Enter')&&nativeTarget(e))return;
+ if(e.code==='KeyR'&&!e.repeat){e.preventDefault();reset();return}
+ if(e.code==='KeyP'&&!e.repeat){e.preventDefault();if(phase==='active')pauseShift();else if(phase==='paused')beginShift();return}
+ if(e.code==='Enter'&&!(e.target instanceof HTMLElement&&e.target.closest('button,input,select,textarea,a'))&&!e.repeat&&(phase==='ready'||phase==='paused')){e.preventDefault();beginShift();return}
+ if(IN.is(e,'up')||IN.is(e,'down')){
+   e.preventDefault();if(phase==='finished')return;
+   const dir=IN.is(e,'up')?'up':'down';
+   if(phase!=='active'){if(!e.repeat)beginShift();}if(phase==='active')keys[dir]=true;return;
+ }
+ if(IN.is(e,'primary')){e.preventDefault();if(e.repeat)return;
+   if(phase==='finished')reset(true);else if(phase!=='active')beginShift();else openDoors();
+ }
+});
+addEventListener('keyup',e=>{if(IN.is(e,'up'))keys.up=false;if(IN.is(e,'down'))keys.down=false});
+document.querySelectorAll('[data-a]').forEach(b=>{
+ const a=b.dataset.a;
+ b.addEventListener('pointerdown',e=>{e.preventDefault();if(document.hidden||windowBlurred)return;
+  if(a==='primary'){if(phase==='finished')reset(true);else if(phase!=='active')beginShift();else openDoors()}
+  else if(phase!=='finished'){if(phase!=='active')beginShift();if(phase==='active')keys[a]=true}
+ });
+ ['pointerup','pointercancel','pointerleave','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>{if(a!=='primary')keys[a]=false}));
+ // A native click without a physical pointer (keyboard or assistive activation)
+ // must work as well. Physical pointerdown already handles the action.
+ b.addEventListener('click',e=>{if(e.detail!==0||e.pointerType||e.sourceCapabilities?.firesTouchEvents||document.hidden||windowBlurred)return;
+   if(a==='primary')doorAction();else if(startControl())buttonPulse[a]=.5;
+ });
+ if(a!=='primary'){
+   const activation=e=>e.code==='Space'||e.code==='Enter';
+   b.addEventListener('keydown',e=>{if(!activation(e))return;e.preventDefault();
+     if(!e.repeat&&startControl())buttonHeld[a].add(e.code);
+   });
+   b.addEventListener('keyup',e=>{if(!activation(e))return;e.preventDefault();buttonHeld[a].delete(e.code)});
+   b.addEventListener('blur',()=>buttonHeld[a].clear());
+ }
+});
+function gamepad(){
+ let g=null;try{g=Array.from(navigator.getGamepads?.()||[]).find(v=>v&&v.connected!==false)||null}catch{}
+ if(!g){padConnected=false;padNeedsNeutral=true;clearPad();return}
+ if(!padConnected){padConnected=true;padNeedsNeutral=true}
+ const up=!!g.buttons?.[7]?.pressed,down=!!g.buttons?.[6]?.pressed,door=!!g.buttons?.[0]?.pressed,start=!!g.buttons?.[9]?.pressed;
+ if(padNeedsNeutral){clearPad();if(!up&&!down&&!door&&!start&&Math.abs(Number(g.axes?.[0])||0)<.16&&Math.abs(Number(g.axes?.[1])||0)<.16)padNeedsNeutral=false;return}
+ if(document.hidden||windowBlurred){clearPad();return}
+ const pressedDoor=door&&!padDoor,pressedStart=start&&!padStart;
+ padDoor=door;padStart=start;
+ if(pressedStart){if(phase==='finished')reset(true);else if(phase==='active')pauseShift();else beginShift()}
+ else if(pressedDoor){if(phase==='finished')reset(true);else if(phase==='ready'||phase==='paused')beginShift();else openDoors()}
+ if(phase==='active'){pad.up=up;pad.down=down}
+ else {pad.up=pad.down=false}
+}
+// A slow frame must not grant extra wall-clock time to meet a ranked timetable.
+// Simulate the foreground interval in bounded 20 ms steps, advancing the
+// timetable and train together. At <= 5 Hz the full frame is accounted for;
+// a longer one-off stall is limited to 500 ms to avoid unbounded catch-up.
+const MAX_FOREGROUND_FRAME=0.5, MAX_SERVICE_STEP=0.02;
+function update(t){
+ const wasRunning=phase==='active'&&running&&!document.hidden&&!windowBlurred;
+ const frameDt=Math.max(0,Math.min(MAX_FOREGROUND_FRAME,(t-last)/1000));
+ last=t;
+ if(phase==='active'&&(document.hidden||windowBlurred))pauseShift();
+ if(!document.hidden&&!windowBlurred)gamepad();
+ if(wasRunning&&phase==='active'&&running){
+   let remaining=frameDt;
+   while(remaining>0.00000001&&phase==='active'&&running){
+     const dt=Math.min(MAX_SERVICE_STEP,remaining);
+     remaining-=dt;
+     activeMs+=dt*1000;
+     if(elapsed()>=SHIFT_LIMIT){finish();break}
+     if(keys.up||pad.up||buttonActive('up'))speed+=7.2*dt;
+     // Resolve braking once for both physics and comfort, regardless of input device.
+     const braking=keys.down||pad.down||buttonActive('down');
+     if(braking)speed-=13*dt;
+     speed-=1.7*dt;speed=Math.max(0,Math.min(14,speed));progress=(progress+speed*dt/138)%1;
+     if(speed>11){penalty+=dt*.6;comfort=Math.max(0,comfort-dt*.75)}
+     if(braking&&speed>8)comfort=Math.max(0,comfort-dt*.8);
+     for(const a of ['up','down'])buttonPulse[a]=Math.max(0,buttonPulse[a]-dt);
+     if(nextStop<6&&progress>stopP[nextStop]+.035&&progress-stopP[nextStop]<.2)penalty+=dt*.9;
+     if(doors>0)doors=Math.max(0,doors-dt);
+   }
+   sync();stateStatus();
+ }
+ draw(t);requestAnimationFrame(update)
+}
+function draw(t){const r=C.getBoundingClientRect(),sx=r.width/W,sy=r.height/H;X.setTransform(DPR*sx,0,0,DPR*sy,0,0);X.fillStyle='#07121c';X.fillRect(0,0,W,H);X.fillStyle='#0c2030';for(let i=0;i<9;i++)for(let j=0;j<5;j++){X.fillStyle=(i+j)%3===0?'#16354a':'#102c3f';X.fillRect(45+i*108,35+j*103,66,55)}X.strokeStyle='#264b63';X.lineWidth=24;X.beginPath();X.ellipse(480,275,330,175,0,0,Math.PI*2);X.stroke();X.strokeStyle='#d1d5db';X.lineWidth=4;X.beginPath();X.ellipse(480,275,330,175,0,0,Math.PI*2);X.stroke();stopP.forEach((p,i)=>{const q=pos(p);X.beginPath();X.arc(q.x,q.y,i===nextStop?18:11,0,7);X.fillStyle=i<nextStop?'#34d399':i===nextStop?'#fbbf24':'#64748b';X.shadowColor=i===nextStop?'#fbbf24':'transparent';X.shadowBlur=i===nextStop?18:0;X.fill();X.shadowBlur=0;X.fillStyle='#cbd5e1';X.font='700 10px system-ui';X.fillText(String(i+1),q.x-3,q.y+4)});const q=pos(progress),ang=q.a+Math.PI/2;X.save();X.translate(q.x,q.y);X.rotate(ang);X.fillStyle=doors>0?'#67e8f9':'#fb7185';X.fillRect(-17,-10,34,20);X.fillStyle='#0f172a';X.fillRect(-10,-7,7,14);X.fillRect(4,-7,7,14);X.restore();X.fillStyle='#e2e8f0';X.font='800 13px system-ui';X.fillText('LANTERN LINE • CITY LOOP',355,275);X.fillStyle='#7894a8';X.font='11px system-ui';X.fillText('Brake into amber station • open doors near zero speed',330,296)}reset();requestAnimationFrame(update);
 </script></body></html>

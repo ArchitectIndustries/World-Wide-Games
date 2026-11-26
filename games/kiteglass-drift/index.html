@@ -1,11 +1,246 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Kiteglass Drift</title><style>*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#061321;color:#f8fafc;font-family:system-ui,sans-serif;overflow:hidden}.wrap{min-height:100vh;display:grid;grid-template-columns:minmax(360px,850px) minmax(245px,320px);gap:16px;justify-content:center;align-items:center;padding:16px;background:radial-gradient(circle at 70% 15%,#164e63,#061321 58%)}canvas{width:100%;height:auto;aspect-ratio:1.55;border:1px solid #286582;border-radius:20px;background:#075985;box-shadow:0 20px 60px #0008}.panel{background:#071b2be8;border:1px solid #286582;border-radius:18px;padding:16px}.panel h1{margin:0 0 4px}.ey{font-size:10px;letter-spacing:.14em;color:#67e8f9}.muted{color:#bae6fd;font-size:12px;line-height:1.45}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}.stat{background:#082032;border:1px solid #285a74;border-radius:11px;padding:8px;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:9px;color:#7dd3fc;text-transform:uppercase}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions button,.touch button{border:1px solid #3b7a96;background:#0c3148;color:white;border-radius:11px;padding:11px;font-weight:800}.actions .primary{background:#0e7490}.note{min-height:48px;color:#cffafe;font-size:12px;line-height:1.45}.touch{display:none;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:9px}@media(max-width:800px){html,body{overflow:auto}.wrap{grid-template-columns:1fr;align-content:start;padding:10px}.panel,canvas{max-width:95vw;width:100%}.touch{display:grid}}</style></head><body><div class="wrap"><canvas id="sky" width="860" height="555" aria-label="Kiteglass gliding course"></canvas><aside class="panel"><div class="ey">ARCHITECT INDUSTRIES SKYLINE LEAGUE</div><h1>Kiteglass Drift</h1><p class="muted">Thread seven suspended gates, ride thermal columns, and protect your line from crosswind. Missed gates add time.</p><div class="stats"><div class="stat"><b id="gate">0/7</b><span>Gates</span></div><div class="stat"><b id="time">0.0</b><span>Time</span></div><div class="stat"><b id="pen">0</b><span>Penalty</span></div></div><p class="note" id="note">Hold a clean glide through the cyan gate.</p><div class="actions"><button id="flare" class="primary">Flare / level</button><button id="restart">Restart run</button></div><div class="touch"><button data-hold="up">▲</button><button data-tap="flare">FLARE</button><button data-hold="down">▼</button></div><p class="muted">Keyboard: remappable Up/Down pitch · Primary flares. Gamepad left stick + A supported. Touch controls appear on smaller screens.</p></aside></div><script src="../../assets/wwg-input.js"></script><script>
-const IN=window.WWGInput||{is:(e,a,x=[])=>({up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],primary:['Space']}[a]||[]).concat(x).includes(e.code)};const C=document.getElementById('sky'),X=C.getContext('2d'),GE=document.getElementById('gate'),TE=document.getElementById('time'),PE=document.getElementById('pen'),NOTE=document.getElementById('note');
-const GATES=[{x:520,y:190},{x:980,y:330},{x:1450,y:155},{x:1940,y:285},{x:2440,y:175},{x:2940,y:350},{x:3470,y:220}],THERMALS=[{x:760,y:360},{x:1710,y:220},{x:2680,y:320}];let wx=0,y=270,vy=0,speed=145,gate=0,penalty=0,finished=false,start=performance.now(),last=start,keys={up:false,down:false};
-function reset(){wx=0;y=270;vy=0;speed=145;gate=0;penalty=0;finished=false;start=performance.now();last=start;NOTE.textContent='Hold a clean glide through the cyan gate.';render(performance.now())}
-function flare(){if(finished)return;vy*=.22;vy-=36;NOTE.textContent='Flare set. Nose levelled.'}
-function gateCheck(prev,now){while(gate<GATES.length&&prev<GATES[gate].x&&now>=GATES[gate].x){const g=GATES[gate],ok=Math.abs(y-g.y)<=82;if(ok){NOTE.textContent=`Gate ${gate+1} clean.`}else{penalty+=6;NOTE.textContent=`Gate ${gate+1} missed: +6 sec.`}gate++}}
-function finish(){if(finished)return;finished=true;const elapsed=(performance.now()-start)/1000,score=Math.max(1,Math.round((elapsed+penalty)*10)/10);NOTE.textContent=`Course complete: ${score.toFixed(1)} sec adjusted.`;try{parent.postMessage({type:'wwg:game-event',game:'kiteglass-drift',event:'course-complete',score,duration:Math.round(elapsed),meta:{gates:gate,penalty}},'*')}catch{}}
-function update(t){const dt=Math.min(.035,(t-last)/1000||0);last=t;if(!finished){const pitch=(keys.up?-1:0)+(keys.down?1:0);vy+=pitch*160*dt;vy+=8*dt;const cross=Math.sin(wx/260)*18;vy+=cross*dt;vy*=Math.pow(.985,dt*60);y+=vy*dt;y=Math.max(55,Math.min(500,y));if(y===55||y===500)vy*=-.18;let thermal=0;for(const th of THERMALS)if(Math.abs(wx-th.x)<100&&Math.abs(y-th.y)<95)thermal=1;speed+=(thermal?34:-5)*dt;speed=Math.max(132,Math.min(186,speed));const prev=wx;wx+=speed*dt;gateCheck(prev,wx);if(wx>GATES[GATES.length-1].x+320)finish()}render(t);requestAnimationFrame(update)}
-function render(t){const elapsed=(t-start)/1000;GE.textContent=gate+'/7';TE.textContent=(elapsed+(finished?0:0)).toFixed(1);PE.textContent=penalty;const grad=X.createLinearGradient(0,0,0,C.height);grad.addColorStop(0,'#0ea5e9');grad.addColorStop(1,'#172554');X.fillStyle=grad;X.fillRect(0,0,C.width,C.height);X.fillStyle='#ffffff22';for(let i=0;i<8;i++){let cx=((i*230-wx*.24)%1100+1100)%1100-120,cy=70+(i%4)*105;X.beginPath();X.ellipse(cx,cy,90,22,0,0,Math.PI*2);X.fill()}for(const th of THERMALS){const sx=180+(th.x-wx);if(sx>-120&&sx<C.width+120){X.fillStyle='#fde68a20';X.fillRect(sx-55,th.y-110,110,220);X.strokeStyle='#fde68a80';X.setLineDash([7,8]);X.strokeRect(sx-55,th.y-110,110,220);X.setLineDash([])}}for(let i=gate;i<GATES.length;i++){const g=GATES[i],sx=180+(g.x-wx);if(sx<-50||sx>C.width+80)continue;X.strokeStyle=i===gate?'#67e8f9':'#7dd3fc88';X.lineWidth=i===gate?8:4;X.beginPath();X.moveTo(sx,g.y-86);X.lineTo(sx,g.y+86);X.stroke();X.fillStyle='#ecfeff';X.font='bold 13px system-ui';X.fillText(String(i+1),sx+10,g.y-72)}X.save();X.translate(180,y);X.rotate(Math.max(-.4,Math.min(.4,vy/240)));X.fillStyle='#f8fafc';X.strokeStyle='#0f172a';X.lineWidth=3;X.beginPath();X.moveTo(-62,0);X.lineTo(0,-24);X.lineTo(62,0);X.lineTo(15,10);X.lineTo(0,23);X.lineTo(-15,10);X.closePath();X.fill();X.stroke();X.fillStyle='#fb7185';X.beginPath();X.arc(0,11,5,0,Math.PI*2);X.fill();X.restore();X.fillStyle='#e0f2fe';X.font='12px system-ui';X.fillText(`airspeed ${Math.round(speed)} · crosswind ${Math.round(Math.sin(wx/260)*18)}`,18,28)}
-addEventListener('keydown',e=>{if(IN.is(e,'up',['ArrowUp'])){keys.up=true;e.preventDefault()}else if(IN.is(e,'down',['ArrowDown'])){keys.down=true;e.preventDefault()}else if(IN.is(e,'primary',['Space'])){flare();e.preventDefault()}else if(e.code==='KeyR')reset()});addEventListener('keyup',e=>{if(IN.is(e,'up',['ArrowUp']))keys.up=false;if(IN.is(e,'down',['ArrowDown']))keys.down=false});document.querySelectorAll('[data-hold]').forEach(b=>{const a=b.dataset.hold;b.onpointerdown=()=>keys[a]=true;b.onpointerup=b.onpointercancel=b.onpointerleave=()=>keys[a]=false});document.querySelector('[data-tap="flare"]').onclick=flare;document.getElementById('flare').onclick=flare;document.getElementById('restart').onclick=reset;function pad(){const p=navigator.getGamepads?.()[0];if(p&&!finished){keys.up=(p.axes?.[1]||0)<-.35;keys.down=(p.axes?.[1]||0)>.35;if(p.buttons?.[0]?.pressed&&!pad.was)flare();pad.was=!!p.buttons?.[0]?.pressed}requestAnimationFrame(pad)}reset();requestAnimationFrame(update);requestAnimationFrame(pad);
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kiteglass Drift 1.5 — Rate-Stable Gliding</title><style>*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#061321;color:#f8fafc;font-family:system-ui,sans-serif;overflow:hidden}.wrap{min-height:100vh;display:grid;grid-template-columns:minmax(360px,850px) minmax(245px,320px);gap:16px;justify-content:center;align-items:center;padding:16px;background:radial-gradient(circle at 70% 15%,#164e63,#061321 58%)}canvas{width:100%;height:auto;aspect-ratio:1.55;border:1px solid #286582;border-radius:20px;background:#075985;box-shadow:0 20px 60px #0008}.panel{background:#071b2be8;border:1px solid #286582;border-radius:18px;padding:16px}.panel h1{margin:0 0 4px}.ey{font-size:10px;letter-spacing:.14em;color:#67e8f9}.muted{color:#bae6fd;font-size:12px;line-height:1.45}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}.stat{background:#082032;border:1px solid #285a74;border-radius:11px;padding:8px;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:9px;color:#7dd3fc;text-transform:uppercase}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions button,.touch button{border:1px solid #3b7a96;background:#0c3148;color:white;border-radius:11px;padding:11px;font-weight:800}.actions .primary{background:#0e7490}.actions .start{grid-column:1/-1;background:#0e7490;font-size:14px}.actions button:focus-visible,.touch button:focus-visible{outline:3px solid #fef08a;outline-offset:3px}.actions button:disabled{opacity:.65;cursor:default}.phase{font-weight:800;letter-spacing:.09em;color:#a5f3fc}.focus-warning{border:1px solid #facc15;background:#3f2b0f;color:#fef08a;padding:10px;border-radius:10px;font-weight:700;font-size:12px}.touch button{touch-action:none}.note{min-height:48px;color:#cffafe;font-size:12px;line-height:1.45}.touch{display:none;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:9px}@media(max-width:800px){html,body{overflow:auto}.wrap{grid-template-columns:1fr;align-content:start;padding:10px}.panel,canvas{max-width:95vw;width:100%}.touch{display:grid}}
+/* Compact landscape: a flight view and every action on one physical screen.
+   The help disclosure floats above play only when intentionally opened. */
+.compact-guide{display:none}
+@media(max-width:800px) and (max-height:430px){
+  html,body{height:100%;overflow:hidden}
+  .wrap{height:100vh;height:100dvh;min-height:0;max-height:100dvh;
+    display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;
+    justify-content:stretch;align-content:stretch;align-items:stretch;gap:4px;padding:4px;
+    overflow:hidden}
+  canvas{display:block;width:auto;height:100%;min-height:0;max-width:100%;max-height:100%;
+    aspect-ratio:860 / 555;justify-self:center;align-self:center;object-fit:contain;
+    border-radius:9px;box-shadow:none}
+  .panel{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);
+    gap:3px;padding:4px 5px;max-width:100%;width:100%;border-radius:9px;align-items:center}
+  .panel>.ey,.panel>h1,.panel>p.muted{display:none}
+  .stats{grid-column:1/3;grid-row:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:3px;margin:0;min-width:0}
+  .stat{padding:1px 2px;border-radius:5px}
+  .stat b{font-size:11px;line-height:1.1}.stat span{font-size:8px;line-height:1}
+  .phase{grid-column:3;grid-row:1;margin:0;font-size:9px;line-height:1.15;
+    text-align:center;letter-spacing:0;overflow-wrap:anywhere}
+  .note{grid-column:1/-1;grid-row:2;margin:0;min-height:0;font-size:10px;line-height:1.1;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .focus-warning:not([hidden]){grid-column:1/-1;grid-row:2;margin:0;padding:2px;font-size:9px}
+  .actions{grid-column:1/-1;grid-row:3;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}
+  .actions .start{grid-column:auto;font-size:11px}
+  .actions button,.touch button{min-width:0;min-height:32px;padding:4px 2px;font-size:11px;border-radius:6px}
+  .touch{grid-column:1/-1;grid-row:4;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:3px;margin:0}
+  .compact-guide{display:block;position:fixed;right:7px;top:7px;z-index:20;
+    max-width:min(290px,calc(100vw - 14px));border-radius:8px;
+    background:#062638f0;border:1px solid #67e8f9;color:#e0f2fe;font-size:11px}
+  .compact-guide summary{cursor:pointer;list-style:none;padding:4px 9px;font-weight:800}
+  .compact-guide summary:focus-visible{outline:3px solid #fef08a;outline-offset:2px}
+  .compact-guide[open]{max-height:calc(100dvh - 14px);overflow:auto;box-shadow:0 5px 24px #000d}
+  .compact-guide[open] summary{position:sticky;top:0;background:#062638}
+  .compact-guide p{padding:0 10px 8px;margin:5px 0;line-height:1.35}
+}
+/* v418: compact-flight controls retain native-size targets without squeezing the
+   flight corridor below a playable view. No alteration to world geometry. */
+@media(max-width:800px) and (max-height:430px){
+  .wrap{grid-template-rows:minmax(0,1fr) auto;gap:3px;padding:3px}
+  .panel{grid-template-rows:19px 14px 44px 44px;gap:2px;padding:2px 4px;align-content:stretch}
+  .stats{height:19px;min-height:0}
+  .stat{height:19px;min-height:0;padding:0 1px;display:flex;flex-direction:column;justify-content:center}
+  .stat b{font-size:10px;line-height:10px}
+  .stat span{font-size:7px;line-height:7px}
+  .phase{font-size:8px;line-height:10px;max-height:19px;overflow:hidden}
+  .note{height:14px;min-height:0;line-height:14px}
+  .actions,.touch{height:44px;min-height:0}
+  .actions button,.touch button{height:44px;min-height:44px;padding:0 2px;font-size:11px}
+  .actions .start{font-size:11px}
+  canvas{border-radius:7px}
+  .compact-guide summary{min-height:24px}
+}
+
+</style></head><body><div class="wrap"><canvas id="sky" width="860" height="555" aria-label="Kiteglass gliding course"></canvas><aside class="panel"><div class="ey">ARCHITECT INDUSTRIES SKYLINE LEAGUE</div><h1>Kiteglass Drift</h1><p class="muted">Thread seven suspended gates at their crossing plane, ride thermal columns, and protect your line from crosswind. Passing outside the posts adds six seconds.</p><div class="stats"><div class="stat"><b id="gate">0/7</b><span>Gates</span></div><div class="stat"><b id="time">0.0</b><span>Time</span></div><div class="stat"><b id="pen">0</b><span>Penalty</span></div></div><p class="note" id="note" role="status" aria-live="polite" aria-atomic="true">Cross the cyan gate between its posts for a clean pass.</p><p class="phase" id="flightPhase" role="status" aria-live="polite" aria-atomic="true">READY · Press Start flight</p><p id="flightFocusNotice" class="focus-warning" role="status" aria-live="polite" hidden>FLIGHT SUSPENDED · Return to this tab to continue. No flight time is consumed.</p><div class="actions"><button id="start" class="start">Start flight</button><button id="flare" class="primary">Flare / level</button><button id="restart">Restart run</button></div><div class="touch"><button type="button" data-hold="up" aria-label="Pitch upward">▲</button><button type="button" data-tap="flare" aria-label="Flare to level the glider">FLARE</button><button type="button" data-hold="down" aria-label="Pitch downward">▼</button></div><p class="muted">Press Start flight before the timer begins. Keyboard: remappable Up/Down pitch · Primary flares · R restarts. Gamepad left stick pitches, A starts/flares after releasing controls to neutral on connection. Touch controls appear on smaller screens. Switching away suspends your run without a penalty.</p></aside><details class="compact-guide"><summary>Help · Flight controls</summary><p>Thread seven gates between the posts. Passing outside adds six seconds. Start the course, pitch with ▲ and ▼, use FLARE to level, or restart. Keyboard: remappable Up/Down and Primary; R resets. Gamepad: left stick, A to start and flare. Switching away pauses flight time.</p></details></div><script src="../../assets/wwg-input.js"></script><script>
+const IN=window.WWGInput||{is:(e,a,x=[])=>({up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],primary:['Space']}[a]||[]).concat(x).includes(e.code)};
+const C=document.getElementById('sky'),X=C.getContext('2d'),GE=document.getElementById('gate'),TE=document.getElementById('time'),PE=document.getElementById('pen'),NOTE=document.getElementById('note');
+const PHASE=document.getElementById('flightPhase'),FOCUS_NOTICE=document.getElementById('flightFocusNotice'),START=document.getElementById('start');
+const GATES=[{x:520,y:190},{x:980,y:330},{x:1450,y:155},{x:1940,y:285},{x:2440,y:175},{x:2940,y:350},{x:3470,y:220}];
+const THERMALS=[{x:760,y:360},{x:1710,y:220},{x:2680,y:320}];
+let wx=0,y=270,vy=0,speed=145,gate=0,cleanGates=0,penalty=0,elapsed=0;
+// Fixed 120 Hz flight physics: render frequency cannot shorten the distance travelled
+// while still charging the full active clock. Limit extreme catch-up to 2 seconds.
+const FLIGHT_DT=1/120,MAX_CATCHUP_SECONDS=2,MAX_FLIGHT_STEPS=240;
+let flightCarry=0;
+let phase='ready',last=performance.now(),skipNextDelta=true;
+// Independent sources keep a neutral or disconnected gamepad from suppressing the keyboard.
+let keys={up:false,down:false},touchKeys={up:false,down:false},padKeys={up:false,down:false};
+let padConnected=false,padIndex=-1,padNeedsNeutral=true,padAWasDown=false;
+let windowBlurred=false,focusPaused=!!document.hidden;
+const touchPointers={up:new Set(),down:new Set()};
+function clearTouch(){for(const ids of Object.values(touchPointers))ids.clear();touchKeys={up:false,down:false}}
+function clearPad(){padKeys={up:false,down:false};padAWasDown=false}
+function clearInput(){keys={up:false,down:false};clearTouch();clearPad();padNeedsNeutral=true}
+function status(){
+  PHASE.textContent=focusPaused?'SUSPENDED · Flight and timer frozen':phase==='ready'?'READY · Press Start flight':phase==='active'?'ACTIVE · Follow the gate line':'COMPLETE · Score recorded';
+  FOCUS_NOTICE.hidden=!focusPaused;
+  START.disabled=focusPaused||phase!=='ready';
+  START.textContent=phase==='ready'?'Start flight':phase==='active'?'Flying':'Course complete';
+}
+function reset(){
+  wx=0;y=270;vy=0;speed=145;gate=0;cleanGates=0;penalty=0;elapsed=0;
+  phase='ready';clearInput();flightCarry=0;last=performance.now();skipNextDelta=true;
+  NOTE.textContent='Ready: press Start flight, then cross the cyan gate between its posts.';
+  status();render(last);
+}
+function startRun(){
+  if(focusPaused||phase!=='ready')return false;
+  phase='active';flightCarry=0;last=performance.now();skipNextDelta=true;
+  NOTE.textContent='Flight started. Pass through all seven gates; misses add six seconds.';
+  status();render(last);return true;
+}
+function flare(){if(focusPaused||phase!=='active')return false;vy*=.22;vy-=36;NOTE.textContent='Flare set. Nose levelled.';return true}
+// Judge the glider at the gate crossing plane, preserving v231's swept-scoring fix.
+function gateCheck(prevX,prevY,nowX,nowY){
+  const dx=nowX-prevX;
+  if(!(dx>0))return;
+  while(gate<GATES.length&&prevX<=GATES[gate].x&&nowX>=GATES[gate].x){
+    const g=GATES[gate],fraction=Math.max(0,Math.min(1,(g.x-prevX)/dx));
+    const atGateY=prevY+(nowY-prevY)*fraction;
+    const clean=Number.isFinite(atGateY)&&Math.abs(atGateY-g.y)<=82;
+    if(clean){cleanGates++;NOTE.textContent=`Gate ${gate+1} clean at crossing. ${cleanGates} of ${gate+1} clean.`}
+    else{penalty+=6;NOTE.textContent=`Gate ${gate+1} outside posts at crossing: +6 sec. ${cleanGates} clean.`}
+    gate++;
+  }
+}
+function finish(){
+  if(phase!=='active'||gate!==GATES.length||wx<=GATES[GATES.length-1].x+320)return false;
+  phase='complete';const score=Math.max(1,Math.round((elapsed+penalty)*10)/10);
+  NOTE.textContent=`Course complete: ${score.toFixed(1)} sec adjusted.`;clearInput();status();render(performance.now());
+  try{parent.postMessage({type:'wwg:game-event',game:'kiteglass-drift',event:'course-complete',score,duration:Math.round(elapsed),meta:{gates:gate,cleanGates,penalty}},'*')}catch{}
+  return true;
+}
+function setFocus(){
+  const inactive=windowBlurred||!!document.hidden;
+  if(inactive===focusPaused)return;
+  focusPaused=inactive;clearInput();flightCarry=0;last=performance.now();skipNextDelta=true;
+  if(focusPaused)NOTE.textContent='Flight suspended while inactive; no time or movement consumed.';
+  else if(phase==='active')NOTE.textContent='Flight resumed. Pitch controls released; steer again to continue.';
+  else if(phase==='ready')NOTE.textContent='Ready: press Start flight to begin.';
+  status();render(last);
+}
+addEventListener('blur',()=>{windowBlurred=true;setFocus()});
+addEventListener('focus',()=>{windowBlurred=false;setFocus()});
+document.addEventListener('visibilitychange',setFocus);
+addEventListener('pagehide',()=>{windowBlurred=true;setFocus()});
+addEventListener('pageshow',()=>{windowBlurred=false;setFocus()});
+function isNativeControl(target){return !!target?.closest?.('button,input,select,textarea,a,[role="button"],[contenteditable="true"]')}
+addEventListener('keydown',e=>{
+  if(focusPaused)return;
+  if(isNativeControl(e.target)&&(e.code==='Space'||e.code==='Enter'||e.code==='KeyR'))return;
+  if(IN.is(e,'up',['ArrowUp'])){keys.up=true;e.preventDefault();return}
+  if(IN.is(e,'down',['ArrowDown'])){keys.down=true;e.preventDefault();return}
+  if(IN.is(e,'primary',['Space'])){if(!e.repeat){if(phase==='ready')startRun();else flare()}e.preventDefault();return}
+  if(e.code==='KeyR'&&!e.repeat){reset();e.preventDefault()}
+});
+addEventListener('keyup',e=>{
+  if(IN.is(e,'up',['ArrowUp']))keys.up=false;
+  if(IN.is(e,'down',['ArrowDown']))keys.down=false;
+});
+function bindHold(button){
+  const direction=button.dataset.hold,ids=touchPointers[direction];
+  const keyHolds=new Set();let lastPointerAt=-Infinity,semanticPulse=null;
+  const refresh=()=>{touchKeys[direction]=ids.size>0||keyHolds.size>0||semanticPulse!==null};
+  function up(e){lastPointerAt=performance.now();ids.delete(e.pointerId);refresh()}
+  button.addEventListener('pointerdown',e=>{
+    if(focusPaused||phase!=='active')return;
+    e.preventDefault();lastPointerAt=performance.now();ids.add(e.pointerId);refresh();
+    try{button.setPointerCapture(e.pointerId)}catch{}
+  });
+  button.addEventListener('pointerup',up);
+  button.addEventListener('pointercancel',up);
+  button.addEventListener('lostpointercapture',up);
+  button.addEventListener('pointerleave',e=>{if(!button.hasPointerCapture?.(e.pointerId))up(e)});
+  // Native focused Enter/Space holds until key release. Prevent the browser's
+  // synthetic click so one keyboard action cannot become a second touch pulse.
+  button.addEventListener('keydown',e=>{
+    if(e.code!=='Enter'&&e.code!=='Space')return;
+    e.preventDefault();e.stopPropagation();
+    if(focusPaused||phase!=='active')return;
+    keyHolds.add(e.code);refresh();
+  });
+  button.addEventListener('keyup',e=>{
+    if(e.code!=='Enter'&&e.code!=='Space')return;
+    e.preventDefault();e.stopPropagation();keyHolds.delete(e.code);refresh();
+  });
+  button.addEventListener('blur',()=>{keyHolds.clear();refresh()});
+  // An assistive-technology click has no pointer press. Give it a bounded
+  // directional pulse; ignore Chromium's touch-generated follow-up click.
+  button.addEventListener('click',e=>{
+    if(focusPaused||phase!=='active'||keyHolds.size||performance.now()-lastPointerAt<500)return;
+    if(semanticPulse!==null)clearTimeout(semanticPulse);
+    semanticPulse=setTimeout(()=>{semanticPulse=null;refresh()},170);
+    refresh();
+  });
+}
+document.querySelectorAll('[data-hold]').forEach(bindHold);
+document.querySelector('[data-tap="flare"]').onclick=flare;
+document.getElementById('flare').onclick=flare;
+document.getElementById('restart').onclick=reset;
+START.onclick=startRun;
+function pad(){
+  try{
+    const all=Array.from(navigator.getGamepads?.()||[]);
+    const index=all.findIndex(p=>p&&p.connected!==false);
+    if(index<0){if(padConnected){clearPad();padNeedsNeutral=true}padConnected=false;padIndex=-1;return}
+    if(!padConnected||padIndex!==index){padConnected=true;padIndex=index;clearPad();padNeedsNeutral=true}
+    const p=all[index],axis=Number.isFinite(p.axes?.[1])?p.axes[1]:0,a=!!p.buttons?.[0]?.pressed;
+    if(focusPaused){clearPad();padNeedsNeutral=true;return}
+    if(padNeedsNeutral){clearPad();if(Math.abs(axis)<.18&&!a)padNeedsNeutral=false;return}
+    padKeys.up=axis<-.35;padKeys.down=axis>.35;
+    if(a&&!padAWasDown){if(phase==='ready')startRun();else flare()}
+    padAWasDown=a;
+  }catch{clearPad();padConnected=false;padIndex=-1;padNeedsNeutral=true}
+}
+// Flight state is advanced only by this bounded, fixed simulation slice. Each gate
+// is scored at its actual swept crossing plane, not at the end of a long frame.
+function simulateFlight(dt){
+ const prevY=y;
+ const up=keys.up||touchKeys.up||padKeys.up,down=keys.down||touchKeys.down||padKeys.down;
+ const pitch=(up?-1:0)+(down?1:0);
+ vy+=pitch*160*dt;vy+=8*dt;vy+=Math.sin(wx/260)*18*dt;
+ vy*=Math.pow(.985,dt*60);y+=vy*dt;
+ y=Math.max(55,Math.min(500,y));if(y===55||y===500)vy*=-.18;
+ let thermal=0;for(const th of THERMALS)if(Math.abs(wx-th.x)<100&&Math.abs(y-th.y)<95)thermal=1;
+ speed+=(thermal?34:-5)*dt;speed=Math.max(132,Math.min(186,speed));
+ const prev=wx;wx+=speed*dt;gateCheck(prev,prevY,wx,y);
+ if(wx>GATES[GATES.length-1].x+320)finish();
+}
+function update(t){
+ const rawDt=Math.max(0,(t-last)/1000||0);last=t;
+ pad();
+ if(phase==='active'&&!focusPaused&&!skipNextDelta){
+   // Preserve fractional slices between frames. At 10-15 Hz, several real
+   // physics slices run each frame; at 120+ Hz, slices carry forward instead.
+   // Long stalls still cost real foreground time, not a cheating clock discount.
+   const catchup=Math.min(rawDt,MAX_CATCHUP_SECONDS);
+   flightCarry+=catchup;
+   let steps=0;
+   while(flightCarry+1e-10>=FLIGHT_DT&&steps<MAX_FLIGHT_STEPS&&phase==='active'){
+     flightCarry-=FLIGHT_DT;steps++;elapsed+=FLIGHT_DT;
+     simulateFlight(FLIGHT_DT);
+   }
+   // Any exceptional excess beyond 2s is time-charged, but not simulated in
+   // one blocking burst. Ordinary frames <=2s remain fully world-time matched.
+   if(phase==='active'&&rawDt>MAX_CATCHUP_SECONDS)elapsed+=rawDt-MAX_CATCHUP_SECONDS;
+   if(flightCarry<0)flightCarry=0;
+ }
+ skipNextDelta=false;render(t);requestAnimationFrame(update);
+}
+function render(t){
+  GE.textContent=gate+'/7';TE.textContent=elapsed.toFixed(1);PE.textContent=penalty;
+  const grad=X.createLinearGradient(0,0,0,C.height);grad.addColorStop(0,'#0ea5e9');grad.addColorStop(1,'#172554');
+  X.fillStyle=grad;X.fillRect(0,0,C.width,C.height);
+  X.fillStyle='#ffffff22';for(let i=0;i<8;i++){const cx=((i*230-wx*.24)%1100+1100)%1100-120,cy=70+(i%4)*105;X.beginPath();X.ellipse(cx,cy,90,22,0,0,Math.PI*2);X.fill()}
+  for(const th of THERMALS){const sx=180+(th.x-wx);if(sx>-120&&sx<C.width+120){X.fillStyle='#fde68a20';X.fillRect(sx-55,th.y-110,110,220);X.strokeStyle='#fde68a80';X.setLineDash([7,8]);X.strokeRect(sx-55,th.y-110,110,220);X.setLineDash([])}}
+  for(let i=gate;i<GATES.length;i++){const g=GATES[i],sx=180+(g.x-wx);if(sx<-50||sx>C.width+80)continue;X.strokeStyle=i===gate?'#67e8f9':'#7dd3fc88';X.lineWidth=i===gate?8:4;X.beginPath();X.moveTo(sx,g.y-86);X.lineTo(sx,g.y+86);X.stroke();X.fillStyle='#ecfeff';X.font='bold 13px system-ui';X.fillText(String(i+1),sx+10,g.y-72)}
+  X.save();X.translate(180,y);X.rotate(Math.max(-.4,Math.min(.4,vy/240)));X.fillStyle='#f8fafc';X.strokeStyle='#0f172a';X.lineWidth=3;X.beginPath();X.moveTo(-62,0);X.lineTo(0,-24);X.lineTo(62,0);X.lineTo(15,10);X.lineTo(0,23);X.lineTo(-15,10);X.closePath();X.fill();X.stroke();X.fillStyle='#fb7185';X.beginPath();X.arc(0,11,5,0,Math.PI*2);X.fill();X.restore();
+  X.fillStyle='#e0f2fe';X.font='12px system-ui';X.fillText(`airspeed ${Math.round(speed)} · crosswind ${Math.round(Math.sin(wx/260)*18)}`,18,28);
+  if(phase!=='active'||focusPaused){X.fillStyle='#061321ac';X.fillRect(0,230,860,92);X.fillStyle='#fef9c3';X.font='bold 25px system-ui';X.textAlign='center';X.fillText(focusPaused?'FLIGHT SUSPENDED':phase==='ready'?'READY TO LAUNCH':'COURSE COMPLETE',430,283);X.textAlign='left'}
+}
+reset();requestAnimationFrame(update);
 </script></body></html>

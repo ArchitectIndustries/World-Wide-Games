@@ -1,0 +1,28 @@
+'use strict';
+const assert=require('node:assert/strict');
+const SB=require('../games/aegis-verge/siege-barrage.js');
+const T=require('../games/aegis-verge/tactics.js');
+let checks=0;function ok(label,v){assert.ok(v,label);checks++;}
+const base={type:'warden',cycles:2,x:4,z:1},actor={x:8,z:3};
+ok('warden cycle selection',SB.chosen(base));ok('other cycles normal',!SB.chosen({...base,cycles:1}));ok('other enemy types unaffected',!SB.chosen({...base,type:'lancer'}));
+ok('invalid attack cycles rejected',!SB.chosen({...base,cycles:NaN}));
+const target=SB.target(actor);ok('immutable target point',Object.isFrozen(target));ok('fixed target',target.x===8&&target.z===3);actor.x=30;ok('target does not track',target.x===8);
+ok('clamp target in field',SB.target({x:999,z:-999}).x===36&&SB.target({x:999,z:-999}).z===-36);
+ok('invalid target returns null',SB.target({x:NaN,z:4})===null);
+const shells=[];const shell=SB.launch(shells,base,target);ok('launch adds shell',shells.length===1&&shell===shells[0]);ok('correct flight duration',shell.left===SB.FLIGHT);
+ok('fixed shell landing point',shell.x===8&&shell.z===3);ok('non-positive dt does nothing',SB.step(shells,0,{x:8,z:3},[],T.firstCover).length===0);
+let hits=[];ok('flight preserves active shell',SB.step(shells,SB.FLIGHT/2,{x:8,z:3},[],T.firstCover,o=>hits.push(o)).length===0&&shell.left>0);
+ok('blast resolves at flight end',SB.step(shells,SB.FLIGHT/2,{x:8,z:3},[],T.firstCover,o=>hits.push(o)).length===1);
+ok('direct exposed blast registers hit',hits.length===1&&hits[0].hit&&!hits[0].blocked);ok('shells removed on detonation',shells.length===0);
+const one=()=>{const a=[];SB.launch(a,base,target);return a};
+const miss=one(),far=SB.step(miss,1,{x:20,z:20},[],T.firstCover)[0];ok('moving beyond ring dodges',!far.hit&&!far.inRange);
+const shieldCover=[{id:777,x:6,z:3,w:1,d:2,h:3}],behind=one();const block=SB.step(behind,1,{x:4,z:3},shieldCover,T.firstCover)[0];ok('physical AABB blocks blast',block.blocked&&!block.hit&&block.inRange);
+const around=one(),out=SB.step(around,1,{x:4,z:3},[],T.firstCover)[0];ok('without wall damage would land',out.hit&&!out.blocked);
+const edge=one(),at=SB.step(edge,1,{x:8+SB.RADIUS,z:3},[],T.firstCover)[0];ok('outer ring collision inclusive',at.inRange);
+const over=one(),outside=SB.step(over,1,{x:8+SB.RADIUS+.1,z:3},[],T.firstCover)[0];ok('outside outer ring safe',!outside.inRange);
+const full=[];for(let i=0;i<SB.MAX_ACTIVE;i++)SB.launch(full,base,target);ok('bounded number of shells',full.length===SB.MAX_ACTIVE);ok('extra attack cannot overflow',SB.launch(full,base,target)===null&&full.length===SB.MAX_ACTIVE);
+let visual=0;const engine={cube(){visual++}};SB.marker(engine,8,3,false,false,0);ok('full ring uses fourteen segments plus core',visual===15);visual=0;SB.marker(engine,8,3,true,true,0);ok('reduced FX ring eight segments plus core',visual===9);
+visual=0;SB.render(engine,full,[{...base,state:'windup',siegeTarget:target,windup:.3,windupTotal:1,dead:false}],true,true);ok('in-flight shells and windup render actual 3D geometries',visual>=9*(full.length+1));
+ok('visual renderer pure',full[0].left===SB.FLIGHT);
+ok('module contains no third-party runtime imports',!Object.keys(SB).includes('Engine'));
+console.log(JSON.stringify({feature:'Warden Skyburst actual cover-blocked siege projectile and telegraph',passed:checks,failed:0}));

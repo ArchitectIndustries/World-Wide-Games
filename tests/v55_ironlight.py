@@ -2,7 +2,7 @@ from pathlib import Path
 import re, json
 ROOT=Path(__file__).resolve().parents[1]
 src=(ROOT/'games/ironlight-breach/index.html').read_text()
-for token in ['meta-v4','meta-v3','warden','overseer','combat-chain','overseer-downed','gamepad()','window.__ironlight','P pauses','OVERSEER DOWN']:
+for token in ['meta-v4','meta-v3','warden','overseer','combat-chain','overseer-downed','function gamepad(','window.__ironlight','P pauses','OVERSEER DOWN']:
     assert token in src,token
 chunk=src.split('const levels=[',1)[1].split('];',1)[0]
 rows=re.findall(r"'([^']+)'",chunk)

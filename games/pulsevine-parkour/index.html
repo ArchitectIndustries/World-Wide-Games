@@ -1,33 +1,238 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Pulsevine Parkour</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#07131a;color:#fff;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;left:12px;right:12px;top:10px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}.pill{background:#071d25df;border:1px solid #225a63;border-radius:12px;padding:7px 10px;font-size:11px;backdrop-filter:blur(8px)}.pill b{font-size:17px;margin-left:4px}.coursebar{position:fixed;left:50%;top:58px;transform:translateX(-50%);display:flex;gap:5px;padding:5px;background:#071d25df;border:1px solid #225a63;border-radius:13px;backdrop-filter:blur(8px)}.coursebar button{width:32px;height:28px;border:1px solid #2d6b72;background:#0a2931;color:#b8d9db;border-radius:8px;font-weight:900}.coursebar button.active{background:#0f766e;color:white;border-color:#6ee7b7}.coursebar button:disabled{opacity:.35}.tip{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);padding:8px 12px;background:#071d25df;border:1px solid #225a63;border-radius:999px;font-size:11px;color:#d1fae5;white-space:nowrap}.touch{position:fixed;left:10px;right:10px;bottom:10px;display:none;justify-content:space-between;pointer-events:none}.touch div{display:flex;gap:6px;pointer-events:auto}.touch button{min-width:54px;height:48px;border:1px solid #2d6b72;background:#0b2d35dd;color:#fff;border-radius:13px;font-weight:900;padding:0 10px}.touch .jump{background:#0f766e}.touch .next{background:#4338ca}@media(pointer:coarse){.touch{display:flex}.tip{display:none}.coursebar{top:54px}.hud{gap:4px}.pill{padding:6px 7px}.pill b{font-size:14px}}</style></head><body><canvas id="c"></canvas><div class="hud"><div class="pill">Course <b id="course">1/5</b></div><div class="pill">Time <b id="time">0.0</b>s</div><div class="pill">Gate <b id="gate">0/5</b></div><div class="pill">Falls <b id="falls">0</b></div></div><div class="coursebar" id="coursebar"></div><div class="tip" id="tip">A/D or ←/→ run · Space/↑ jump · R restart · 1-5 courses · N next after finish</div><div class="touch"><div><button data-a="left">◀</button><button data-a="right">▶</button></div><div><button class="jump" data-a="jump">JUMP</button><button data-a="reset">RESET</button><button class="next" data-a="next">NEXT</button></div></div><script src="../../assets/wwg-input.js"></script><script>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Pulsevine Parkour 2.7 — Personal-Best Echo</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#07131a;color:#fff;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;left:12px;right:12px;top:10px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}.pill{background:#071d25df;border:1px solid #225a63;border-radius:12px;padding:7px 10px;font-size:11px;backdrop-filter:blur(8px)}.pill b{font-size:17px;margin-left:4px}.coursebar{position:fixed;left:50%;top:58px;max-width:calc(100vw - 14px);transform:translateX(-50%);display:flex;gap:5px;padding:5px;background:#071d25df;border:1px solid #225a63;border-radius:13px;backdrop-filter:blur(8px)}.coursebar button{width:32px;flex:0 0 32px;height:28px;border:1px solid #2d6b72;background:#0a2931;color:#b8d9db;border-radius:8px;font-weight:900}.coursebar button.active{background:#0f766e;color:white;border-color:#6ee7b7}.coursebar button:disabled{opacity:.35}.tip{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);padding:8px 12px;background:#071d25df;border:1px solid #225a63;border-radius:999px;font-size:11px;color:#d1fae5;white-space:nowrap}.playStatus{position:fixed;top:147px;left:50%;transform:translateX(-50%);max-width:calc(100vw - 22px);border:1px solid #6ee7b7;border-radius:12px;padding:8px 12px;background:#073a40ef;color:#fff;font:700 12px system-ui;text-align:center;line-height:1.4;z-index:3;pointer-events:none}.playStatus[hidden]{display:none}@media(max-width:640px){.playStatus{top:137px;font-size:11px}}.storageNotice{position:fixed;left:50%;bottom:52px;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 20px);padding:9px 12px;border:1px solid #fbbf24;border-radius:10px;background:#402b13ee;color:#fff5d1;font-size:12px;line-height:1.35;text-align:center;z-index:4}.storageNotice[hidden]{display:none}.circuitRow{position:fixed;top:99px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:8px;padding:5px 8px;border:1px solid #246770;border-radius:12px;background:#071d25f0;max-width:calc(100vw - 16px);z-index:2}.circuitRow button{border:1px solid #a7f3d0;background:#065f46;color:white;font:700 11px system-ui;border-radius:8px;padding:7px 9px;white-space:nowrap;cursor:pointer}.circuitRow button:focus-visible{outline:3px solid #fef08a;outline-offset:3px}.circuitStatus{font:700 11px system-ui;color:#d1fae5;min-width:100px;max-width:290px;line-height:1.35}.circuitRow .info{font:10px system-ui;opacity:.87;max-width:250px;line-height:1.3}@media(max-width:640px){.circuitRow{top:93px;width:calc(100vw - 16px);gap:5px;justify-content:center}.circuitRow .info{display:none}.circuitRow button{font-size:10px;padding:7px 6px}.circuitStatus{font-size:10px;min-width:0}}@media(pointer:coarse){.storageNotice{bottom:72px}}.touch{position:fixed;left:10px;right:10px;bottom:10px;display:none;justify-content:space-between;pointer-events:none}.touch div{display:flex;gap:6px;pointer-events:auto}.touch button{min-width:54px;height:48px;border:1px solid #2d6b72;background:#0b2d35dd;color:#fff;border-radius:13px;font-weight:900;padding:0 10px}.touch .jump{background:#0f766e}.touch .next{background:#4338ca}@media(max-width:340px){.coursebar{gap:2px;padding:3px}.coursebar button{width:30px;flex-basis:30px}}@media(pointer:coarse){.touch{display:flex}.tip{display:none}.coursebar{top:54px}.hud{gap:4px}.pill{padding:6px 7px}.pill b{font-size:14px}}.ghostCtl{position:fixed;right:12px;bottom:54px;z-index:5;padding:8px 12px;background:#10354bec;color:#d1fae5;border:1px solid #67e8f9;border-radius:11px;font:700 11px system-ui;cursor:pointer}.ghostCtl:focus-visible{outline:3px solid #fef08a;outline-offset:3px}@media(pointer:coarse){.ghostCtl{right:10px;bottom:70px;max-width:132px;padding:7px 9px;font-size:10px}}@media(prefers-reduced-motion:reduce){.ghostCtl{transition:none}}</style></head><body><canvas id="c"></canvas><div class="hud"><div class="pill">Course <b id="course">1/8</b></div><div class="pill">Time <b id="time">0.0</b>s</div><div class="pill">Gate <b id="gate">0/5</b></div><div class="pill">Falls <b id="falls">0</b></div></div><div class="coursebar" id="coursebar"></div><div class="circuitRow"><button id="freshCircuit" type="button" aria-label="Start ranked eight-course circuit from the beginning">START 8-COURSE CIRCUIT</button><span id="circuitStatus" class="circuitStatus" role="status" aria-live="polite">PRACTICE · Ranked scores require a fresh full circuit.</span><span class="info">Bank gates from solid ground. Falls return to your last earned foothold; no free gap skips. Falls add 2.5s.</span></div><div id="playStatus" class="playStatus" role="status" aria-live="polite">READY · Move or jump to start the course clock.</div><div class="tip" id="tip" role="status" aria-live="polite">A/D or ←/→ run · Space/↑ jump · G toggle PB echo · Land beyond gates to bank checkpoints · R practice reset · 1-8 practice select · N next · Start 8-Course Circuit for a ranked run</div><p id="storageNotice" class="storageNotice" role="status" aria-live="polite" hidden></p><button id="ghostToggle" class="ghostCtl" type="button" aria-pressed="false" aria-label="Show or hide the personal-best ghost replay">PB ECHO: OFF</button><div class="touch"><div><button data-a="left">◀</button><button data-a="right">▶</button></div><div><button class="jump" data-a="jump">JUMP</button><button data-a="reset">RESET</button><button class="next" data-a="next">NEXT</button></div></div><script src="../../assets/wwg-input.js"></script><script>
 const IN=window.WWGInput||{is:(e,a,x=[])=>({up:['KeyW'],down:['KeyS'],left:['KeyA','ArrowLeft'],right:['KeyD','ArrowRight'],primary:['Space'],secondary:['KeyE']}[a]||[]).concat(x).includes(e.code)};
 const C=document.getElementById('c'),X=C.getContext('2d'),VW=1280,VH=540;let dpr=1,sc=1,ox=0,oy=0;function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=innerWidth*dpr;C.height=innerHeight*dpr;sc=Math.min(innerWidth/VW,innerHeight/VH);ox=(innerWidth-VW*sc)/2;oy=(innerHeight-VH*sc)/2}addEventListener('resize',resize);resize();
-const TIME=document.getElementById('time'),GATE=document.getElementById('gate'),FALLS=document.getElementById('falls'),COURSE=document.getElementById('course'),TIP=document.getElementById('tip'),COURSEBAR=document.getElementById('coursebar');
+const PLAY_STATUS=document.getElementById('playStatus'),TIME=document.getElementById('time'),GATE=document.getElementById('gate'),FALLS=document.getElementById('falls'),COURSE=document.getElementById('course'),TIP=document.getElementById('tip'),COURSEBAR=document.getElementById('coursebar'),STORAGE_NOTICE=document.getElementById('storageNotice'),CIRCUIT_STATUS=document.getElementById('circuitStatus');
 const COURSES=[
 {name:'Rooftop Pulse',tag:'Learn the line',platforms:[[0,485,230,55],[260,430,180,30],[470,365,155,28],[650,425,175,28],[850,345,180,28],[1050,420,230,55],[360,270,115,22],[720,250,120,22],[930,220,105,22]],checkpoints:[210,420,610,810,1035],respawns:[[280,392],[490,327],[670,387],[870,307],[1070,382]],thorns:[[365,413,30,17],[565,348,30,17],[755,408,30,17],[920,328,30,17]],springs:[],winds:[],goalX:1210,start:[70,440]},
 {name:'Glassroot Gap',tag:'Use the launch pads',platforms:[[0,485,210,55],[245,430,160,30],[435,370,155,28],[620,430,150,28],[805,355,160,28],[1000,420,280,55],[330,285,100,20],[720,265,100,20]],checkpoints:[190,390,575,750,950,1165],respawns:[[265,392],[455,332],[640,392],[825,317],[1020,382],[1140,382]],thorns:[[350,413,30,17],[535,353,30,17],[710,413,30,17],[900,338,30,17]],springs:[[365,422,30,8],[744,422,30,8]],winds:[],goalX:1230,start:[55,440]},
 {name:'Skyline Switchbacks',tag:'Read the crosswind',platforms:[[0,485,170,55],[200,420,150,30],[380,355,130,28],[535,430,145,28],[710,370,125,28],[865,300,145,28],[1040,390,240,55],[480,255,90,20],[935,210,90,20]],checkpoints:[155,335,500,665,820,995,1180],respawns:[[220,382],[400,317],[555,392],[730,332],[885,262],[1060,352],[1140,352]],thorns:[[305,403,30,17],[470,338,30,17],[635,413,30,17],[795,353,28,17],[960,283,30,17]],springs:[[315,412,28,8]],winds:[[420,230,190,180,1],[805,220,190,190,-1]],goalX:1230,start:[45,440]},
 {name:'Thornspire Relay',tag:'Precision over panic',platforms:[[0,485,200,55],[230,445,120,30],[380,390,120,28],[530,335,120,28],[680,390,120,28],[830,440,120,28],[980,365,120,28],[1130,420,150,55]],checkpoints:[185,340,490,640,790,940,1090],respawns:[[250,407],[400,352],[550,297],[700,352],[850,402],[1000,327],[1150,382]],thorns:[[315,428,28,17],[465,373,28,17],[615,318,28,17],[765,373,28,17],[915,423,28,17],[1065,348,28,17]],springs:[[320,437,26,8],[620,327,26,8],[920,432,26,8]],winds:[],goalX:1235,start:[55,440]},
-{name:'Pulse Crown',tag:'Master every rhythm',platforms:[[0,485,170,55],[195,425,125,30],[345,365,130,28],[500,430,125,28],[650,350,135,28],[810,420,130,28],[970,340,130,28],[1130,405,150,55],[260,270,90,20],[750,250,95,20]],checkpoints:[155,305,460,610,770,925,1085,1200],respawns:[[215,387],[365,327],[520,392],[670,312],[830,382],[990,302],[1150,367],[1170,367]],thorns:[[285,408,28,17],[440,348,28,17],[590,413,28,17],[745,333,28,17],[900,403,28,17],[1065,323,28,17]],springs:[[290,417,28,8],[600,422,28,8],[1065,332,28,8]],winds:[[360,230,170,200,1],[805,210,160,210,-1]],goalX:1240,start:[45,440]}
+{name:'Pulse Crown',tag:'Master every rhythm',platforms:[[0,485,170,55],[195,425,125,30],[345,365,130,28],[500,430,125,28],[650,350,135,28],[810,420,130,28],[970,340,130,28],[1130,405,150,55],[260,270,90,20],[750,250,95,20]],checkpoints:[155,305,460,610,770,925,1085,1200],respawns:[[215,387],[365,327],[520,392],[670,312],[830,382],[990,302],[1150,367],[1170,367]],thorns:[[285,408,28,17],[440,348,28,17],[590,413,28,17],[745,333,28,17],[900,403,28,17],[1065,323,28,17]],springs:[[290,417,28,8],[600,422,28,8],[1065,332,28,8]],winds:[[360,230,170,200,1],[805,210,160,210,-1]],goalX:1240,start:[45,440]},
+{name:'Railglass Crossing',tag:'Read the moving rail before leaping',platforms:[[0,485,190,55],[235,435,135,28],[430,375,125,28],[620,435,135,28],[815,355,135,28],[1000,420,280,55],[400,260,95,20]],movers:[[365,405,84,16,86,3.4],[760,407,88,16,80,4]],checkpoints:[175,350,545,740,935,1150],respawns:[[80,440],[260,397],[455,337],[650,397],[840,317],[1050,382]],thorns:[[350,418,20,17],[520,358,26,17],[715,418,28,17],[905,338,26,17]],springs:[[525,367,26,8]],winds:[],goalX:1230,start:[45,440]},
+{name:'Canopy Switchline',tag:'Use rail timing and crosswinds',platforms:[[0,485,180,55],[215,430,135,28],[405,365,125,28],[580,425,125,28],[760,350,130,28],[945,405,135,28],[1120,415,160,55],[510,245,95,20]],movers:[[350,395,88,16,75,3.1],[710,390,86,16,74,3.7],[890,385,84,16,82,4.4]],checkpoints:[160,335,515,690,870,1065,1190],respawns:[[85,440],[245,392],[430,327],[605,387],[790,312],[965,367],[1150,377]],thorns:[[335,413,18,17],[475,348,24,17],[660,408,26,17],[840,333,26,17],[1030,388,25,17]],springs:[[475,357,26,8],[1035,397,25,8]],winds:[[515,215,180,195,-1],[890,215,150,175,1]],goalX:1230,start:[45,440]},
+{name:'Aurora Relay',tag:'Master shifting rails and the final crown',platforms:[[0,485,170,55],[205,420,115,28],[365,355,135,28],[540,430,120,28],[710,355,135,28],[885,415,120,28],[1050,345,125,28],[1180,420,100,55],[600,265,75,20]],movers:[[325,390,86,16,80,3.2],[660,387,85,16,85,4],[1010,378,85,16,70,3.3]],checkpoints:[155,310,490,650,830,995,1160,1210],respawns:[[65,440],[225,382],[390,317],[560,392],[735,317],[905,377],[1070,307],[1190,382]],thorns:[[280,403,23,17],[450,338,27,17],[610,413,24,17],[790,338,24,17],[960,398,25,17],[1120,328,25,17]],springs:[[460,347,26,8],[620,422,26,8],[1080,337,26,8]],winds:[[485,245,160,170,-1],[850,205,165,215,1]],goalX:1230,start:[45,440]}
+
 ];
-const safeLoad=()=>{try{return JSON.parse(localStorage.getItem('wwg:pulsevine:progress')||'{}')}catch{return {}}},progress=safeLoad();progress.unlocked=Math.max(1,Math.min(COURSES.length,Number(progress.unlocked)||1));progress.bests=progress.bests&&typeof progress.bests==='object'?progress.bests:{};
-let courseIndex=0,course=COURSES[0],keys={left:0,right:0},jumpQueued=0,last=performance.now(),start=performance.now(),done=false,gate=0,falls=0,shake=0,gpJump=false,gpReset=false,gpNext=false;const p={x:70,y:440,vx:0,vy:0,w:26,h:38,on:false,coyote:0,spawnX:70,spawnY:440};
-function saveProgress(){try{localStorage.setItem('wwg:pulsevine:progress',JSON.stringify(progress))}catch{}}
+// Local scores are convenience records, not authenticated ranked results. Untrusted or old storage
+// must never prevent the eight-course game from starting or manufacture invalid best times.
+// Stored PBs unlock practice stages; only eight consecutive in-memory clears can earn a ranked run.
+const STORAGE_KEY='wwg:pulsevine:progress';
+function storageNotice(message){STORAGE_NOTICE.textContent=message;STORAGE_NOTICE.hidden=false}
+function safeLoad(){
+  const clean={unlocked:1,bests:{}};
+  let raw;
+  try{raw=localStorage.getItem(STORAGE_KEY)}
+  catch{storageNotice('Browser saving is unavailable. Course unlocks and best times last for this session only.');return clean}
+  if(raw===null)return clean;
+  let saved;
+  try{saved=JSON.parse(raw)}
+  catch{storageNotice('A damaged progress record was ignored. New course clears can create a clean record.');return clean}
+  if(!saved||typeof saved!=='object'||Array.isArray(saved)){
+    storageNotice('An invalid progress record was ignored. New course clears can create a clean record.');return clean
+  }
+  let damaged=false;
+  if(saved.unlocked!==undefined){
+    const n=saved.unlocked;
+    if(Number.isInteger(n)&&n>=1&&n<=COURSES.length)clean.unlocked=n;
+    else damaged=true;
+  }
+  if(saved.bests!==undefined){
+    if(!saved.bests||typeof saved.bests!=='object'||Array.isArray(saved.bests))damaged=true;
+    else for(const [key,sec] of Object.entries(saved.bests)){
+      if(/^(0|[1-9]\d*)$/.test(key)&&Number(key)<COURSES.length&&typeof sec==='number'&&Number.isFinite(sec)&&sec>=0.1){clean.bests[key]=sec}
+      else damaged=true;
+    }
+  }
+  if(clean.unlocked===5&&[0,1,2,3,4].every(i=>Number.isFinite(clean.bests[String(i)])))clean.unlocked=6;
+  if(damaged)storageNotice('Some invalid saved progress was ignored. New course clears can repair the record.');
+  return clean;
+}
+const progress=safeLoad();
+// Personal-best echoes are bounded local observations, never inputs to collision,
+// progression, or ranked scores. No network leaderboard/authority is implied.
+const GHOST_KEY='wwg:pulsevine:pb-echo:v1',GHOST_MAX=2400;
+const GHOST_BUTTON=document.getElementById('ghostToggle');
+const reduceMotion=!!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+let ghostEnabled=!reduceMotion,ghostFrames=[],ghostSplits=[];
+function validGhostFrames(frames){
+ if(!Array.isArray(frames)||frames.length<3||frames.length>GHOST_MAX)return false;
+ let prev=-1;
+ return frames.every(f=>{
+  if(!Array.isArray(f)||f.length!==3||!f.every(Number.isInteger))return false;
+  const [tick,x,y]=f;
+  if(tick<=prev||tick<0||tick>24000||x<0||x>VW||y< -200||y>VH+150)return false;
+  prev=tick;return true;
+ })&&frames[0][0]===0;
+}
+function readGhosts(){
+ const clean={};let raw;
+ try{raw=localStorage.getItem(GHOST_KEY)}catch{return clean}
+ if(!raw||raw.length>450000)return clean;
+ try{
+  const obj=JSON.parse(raw);
+  if(!obj||typeof obj!=='object'||Array.isArray(obj)||obj.v!==1||!obj.courses||typeof obj.courses!=='object'||Array.isArray(obj.courses))return clean;
+  for(let i=0;i<COURSES.length;i++){
+   const record=obj.courses[String(i)],pb=progress.bests[String(i)];
+   if(!record||typeof record!=='object'||!Number.isFinite(pb)||!Number.isFinite(record.time)||Math.abs(record.time-pb)>.051||!validGhostFrames(record.frames))continue;
+   if(!Array.isArray(record.splits)||record.splits.length!==COURSES[i].checkpoints.length||!record.splits.every((t,j)=>Number.isInteger(t)&&t>=0&&t<=2400000&&(j===0||t>=record.splits[j-1])))continue;
+   clean[String(i)]={time:record.time,frames:record.frames,splits:record.splits};
+  }
+ }catch{/* Damaged/untrusted echo storage is optional. Ignore without affecting play. */}
+ return clean;
+}
+const ghosts=readGhosts();
+function saveGhosts(){try{localStorage.setItem(GHOST_KEY,JSON.stringify({v:1,courses:ghosts}))}catch{storageNotice('Personal-best echo saved for this session only; browser storage is unavailable.')}}
+function currentGhost(){return ghosts[String(courseIndex)]||null}
+function updateGhostControl(){const has=!!currentGhost();GHOST_BUTTON.textContent=`PB ECHO: ${ghostEnabled?'ON':'OFF'}${has?'':' · NO RECORD'}`;GHOST_BUTTON.setAttribute('aria-pressed',String(ghostEnabled));GHOST_BUTTON.title=has?'Visual-only replay of this course’s personal best. G toggles.':'Clear a course with real movement to create a personal-best echo. G toggles.'}
+GHOST_BUTTON.addEventListener('click',()=>{ghostEnabled=!ghostEnabled;updateGhostControl()});
+function recordGhostPoint(force=false){
+ if(!started||(!force&&done)||ghostFrames.length>=GHOST_MAX)return;
+ const tick=Math.round(activeMs/100),last=ghostFrames[ghostFrames.length-1];
+ if(last&&last[0]>=tick){if(force&&last[0]===tick){last[1]=Math.round(p.x);last[2]=Math.round(p.y)}return}
+ ghostFrames.push([tick,Math.round(p.x),Math.round(p.y)]);
+}
+function ghostPosition(){
+ const record=currentGhost();if(!ghostEnabled||!record)return null;
+ const frames=record.frames,target=activeMs/100;
+ if(target<=0)return frames[0].slice(1);
+ if(target>=frames[frames.length-1][0])return null;
+ let lo=0,hi=frames.length-1;
+ while(lo+1<hi){const mid=(lo+hi)>>1;if(frames[mid][0]<=target)lo=mid;else hi=mid}
+ const a=frames[lo],b=frames[hi],f=(target-a[0])/(b[0]-a[0]);
+ return [a[1]+(b[1]-a[1])*f,a[2]+(b[2]-a[2])*f];
+}
+function renderGhost(){
+ const xy=ghostPosition();if(!xy)return;
+ X.save();X.globalAlpha=.56;X.fillStyle='#67e8f9';X.fillRect(xy[0],xy[1],p.w,p.h);
+ X.strokeStyle='#fef08a';X.lineWidth=2;X.setLineDash([4,4]);X.strokeRect(xy[0],xy[1],p.w,p.h);X.setLineDash([]);
+ X.font='700 12px system-ui';X.fillStyle='#fef08a';X.fillText('PB',xy[0],Math.max(18,xy[1]-8));X.restore();
+}
+let courseIndex=0,course=COURSES[0],keys={left:0,right:0},jumpQueued=0,last=performance.now(),activeMs=0,started=false,focusLost=false,done=false,gate=0,falls=0,shake=0,gpJump=false,gpReset=false,gpNext=false,gpConnected=false,gpNeedsNeutral=true;const p={x:70,y:440,vx:0,vy:0,w:26,h:38,on:false,coyote:0,spawnX:70,spawnY:440};
+// Rails use local simulation time; restart and course selection reset the complete geometry.
+let railTime=0,movers=[];
+// A ranked result must come from eight consecutively cleared stages in ONE fresh session.
+// Practice selection, replay, reload, and individual restarts never convert old PBs to ranked credit.
+let rankedActive=false,rankedNext=0,rankedTime=0,rankedFalls=0,rankedCompleted=false;
+function clearCircuit(){rankedActive=false;rankedNext=0;rankedTime=0;rankedFalls=0;rankedCompleted=false}
+function showCircuit(){CIRCUIT_STATUS.textContent=rankedCompleted?`RANKED CLEAR · ${rankedTime.toFixed(1)}s across all eight`:
+ rankedActive?`RANKED · ${rankedNext+1}/${COURSES.length} · ${rankedTime.toFixed(1)}s earned`:
+ 'PRACTICE · Select START for a ranked eight-course run';}
+function startCircuit(){clearCircuit();rankedActive=true;loadCourse(0,true);TIP.textContent='RANKED: Clear courses 1–8 using NEXT; no resets or jumps. Falls add 2.5s. Lower total time wins.';showCircuit()}
+
+function initMovers(){railTime=0;movers=(course.movers||[]).map(a=>({x:a[0],y:a[1],w:a[2],h:a[3],base:a[0],range:a[4],period:a[5],dx:0}))}
+function moveRails(dt){railTime+=dt;for(const m of movers){const before=m.x;m.x=m.base+m.range*(.5-.5*Math.cos(2*Math.PI*railTime/m.period));m.dx=m.x-before}}
+
+function saveProgress(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(progress))}catch{storageNotice('Browser saving is unavailable. Course unlocks and best times last for this session only.')}}
 function renderCourseButtons(){COURSEBAR.innerHTML=COURSES.map((q,i)=>`<button data-course="${i}" ${i>=progress.unlocked?'disabled':''} class="${i===courseIndex?'active':''}" title="${q.name}">${i+1}</button>`).join('');COURSEBAR.querySelectorAll('[data-course]').forEach(b=>b.onclick=()=>loadCourse(Number(b.dataset.course)))}
-function sync(){TIME.textContent=((performance.now()-start)/1000).toFixed(1);GATE.textContent=gate+'/'+course.checkpoints.length;FALLS.textContent=falls;COURSE.textContent=(courseIndex+1)+'/'+COURSES.length}
-function loadCourse(i){if(i<0||i>=progress.unlocked||i>=COURSES.length)return;courseIndex=i;course=COURSES[i];p.x=course.start[0];p.y=course.start[1];p.vx=p.vy=0;p.spawnX=p.x;p.spawnY=p.y;gate=0;falls=0;done=false;start=performance.now();TIP.textContent=`${course.name} — ${course.tag}. A/D or ←/→ run · Space/↑ jump.`;renderCourseButtons();sync()}
+function sync(){TIME.textContent=(activeMs/1000).toFixed(1);GATE.textContent=gate+'/'+course.checkpoints.length;FALLS.textContent=falls;COURSE.textContent=(courseIndex+1)+'/'+COURSES.length}
+function loadCourse(i,continueRanked=false){if(i<0||i>=progress.unlocked||i>=COURSES.length)return;
+ if(!continueRanked)clearCircuit();
+ courseIndex=i;course=COURSES[i];initMovers();p.x=course.start[0];p.y=course.start[1];p.vx=p.vy=0;p.on=false;p.coyote=0;jumpQueued=0;p.spawnX=p.x;p.spawnY=p.y;gate=0;falls=0;ghostFrames=[[0,Math.round(p.x),Math.round(p.y)]];ghostSplits=[];done=false;started=false;activeMs=0;keys.left=keys.right=0;jumpQueued=0;last=performance.now();
+ TIP.textContent=`${course.name} — ${course.tag}. Land beyond each pulse gate to bank a safe checkpoint. A/D or ←/→ run · Space/↑ jump. ${rankedActive?'Ranked circuit active.':'Practice course.'}`;
+ renderCourseButtons();showCircuit();showPlayStatus();updateGhostControl();sync()}
 function reset(){loadCourse(courseIndex)}
 function respawn(){falls++;p.x=p.spawnX;p.y=p.spawnY;p.vx=0;p.vy=0;shake=6;TIP.textContent='Missed the line — back to the last pulse gate.';sync()}
-function queueJump(){jumpQueued=.12}
-function nextCourse(){if(!done)return;if(courseIndex+1<progress.unlocked)loadCourse(courseIndex+1);else if(courseIndex===COURSES.length-1)loadCourse(0)}
-addEventListener('keydown',e=>{if(IN.is(e,'left',['ArrowLeft'])){keys.left=1;e.preventDefault()}if(IN.is(e,'right',['ArrowRight'])){keys.right=1;e.preventDefault()}if(IN.is(e,'primary',['Space','ArrowUp'])&&!e.repeat){queueJump();e.preventDefault()}if(e.code==='KeyR'){reset();e.preventDefault()}if(e.code==='KeyN'){nextCourse();e.preventDefault()}if(/^Digit[1-5]$/.test(e.code)){loadCourse(Number(e.code.slice(-1))-1);e.preventDefault()}});addEventListener('keyup',e=>{if(IN.is(e,'left',['ArrowLeft']))keys.left=0;if(IN.is(e,'right',['ArrowRight']))keys.right=0});
-document.querySelectorAll('[data-a]').forEach(b=>{const a=b.dataset.a;b.addEventListener('pointerdown',e=>{e.preventDefault();if(a==='jump')queueJump();else if(a==='reset')reset();else if(a==='next')nextCourse();else keys[a]=1});['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,()=>{if(a==='left'||a==='right')keys[a]=0}))});
+function isSuspended(){return focusLost||document.hidden}
+function showPlayStatus(){if(isSuspended()){PLAY_STATUS.hidden=false;PLAY_STATUS.textContent='SUSPENDED · Browser inactive. Physics and course time are frozen.'}else if(!started&&!done){PLAY_STATUS.hidden=false;PLAY_STATUS.textContent='READY · Move or jump to start. Only active play counts toward your course time.'}else{PLAY_STATUS.hidden=true;PLAY_STATUS.textContent=''}}
+function beginPlay(){if(done||isSuspended())return;started=true;showPlayStatus()}
+function clearHeldInput(){keys.left=keys.right=0;jumpQueued=0;gpNeedsNeutral=true;gpJump=gpReset=gpNext=false;last=performance.now()}
+addEventListener('blur',()=>{focusLost=true;clearHeldInput();showPlayStatus()});
+addEventListener('focus',()=>{focusLost=false;last=performance.now();showPlayStatus()});
+document.addEventListener('visibilitychange',()=>{clearHeldInput();showPlayStatus()});
+function queueJump(){beginPlay();if(started)jumpQueued=.12}
+function nextCourse(){if(!done)return;if(courseIndex+1<progress.unlocked){const next=courseIndex+1;loadCourse(next,rankedActive&&rankedNext===next)}else if(courseIndex===COURSES.length-1)loadCourse(0)}
+document.getElementById('freshCircuit').addEventListener('click',startCircuit);
+addEventListener('keydown',e=>{if(isSuspended()||e.altKey||e.ctrlKey||e.metaKey)return;
+ // Space/Enter on a native button should activate that button, not jump/reset the game behind it.
+ if((e.code==='Space'||e.code==='Enter')&&e.target?.closest?.('button,input,select,textarea,a,[contenteditable="true"]'))return;
+ if(IN.is(e,'left',['ArrowLeft'])){keys.left=1;beginPlay();e.preventDefault()}
+ if(IN.is(e,'right',['ArrowRight'])){keys.right=1;beginPlay();e.preventDefault()}
+ if(IN.is(e,'primary',['Space','ArrowUp'])&&!e.repeat){queueJump();e.preventDefault()}
+ if(!e.repeat&&e.code==='KeyR'){reset();e.preventDefault()}
+ if(!e.repeat&&e.code==='KeyG'&&!e.target?.closest?.('button,input,select,textarea,a,[contenteditable="true"]')){ghostEnabled=!ghostEnabled;updateGhostControl();e.preventDefault()}
+ if(!e.repeat&&e.code==='KeyN'){nextCourse();e.preventDefault()}
+ if(!e.repeat&&/^Digit[1-8]$/.test(e.code)){loadCourse(Number(e.code.slice(-1))-1);e.preventDefault()}
+});addEventListener('keyup',e=>{if(IN.is(e,'left',['ArrowLeft']))keys.left=0;if(IN.is(e,'right',['ArrowRight']))keys.right=0});
+document.querySelectorAll('[data-a]').forEach(b=>{const a=b.dataset.a;
+ b.addEventListener('pointerdown',e=>{if(isSuspended())return;e.preventDefault();if(a==='jump')queueJump();else if(a==='reset')reset();else if(a==='next')nextCourse();else{beginPlay();keys[a]=1}});
+ ['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,()=>{if(a==='left'||a==='right')keys[a]=0}));
+ // Native keyboard/screen reader activation of a focused touch button.
+ b.addEventListener('click',e=>{if(isSuspended()||e.detail!==0)return;if(a==='jump')queueJump();else if(a==='reset')reset();else if(a==='next')nextCourse();else{beginPlay();keys[a]=1;setTimeout(()=>{keys[a]=0},80)}});
+});
 function rectHit(ax,ay,aw,ah,b){return ax<b[0]+b[2]&&ax+aw>b[0]&&ay<b[1]+b[3]&&ay+ah>b[1]}
-function physics(dt){if(done){readGamepad();return}let dir=keys.right-keys.left;const gp=readGamepad();if(gp)dir=Math.abs(gp.axes[0]||0)>.25?Math.sign(gp.axes[0]):dir;p.vx+=dir*1200*dt;p.vx*=Math.pow(.018,dt);p.vx=Math.max(-330,Math.min(330,p.vx));jumpQueued=Math.max(0,jumpQueued-dt);p.coyote=Math.max(0,p.coyote-dt);if((p.on||p.coyote>0)&&jumpQueued>0){p.vy=-520;p.on=false;p.coyote=0;jumpQueued=0;shake=2}p.vy+=1450*dt;p.vy=Math.min(900,p.vy);let nx=p.x+p.vx*dt,ny=p.y+p.vy*dt;p.on=false;
- for(const q of course.platforms){if(p.vy>=0&&p.y+p.h<=q[1]+8&&ny+p.h>=q[1]&&nx+p.w>q[0]&&nx<q[0]+q[2]){ny=q[1]-p.h;p.vy=0;p.on=true;p.coyote=.1}}
+function physics(dt,gp){let dir=keys.right-keys.left;if(gp)dir=Math.abs(gp.axes[0]||0)>.25?Math.sign(gp.axes[0]):dir;p.vx+=dir*1200*dt;p.vx*=Math.pow(.018,dt);p.vx=Math.max(-330,Math.min(330,p.vx));jumpQueued=Math.max(0,jumpQueued-dt);p.coyote=Math.max(0,p.coyote-dt);if((p.on||p.coyote>0)&&jumpQueued>0){p.vy=-520;p.on=false;p.coyote=0;jumpQueued=0;shake=2}p.vy+=1450*dt;p.vy=Math.min(900,p.vy);
+ const standing=p.on?movers.find(m=>Math.abs(p.y+p.h-m.y)<2&&p.x+p.w>m.x&&p.x<m.x+m.w):null;
+ moveRails(dt);
+ const carry=standing&&p.on?standing.dx:0;
+ let nx=p.x+carry+p.vx*dt,ny=p.y+p.vy*dt;p.on=false;
+ for(const q of course.platforms.concat(movers.map(m=>[m.x,m.y,m.w,m.h]))){if(p.vy>=0&&p.y+p.h<=q[1]+8&&ny+p.h>=q[1]&&nx+p.w>q[0]&&nx<q[0]+q[2]){ny=q[1]-p.h;p.vy=0;p.on=true;p.coyote=.1}}
  p.x=nx;p.y=ny;for(const w of course.winds||[])if(rectHit(p.x,p.y,p.w,p.h,w))p.vx+=w[4]*210*dt;for(const s of course.springs||[])if(p.on&&rectHit(p.x,p.y+p.h-4,p.w,8,s)){p.vy=-650;p.on=false;p.coyote=0;shake=3}if(p.x<0){p.x=0;p.vx=0}if(p.x+p.w>VW){p.x=VW-p.w;p.vx=0}for(const h of course.thorns)if(rectHit(p.x,p.y,p.w,p.h,h)){respawn();return}if(p.y>VH+80){respawn();return}checkCheckpoint()}
-function readGamepad(){let g=null;try{g=navigator.getGamepads?.()[0]||null;if(g){const a=!!g.buttons[0]?.pressed;if(a&&!gpJump)queueJump();gpJump=a;const rs=!!g.buttons[9]?.pressed;if(rs&&!gpReset)reset();gpReset=rs;const nx=!!g.buttons[3]?.pressed;if(nx&&!gpNext)nextCourse();gpNext=nx}}catch{}return g}
-function checkCheckpoint(){while(gate<course.checkpoints.length&&p.x+p.w/2>=course.checkpoints[gate]){gate++;[p.spawnX,p.spawnY]=course.respawns[gate-1];TIP.textContent=gate<course.checkpoints.length?`Pulse gate ${gate} locked. Keep moving.`:'Final gate locked — reach the exit beacon!';sync()}if(gate===course.checkpoints.length&&p.x>course.goalX)finish()}
-function finish(){if(done)return;done=true;const raw=Math.max(.1,Math.round((performance.now()-start)/100)/10),sec=Math.round((raw+falls*2.5)*10)/10,key=String(courseIndex),prior=Number(progress.bests[key]);if(!Number.isFinite(prior)||sec<prior)progress.bests[key]=sec;if(courseIndex===progress.unlocked-1&&progress.unlocked<COURSES.length)progress.unlocked++;saveProgress();const all=Object.keys(progress.bests).length===COURSES.length,total=all?Math.round(Object.values(progress.bests).reduce((a,b)=>a+Number(b),0)*10)/10:null;TIP.textContent=courseIndex<COURSES.length-1?`${course.name} clear: ${sec.toFixed(1)}s. Press N for the next course.`:`Pulse Crown clear: ${sec.toFixed(1)}s. ${all?`Five-course best total ${total.toFixed(1)}s.`:'Replay earlier courses to complete the full circuit.'}`;renderCourseButtons();try{parent.postMessage({type:'wwg:game-event',game:'pulsevine-parkour',event:'course-complete',score:sec,duration:Math.round(raw),meta:{course:courseIndex+1,courseName:course.name,falls,checkpoints:course.checkpoints.length}},'*');if(courseIndex===COURSES.length-1&&all)parent.postMessage({type:'wwg:game-event',game:'pulsevine-parkour',event:'campaign-complete',score:total,duration:Math.round(raw),meta:{courses:COURSES.length,bests:progress.bests}},'*')}catch{}sync()}
-function draw(){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#041016';X.fillRect(0,0,innerWidth,innerHeight);X.save();X.translate(ox+(Math.random()-.5)*shake,oy+(Math.random()-.5)*shake);X.scale(sc,sc);let g=X.createLinearGradient(0,0,0,VH);g.addColorStop(0,['#0c3440','#163145','#172f4d','#27304c','#31264e'][courseIndex]);g.addColorStop(1,'#07161d');X.fillStyle=g;X.fillRect(0,0,VW,VH);for(let i=0;i<34;i++){X.fillStyle='rgba(110,231,183,.08)';X.fillRect((i*137+courseIndex*53)%VW,80+(i*83)%330,2,2)}for(const w of course.winds||[]){X.fillStyle=w[4]>0?'rgba(96,165,250,.09)':'rgba(192,132,252,.09)';X.fillRect(w[0],w[1],w[2],w[3]);X.fillStyle='rgba(255,255,255,.25)';X.font='18px system-ui';for(let x=w[0]+20;x<w[0]+w[2];x+=45)X.fillText(w[4]>0?'→':'←',x,w[1]+35)}X.fillStyle='#163640';for(const q of course.platforms){X.fillRect(...q);X.fillStyle='#1f4a52';X.fillRect(q[0],q[1],q[2],5);X.fillStyle='#163640'}for(const s of course.springs||[]){X.fillStyle='#22d3ee';X.fillRect(s[0],s[1],s[2],s[3]);X.fillStyle='#a5f3fc';X.fillRect(s[0]+4,s[1]-3,s[2]-8,3)}for(const h of course.thorns){X.fillStyle='#fb7185';for(let i=0;i<Math.max(2,Math.floor(h[2]/10));i++){X.beginPath();X.moveTo(h[0]+i*10,h[1]+h[3]);X.lineTo(h[0]+i*10+5,h[1]);X.lineTo(h[0]+i*10+10,h[1]+h[3]);X.fill()}}for(let i=0;i<course.checkpoints.length;i++){const x=course.checkpoints[i],active=i<gate;X.strokeStyle=active?'#6ee7b7':'#5eead455';X.lineWidth=4;X.beginPath();X.moveTo(x,160);X.lineTo(x,485);X.stroke();X.fillStyle=active?'#6ee7b7':'#164e63';X.beginPath();X.arc(x,155,10,0,7);X.fill()}X.fillStyle='#fef08a';X.shadowColor='#fef08a';X.shadowBlur=14;X.beginPath();X.arc(1245,380,12,0,7);X.fill();X.shadowBlur=0;X.fillStyle='#a7f3d0';X.fillRect(p.x,p.y,p.w,p.h);X.fillStyle='#052e2b';X.fillRect(p.x+16,p.y+7,5,5);X.strokeStyle='#34d399';X.lineWidth=2;X.strokeRect(p.x,p.y,p.w,p.h);X.fillStyle='#d1fae5';X.font='700 12px system-ui';X.fillText(`PULSEVINE • ${courseIndex+1}. ${course.name.toUpperCase()}`,20,30);const best=Number(progress.bests[String(courseIndex)]);if(Number.isFinite(best)){X.fillStyle='#99f6e4';X.font='600 11px system-ui';X.fillText(`BEST ${best.toFixed(1)}s`,20,48)}X.restore();shake*=Math.pow(.02,1/60)}
-function loop(t){let dt=Math.min(.033,(t-last)/1000);last=t;physics(dt);draw();if(!done)sync();requestAnimationFrame(loop)}renderCourseButtons();loadCourse(0);requestAnimationFrame(loop);
+function readGamepad(){let g=null;try{g=Array.from(navigator.getGamepads?.()||[]).find(pad=>pad&&pad.connected!==false)||null}catch{}
+ if(!g){gpConnected=false;gpNeedsNeutral=true;gpJump=gpReset=gpNext=false;return null}
+ if(!gpConnected){gpConnected=true;gpNeedsNeutral=true}
+ const jump=!!g.buttons?.[0]?.pressed,resetHeld=!!g.buttons?.[9]?.pressed,nextHeld=!!g.buttons?.[3]?.pressed;
+ const stick=Number(g.axes?.[0]||0),horizontal=Number.isFinite(stick)&&Math.abs(stick)>.25?Math.sign(stick):0;
+ if(gpNeedsNeutral){if(!jump&&!resetHeld&&!nextHeld&&!horizontal)gpNeedsNeutral=false;return null}
+ if(jump&&!gpJump)queueJump();if(resetHeld&&!gpReset)reset();if(nextHeld&&!gpNext)nextCourse();
+ gpJump=jump;gpReset=resetHeld;gpNext=nextHeld;if(horizontal)beginPlay();return g
+}
+// A checkpoint is earned from a physically supported landing, not by merely flying past
+// its horizontal coordinate. Save the validated foothold actually reached by the player:
+// the level-data respawn coordinates may lie *across* the next jump and must not teleport
+// a runner past untouched hazards after a fall.
+function hasGroundedFoothold(){if(!p.on)return false;const feet=p.y+p.h;
+ return course.platforms.concat(movers.map(m=>[m.x,m.y,m.w,m.h])).some(q=>
+  Math.abs(feet-q[1])<=2&&p.x+p.w>q[0]+2&&p.x<q[0]+q[2]-2)}
+function checkCheckpoint(){if(!hasGroundedFoothold())return;
+ while(gate<course.checkpoints.length&&p.x+p.w/2>=course.checkpoints[gate]){
+  gate++;p.spawnX=p.x;p.spawnY=p.y;
+  const elapsedWithFalls=Math.round(activeMs/10+falls*250);ghostSplits.push(elapsedWithFalls);
+  const prior=currentGhost(),priorSplit=prior?.splits[gate-1];
+  const splitInfo=Number.isInteger(priorSplit)?` PB split: ${Math.abs(elapsedWithFalls-priorSplit)/100<.005?'EVEN':(elapsedWithFalls<priorSplit?'AHEAD':'BEHIND')} by ${(Math.abs(elapsedWithFalls-priorSplit)/100).toFixed(2)}s incl. falls.`:'';
+  TIP.textContent=(gate<course.checkpoints.length?`Pulse gate ${gate} secured on solid ground. Falling returns to this foothold.`:'Final gate secured — reach the exit beacon!')+splitInfo;sync()}
+ if(gate===course.checkpoints.length&&p.x>course.goalX)finish()}
+function finish(){if(done||!started||isSuspended())return;recordGhostPoint(true);done=true;
+ const raw=Math.max(.1,Math.round(activeMs/100)/10),sec=Math.round((raw+falls*2.5)*10)/10,key=String(courseIndex),prior=Number(progress.bests[key]);
+ const improved=!Number.isFinite(prior)||sec<prior;
+ if(improved){
+  progress.bests[key]=sec;
+  if(ghostFrames.length>=3&&ghostFrames.length<GHOST_MAX&&ghostSplits.length===course.checkpoints.length){
+   ghosts[key]={time:sec,frames:ghostFrames.map(f=>f.slice()),splits:ghostSplits.slice()};saveGhosts();
+  }else{delete ghosts[key];saveGhosts()}
+ }
+ if(courseIndex===progress.unlocked-1&&progress.unlocked<COURSES.length)progress.unlocked++;
+ const qualifies=rankedActive&&rankedNext===courseIndex;
+ if(qualifies){rankedTime=Math.round((rankedTime+sec)*10)/10;rankedFalls+=falls;rankedNext++}else if(rankedActive)clearCircuit();
+ const crowned=qualifies&&rankedNext===COURSES.length&&courseIndex===COURSES.length-1;
+ if(crowned){rankedActive=false;rankedCompleted=true}
+ saveProgress();updateGhostControl();
+ const all=Object.keys(progress.bests).length===COURSES.length,personalTotal=all?Math.round(Object.values(progress.bests).reduce((a,b)=>a+Number(b),0)*10)/10:null;
+ TIP.textContent=crowned?`Eight-course ranked circuit CLEAR · ${rankedTime.toFixed(1)}s (${rankedFalls} falls). Personal course-best aggregate ${personalTotal.toFixed(1)}s.`:
+ courseIndex<COURSES.length-1?`${course.name} clear: ${sec.toFixed(1)}s. Press N for next course. ${rankedActive?'Ranked circuit continues.':'Practice: START a full circuit to rank.'}`:
+ `${course.name} clear: ${sec.toFixed(1)}s. ${all?`Course-best aggregate ${personalTotal.toFixed(1)}s (not ranked).`:'Replay earlier courses to complete all course bests.'}`;
+ renderCourseButtons();showCircuit();
+ try{parent.postMessage({type:'wwg:game-event',game:'pulsevine-parkour',event:'course-complete',duration:Math.round(raw),meta:{course:courseIndex+1,courseName:course.name,falls,checkpoints:course.checkpoints.length,courseTime:sec,ranked:crowned}},'*');
+ if(crowned)parent.postMessage({type:'wwg:game-event',game:'pulsevine-parkour',event:'campaign-complete',score:rankedTime,duration:Math.round(rankedTime),meta:{courses:COURSES.length,circuitTime:rankedTime,falls:rankedFalls,mode:'fresh-eight-course',scoreUnit:'sec',lowerIsBetter:true}},'*')
+ }catch{}sync()}
+function draw(){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#041016';X.fillRect(0,0,innerWidth,innerHeight);X.save();X.translate(ox+(Math.random()-.5)*shake,oy+(Math.random()-.5)*shake);X.scale(sc,sc);let g=X.createLinearGradient(0,0,0,VH);g.addColorStop(0,['#0c3440','#163145','#172f4d','#27304c','#31264e','#163f48','#1d394f','#382e59'][courseIndex]);g.addColorStop(1,'#07161d');X.fillStyle=g;X.fillRect(0,0,VW,VH);for(let i=0;i<34;i++){X.fillStyle='rgba(110,231,183,.08)';X.fillRect((i*137+courseIndex*53)%VW,80+(i*83)%330,2,2)}for(const w of course.winds||[]){X.fillStyle=w[4]>0?'rgba(96,165,250,.09)':'rgba(192,132,252,.09)';X.fillRect(w[0],w[1],w[2],w[3]);X.fillStyle='rgba(255,255,255,.25)';X.font='18px system-ui';for(let x=w[0]+20;x<w[0]+w[2];x+=45)X.fillText(w[4]>0?'→':'←',x,w[1]+35)}X.fillStyle='#163640';for(const q of course.platforms){X.fillRect(...q);X.fillStyle='#1f4a52';X.fillRect(q[0],q[1],q[2],5);X.fillStyle='#163640'}for(const m of movers){X.strokeStyle='rgba(125,211,252,.35)';X.lineWidth=2;X.beginPath();X.moveTo(m.base,m.y+21);X.lineTo(m.base+m.range+m.w,m.y+21);X.stroke();X.fillStyle='#155e75';X.fillRect(m.x,m.y,m.w,m.h);X.fillStyle='#67e8f9';X.fillRect(m.x,m.y,m.w,5)}for(const s of course.springs||[]){X.fillStyle='#22d3ee';X.fillRect(s[0],s[1],s[2],s[3]);X.fillStyle='#a5f3fc';X.fillRect(s[0]+4,s[1]-3,s[2]-8,3)}for(const h of course.thorns){X.fillStyle='#fb7185';for(let i=0;i<Math.max(2,Math.floor(h[2]/10));i++){X.beginPath();X.moveTo(h[0]+i*10,h[1]+h[3]);X.lineTo(h[0]+i*10+5,h[1]);X.lineTo(h[0]+i*10+10,h[1]+h[3]);X.fill()}}for(let i=0;i<course.checkpoints.length;i++){const x=course.checkpoints[i],active=i<gate;X.strokeStyle=active?'#6ee7b7':'#5eead455';X.lineWidth=4;X.beginPath();X.moveTo(x,160);X.lineTo(x,485);X.stroke();X.fillStyle=active?'#6ee7b7':'#164e63';X.beginPath();X.arc(x,155,10,0,7);X.fill()}X.fillStyle='#fef08a';X.shadowColor='#fef08a';X.shadowBlur=14;X.beginPath();X.arc(1245,380,12,0,7);X.fill();X.shadowBlur=0;renderGhost();X.fillStyle='#a7f3d0';X.fillRect(p.x,p.y,p.w,p.h);X.fillStyle='#052e2b';X.fillRect(p.x+16,p.y+7,5,5);X.strokeStyle='#34d399';X.lineWidth=2;X.strokeRect(p.x,p.y,p.w,p.h);X.fillStyle='#d1fae5';X.font='700 12px system-ui';X.fillText(`PULSEVINE • ${courseIndex+1}. ${course.name.toUpperCase()}`,20,30);const best=Number(progress.bests[String(courseIndex)]);if(Number.isFinite(best)){X.fillStyle='#99f6e4';X.font='600 11px system-ui';X.fillText(`BEST ${best.toFixed(1)}s`,20,48)}X.restore();shake*=Math.pow(.02,1/60)}
+// Count only simulation time actually played. A delayed browser frame must not charge
+// 100+ ms to the ranked clock while advancing just one 33 ms collision step.
+// Bounded 20 ms substeps preserve short thorn/ledge contacts and moving-rail carriage.
+// Beyond 120 ms of inactivity, discard excess wall time rather than spawning a
+// dangerous catch-up burst or billing unplayed time to the race.
+function loop(t){const elapsed=Math.max(0,t-last);last=t;
+ if(!isSuspended()){
+  const gp=readGamepad();
+  if(started&&!done){
+   let remaining=Math.min(120,elapsed);
+   while(remaining>0.00001&&started&&!done){
+    const stepMs=Math.min(20,remaining);
+    activeMs+=stepMs;
+    physics(stepMs/1000,gp);
+    recordGhostPoint();
+    remaining-=stepMs;
+   }
+  }
+ }
+ draw();sync();requestAnimationFrame(loop)}renderCourseButtons();loadCourse(0);requestAnimationFrame(loop);
 </script></body></html>

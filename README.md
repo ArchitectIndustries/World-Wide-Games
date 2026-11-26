@@ -1,34 +1,48 @@
 # WorldWideGames
 
-WorldWideGames is an Architect Industries browser-gaming platform focused on original, polished, no-install games across a broad range of genres.
+Original, instant-play browser games by **Architect Industries**.
 
-## Current source update
+## Current source release: v497 — November 26, 2026
 
-**Arcade Nights — six original additions**
+The consolidated source contains **91 games**, with **136 genre tags**. This release restores the accumulated work that had remained in saved build candidates instead of reaching the canonical repository and production site.
 
-Aurora Hockey, Skyline Hoops, Lightline Circuit, Orchard Slice, Mosaic Memory, and Tabletop Commons extend the existing catalog. Tabletop Commons includes Four in a Row, Noughts & Crosses, English Checkers, and Domino Draw.
+- All 82 original catalog games retain the cumulative improvements through v496.
+- Cyber Wars joins the catalog with the recovered **0.64** Viridia slice.
+- **Aurora Hockey, Skyline Hoops, Lightline Circuit, Orchard Slice, Mosaic Memory, and Tabletop Commons** remain integrated from the Arcade Nights merge.
+- **Stormwake Rescue** and **Iron Meridian**, added concurrently to main, remain integrated with their shared campaign engine.
+- Aegis Verge is upgraded to **2.95 / F3D95**, preserving newer catalog save and focus fixes.
+- Mosaic Memory **1.1** repairs covered-board focus, pause, resume and restart behavior.
+- The game-detail page now isolates damaged local profile records without overwriting their original stored values.
+- Lattice Armada includes the v100 picker correction: the sector menu is actually hidden after launch rather than remaining over the playfield.
 
-The source catalog contains **88 games: 82 existing entries plus six additions**. The existing catalog and legacy game files remain intact. The new games provide original covers, objectives, keyboard/pointer controls, replay, browser-local records, and earned-result event handling.
+**Build numbers identify revisions, not game counts.** The complete [recovered change history](docs/RECOVERED_CHANGE_HISTORY_2026-11-26.md) indexes all 424 revisions from v73 through v496 and groups their player-facing changes. Earlier v71–v72 work is also included through the canonical Git base.
 
-This source update and production publication are tracked separately. The existing WorldWideGames site is live; the additions require a verified deployment to that same project. See [the current integration record](docs/arcade-live-update-2026-11-26.md) for exact source, tests, and deployment observations.
+## Play and verify publication
 
-## Catalog and platform
+- [WorldWideGames](https://worldwidegames.vercel.app/)
+- [Production release receipt](https://worldwidegames.vercel.app/release.json)
 
-- 88 source catalog entries
-- Responsive homepage, discovery, categories, favorites, ratings, and local stats
-- PWA/offline support and controller/touch support where appropriate
-- Arcade Nights discovery shelf and six original game covers
+The receipt is generated at build time and contains the actual commit, release, game count and public file hashes. A source commit or successful preview alone does not establish that the production alias has updated.
 
-## Development and release quality
+## Build
 
-See `DEVELOPMENT_STANDARDS.md` for the development, QA, and release-quality contract. The dated v72 project/test/release records describe the prior base; the current arcade record above documents this additive change.
-
-Run the portable expansion tests with:
+Requires Node.js 22 or later. There are no application package dependencies.
 
 ```sh
-node --test tests/arcade-expansion/*.cjs tests/arcade-expansion/*.mjs
+npm run build
+npm run test:release
+npm run test:arcade
+node tests/recovery_b2_profile_storage.cjs
+node tests/recovery-specialist/integration.cjs
+node tests/recovery-specialist/lattice-menu.cjs
 ```
 
-## Ownership
+The build writes **dist/** and stages only public game/runtime files. Tests, source history, internal records and optional relay service code stay outside the public output. Vercel uses this same build and output directory in the existing project.
 
-WorldWideGames is owned and operated by **Architect Industries**.
+When changing runtime files, run `node tools/build-public.mjs --update-cache` to refresh the source worker inventory. Every ordinary build independently regenerates the published worker inventory, including exact query variants and all specialist game modules.
+
+## Source and validation
+
+See [source recovery scope](docs/SOURCE_RECOVERY_SCOPE_2026-11-26.md), [PROJECT_STATE.md](PROJECT_STATE.md), [TEST_REPORT.md](TEST_REPORT.md), and [DEVELOPMENT_STANDARDS.md](DEVELOPMENT_STANDARDS.md). Historical records retain their original build-only status as evidence of what was known at that time; they do not describe the publication status of v497.
+
+Browser-local scores and saves remain local. Optional multiplayer relay implementations are preserved in source; this static release does not provision an online relay service.

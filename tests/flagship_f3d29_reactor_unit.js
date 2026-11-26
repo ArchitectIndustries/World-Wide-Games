@@ -1,0 +1,25 @@
+const assert=require('node:assert/strict');
+const R=require('../games/aegis-verge/reactor-flank.js');
+const E=require('../games/aegis-verge/enemy-silhouettes.js');
+let pass=0;function test(n,fn){fn();pass++;console.log('PASS',n)}
+const w={type:'warden',yaw:0,dead:false};
+test('warden rear direct cannon +1',()=>assert.deepEqual(R.evaluate(w,{vx:0,vz:38},1),{damage:2,bonus:1}));
+test('warden frontal hit remains normal',()=>assert.deepEqual(R.evaluate(w,{vx:0,vz:-38},1),{damage:1,bonus:0}));
+test('warden flank at 90deg remains normal',()=>assert.equal(R.evaluate(w,{vx:38,vz:0},1).bonus,0));
+test('45-degree approach has bonus',()=>assert.equal(R.evaluate(w,{vx:38,vz:38},1).bonus,1));
+test('opposite rotated yaw respects orientation',()=>assert.equal(R.evaluate({...w,yaw:Math.PI},{vx:0,vz:-38},1).bonus,1));
+test('other enemy types never earn bonus',()=>{for(const type of ['skirmisher','lancer','bulwark'])assert.equal(R.evaluate({...w,type},{vx:0,vz:38},1).bonus,0)});
+test('reflect cannot amplify damage',()=>assert.equal(R.evaluate(w,{vx:0,vz:38,reflected:true},2).damage,2));
+test('dead opponent no bonus',()=>assert.equal(R.evaluate({...w,dead:true},{vx:0,vz:38},1).bonus,0));
+test('invalid enemy yaw no bonus',()=>assert.equal(R.evaluate({...w,yaw:NaN},{vx:0,vz:38},1).bonus,0));
+test('invalid zero projectile no bonus',()=>assert.equal(R.evaluate(w,{vx:0,vz:0},1).bonus,0));
+test('invalid shot vectors no bonus',()=>assert.equal(R.evaluate(w,{vx:Infinity,vz:38},1).bonus,0));
+test('invalid base damage not amplified to NaN',()=>assert.deepEqual(R.evaluate(w,{vx:0,vz:38},NaN),{damage:1,bonus:1}));
+test('stagger base damage stacks with one controlled bonus',()=>assert.deepEqual(R.evaluate(w,{vx:0,vz:38},2),{damage:3,bonus:1}));
+test('quality lite includes rear reactor',()=>assert(E.parts({...w,size:2.4},'lite').some(p=>p.name==='rear-reactor')));
+test('quality full includes rear reactor',()=>assert(E.parts({...w,size:2.4},'full').some(p=>p.name==='rear-reactor')));
+test('rear-reactor has negative local forward position',()=>assert(E.parts({...w,size:2.4}).find(p=>p.name==='rear-reactor').f<0));
+test('reactor flash white during actual hit state',()=>assert.equal(E.parts({...w,size:2.4,reactorFlash:.2}).find(p=>p.name==='rear-reactor').color,'#ffffff'));
+test('restored rear reactor reverts to cyan',()=>assert.equal(E.parts({...w,size:2.4,reactorFlash:0}).find(p=>p.name==='rear-reactor').color,'#67e8f9'));
+test('nonwarden keeps own armor',()=>assert(!E.parts({type:'lancer',size:1.7},'full').some(p=>p.name==='rear-reactor')));
+console.log(pass+'/'+pass+' Reactor Flank unit assertions passed');

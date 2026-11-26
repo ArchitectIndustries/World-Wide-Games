@@ -1,0 +1,26 @@
+'use strict';
+const assert=require('node:assert/strict');
+const B=require('../games/aegis-verge/crowd-bypass.js');
+const T=require('../games/aegis-verge/tactics.js');
+const C=require('../games/aegis-verge/body-contact.js');
+const types={skirmisher:{size:1.4},lancer:{size:1.7},bulwark:{size:2.1},warden:{size:2.4}};
+let n=0;function ok(name,condition){assert.ok(condition,name);n++}
+const unit=(x,z,idx,type='bulwark',hp=5)=>({x,z,idx,type,hp,dead:false});
+const a=unit(-5,0,0),blocker=unit(-2,0,1),world=[a,blocker];
+ok('API immutable',Object.isFrozen(B));ok('lightweight lookahead positive',B.LOOK>1);ok('correct typed radius',B.radius(a,types)===types.bulwark.size*.65);ok('unknown radius zero',B.radius({type:'missing'},types)===0);
+ok('living body valid',B.live(a));ok('dead invalid',!B.live({...a,dead:true}));ok('zero hp invalid',!B.live({...a,hp:0}));ok('bad coordinates invalid',!B.live({...a,x:NaN}));
+const move=B.steer(a,1,0,world,types,[],T);
+ok('sidestep activated',move.avoiding);ok('sideways component meaningful',Math.abs(move.mz)>.5);ok('steer forward remains positive',move.mx>0);ok('steer finite',Number.isFinite(move.mx)&&Number.isFinite(move.mz));ok('speed normalized',Math.abs(Math.hypot(move.mx,move.mz)-1)<1e-9);
+ok('target latched',a.bypassTarget===1);ok('visual cue tied to steering',a.bypassFlash===B.FLASH);ok('side stable',a.bypassSign===move.side);
+const second=B.steer(a,1,0,world,types,[],T);ok('same lane while target not passed',second.side===move.side);
+const end={...a,x:blocker.x+4,z:0};const passed=B.steer(end,1,0,[end,blocker],types,[],T);ok('clears lane after passing',!passed.avoiding&&end.bypassTarget===null);
+const single=unit(0,0,9);const out=B.steer(single,1,0,[single],types,[],T);ok('no peers no avoidance',!out.avoiding&&out.mx===1);
+const absent=B.steer(unit(0,0,3),0,0,world,types,[],T);ok('stationary no steering',!absent.avoiding);ok('no array safe',!B.steer(a,1,0,null,types,[],T).avoiding);
+const dead=unit(-2,0,1,'bulwark',0);ok('defeated ally not obstacle',!B.steer(a,1,0,[a,dead],types,[],T).avoiding);
+const noLane=B.steer({...a,bypassTarget:null},1,0,[a,blocker],types,[],{free:()=>false});ok('both unsafe lanes rejected',!noLane.avoiding&&noLane.mx===1);
+const clear={...a,bypassFlash:0,bypassSign:0};ok('render dormant when no sidestep',B.render({cube(){throw Error('phantom')}},clear)===0);
+B.steer(a,1,0,[a,blocker],types,[],T);let calls=0;ok('full visual bounded 4',B.render({cube(){calls++}},a,false,false)===4&&calls===4);ok('reduced visual bounded 2',B.render({cube(){calls++}},a,true,false)===2&&calls===6);ok('calm visual bounded 2',B.render({cube(){calls++}},a,false,true)===2&&calls===8);
+B.tick([a],B.FLASH/2);ok('simulation tick updates opacity',a.bypassFlash<B.FLASH&&a.bypassFlash>0);const before=a.bypassFlash;B.tick([a],0);ok('pause/no simulation freezes cue',a.bypassFlash===before);B.tick([a],B.FLASH);ok('effect expires',a.bypassFlash===0);
+const body=unit(-4.9,0,2),other=unit(-2,0,3);const turn=B.steer(body,1,0,[body,other],types,[],T),from={x:body.x,z:body.z};T.move(body,turn.mx*.2,turn.mz*.2,[],types.bulwark.size*.65);const clip=C.clip(body,from,[other],types.bulwark.size*.65,[],T.free,types);
+ok('authoritative peer contact still enforceable',clip&&Math.hypot(body.x-other.x,body.z-other.z)>=2*types.bulwark.size*.65-.01);ok('avoidance never edits health',body.hp===5&&other.hp===5);
+console.log(`F3D76 bypass assertions ${n}/${n} passed`);

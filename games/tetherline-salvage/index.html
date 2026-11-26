@@ -1,14 +1,218 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Tetherline Salvage</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#040713;color:#fff;font-family:system-ui,sans-serif;touch-action:none}canvas{display:block;width:100vw;height:100vh}.hud{position:fixed;left:10px;right:10px;top:10px;display:flex;gap:7px;flex-wrap:wrap;pointer-events:none}.hud span,.tip{background:#071127e8;border:1px solid #334b77;border-radius:11px;padding:7px 10px;font-size:11px}.hud b{font-size:16px;margin-left:4px;color:#93c5fd}.tip{position:fixed;left:10px;bottom:10px;max-width:610px;color:#cbd5e1}.touch{position:fixed;right:10px;bottom:10px;display:grid;grid-template-columns:repeat(3,48px);gap:6px}.touch button{height:48px;border:1px solid #425d91;background:#0b1a37dd;color:#fff;border-radius:12px;font-weight:900}.touch [data-k="up"]{grid-column:2}.touch [data-k="left"]{grid-column:1}.touch [data-k="tether"]{grid-column:2}.touch [data-k="right"]{grid-column:3}.touch [data-k="down"]{grid-column:1}.touch [data-k="brake"]{grid-column:3}@media(min-width:900px){.touch{display:none}}</style></head><body><canvas id="c"></canvas><div class="hud"><span>ARCHITECT INDUSTRIES SALVAGE UNIT</span><span>Salvage <b id="salvage">0</b>/6</span><span>Hull <b id="hull">100</b></span><span>Time <b id="time">75</b></span><span>Score <b id="score">0</b></span></div><div class="tip" id="tip">Hook nearby salvage, tow it into the blue recovery bay, and avoid tumbling debris.</div><div class="touch"><button data-k="up">UP</button><button data-k="left">LEFT</button><button data-k="tether">HOOK</button><button data-k="right">RIGHT</button><button data-k="down">DOWN</button><button data-k="brake">BRAKE</button></div><script src="../../assets/wwg-input.js"></script><script>
-const IN=window.WWGInput||{is:(e,a,x=[])=>({up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],left:['KeyA','ArrowLeft'],right:['KeyD','ArrowRight'],primary:['Space'],secondary:['KeyE']}[a]||[]).concat(x).includes(e.code)};const C=document.getElementById('c'),X=C.getContext('2d'),SAL=document.getElementById('salvage'),HULL=document.getElementById('hull'),TIME=document.getElementById('time'),SCORE=document.getElementById('score'),TIP=document.getElementById('tip');let dpr=1,W=0,H=0;function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=innerWidth*dpr;C.height=innerHeight*dpr;W=innerWidth;H=innerHeight}addEventListener('resize',resize);resize();const world={w:1700,h:1050},bay={x:180,y:520,r:92};const SALVAGE_SEED=[[470,240],[820,180],[1280,310],[1410,760],[920,860],[470,790]],HAZARD_SEED=[[650,510,62,42],[1040,500,-54,38],[1260,650,44,-51],[760,690,-47,-35]];let ship,pods,hazards,tether=null,keys={up:false,down:false,left:false,right:false},done=false,start,last,timeLeft=75,score=0,recovered=0,padP=false,padS=false;
-function reset(){ship={x:bay.x+150,y:bay.y,vx:0,vy:0,hull:100};pods=SALVAGE_SEED.map((p,i)=>({x:p[0],y:p[1],vx:(i%2?1:-1)*(12+i*2),vy:(i%3-1)*9,r:13,done:false}));hazards=HAZARD_SEED.map((h,i)=>({x:h[0],y:h[1],vx:h[2],vy:h[3],r:22+i*3}));tether=null;done=false;start=performance.now();last=start;timeLeft=75;score=0;recovered=0;TIP.textContent='Hook nearby salvage, tow it into the blue recovery bay, and avoid tumbling debris.';sync()}
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Tetherline Salvage 1.7 — Fair Salvage Clock</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#040713;color:#fff;font-family:system-ui,sans-serif;touch-action:none}canvas{display:block;width:100vw;height:100vh}.hud{position:fixed;left:10px;right:10px;top:10px;display:flex;gap:7px;flex-wrap:wrap;pointer-events:none}.hud span,.tip{background:#071127e8;border:1px solid #334b77;border-radius:11px;padding:7px 10px;font-size:11px}.hud b{font-size:16px;margin-left:4px;color:#93c5fd}.tip{position:fixed;left:10px;bottom:10px;max-width:610px;color:#cbd5e1}.touch{position:fixed;right:10px;bottom:10px;display:grid;grid-template-columns:repeat(3,48px);gap:6px}.touch button{height:48px;border:1px solid #425d91;background:#0b1a37dd;color:#fff;border-radius:12px;font-weight:900}.touch [data-k="up"]{grid-column:2}.touch [data-k="left"]{grid-column:1}.touch [data-k="tether"]{grid-column:2}.touch [data-k="right"]{grid-column:3}.touch [data-k="down"]{grid-column:1}.touch [data-k="brake"]{grid-column:3}.status{position:fixed;left:10px;bottom:88px;max-width:610px;padding:9px 12px;background:#142e50f2;border:1px solid #93c5fd;border-radius:11px;color:#eff6ff;font-size:13px;font-weight:700;pointer-events:none}.status[hidden]{display:none}.restart{position:fixed;left:12px;bottom:98px;z-index:5;min-height:48px;padding:10px 17px;border-radius:12px;background:#1d4ed8;color:#fff;border:2px solid #bfdbfe;font:800 14px system-ui;cursor:pointer;box-shadow:0 5px 20px #0009}.restart:focus-visible{outline:3px solid #fbbf24;outline-offset:3px}.restart[hidden]{display:none!important}@media(min-width:900px){.touch{display:none}}
+/* v411 compact flight console: keep original world camera unobscured by controls. */
+.chart-launch{position:fixed;right:12px;top:62px;z-index:4;min-width:72px;min-height:44px;background:#143563;color:#fff;border:2px solid #93c5fd;border-radius:11px;font:800 13px system-ui;cursor:pointer}
+.chart-launch:focus-visible,.touch button:focus-visible,#navClose:focus-visible{outline:3px solid #fbbf24;outline-offset:2px}
+#navPanel{color:#eff6ff;background:#08162c;border:2px solid #93c5fd;border-radius:14px;padding:12px;width:min(440px,calc(100vw - 12px));max-height:calc(100dvh - 12px);overflow:auto;box-shadow:0 22px 80px #000d}
+#navPanel::backdrop{background:#020817dc}
+#navPanel h2{font:850 18px system-ui;margin:0 0 5px}
+#navPanel p{font:13px/1.4 system-ui;margin:5px 0 9px}
+#navMap{width:100%;height:auto;max-height:40dvh;object-fit:contain;background:#08142a;border:1px solid #355c88;border-radius:8px}
+#navClose{position:sticky;bottom:0;z-index:2;display:block;width:100%;min-height:44px;border:2px solid #93c5fd;border-radius:9px;background:#164e83;color:white;font-weight:800;cursor:pointer}
+.chart-key{color:#fcd34d;font-weight:700}
+@media(max-width:700px) and (max-height:420px){
+ canvas#c{position:fixed;left:0;top:54px;width:100vw;height:calc(100dvh - 107px)}
+ .hud{left:2px;right:2px;top:2px;height:28px;flex-wrap:nowrap;gap:2px;align-items:center;overflow:hidden}
+ .hud span{white-space:nowrap;padding:3px 4px;border-radius:6px;font-size:9px;flex:1 1 0;min-width:0;text-align:center}
+ .hud span:first-child{display:none}
+ .hud b{font-size:11px;margin-left:1px}
+ .status{left:3px;right:3px;top:31px;bottom:auto;height:20px;max-width:none;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;padding:2px 5px;font-size:10px;border-radius:5px}
+ .tip{position:absolute;width:1px;height:1px;left:0;top:0;bottom:auto;overflow:hidden;clip-path:inset(50%);white-space:nowrap;padding:0;border:0}
+ .touch{left:0;right:0;bottom:2px;top:auto;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:48px;gap:2px}
+ .touch [data-k]{grid-column:auto}
+ .touch button{height:48px;padding:0 1px;border-radius:7px;font-size:10px;min-width:0}
+ .chart-launch{display:none}
+ .restart{bottom:60px;left:calc(50% - 86px);width:172px;min-height:44px;font-size:11px;padding:3px}
+ #navPanel{padding:8px}
+ #navPanel h2{font-size:15px}
+ #navPanel p{font-size:11px;line-height:1.25}
+ #navMap{max-height:36dvh}
+}
+@media(max-width:899px){.chart-launch{display:none}}
+@media(max-width:899px) and (min-height:421px){
+ .touch{left:4px;right:4px;bottom:4px;top:auto;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:48px;gap:2px}
+ .touch [data-k]{grid-column:auto}
+ .touch button{height:48px;min-width:0;padding:0 1px;font-size:11px;border-radius:8px}
+ .tip{left:6px;right:6px;bottom:59px;max-width:none;max-height:96px;overflow:auto;pointer-events:auto}
+ .status{left:6px;right:6px;bottom:164px;max-width:none;font-size:11px}
+ .restart{left:calc(50% - 90px);width:180px;bottom:165px;min-height:44px}
+}
+</style></head><body><canvas id="c"></canvas><div class="hud"><span>ARCHITECT INDUSTRIES SALVAGE UNIT</span><span>Salvage <b id="salvage">0</b>/6</span><span>Hull <b id="hull">100</b></span><span>Time <b id="time">75</b></span><span>Score <b id="score">0</b></span></div><div class="tip" id="tip" role="status" aria-live="polite">Hook nearby salvage, tow it into the blue recovery bay, and avoid tumbling debris. Move with Arrow Keys/WASD; Space hooks, E brakes, R restarts. Gamepad: left stick, A hook, B brake. The 75-second shift begins on your first action and pauses when you leave the tab.</div><div class="status" id="playStatus" role="status" aria-live="polite">READY — steer, hook or brake to begin your 75-second salvage shift.</div><button type="button" id="restartAction" class="restart" hidden aria-label="Play another salvage shift">PLAY ANOTHER SHIFT</button><div class="touch"><button data-k="up">UP</button><button data-k="left">LEFT</button><button data-k="tether">HOOK</button><button data-k="right">RIGHT</button><button data-k="down">DOWN</button><button data-k="brake">BRAKE</button><button type="button" id="chartTouch" aria-label="Open salvage navigation chart and instructions">CHART</button></div><button type="button" id="chartLaunch" class="chart-launch" aria-label="Open salvage navigation chart">CHART · M</button><dialog id="navPanel" aria-labelledby="navTitle"><h2 id="navTitle" tabindex="-1">SALVAGE NAVIGATION CHART</h2><canvas id="navMap" width="340" height="210" role="img" aria-label="North-up map: blue recovery bay, white ship, gold salvage and red hazards"></canvas><p id="navReadout" role="status"></p><p><span class="chart-key">WHITE</span> ship · <span class="chart-key">GOLD</span> recoverable pods · <span class="chart-key">BLUE</span> recovery bay · <span class="chart-key">RED</span> moving hazards. The chart freezes play; positions are current when opened.</p><p><b>Objective:</b> Hook all six gold pods within 165 world units, tow each into the blue recovery bay, avoid debris and complete the 75-second shift with hull above zero. Move: arrows/WASD or gamepad left stick. Hook: Space/A; brake: E/B; chart: M or CHART; restart: R. This chart never grants scoring or progression.</p><button type="button" id="navClose">CLOSE CHART</button></dialog><script src="../../assets/wwg-input.js"></script><script>
+const NAV=document.getElementById('navPanel'),NAVMAP=document.getElementById('navMap'),NAVREAD=document.getElementById('navReadout');let chartOpen=false,chartCaller=null;
+const IN=window.WWGInput||{is:(e,a,x=[])=>({up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],left:['KeyA','ArrowLeft'],right:['KeyD','ArrowRight'],primary:['Space'],secondary:['KeyE']}[a]||[]).concat(x).includes(e.code)};const C=document.getElementById('c'),X=C.getContext('2d'),SAL=document.getElementById('salvage'),HULL=document.getElementById('hull'),TIME=document.getElementById('time'),SCORE=document.getElementById('score'),TIP=document.getElementById('tip'),STATUS=document.getElementById('playStatus'),RETRY=document.getElementById('restartAction');let dpr=1,W=0,H=0;function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=innerWidth*dpr;C.height=innerHeight*dpr;W=innerWidth;H=innerHeight}addEventListener('resize',resize);resize();const world={w:1700,h:1050},bay={x:180,y:520,r:92};const SALVAGE_SEED=[[470,240],[820,180],[1280,310],[1410,760],[920,860],[470,790]],HAZARD_SEED=[[650,510,62,42],[1040,500,-54,38],[1260,650,44,-51],[760,690,-47,-35]];let ship,pods,hazards,tether=null,keys={up:false,down:false,left:false,right:false},done=false,last,timeLeft=75,activeMs=0,started=false,focusPaused=false,score=0,recovered=0,padP=false,padS=false,padNeedsNeutral=true,padConnected=false,padReplayArmed=false,padReplayHeld=false;
+function playable(){return !focusPaused&&!document.hidden&&!chartOpen}
+function setStatus(){const message=done?'':focusPaused||document.hidden?'SUSPENDED — your salvage shift is paused while this tab or window is inactive.':!started&&!done?'READY — steer, hook or brake to begin your 75-second salvage shift.':'';STATUS.hidden=!message;STATUS.textContent=message}
+function beginAction(){if(done||!playable())return false;if(!started){started=true;setStatus()}return true}
+function suspend(){focusPaused=true;keys={up:false,down:false,left:false,right:false};padNeedsNeutral=true;padReplayArmed=false;padReplayHeld=false;padP=padS=false;last=performance.now();setStatus()}
+function resume(){focusPaused=!!document.hidden;last=performance.now();padNeedsNeutral=true;padReplayArmed=false;padReplayHeld=false;padP=padS=false;setStatus()}
+addEventListener('blur',suspend);addEventListener('focus',resume);
+document.addEventListener('visibilitychange',()=>document.hidden?suspend():resume());
+function reset(){if(chartOpen){chartOpen=false;NAV.close()}ship={x:bay.x+150,y:bay.y,vx:0,vy:0,hull:100};pods=SALVAGE_SEED.map((p,i)=>({x:p[0],y:p[1],vx:(i%2?1:-1)*(12+i*2),vy:(i%3-1)*9,r:13,done:false}));hazards=HAZARD_SEED.map((h,i)=>({x:h[0],y:h[1],vx:h[2],vy:h[3],r:22+i*3}));tether=null;done=false;started=false;last=performance.now();activeMs=0;timeLeft=75;score=0;recovered=0;keys={up:false,down:false,left:false,right:false};padNeedsNeutral=true;padReplayArmed=false;padReplayHeld=false;padP=padS=false;RETRY.hidden=true;TIP.textContent='Hook nearby salvage, tow it into the blue recovery bay, and avoid tumbling debris. Move with Arrow Keys/WASD; Space hooks, E brakes, R restarts. Gamepad: left stick, A hook, B brake. The 75-second shift begins on your first action and pauses when you leave the tab. Complete all six before time or hull runs out; collisions resolve before ranked clearance.';setStatus();sync()}
 function sync(){SAL.textContent=recovered;HULL.textContent=Math.max(0,Math.round(ship.hull));TIME.textContent=Math.max(0,Math.ceil(timeLeft));SCORE.textContent=Math.round(score)}
 function nearest(){let best=null,bd=165;for(const p of pods){if(p.done)continue;const d=Math.hypot(ship.x-p.x,ship.y-p.y);if(d<bd){bd=d;best=p}}return best}
 function hook(){if(done)return;if(tether){tether=null;TIP.textContent='Tether released.';return}const p=nearest();if(p){tether=p;TIP.textContent='Salvage hooked. Tow it into the recovery bay.'}else TIP.textContent='No salvage within tether range.'}
 function brake(){ship.vx*=.28;ship.vy*=.28;if(tether){tether.vx*=.45;tether.vy*=.45}TIP.textContent='Inertial brake fired.'}
-function tryRecover(){if(!tether||tether.done)return false;if(Math.hypot(tether.x-bay.x,tether.y-bay.y)>=bay.r-8)return false;tether.done=true;tether=null;recovered++;score+=800+Math.round(Math.max(0,timeLeft)*3);TIP.textContent=`Salvage ${recovered}/6 secured.`;if(recovered>=6)finish(true);return true}
-function finish(win){if(done)return;done=true;const secs=Math.max(1,(performance.now()-start)/1000),final=Math.max(0,Math.round(score+(win?2600:0)+ship.hull*15+Math.max(0,timeLeft)*38));score=final;TIP.textContent=win?`Recovery complete. Salvage score ${final.toLocaleString()}. Press R to fly again.`:`Shift lost. ${recovered}/6 salvage recovered. Press R to retry.`;try{parent.postMessage({type:'wwg:game-event',game:'tetherline-salvage',event:win?'haul-complete':'haul-ended',score:final,duration:Math.round(secs),meta:{unit:'pts',direction:'high',salvage:recovered,hull:Math.round(ship.hull)}},'*')}catch{}sync()}
-function moveInputFromPad(){try{const g=navigator.getGamepads&&navigator.getGamepads()[0];if(!g)return[0,0];let x=Math.abs(g.axes[0]||0)>.18?g.axes[0]:0,y=Math.abs(g.axes[1]||0)>.18?g.axes[1]:0,pp=!!g.buttons[0]?.pressed,ss=!!g.buttons[1]?.pressed;if(pp&&!padP)hook();if(ss&&!padS)brake();padP=pp;padS=ss;return[x,y]}catch{return[0,0]}}
-function update(t){let dt=Math.min(.04,(t-last)/1000);last=t;if(!done){timeLeft-=dt;let ax=(keys.right?1:0)-(keys.left?1:0),ay=(keys.down?1:0)-(keys.up?1:0),gp=moveInputFromPad();ax+=gp[0];ay+=gp[1];if(ax||ay){const m=Math.hypot(ax,ay)||1;ship.vx+=ax/m*185*dt;ship.vy+=ay/m*185*dt}ship.vx*=Math.pow(.22,dt);ship.vy*=Math.pow(.22,dt);ship.x=Math.max(25,Math.min(world.w-25,ship.x+ship.vx*dt));ship.y=Math.max(25,Math.min(world.h-25,ship.y+ship.vy*dt));for(const p of pods){if(p.done)continue;p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.x<30||p.x>world.w-30)p.vx*=-1;if(p.y<30||p.y>world.h-30)p.vy*=-1}if(tether&&!tether.done){let dx=ship.x-tether.x,dy=ship.y-tether.y,d=Math.hypot(dx,dy)||1;if(d>235){tether=null;ship.hull-=3;TIP.textContent='Tether snapped under strain.'}else{const stretch=Math.max(0,d-72);tether.vx+=dx/d*stretch*1.45*dt;tether.vy+=dy/d*stretch*1.45*dt;ship.vx-=dx/d*stretch*.24*dt;ship.vy-=dy/d*stretch*.24*dt;tether.vx*=Math.pow(.55,dt);tether.vy*=Math.pow(.55,dt);tryRecover()}}for(const h of hazards){h.x+=h.vx*dt;h.y+=h.vy*dt;if(h.x<40||h.x>world.w-40)h.vx*=-1;if(h.y<40||h.y>world.h-40)h.vy*=-1;let d=Math.hypot(ship.x-h.x,ship.y-h.y);if(d<h.r+18){ship.hull-=18*dt;ship.vx+=(ship.x-h.x)/(d||1)*95*dt;ship.vy+=(ship.y-h.y)/(d||1)*95*dt;if(tether&&Math.random()<dt*1.8){tether=null;TIP.textContent='Impact broke the tether.'}}}if(ship.hull<=0||timeLeft<=0)finish(false);sync()}draw(t);requestAnimationFrame(update)}
+function tryRecover(){if(!tether||tether.done)return false;if(Math.hypot(tether.x-bay.x,tether.y-bay.y)>=bay.r-8)return false;tether.done=true;tether=null;recovered++;score+=800+Math.round(Math.max(0,timeLeft)*3);TIP.textContent=`Salvage ${recovered}/6 secured.`;return true}
+// Terminal score authority: cargo alone does not constitute a safe extraction.
+// The update loop settles this frame's hazards and deadline before calling finish.
+function finish(win){
+ if(done)return;
+ const cleared=!!win&&recovered===pods.length&&ship.hull>0&&timeLeft>0;
+ done=true;RETRY.hidden=false;setStatus();
+ const secs=Math.max(1,activeMs/1000);
+ const attemptValue=Math.max(0,Math.round(score+Math.max(0,ship.hull)*15+Math.max(0,timeLeft)*38));
+ if(cleared){
+  const final=attemptValue+2600;score=final;
+  TIP.textContent=`Recovery complete. Salvage score ${final.toLocaleString()}. Press R, choose PLAY ANOTHER SHIFT, or press gamepad Menu to replay.`;
+  try{parent.postMessage({type:'wwg:game-event',game:'tetherline-salvage',event:'haul-complete',score:final,duration:Math.round(secs),meta:{unit:'pts',direction:'high',salvage:recovered,hull:Math.round(ship.hull)}},'*')}catch{}
+ }else{
+  const cause=ship.hull<=0?'Hull destroyed':timeLeft<=0?'Shift time expired':'Extraction incomplete';
+  TIP.textContent=`Shift lost — ${cause.toLowerCase()}. ${recovered}/6 salvage secured. A complete haul requires a surviving ship before the deadline. No ranked score; press R, choose PLAY ANOTHER SHIFT, or press gamepad Menu to retry.`;
+  try{parent.postMessage({type:'wwg:game-event',game:'tetherline-salvage',event:'haul-ended',duration:Math.round(secs),meta:{unit:'pts',direction:'high',salvage:recovered,hull:Math.round(Math.max(0,ship.hull)),attemptValue,outcome:'failed',cause}},'*')}catch{}
+ }
+ sync();
+}
+function moveInputFromPad(){
+ try{
+  const g=navigator.getGamepads?.()?.find(p=>p&&p.connected!==false);
+  if(!g){padConnected=false;padNeedsNeutral=true;padP=padS=false;return[0,0]}
+  if(!padConnected){padConnected=true;padNeedsNeutral=true}
+  const x=Math.abs(g.axes?.[0]||0)>.18?g.axes[0]:0,y=Math.abs(g.axes?.[1]||0)>.18?g.axes[1]:0;
+  const pp=!!g.buttons?.[0]?.pressed,ss=!!g.buttons?.[1]?.pressed;
+  if(padNeedsNeutral){if(!x&&!y&&!pp&&!ss)padNeedsNeutral=false;padP=pp;padS=ss;return[0,0]}
+  if(x||y||(pp&&!padP)||(ss&&!padS))beginAction();
+  if(pp&&!padP)hook();if(ss&&!padS)brake();padP=pp;padS=ss;
+  return[x,y];
+ }catch{padConnected=false;padNeedsNeutral=true;padP=padS=false;return[0,0]}
+}
+// Replay is an explicit terminal-state action. Require a released Menu button
+// before arming so a held/disconnected controller cannot reset a finished run.
+function pollReplayPad(){
+ try{
+  const g=navigator.getGamepads?.()?.find(p=>p&&p.connected!==false);
+  const pressed=!!g?.buttons?.[9]?.pressed;
+  if(!g||!playable()){padReplayArmed=false;padReplayHeld=pressed;return}
+  if(!pressed)padReplayArmed=true;
+  if(done&&pressed&&!padReplayHeld&&padReplayArmed){reset();padReplayArmed=false}
+  padReplayHeld=pressed;
+ }catch{padReplayArmed=false;padReplayHeld=false}
+}
+// Keep the 75-second competitive clock, hazards, towing and collision physics
+// consistent on slow foreground displays. Small simulation steps prevent long
+// intervals from tunneling through the recovery bay or debris. An extreme
+// foreground stall still consumes its elapsed clock time, but movement catch-up
+// is capped at 0.5s per rendered frame to bound CPU work and collision jumps.
+function advanceSalvage(dt,gp){
+ activeMs+=dt*1000;
+ timeLeft=Math.max(0,timeLeft-dt);
+ let ax=(keys.right?1:0)-(keys.left?1:0),ay=(keys.down?1:0)-(keys.up?1:0);
+ ax+=gp[0];ay+=gp[1];
+ if(ax||ay){const m=Math.hypot(ax,ay)||1;ship.vx+=ax/m*185*dt;ship.vy+=ay/m*185*dt}
+ ship.vx*=Math.pow(.22,dt);ship.vy*=Math.pow(.22,dt);
+ ship.x=Math.max(25,Math.min(world.w-25,ship.x+ship.vx*dt));
+ ship.y=Math.max(25,Math.min(world.h-25,ship.y+ship.vy*dt));
+ for(const p of pods){
+  if(p.done)continue;
+  p.x+=p.vx*dt;p.y+=p.vy*dt;
+  if(p.x<30||p.x>world.w-30)p.vx*=-1;
+  if(p.y<30||p.y>world.h-30)p.vy*=-1;
+ }
+ if(tether&&!tether.done){
+  let dx=ship.x-tether.x,dy=ship.y-tether.y,d=Math.hypot(dx,dy)||1;
+  if(d>235){tether=null;ship.hull-=3;TIP.textContent='Tether snapped under strain.'}
+  else{
+   const stretch=Math.max(0,d-72);
+   tether.vx+=dx/d*stretch*1.45*dt;tether.vy+=dy/d*stretch*1.45*dt;
+   ship.vx-=dx/d*stretch*.24*dt;ship.vy-=dy/d*stretch*.24*dt;
+   tether.vx*=Math.pow(.55,dt);tether.vy*=Math.pow(.55,dt);
+   tryRecover();
+  }
+ }
+ for(const h of hazards){
+  h.x+=h.vx*dt;h.y+=h.vy*dt;
+  if(h.x<40||h.x>world.w-40)h.vx*=-1;
+  if(h.y<40||h.y>world.h-40)h.vy*=-1;
+  const d=Math.hypot(ship.x-h.x,ship.y-h.y);
+  if(d<h.r+18){
+   ship.hull-=18*dt;
+   ship.vx+=(ship.x-h.x)/(d||1)*95*dt;
+   ship.vy+=(ship.y-h.y)/(d||1)*95*dt;
+   if(tether&&Math.random()<dt*1.8){tether=null;TIP.textContent='Impact broke the tether.'}
+  }
+ }
+ // Expired time or lethal collision takes precedence over the sixth delivery.
+ if(ship.hull<=0||timeLeft<=0)finish(false);
+ else if(recovered>=pods.length)finish(true);
+}
+function update(t){
+ const elapsed=Math.max(0,(t-last)/1000);last=t;
+ pollReplayPad();
+ if(!done&&playable()){
+  const gp=moveInputFromPad();
+  if(started){
+   const simulation=Math.min(elapsed,.5);
+   // Do not reward a stalled foreground callback with free ranked time.
+   if(elapsed>simulation){const excess=elapsed-simulation;activeMs+=excess*1000;timeLeft=Math.max(0,timeLeft-excess);if(timeLeft<=0)finish(false)}
+   let remaining=simulation;
+   while(remaining>0.000000001&&!done){
+    const dt=Math.min(.02,remaining);
+    advanceSalvage(dt,gp);
+    remaining-=dt;
+   }
+   sync();
+  }
+ }
+ draw(activeMs);requestAnimationFrame(update);
+}
 function draw(t){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#040713';X.fillRect(0,0,W,H);const camX=Math.max(0,Math.min(world.w-W,ship.x-W/2)),camY=Math.max(0,Math.min(world.h-H,ship.y-H/2));X.save();X.translate(-camX,-camY);X.fillStyle='#08122c';X.fillRect(0,0,world.w,world.h);X.fillStyle='#cbd5e144';for(let y=40;y<world.h;y+=90)for(let x=50;x<world.w;x+=110){X.beginPath();X.arc(x+(y%3)*9,y,1.2,0,7);X.fill()}X.strokeStyle='#60a5fa';X.lineWidth=5;X.beginPath();X.arc(bay.x,bay.y,bay.r,0,7);X.stroke();X.fillStyle='#60a5fa22';X.beginPath();X.arc(bay.x,bay.y,bay.r-7,0,7);X.fill();X.fillStyle='#93c5fd';X.font='800 13px system-ui';X.fillText('RECOVERY',bay.x-39,bay.y+5);for(const p of pods){if(p.done)continue;X.save();X.translate(p.x,p.y);X.rotate((t/900)+(p.x+p.y));X.fillStyle='#fbbf24';X.fillRect(-13,-10,26,20);X.strokeStyle='#fde68a';X.strokeRect(-13,-10,26,20);X.restore()}for(const h of hazards){X.fillStyle='#64748b';X.save();X.translate(h.x,h.y);X.rotate(t/500+h.r);X.beginPath();for(let i=0;i<8;i++){const a=i/8*Math.PI*2,r=h.r*(i%2?.7:1);X.lineTo(Math.cos(a)*r,Math.sin(a)*r)}X.closePath();X.fill();X.restore()}if(tether){X.strokeStyle='#fde68a';X.lineWidth=2;X.beginPath();X.moveTo(ship.x,ship.y);X.lineTo(tether.x,tether.y);X.stroke()}X.save();X.translate(ship.x,ship.y);X.rotate(Math.atan2(ship.vy,ship.vx)||0);X.fillStyle='#e2e8f0';X.beginPath();X.moveTo(23,0);X.lineTo(-14,-12);X.lineTo(-8,0);X.lineTo(-14,12);X.closePath();X.fill();X.fillStyle='#60a5fa';X.fillRect(-13,-5,10,10);X.restore();X.restore()}
-function setKey(e,on){for(const a of ['up','down','left','right'])if(IN.is(e,a,[a==='up'?'ArrowUp':a==='down'?'ArrowDown':a==='left'?'ArrowLeft':'ArrowRight'])){keys[a]=on;return true}return false}addEventListener('keydown',e=>{if(setKey(e,true)){e.preventDefault();return}if(IN.is(e,'primary',['Space'])){if(!e.repeat)hook();e.preventDefault()}else if(IN.is(e,'secondary',['KeyE'])){if(!e.repeat)brake();e.preventDefault()}else if(e.code==='KeyR')reset()});addEventListener('keyup',e=>{if(setKey(e,false))e.preventDefault()});document.querySelectorAll('[data-k]').forEach(b=>{const k=b.dataset.k;b.addEventListener('pointerdown',e=>{e.preventDefault();if(k==='tether')hook();else if(k==='brake')brake();else keys[k]=true});for(const ev of ['pointerup','pointercancel','pointerleave'])b.addEventListener(ev,()=>{if(['up','down','left','right'].includes(k))keys[k]=false})});reset();requestAnimationFrame(update);
+// Original, self-contained navigation chart. No imported map engine, assets, or game-state mutations.
+function drawChart(){
+ const ctx=NAVMAP.getContext('2d');if(!ctx)return;
+ const w=NAVMAP.width,h=NAVMAP.height,pad=14,sc=Math.min((w-pad*2)/world.w,(h-pad*2)/world.h);
+ const ox=(w-world.w*sc)/2,oy=(h-world.h*sc)/2;
+ const point=(x,y)=>[ox+x*sc,oy+y*sc];
+ ctx.clearRect(0,0,w,h);ctx.fillStyle='#09172d';ctx.fillRect(0,0,w,h);
+ ctx.strokeStyle='#365374';ctx.lineWidth=1;ctx.strokeRect(ox,oy,world.w*sc,world.h*sc);
+ ctx.strokeStyle='#223f5c';for(let x=250;x<world.w;x+=250){const [cx]=point(x,0);ctx.beginPath();ctx.moveTo(cx,oy);ctx.lineTo(cx,oy+world.h*sc);ctx.stroke()}
+ for(let y=250;y<world.h;y+=250){const [,cy]=point(0,y);ctx.beginPath();ctx.moveTo(ox,cy);ctx.lineTo(ox+world.w*sc,cy);ctx.stroke()}
+ const circle=(x,y,r,color,fill=false)=>{const [cx,cy]=point(x,y);ctx.beginPath();ctx.arc(cx,cy,Math.max(3,r*sc),0,Math.PI*2);ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=fill?1:2;if(fill)ctx.fill();else ctx.stroke()};
+ circle(bay.x,bay.y,bay.r,'#60a5fa');
+ for(const haz of hazards)circle(haz.x,haz.y,haz.r,'#fb7185',true);
+ for(const pod of pods)if(!pod.done)circle(pod.x,pod.y,12,pod===tether?'#ffffff':'#fbbf24',true);
+ const [px,py]=point(ship.x,ship.y);ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(px,py-6);ctx.lineTo(px-5,py+5);ctx.lineTo(px+5,py+5);ctx.closePath();ctx.fill();
+ ctx.fillStyle='#dbeafe';ctx.font='12px system-ui';ctx.fillText('N ↑',ox+4,oy+14);
+ const next=tether||pods.filter(p=>!p.done).sort((a,b)=>Math.hypot(a.x-ship.x,a.y-ship.y)-Math.hypot(b.x-ship.x,b.y-ship.y))[0];
+ if(next){const d=Math.hypot(next.x-ship.x,next.y-ship.y);const dx=next.x-ship.x,dy=next.y-ship.y;
+  const heading=Math.abs(dx)>Math.abs(dy)?(dx>0?'east':'west'):(dy>0?'south':'north');
+  let strain='';if(tether)strain=d>=235?' · SNAP RISK':d>=200?' · HIGH TENSION':' · SAFE TENSION';
+  NAVREAD.textContent=`${recovered} of ${pods.length} recovered. ${tether?'Tow attached pod':'Nearest pod'}: ${Math.round(d)} units ${heading}${strain}. Hull ${Math.max(0,Math.ceil(ship.hull))}. ${Math.ceil(timeLeft)}s remaining.`;
+ }else NAVREAD.textContent=`All ${pods.length} pods recovered. ${Math.ceil(timeLeft)}s remain. ${done?'Shift concluded.':'Return safely to the bay.'}`;
+}
+function openChart(caller){if(chartOpen)return;chartCaller=caller||document.activeElement;chartOpen=true;keys={up:false,down:false,left:false,right:false};padNeedsNeutral=true;padReplayArmed=false;last=performance.now();drawChart();NAV.showModal();document.getElementById('navTitle').focus({preventScroll:true});NAV.scrollTop=0}
+function closeChart(){if(!chartOpen)return;chartOpen=false;NAV.close();last=performance.now();padNeedsNeutral=true;padReplayArmed=false;keys={up:false,down:false,left:false,right:false};if(chartCaller?.isConnected)chartCaller.focus()}
+document.getElementById('chartTouch').addEventListener('click',e=>openChart(e.currentTarget));
+document.getElementById('chartLaunch').addEventListener('click',e=>openChart(e.currentTarget));
+document.getElementById('navClose').addEventListener('click',closeChart);
+NAV.addEventListener('cancel',e=>{e.preventDefault();closeChart()});
+function setKey(e,on){for(const a of ['up','down','left','right'])if(IN.is(e,a,[a==='up'?'ArrowUp':a==='down'?'ArrowDown':a==='left'?'ArrowLeft':'ArrowRight'])){keys[a]=on;return true}return false}
+RETRY.addEventListener('click',()=>{if(done&&playable())reset()});
+addEventListener('keydown',e=>{
+ if(e.code==='KeyM'&&!e.repeat){e.preventDefault();if(chartOpen)closeChart();else openChart(document.activeElement);return}
+ // Keep native Space/Enter activation on the end-of-run replay button.
+ if(e.target instanceof Element&&e.target.closest('button')&&(e.code==='Space'||e.code==='Enter'))return;
+ if(e.code==='KeyR'&&!e.repeat&&playable()){e.preventDefault();reset();return}
+ if(!playable()||done){if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();return}
+ if(e.repeat&&e.code==='KeyR')return;
+ if(setKey(e,true)){if(!e.repeat)beginAction();e.preventDefault();return}
+ if(IN.is(e,'primary',['Space'])){if(!e.repeat){beginAction();hook()}e.preventDefault()}
+ else if(IN.is(e,'secondary',['KeyE'])){if(!e.repeat){beginAction();brake()}e.preventDefault()}
+
+});
+addEventListener('keyup',e=>{if(setKey(e,false))e.preventDefault()});
+document.querySelectorAll('[data-k]').forEach(b=>{
+ const k=b.dataset.k;
+ b.addEventListener('pointerdown',e=>{e.preventDefault();if(!playable()||done)return;beginAction();if(k==='tether')hook();else if(k==='brake')brake();else keys[k]=true});
+ for(const ev of ['pointerup','pointercancel','pointerleave'])b.addEventListener(ev,()=>{if(['up','down','left','right'].includes(k))keys[k]=false});
+ b.addEventListener('click',e=>{if(e.detail!==0||!playable()||done)return;beginAction();if(k==='tether')hook();else if(k==='brake')brake();else{keys[k]=true;setTimeout(()=>keys[k]=false,140)}});
+});
+reset();requestAnimationFrame(update);
 </script></body></html>

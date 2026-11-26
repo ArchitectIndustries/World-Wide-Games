@@ -1,6 +1,51 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Starfall Observatory</title><style>*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 15%,#172554,#050814 58%,#02040a);color:#eef6ff;font-family:system-ui,sans-serif;overflow:hidden}.hud{position:fixed;z-index:3;left:12px;right:12px;top:12px;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none}.pill{background:#07101edb;border:1px solid #334766;border-radius:999px;padding:7px 10px;font-size:12px;backdrop-filter:blur(8px)}.pill b{color:#7dd3fc;margin-left:4px}.panel{position:fixed;z-index:3;left:14px;bottom:14px;width:min(460px,calc(100% - 28px));background:#07101ee8;border:1px solid #314561;border-radius:18px;padding:14px;box-shadow:0 18px 50px #0008}.panel h1{margin:0 0 3px;font-size:22px}.brand{font-size:9px;font-weight:900;letter-spacing:.16em;color:#7dd3fc}.panel p{margin:6px 0;color:#a8b8d6;font-size:12px;line-height:1.45}.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0}.readout div{background:#0b1730;border:1px solid #263a5c;border-radius:10px;padding:8px}.readout small,.readout strong{display:block}.readout small{color:#7184aa;font-size:9px}.readout strong{font-variant-numeric:tabular-nums;font-size:15px}.buttons{display:flex;gap:7px;flex-wrap:wrap}.buttons button{border:1px solid #385174;background:#0d1d38;color:#edf6ff;border-radius:10px;padding:9px 11px;font-weight:800;cursor:pointer}.buttons button.active{border-color:#7dd3fc;background:#12345a}.dpad{position:fixed;z-index:4;right:16px;bottom:16px;display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,48px);gap:5px}.dpad button{border:1px solid #3c5275;background:#0b1730df;color:white;border-radius:12px;font-weight:900}.dpad [data-a="up"]{grid-column:2}.dpad [data-a="left"]{grid-column:1}.dpad [data-a="capture"]{grid-column:2;background:#164e63}.dpad [data-a="right"]{grid-column:3}.dpad [data-a="down"]{grid-column:2;grid-row:3}.dpad [data-a="filter"]{grid-column:3;grid-row:3}.dpad{grid-template-rows:repeat(3,48px)}canvas{width:100vw;height:100vh;display:block;touch-action:none}@media(max-width:720px){.panel{bottom:178px}.readout{grid-template-columns:repeat(2,1fr)}.dpad{right:50%;transform:translateX(50%)}.hud{font-size:10px}}</style></head><body><canvas id="scope"></canvas><div class="hud"><span class="pill">Observation <b id="obs">1/6</b></span><span class="pill">Signal <b id="signal">0%</b></span><span class="pill">Attempts <b id="attempts">0</b></span><span class="pill">Score <b id="score">0</b></span></div><section class="panel"><div class="brand">ARCHITECT INDUSTRIES // STARFALL OBSERVATORY</div><h1 id="name">Vesper Thread</h1><p id="brief">Acquire the target, match its spectral filter, and capture a clean observation.</p><div class="readout"><div><small>AZIMUTH</small><strong id="az">180°</strong></div><div><small>ALTITUDE</small><strong id="alt">45°</strong></div><div><small>FILTER</small><strong id="filter">BLUE</strong></div><div><small>TARGET</small><strong id="target">112° / 34°</strong></div><div><small>REQUIRED FILTER</small><strong id="need">BLUE</strong></div><div><small>TOLERANCE</small><strong id="tol">±6°</strong></div></div><p id="note">Use remappable directions or tap the scope to align. Secondary cycles filters. Primary captures.</p><div class="buttons"><button id="capture">Capture</button><button data-filter="0">Blue</button><button data-filter="1">Gold</button><button data-filter="2">Infrared</button><button id="restart">Restart</button></div></section><div class="dpad"><button data-a="up">▲</button><button data-a="left">◀</button><button data-a="capture">◎</button><button data-a="right">▶</button><button data-a="down">▼</button><button data-a="filter">F</button></div><script src="../../assets/wwg-input.js"></script><script>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Starfall Observatory 1.3 — Compact Instrument Deck</title><style>*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 15%,#172554,#050814 58%,#02040a);color:#eef6ff;font-family:system-ui,sans-serif;overflow:hidden}.hud{position:fixed;z-index:3;left:12px;right:12px;top:12px;display:flex;gap:8px;flex-wrap:wrap;pointer-events:none}.pill{background:#07101edb;border:1px solid #334766;border-radius:999px;padding:7px 10px;font-size:12px;backdrop-filter:blur(8px)}.pill b{color:#7dd3fc;margin-left:4px}.panel{position:fixed;z-index:3;left:14px;bottom:14px;width:min(460px,calc(100% - 28px));background:#07101ee8;border:1px solid #314561;border-radius:18px;padding:14px;box-shadow:0 18px 50px #0008}.panel h1{margin:0 0 3px;font-size:22px}.brand{font-size:9px;font-weight:900;letter-spacing:.16em;color:#7dd3fc}.panel p{margin:6px 0;color:#a8b8d6;font-size:12px;line-height:1.45}.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:10px 0}.readout div{background:#0b1730;border:1px solid #263a5c;border-radius:10px;padding:8px}.readout small,.readout strong{display:block}.readout small{color:#7184aa;font-size:9px}.readout strong{font-variant-numeric:tabular-nums;font-size:15px}.buttons{display:flex;gap:7px;flex-wrap:wrap}.buttons button{border:1px solid #385174;background:#0d1d38;color:#edf6ff;border-radius:10px;padding:9px 11px;font-weight:800;cursor:pointer}.buttons button.active{border-color:#7dd3fc;background:#12345a}.buttons button:focus-visible,.dpad button:focus-visible{outline:3px solid #facc15;outline-offset:3px}.dpad{position:fixed;z-index:4;right:16px;bottom:16px;display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,48px);gap:5px}.dpad button{border:1px solid #3c5275;background:#0b1730df;color:white;border-radius:12px;font-weight:900}.dpad [data-a="up"]{grid-column:2}.dpad [data-a="left"]{grid-column:1}.dpad [data-a="capture"]{grid-column:2;background:#164e63}.dpad [data-a="right"]{grid-column:3}.dpad [data-a="down"]{grid-column:2;grid-row:3}.dpad [data-a="filter"]{grid-column:3;grid-row:3}.dpad{grid-template-rows:repeat(3,48px)}canvas{width:100vw;height:100vh;display:block;touch-action:none}.state{border-left:3px solid #7dd3fc;padding-left:8px;color:#e1f7ff!important;font-weight:650}@media(max-width:720px){.panel{bottom:178px}.readout{grid-template-columns:repeat(2,1fr)}.dpad{right:50%;transform:translateX(50%)}.hud{font-size:10px}}
+/* v441: expose a native, keyboard-operable instrument disclosure instead of a
+   400-500px sheet covering the telescope on touch and landscape screens. */
+.panel summary{display:none}
+@media (max-width:720px), (max-height:500px){
+ .panel{z-index:7;left:8px;right:8px;top:var(--instrument-top,92px);bottom:auto;width:min(420px,calc(100vw - 16px));max-width:calc(100vw - 16px);max-height:calc(100dvh - var(--instrument-top,92px) - 8px);overflow:hidden;padding:0;border-radius:12px}
+ .panel summary{display:block;cursor:pointer;list-style:none;background:#092142;color:#effaff;font:750 12px/1.4 system-ui,sans-serif;padding:8px 12px;min-height:38px;outline-offset:-3px}
+ .panel summary::-webkit-details-marker{display:none}
+ .panel summary:before{content:'▸';display:inline-block;margin-right:7px;color:#7dd3fc}
+ .panel[open] summary:before{content:'▾'}
+ .panel summary:focus-visible{outline:3px solid #facc15}
+ #compactReadout{display:block;font-size:11px;font-weight:550;color:#cce7ff;white-space:normal}
+ .panel .panel-inner{display:none}
+ .panel[open]{z-index:15;top:8px;bottom:8px;max-height:calc(100dvh - 16px);width:calc(100vw - 16px);overflow-y:auto;overscroll-behavior:contain;box-shadow:0 0 0 100vmax #02040ac9,0 18px 50px #000b}
+ .panel[open] .panel-inner{display:block;padding:10px 12px 14px}
+ .panel[open] summary{position:sticky;top:0;z-index:1}
+ .panel h1{font-size:19px}
+ .panel .readout{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin:7px 0}
+ .panel .readout div{padding:6px}
+ .panel .buttons button{min-height:38px}
+ .dpad{bottom:8px;right:8px;transform:none;grid-template-columns:repeat(3,40px);grid-template-rows:repeat(3,40px);gap:4px}
+ .dpad button{min-height:40px;touch-action:manipulation}
+ .hud{left:8px;right:8px;top:7px;gap:4px}
+ .pill{font-size:10px;padding:4px 7px}
+}
+@media (max-width:360px) and (max-height:300px){
+ .dpad{grid-template-columns:repeat(3,35px);grid-template-rows:repeat(3,35px);gap:3px}
+ .dpad button{min-height:35px}
+ .panel:not([open]){width:calc(100vw - 128px)}
+ .panel summary{font-size:11px;padding:5px 7px}
+ #compactReadout{font-size:10px}
+}
+</style></head><body><canvas id="scope"></canvas><div class="hud"><span class="pill">Observation <b id="obs">1/6</b></span><span class="pill">Signal <b id="signal">0%</b></span><span class="pill">Attempts <b id="attempts">0</b></span><span class="pill">Score <b id="score">0</b></span><span class="pill">Active time <b id="clock">0.0s</b></span></div><details class="panel" id="instruments" open><summary>Instruments / Target <span id="compactReadout" aria-live="off">Target and aim readout</span></summary><div class="panel-inner"><div class="brand">ARCHITECT INDUSTRIES // STARFALL OBSERVATORY</div><h1 id="name">Vesper Thread</h1><p id="brief">Acquire the target, match its spectral filter, and capture a clean observation.</p><div class="readout"><div><small>AZIMUTH</small><strong id="az">180°</strong></div><div><small>ALTITUDE</small><strong id="alt">45°</strong></div><div><small>FILTER</small><strong id="filter">BLUE</strong></div><div><small>TARGET</small><strong id="target">112° / 34°</strong></div><div><small>REQUIRED FILTER</small><strong id="need">BLUE</strong></div><div><small>TOLERANCE</small><strong id="tol">±6°</strong></div></div><p id="status" class="state" role="status" aria-live="polite" aria-atomic="true">READY — Survey clock begins with your first telescope action.</p><p id="note" role="status" aria-live="polite">Use remappable directions or tap the scope to align. Secondary cycles filters. Primary captures once per press. Controller: stick/D-pad aims, A captures, B switches filter.</p><div class="buttons"><button id="capture">Capture</button><button data-filter="0">Blue</button><button data-filter="1">Gold</button><button data-filter="2">Infrared</button><button id="restart">Restart</button></div></div></details><div class="dpad"><button data-a="up" aria-label="Aim telescope higher">▲</button><button data-a="left" aria-label="Aim telescope left">◀</button><button data-a="capture" aria-label="Capture one telescope observation">◎</button><button data-a="right" aria-label="Aim telescope right">▶</button><button data-a="down" aria-label="Aim telescope lower">▼</button><button data-a="filter" aria-label="Cycle spectral filter">F</button></div><script src="../../assets/wwg-input.js"></script><script>
 const IN=window.WWGInput||{is:(e,a,x=[])=>({up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],left:['KeyA','ArrowLeft'],right:['KeyD','ArrowRight'],primary:['Space'],secondary:['KeyE']}[a]||[]).concat(x).includes(e.code)};
 const C=document.getElementById('scope'),X=C.getContext('2d'),O=document.getElementById('obs'),SIG=document.getElementById('signal'),ATT=document.getElementById('attempts'),SC=document.getElementById('score'),AZ=document.getElementById('az'),AL=document.getElementById('alt'),FI=document.getElementById('filter'),TG=document.getElementById('target'),NE=document.getElementById('need'),TO=document.getElementById('tol'),NM=document.getElementById('name'),NOTE=document.getElementById('note');
+const STATUS=document.getElementById('status'),CLOCK=document.getElementById('clock');
+const INSTRUMENTS=document.getElementById('instruments'),COMPACT=document.getElementById('compactReadout');
+const compactLayout=matchMedia('(max-width:720px), (max-height:500px)');
+function layoutInstruments(){
+  document.documentElement.style.setProperty('--instrument-top',(Math.ceil(document.querySelector('.hud').getBoundingClientRect().bottom)+7)+'px');
+}
+function modeInstruments(){INSTRUMENTS.open=!compactLayout.matches;layoutInstruments()}
+modeInstruments();compactLayout.addEventListener('change',modeInstruments);
+INSTRUMENTS.addEventListener('toggle',()=>{
+  padNeedsNeutral=true;
+  if(!INSTRUMENTS.open)INSTRUMENTS.querySelector('summary').focus({preventScroll:true});
+});
+
 const FILTERS=['BLUE','GOLD','INFRARED'];
 const TARGETS=[
 {name:'Vesper Thread',az:112,alt:34,filter:0,tol:6,seed:11},
@@ -10,23 +55,144 @@ const TARGETS=[
 {name:'Ashen Compass',az:167,alt:74,filter:1,tol:4,seed:59},
 {name:'Far Choir',az:28,alt:43,filter:2,tol:3,seed:71}
 ];
-let W=0,H=0,dpr=1,az=180,alt=45,filter=0,idx=0,attempts=0,totalScore=0,start=performance.now(),done=false,stars=[];
+let W=0,H=0,dpr=1,az=180,alt=45,filter=0,idx=0,attempts=0,totalScore=0,done=false,stars=[];
+// Competitive time is foreground active-play time, never page-open or hidden time.
+let started=false,suspended=false,elapsedForegroundMs=0,foregroundSince=null,lastClockPaint=0;
+const heldKeys=new Set(),keysNeedRelease=new Set();
+let padNeedsNeutral=true;
+function surveyElapsedMs(){return elapsedForegroundMs+(started&&!suspended&&foregroundSince!==null?Math.max(0,performance.now()-foregroundSince):0)}
+function showClock(){CLOCK.textContent=(surveyElapsedMs()/1000).toFixed(1)+'s'}
+function surveyAction(){
+  if(done||suspended||document.hidden)return false;
+  if(!started){started=true;foregroundSince=performance.now();STATUS.textContent='ACTIVE — Survey time counts while this page is in the foreground.';showClock()}
+  return true;
+}
+function suspendSurvey(){
+  if(done||suspended)return;
+  if(foregroundSince!==null){elapsedForegroundMs+=Math.max(0,performance.now()-foregroundSince);foregroundSince=null}
+  suspended=true;
+  for(const key of heldKeys)keysNeedRelease.add(key);
+  heldKeys.clear();actionKeysDown.clear();padNeedsNeutral=true;padPrevious={a:false,b:false};padDirection='';
+  STATUS.textContent=started?'SUSPENDED — Survey clock paused while you are away.':'SUSPENDED — No survey time has started.';
+  showClock();
+}
+function resumeSurvey(){
+  if(done||!suspended||document.hidden)return;
+  suspended=false;
+  if(started)foregroundSince=performance.now();
+  padNeedsNeutral=true;
+  STATUS.textContent=started?'ACTIVE — Survey resumed. Held inputs must be released.':'READY — Survey clock begins with your first telescope action.';
+  showClock();
+}
 function rng(seed){let s=seed>>>0;return()=>((s=Math.imul(s^s>>>15,1|s),s^=s+Math.imul(s^s>>>7,61|s),((s^s>>>14)>>>0)/4294967296))}
-function resize(){dpr=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;C.width=W*dpr;C.height=H*dpr;C.style.width=W+'px';C.style.height=H+'px';makeStars();draw()}
+function resize(){dpr=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;C.width=W*dpr;C.height=H*dpr;C.style.width=W+'px';C.style.height=H+'px';makeStars();layoutInstruments();draw()}
 function makeStars(){const r=rng(9217+idx*101),n=Math.max(90,Math.floor(W*H/8000));stars=Array.from({length:n},()=>({x:r()*W,y:r()*H,a:.25+r()*.75,s:.5+r()*1.8}))}
 function angular(a,b){let d=Math.abs(a-b)%360;return Math.min(d,360-d)}
 function quality(){const t=TARGETS[idx],da=angular(az,t.az),dh=Math.abs(alt-t.alt),dist=Math.hypot(da,dh),align=Math.max(0,1-dist/(t.tol*4)),spectral=filter===t.filter?1:.36;return Math.round(100*align*spectral)}
-function move(dx,dy){if(done)return;az=(az+dx*2+360)%360;alt=Math.max(5,Math.min(85,alt+dy*2));sync();draw()}
-function cycleFilter(){if(done)return;filter=(filter+1)%FILTERS.length;sync();draw()}
-function setFilter(n){if(done)return;filter=Math.max(0,Math.min(2,Number(n)));sync();draw()}
-function capture(){if(done)return;attempts++;const t=TARGETS[idx],da=angular(az,t.az),dh=Math.abs(alt-t.alt),ok=da<=t.tol&&dh<=t.tol&&filter===t.filter;const q=quality();if(ok){const stage=Math.max(120,1200-attempts*45+q*8);totalScore+=stage;NOTE.textContent=`Clean spectrum on ${t.name}. +${stage.toLocaleString()} points.`;idx++;attempts=0;if(idx>=TARGETS.length){finish();return}az=(az+17)%360;alt=Math.max(10,Math.min(80,alt-9));filter=(filter+1)%3;makeStars();setTimeout(()=>{if(!done)NOTE.textContent='Next target loaded. Match bearing, altitude, and spectral filter.'},550)}else{const clues=[];if(da>t.tol)clues.push(`azimuth ${((t.az-az+540)%360)-180>0?'east':'west'}`);if(dh>t.tol)clues.push(`altitude ${t.alt>alt?'higher':'lower'}`);if(filter!==t.filter)clues.push('wrong spectral filter');NOTE.textContent=`No lock: ${clues.join(', ')}. Signal ${q}%.`}sync();draw()}
-function finish(){done=true;const secs=Math.max(1,(performance.now()-start)/1000),score=Math.max(100,Math.round(totalScore+4200-secs*7));totalScore=score;NOTE.textContent=`Survey sealed. Observatory score ${score.toLocaleString()}. Press R to run the night again.`;try{parent.postMessage({type:'wwg:game-event',game:'starfall-observatory',event:'survey-complete',score,duration:Math.round(secs),meta:{unit:'pts',direction:'high',targets:6}},'*')}catch{}sync();draw()}
-function reset(){az=180;alt=45;filter=0;idx=0;attempts=0;totalScore=0;start=performance.now();done=false;makeStars();NOTE.textContent='Use remappable directions or tap the scope to align. Secondary cycles filters. Primary captures.';sync();draw()}
-function sync(){const t=TARGETS[Math.min(idx,TARGETS.length-1)];O.textContent=`${Math.min(idx+1,6)}/6`;SIG.textContent=done?'100%':quality()+'%';ATT.textContent=attempts;SC.textContent=Math.round(totalScore);AZ.textContent=Math.round(az)+'°';AL.textContent=Math.round(alt)+'°';FI.textContent=FILTERS[filter];TG.textContent=`${t.az}° / ${t.alt}°`;NE.textContent=FILTERS[t.filter];TO.textContent=`±${t.tol}°`;NM.textContent=done?'Survey Complete':t.name;document.querySelectorAll('[data-filter]').forEach(b=>b.classList.toggle('active',Number(b.dataset.filter)===filter))}
+function move(dx,dy){if(!surveyAction())return;az=(az+dx*2+360)%360;alt=Math.max(5,Math.min(85,alt+dy*2));sync();draw()}
+function cycleFilter(){if(!surveyAction())return;filter=(filter+1)%FILTERS.length;sync();draw()}
+function setFilter(n){if(!surveyAction())return;filter=Math.max(0,Math.min(2,Number(n)));sync();draw()}
+function capture(){if(!surveyAction())return;attempts++;const t=TARGETS[idx],da=angular(az,t.az),dh=Math.abs(alt-t.alt),ok=da<=t.tol&&dh<=t.tol&&filter===t.filter;const q=quality();if(ok){const stage=Math.max(120,1200-attempts*45+q*8);totalScore+=stage;NOTE.textContent=`Clean spectrum on ${t.name}. +${stage.toLocaleString()} points.`;idx++;attempts=0;if(idx>=TARGETS.length){finish();return}az=(az+17)%360;alt=Math.max(10,Math.min(80,alt-9));filter=(filter+1)%3;makeStars();setTimeout(()=>{if(!done)NOTE.textContent='Next target loaded. Match bearing, altitude, and spectral filter.'},550)}else{const clues=[];if(da>t.tol)clues.push(`azimuth ${((t.az-az+540)%360)-180>0?'east':'west'}`);if(dh>t.tol)clues.push(`altitude ${t.alt>alt?'higher':'lower'}`);if(filter!==t.filter)clues.push('wrong spectral filter');NOTE.textContent=`No lock: ${clues.join(', ')}. Signal ${q}%.`}sync();draw()}
+function finish(){if(done)return;const recordedMs=surveyElapsedMs();done=true;elapsedForegroundMs=recordedMs;foregroundSince=null;const secs=Math.max(1,recordedMs/1000),score=Math.max(100,Math.round(totalScore+4200-secs*7));totalScore=score;STATUS.textContent='COMPLETE — Active survey clock stopped.';showClock();NOTE.textContent=`Survey sealed. Observatory score ${score.toLocaleString()}. Press R to run the night again.`;try{parent.postMessage({type:'wwg:game-event',game:'starfall-observatory',event:'survey-complete',score,duration:Math.round(secs),meta:{unit:'pts',direction:'high',targets:6}},'*')}catch{}sync();draw()}
+function reset(){az=180;alt=45;filter=0;idx=0;attempts=0;totalScore=0;started=false;elapsedForegroundMs=0;foregroundSince=null;suspended=document.hidden;done=false;actionKeysDown.clear();padNeedsNeutral=true;padPrevious={a:false,b:false};padDirection='';STATUS.textContent=suspended?'SUSPENDED — Survey begins on return.':'READY — Survey clock begins with your first telescope action.';showClock();makeStars();NOTE.textContent='Use remappable directions or tap the scope to align. Secondary cycles filters. Primary captures once per press. Controller: stick/D-pad aims, A captures, B switches filter.';sync();draw()}
+function sync(){const t=TARGETS[Math.min(idx,TARGETS.length-1)];layoutInstruments();O.textContent=`${Math.min(idx+1,6)}/6`;SIG.textContent=done?'100%':quality()+'%';ATT.textContent=attempts;SC.textContent=Math.round(totalScore);AZ.textContent=Math.round(az)+'°';AL.textContent=Math.round(alt)+'°';FI.textContent=FILTERS[filter];TG.textContent=`${t.az}° / ${t.alt}°`;NE.textContent=FILTERS[t.filter];TO.textContent=`±${t.tol}°`;NM.textContent=done?'Survey Complete':t.name;COMPACT.textContent=done?'Survey complete · Restart to observe again':`Target ${t.az}°/${t.alt}° ${FILTERS[t.filter]} · Aim ${Math.round(az)}°/${Math.round(alt)}° ${FILTERS[filter]}`;document.querySelectorAll('[data-filter]').forEach(b=>b.classList.toggle('active',Number(b.dataset.filter)===filter))}
 function mapPoint(){const cx=W*.56,cy=H*.46,r=Math.min(W,H)*.32,dx=angular(az,180)*(az<180?-1:1)/180,dy=(45-alt)/45;return{x:cx+dx*r,y:cy+dy*r}}
 function targetPoint(){const t=TARGETS[Math.min(idx,TARGETS.length-1)],cx=W*.56,cy=H*.46,r=Math.min(W,H)*.32,raw=((t.az-180+540)%360)-180;return{x:cx+(raw/180)*r,y:cy+((45-t.alt)/45)*r}}
 function draw(){if(!W)return;X.setTransform(dpr,0,0,dpr,0,0);X.clearRect(0,0,W,H);const g=X.createRadialGradient(W*.55,H*.42,20,W*.55,H*.42,Math.max(W,H)*.7);g.addColorStop(0,'#10264c');g.addColorStop(1,'#02040a');X.fillStyle=g;X.fillRect(0,0,W,H);for(const s of stars){X.globalAlpha=s.a;X.fillStyle='#dbeafe';X.beginPath();X.arc(s.x,s.y,s.s,0,Math.PI*2);X.fill()}X.globalAlpha=1;const cx=W*.56,cy=H*.46,r=Math.min(W,H)*.32;X.strokeStyle='#426184';X.lineWidth=1;for(let i=1;i<=4;i++){X.beginPath();X.arc(cx,cy,r*i/4,0,Math.PI*2);X.stroke()}X.beginPath();X.moveTo(cx-r,cy);X.lineTo(cx+r,cy);X.moveTo(cx,cy-r);X.lineTo(cx,cy+r);X.stroke();const p=mapPoint(),t=targetPoint();X.strokeStyle=['#7dd3fc','#fbbf24','#fb7185'][filter];X.lineWidth=2;X.beginPath();X.arc(p.x,p.y,18,0,Math.PI*2);X.moveTo(p.x-28,p.y);X.lineTo(p.x+28,p.y);X.moveTo(p.x,p.y-28);X.lineTo(p.x,p.y+28);X.stroke();X.globalAlpha=.18;X.fillStyle='#ffffff';X.beginPath();X.arc(t.x,t.y,Math.max(12,TARGETS[Math.min(idx,5)].tol*3),0,Math.PI*2);X.fill();X.globalAlpha=1;X.fillStyle='#9fb7d7';X.font='11px system-ui';X.fillText('W',cx-r-12,cy+4);X.fillText('E',cx+r+5,cy+4);X.fillText('ZENITH',cx-22,cy-r-8);}
-addEventListener('keydown',e=>{if(IN.is(e,'left')){e.preventDefault();move(-1,0)}else if(IN.is(e,'right')){e.preventDefault();move(1,0)}else if(IN.is(e,'up')){e.preventDefault();move(0,1)}else if(IN.is(e,'down')){e.preventDefault();move(0,-1)}else if(IN.is(e,'secondary')){e.preventDefault();cycleFilter()}else if(IN.is(e,'primary')){e.preventDefault();capture()}if(e.code==='KeyR')reset()});
-C.addEventListener('pointerdown',e=>{if(done)return;const rect=C.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top,cx=W*.56,cy=H*.46,r=Math.min(W,H)*.32;az=(180+((x-cx)/r)*180+360)%360;alt=Math.max(5,Math.min(85,45-((y-cy)/r)*45));sync();draw()});
-document.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();const a=b.dataset.a;if(a==='left')move(-1,0);if(a==='right')move(1,0);if(a==='up')move(0,1);if(a==='down')move(0,-1);if(a==='capture')capture();if(a==='filter')cycleFilter()}));document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>setFilter(b.dataset.filter));document.getElementById('capture').onclick=capture;document.getElementById('restart').onclick=reset;addEventListener('resize',resize);resize();reset();
+// Capture and filter changes are discrete actions, not typematic movement.
+// A focused native button always activates itself instead of a global game shortcut.
+const actionKeysDown=new Set();
+function commandFromButton(button){
+  const a=button.dataset.a;
+  if(a==='left')move(-1,0);
+  else if(a==='right')move(1,0);
+  else if(a==='up')move(0,1);
+  else if(a==='down')move(0,-1);
+  else if(a==='capture')capture();
+  else if(a==='filter')cycleFilter();
+  else button.click();
+}
+addEventListener('keydown',e=>{
+  if(e.code==='Escape'&&INSTRUMENTS.open&&compactLayout.matches){e.preventDefault();INSTRUMENTS.open=false;return}
+  // Native summary must receive Space and Enter. A covered canvas must never
+  // receive global movement or capture shortcuts while the readout is expanded.
+  if(e.target instanceof HTMLElement && e.target.tagName==='SUMMARY' && (e.code==='Space'||e.code==='Enter'))return;
+  if(compactLayout.matches&&INSTRUMENTS.open&&!((e.code==='Space'||e.code==='Enter')&&e.target instanceof HTMLButtonElement&&INSTRUMENTS.contains(e.target)))return;
+  if(suspended||document.hidden)return;
+  if(keysNeedRelease.has(e.code)){e.preventDefault();return}
+  heldKeys.add(e.code);
+  const focused=document.activeElement;
+  if((e.code==='Space'||e.code==='Enter')&&focused instanceof HTMLButtonElement){
+    e.preventDefault();
+    if(!e.repeat&&!actionKeysDown.has(e.code)){
+      actionKeysDown.add(e.code);
+      commandFromButton(focused);
+    }
+    return;
+  }
+  if(IN.is(e,'left')){e.preventDefault();move(-1,0)}
+  else if(IN.is(e,'right')){e.preventDefault();move(1,0)}
+  else if(IN.is(e,'up')){e.preventDefault();move(0,1)}
+  else if(IN.is(e,'down')){e.preventDefault();move(0,-1)}
+  else if(IN.is(e,'secondary')||IN.is(e,'primary')){
+    e.preventDefault();
+    if(!e.repeat&&!actionKeysDown.has(e.code)){
+      actionKeysDown.add(e.code);
+      if(IN.is(e,'secondary'))cycleFilter();else capture();
+    }
+  }else if(e.code==='KeyR'&&!e.repeat)reset();
+});
+addEventListener('keyup',e=>{actionKeysDown.delete(e.code);heldKeys.delete(e.code);keysNeedRelease.delete(e.code)});
+addEventListener('blur',suspendSurvey);
+addEventListener('focus',resumeSurvey);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)suspendSurvey();else resumeSurvey()});
+
+// Poll fresh standardized gamepad state. Direction may repeat at a measured
+// cadence, but A (shutter) and B (filter) react to press edges only.
+let padPrevious={a:false,b:false},padDirection='',padLastStep=0;
+function pollGamepad(now){
+  let pad=null;
+  try{
+    if(typeof navigator.getGamepads==='function'){
+      pad=Array.from(navigator.getGamepads()||[]).find(g=>g&&g.connected!==false&&(!g.mapping||g.mapping==='standard'))||null;
+    }
+  }catch{pad=null}
+  if(!pad||document.hidden||suspended||(compactLayout.matches&&INSTRUMENTS.open)){
+    padPrevious={a:false,b:false};padDirection='';padNeedsNeutral=true;
+  }else{
+    const pressed=i=>!!pad.buttons?.[i]?.pressed;
+    const ax=Number.isFinite(pad.axes?.[0])?pad.axes[0]:0;
+    const ay=Number.isFinite(pad.axes?.[1])?pad.axes[1]:0;
+    const neutral=!Array.from(pad.buttons||[]).some(b=>b?.pressed)&&Math.max(Math.abs(ax),Math.abs(ay))<.35;
+    if(padNeedsNeutral&&neutral)padNeedsNeutral=false;
+    if(!padNeedsNeutral){
+    let direction='';
+    if(pressed(14)&&!pressed(15))direction='left';
+    else if(pressed(15)&&!pressed(14))direction='right';
+    else if(pressed(12)&&!pressed(13))direction='up';
+    else if(pressed(13)&&!pressed(12))direction='down';
+    else if(Math.max(Math.abs(ax),Math.abs(ay))>.55)
+      direction=Math.abs(ax)>=Math.abs(ay)?(ax>0?'right':'left'):(ay>0?'down':'up');
+    if(direction&&(direction!==padDirection||now-padLastStep>=115)){
+      if(direction==='left')move(-1,0);
+      else if(direction==='right')move(1,0);
+      else if(direction==='up')move(0,1);
+      else move(0,-1);
+      padLastStep=now;
+    }
+    padDirection=direction;
+    const a=pressed(0),b=pressed(1);
+    if(a&&!padPrevious.a)capture();
+    if(b&&!padPrevious.b)cycleFilter();
+    padPrevious={a,b};
+    }else{padPrevious={a:false,b:false};padDirection=''}
+  }
+  if(now-lastClockPaint>=175){showClock();lastClockPaint=now}
+  requestAnimationFrame(pollGamepad);
+}
+requestAnimationFrame(pollGamepad);
+C.addEventListener('pointerdown',e=>{if(compactLayout.matches&&INSTRUMENTS.open||!surveyAction())return;const rect=C.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top,cx=W*.56,cy=H*.46,r=Math.min(W,H)*.32;az=(180+((x-cx)/r)*180+360)%360;alt=Math.max(5,Math.min(85,45-((y-cy)/r)*45));sync();draw()});
+// Click activation covers mouse, touch pointer release and keyboard focus
+// without a pointerdown+click double-action on touchscreens.
+document.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('click',()=>commandFromButton(b)));document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>setFilter(b.dataset.filter));document.getElementById('capture').onclick=capture;document.getElementById('restart').onclick=reset;addEventListener('resize',resize);resize();reset();
 </script></body></html>

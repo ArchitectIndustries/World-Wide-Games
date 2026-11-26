@@ -1,46 +1,27 @@
-# WorldWideGames Project State
+# WorldWideGames — v497 integrated source
 
-Last updated: 2026-10-06
+Date: November 26, 2026 (America/New_York)
 Owner/operator: Architect Industries
-Current verified release candidate: **v72 — Harbor Pulse 1.1: Full Shift**
-Catalog: **82 games / 129 genre tags / 152 achievements / 54 remappable releases**
-Release status: **READY FOR RELEASE TASK**
+Canonical repository: ArchitectIndustries/World-Wide-Games
+Production target: https://worldwidegames.vercel.app/
+Existing Vercel project: prj_CgW1xTHIZOOe1R4RNzcByfvxantq
 
-## Objective
+## Recovery scope
 
-Repair a real Harbor Pulse result-integrity defect without expanding the catalog. In v71, reputation collapse and legitimate 90-second survival both emitted the same scored `shift-complete` event. A failed run could therefore write the game's local best score, while the ambiguous event could not safely be classified as a platform completion.
+The starting canonical main was `8ffd27a4aa115ff4647c0946e5eea032b91504f9`, containing the old 82-game base and six Arcade Nights additions. Public production still loaded v70 and 82 catalog entries. Its newest added-game date was October 4.
 
-## Result
+This source integrates the complete v496 cumulative game source, the current six additions, Mosaic B1, profile B2, Aegis F3D95 and Cyber Wars 0.64. During publication, main advanced to `f33d5ffd014f132af21c24eef730c2de122e9535`, adding Stormwake Rescue and Iron Meridian and publishing Lattice/Vanta repairs. Those concurrent changes are preserved. All original games remain. The result is **91 catalog entries**, not 497 games. The B3 worker was deliberately excluded because its fixes were superseded by v480–v481 and it would have regressed the cache boundary.
 
-Harbor Pulse 1.1 now emits neutral unscored `shift-complete` compatibility telemetry plus an explicit result: `shift-cleared` only after the player survives the full 90-second shift with reputation remaining, or `shift-failed` when reputation reaches zero first. Only `shift-cleared` submits a score, updates the Harbor best, counts as a Daily Circuit milestone, and marks Harbor Pulse cleared. Failed shifts remain observable without entering score history or completion state.
+The current user explicitly authorized integration and production publication; previous build-only task restrictions describe their earlier scope. No replacement project, billing change, force push or new relay hosting is part of this recovery.
 
-## Verification
+## Live-specific report
 
-- Pre-fix v71 reproduction: forcing reputation to zero with 120 credits emitted scored `shift-complete` and wrote `wwg:harbor-best=120`.
-- Dedicated real-Chromium Harbor Pulse regression: PASS for early reputation failure, legitimate full-shift clear, score/best isolation, restart, real pointer routing, 390×844 mobile layout, and platform clear/milestone semantics.
-- Platform objective/control/remap/mobile gate: **82/82 detail/objective pages PASS**, **54/54 remappable profiles PASS**, **82/82 mobile homepage cards PASS**, zero tested page errors.
-- Whole-catalog Chromium interaction audit: **82/82 PASS**.
-- Local-origin/PWA sweep: **178/178 HTTP 200** (root plus 177 service-worker file assets).
-- Recent integrity regressions for Vector League, Riftwake Regatta, Solar Loom, Pulse Archive, Parallax Accord, Hexbound Tactics, Command Bloom, and Verdant Echoes: PASS.
+The user reported that Lattice Armada’s option picker obstructs gameplay. Public source confirmed that `.menu{display:grid}` overrode the hidden attribute. The missing `.menu[hidden]{display:none!important}` correction first appeared in v100 on October 10 and was retained in this integrated release. Current browser launch and resume remove the picker from both the accessibility layout and its measured bounding box. A 26-check regression also covers pause, keyboard actions, restart, focus changes and score integrity.
 
-## Review lenses
+## Source integrity and verification
 
-- **Game design:** published 90-second survival rule is now authoritative; a reputation-collapse run cannot masquerade as a completed shift.
-- **Catalog QA:** historical false-result path was reproduced first, then both terminal branches, restart, and pointer routing were regression-tested.
-- **Platform/discovery:** `harbor-pulse:shift-cleared` is now a true completion/milestone; neutral `shift-complete` and `shift-failed` remain excluded from Cleared filters and Daily Circuit credit.
-- **Input/accessibility:** pointer/touch routing remains the core control scheme; narrow mobile layout and restart affordance remain usable.
-- **Art/audio provenance:** no external art, audio, libraries, models, or new licensing obligations were introduced.
-- **Performance/reliability:** result classification remains constant-time Set lookup and adds only one terminal event key; PWA asset inventory remains unchanged.
-- **Technology/genre research:** no new browser technology or genre dependency was justified for this bounded correctness repair; the dependency-free canvas implementation remains sufficient.
+See RELEASE_RECORD.json for provenance and TEST_REPORT.md for exact verification scope. The production build emits release.json with the built commit and file hashes. Publication is established by checking that live receipt and executable bytes after Git synchronization; historical successful preview deployments are insufficient.
 
-## Source and release boundary
+## Remaining platform limits
 
-Build baseline is the exact verified v71 candidate from the preceding Build & QA run (source SHA-256 `660e8d01a71ebc93140dd7cda8c454a1b6651a958e239a383745bcd47b69fe20`, verified before modification). Canonical GitHub `main` at build start and latest re-read is `ed29d3a17e804e6610ec86b7e49f5b980a31a5d4` (v70). This Build & QA task did **not** modify canonical `main`, create a release promotion, or deploy production.
-
-## Persistence status
-
-The first verified v72 source, records, and checksum artifacts were successfully uploaded to `/WorldWideGames`. After this persistence result was recorded in the local release records, the candidate archives were rebuilt so the records would accurately describe that upload. Two attempts to overwrite the Library copies with that final record-refresh build failed with transient `container_session_unavailable`. The durable Library v72 copy therefore contains the same verified runtime/gameplay/test payload but older persistence-status text and different archive hashes. The exact final handoff archives are retained in this run; Release & Deploy must independently verify whichever exact package it selects and should refresh `/WorldWideGames` before promotion when the bridge is healthy.
-
-## Handoff
-
-v72 is **READY FOR RELEASE TASK**. Release & Deploy should independently verify the exact v72 artifacts, persist/confirm them in `/WorldWideGames`, reconcile the verified v71+v72 delta onto current canonical `main` without overwriting unrelated work, then deploy/promote that exact source to the existing WorldWideGames Vercel project and smoke-test production.
+Physical devices/controllers, screen readers, all browser engines and uninterrupted full campaigns have not been exhaustively certified. Fresh Node checks cover the integrated logic and package; current browser interactions cover representative launch and control flows. Optional online relay activation remains separate.

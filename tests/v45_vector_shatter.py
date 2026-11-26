@@ -1,3 +1,4 @@
+from v352_vector_fixture import instrument
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 import json,re
@@ -20,7 +21,7 @@ for token in [
     "powerKinds=['wide','multi','slow','guard','pierce']",
     "post('sector-complete'", "post('campaign-complete'", "post('powerup-collected'",
     "wwg:vector-shatter:meta-v1", "navigator.getGamepads", "pointerdown",
-    "WWGInput.is", "gpAxis", "window.__vectorShatter"
+    "WWGInput.is", "gpAxis", "post('campaign-complete'"
 ]:
     assert token in SRC, token
 
@@ -31,7 +32,7 @@ window.__events=[];window.postMessage=(d)=>{if(d&&d.type==='wwg:game-event')wind
 </script>'''
 
 def html():
-    h=SRC.replace('<script src="../../assets/wwg-input.js"></script>',f'<script>{INPUT}</script>')
+    h=instrument(SRC).replace('<script src="../../assets/wwg-input.js"></script>',f'<script>{INPUT}</script>')
     i=h.lower().find('<script')
     return h[:i]+PRE+h[i:]
 

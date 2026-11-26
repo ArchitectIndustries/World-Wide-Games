@@ -1,12 +1,157 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Railspire Dispatch</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#07111d;color:#fff;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;inset:10px 10px auto;display:flex;gap:7px;flex-wrap:wrap;pointer-events:none}.hud span,.tip{background:#071827e8;border:1px solid #29506b;border-radius:11px;padding:7px 10px;font-size:11px}.hud b{color:#a7f3d0;font-size:16px;margin-left:4px}.tip{position:fixed;left:10px;bottom:10px;max-width:620px;color:#cbd5e1}.keys{position:fixed;right:10px;bottom:10px;display:flex;gap:6px}.keys button{border:1px solid #2f5b70;background:#0c2635;color:#fff;border-radius:10px;padding:12px 14px;font-weight:900}</style></head><body><canvas id="c"></canvas><div class="hud"><span>Delivered <b id="del">0</b>/8</span><span>Strikes <b id="str">0</b>/3</span><span>Time <b id="time">90</b></span><span>Score <b id="score">0</b></span></div><div class="tip" id="tip">Toggle the four amber switches so each colored train reaches its matching depot. Keys 1-4 or tap the switches.</div><div class="keys"><button data-sw="0">1</button><button data-sw="1">2</button><button data-sw="2">3</button><button data-sw="3">4</button></div><script>
-const C=document.querySelector('#c'),X=C.getContext('2d'),DEL=document.querySelector('#del'),STR=document.querySelector('#str'),TIME=document.querySelector('#time'),SCORE=document.querySelector('#score'),TIP=document.querySelector('#tip');let dpr=1,W=0,H=0;function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=innerWidth*dpr;C.height=innerHeight*dpr;W=innerWidth;H=innerHeight}addEventListener('resize',resize);resize();
-const routes=[[[80,150],[300,150],[470,270],[650,270],[840,145],[W-80,145]],[[80,270],[300,270],[470,150],[650,150],[840,275],[W-80,275]],[[80,390],[300,390],[470,510],[650,510],[840,390],[W-80,390]],[[80,510],[300,510],[470,390],[650,390],[840,515],[W-80,515]]];const colors=['#67e8f9','#f9a8d4','#86efac','#fde68a'];let switches=[0,0,0,0],trains=[],spawn=0,delivered=0,strikes=0,score=0,start=performance.now(),last=start,done=false,serial=0;
-function toggle(i){if(done)return;switches[i]^=1;TIP.textContent=`Switch ${i+1} set ${switches[i]?'CROSS':'STRAIGHT'}.`;}
-function pathFor(t){let r=t.lane;const s=switches[t.lane];if(s)r=t.lane^1;return routes[r]||routes[t.lane]}
-function addTrain(){const lane=serial++%4;trains.push({lane,progress:0,speed:92+lane*7,color:colors[lane],x:80,y:routes[lane][0][1]})}
-function finish(reason){if(done)return;done=true;let secs=Math.max(1,(performance.now()-start)/1000);score=Math.max(0,Math.round(delivered*650-strikes*300+Math.max(0,90-secs)*15));TIP.textContent=`${reason} Final dispatch score ${score.toLocaleString()}. Press R to restart.`;try{parent.postMessage({type:'wwg:game-event',game:'railspire-dispatch',event:'shift-complete',score,duration:Math.round(secs),meta:{unit:'pts',direction:'high',delivered,strikes}},'*')}catch{}}
-function restart(){switches=[0,0,0,0];trains=[];spawn=0;delivered=strikes=score=0;start=performance.now();last=start;done=false;serial=0;TIP.textContent='Toggle the switches so every train reaches its matching depot.'}
-function step(t){let dt=Math.min(.05,(t-last)/1000);last=t;if(!done){let elapsed=(t-start)/1000,left=Math.max(0,90-elapsed);spawn-=dt;if(spawn<=0&&trains.length<6){addTrain();spawn=2.4}for(const tr of trains){tr.progress+=tr.speed*dt;const p=pathFor(tr),seg=Math.min(p.length-2,Math.floor(tr.progress/210)),u=(tr.progress%210)/210,a=p[seg],b=p[seg+1];tr.x=a[0]+(b[0]-a[0])*u;tr.y=a[1]+(b[1]-a[1])*u;if(seg===p.length-2&&u>.97&&!tr.done){tr.done=true;const targetY=routes[tr.lane].at(-1)[1],ok=Math.abs(tr.y-targetY)<45;if(ok){delivered++;score+=650;TIP.textContent='Clean delivery.'}else{strikes++;TIP.textContent='Wrong depot — strike.'}}}for(let i=0;i<trains.length;i++)for(let j=i+1;j<trains.length;j++){const a=trains[i],b=trains[j];if(!a.done&&!b.done&&Math.hypot(a.x-b.x,a.y-b.y)<24){a.done=b.done=true;strikes++;TIP.textContent='Collision — strike.'}}trains=trains.filter(x=>!x.done);if(delivered>=8)finish('Shift cleared.');else if(strikes>=3)finish('Dispatch suspended.');else if(left<=0)finish('Shift ended.');DEL.textContent=delivered;STR.textContent=strikes;TIME.textContent=Math.ceil(left);SCORE.textContent=score}draw();requestAnimationFrame(step)}
-function draw(){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#06111d';X.fillRect(0,0,W,H);X.lineCap='round';for(let i=0;i<4;i++){const p=routes[i];X.strokeStyle='#24475c';X.lineWidth=9;X.beginPath();p.forEach((q,k)=>k?X.lineTo(...q):X.moveTo(...q));X.stroke();X.strokeStyle='#9ca3af';X.lineWidth=2;X.stroke()}for(let i=0;i<4;i++){let x=390+(i%2)*370,y=210+Math.floor(i/2)*240;X.fillStyle=switches[i]?'#f97316':'#fbbf24';X.beginPath();X.arc(x,y,16,0,7);X.fill();X.fillStyle='#111827';X.font='bold 11px system-ui';X.fillText(String(i+1),x-3,y+4)}for(let i=0;i<4;i++){X.fillStyle=colors[i];X.fillRect(W-68,routes[i].at(-1)[1]-23,42,46);X.fillStyle='#08111b';X.font='bold 12px system-ui';X.fillText(String(i+1),W-51,routes[i].at(-1)[1]+5)}for(const tr of trains){X.save();X.translate(tr.x,tr.y);X.fillStyle=tr.color;X.fillRect(-18,-11,36,22);X.fillStyle='#0f172a';X.fillRect(-8,-7,16,8);X.restore()}}
-addEventListener('keydown',e=>{if(/^Digit[1-4]$/.test(e.code))toggle(Number(e.code.at(-1))-1);if(e.code==='KeyR')restart()});document.querySelectorAll('[data-sw]').forEach(b=>b.addEventListener('pointerdown',()=>toggle(Number(b.dataset.sw))));C.addEventListener('pointerdown',e=>{const r=C.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;let best=-1,bd=70;for(let i=0;i<4;i++){let sx=390+(i%2)*370,sy=210+Math.floor(i/2)*240,d=Math.hypot(x-sx,y-sy);if(d<bd){bd=d;best=i}}if(best>=0)toggle(best)});restart();requestAnimationFrame(step);
-</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Railspire Dispatch 1.6 — Reachable Dispatch Commands</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#061321;color:#f4fbff;font-family:system-ui,-apple-system,sans-serif}
+body{touch-action:manipulation}canvas{display:block;width:100%;height:100%;touch-action:manipulation}
+.hud{position:fixed;inset:10px 10px auto;display:flex;align-items:center;gap:7px;flex-wrap:wrap;pointer-events:none}
+.hud > span,.panel{background:#071929ed;border:1px solid #3a6579;border-radius:10px;padding:6px 10px;box-shadow:0 3px 14px #0007}
+.hud > span{font-size:12px}.hud b{font-size:16px;color:#a7f3d0;margin-left:5px;font-variant-numeric:tabular-nums}
+.panel{position:fixed;top:67px;left:10px;max-width:min(560px,calc(100% - 20px));font-size:13px;line-height:1.45}
+.panel strong{color:#f9d782}.panel .help{display:block;color:#b8d3e0;margin-top:3px}
+#status{display:block;color:#fff;margin-top:3px;min-height:1.3em}
+.route-bar{position:fixed;inset:auto 9px 10px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;max-width:710px;margin:0 auto}
+.route-bar button,.actions button{cursor:pointer;border:2px solid #4b7188;background:#102a39;color:#fff;border-radius:12px;min-height:51px;font-weight:700;touch-action:manipulation;font:inherit}
+.route-bar button{display:grid;place-items:center;gap:1px;padding:6px 3px;font-size:13px}
+.route-bar button small{font-size:11px;opacity:.87}.route-bar button[aria-pressed="true"]{border-color:#ffe091;background:#194f66;box-shadow:0 0 0 2px #ffdf7b33 inset}
+.route-bar button:focus-visible,.actions button:focus-visible,#helpToggle:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.route-chip{font-weight:900;padding:1px 6px;border-radius:5px;background:#04131c;white-space:nowrap}
+.actions{position:fixed;top:10px;right:10px;display:flex;gap:7px}.actions button{min-height:44px;padding:5px 10px;background:#132d40;font-size:12px}
+.legend{position:fixed;right:10px;top:67px;background:#071929e5;border:1px solid #3a6579;border-radius:10px;padding:7px 10px;font-size:12px;max-width:220px}
+ .legend b{color:#fff}
+.short-label{display:none}.compact-line{display:contents}#helpToggle{display:none}
+.help-body .help{display:block;color:#b8d3e0;margin-top:3px}
+@media(max-width:660px){.hud{right:7px;left:7px;gap:4px;padding-right:0}.hud > span{font-size:11px;padding:5px 7px}.hud b{font-size:13px}.actions{top:53px;right:7px}.panel{top:101px;left:7px;right:7px;max-width:100%;font-size:12px;padding:5px 7px}.panel .help{font-size:11px}.legend{display:none}.route-bar{inset:auto 6px 7px;gap:5px}.route-bar button{min-height:54px;font-size:12px}.route-bar button small{font-size:10px}}
+@media(max-height:540px){.panel{top:53px;max-width:420px}.panel .help{display:none}.legend{display:none}.actions{top:8px}.route-bar button{min-height:42px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+/* Keep the turnout and numbered depots visible while operating controls in
+   short landscape viewports. Never shrink the target route dock below 42px. */
+@media(max-width:700px){
+ .hud{inset:5px 96px auto 6px;width:auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;flex-wrap:nowrap}
+ .hud > span{min-width:0;padding:4px 2px;text-align:center;font-size:0;white-space:nowrap;border-radius:6px}
+ .hud .short-label{display:inline;font-size:10px}.hud .wide-label{display:none}
+ .hud b{font-size:11px;margin-left:2px}
+ .actions{top:5px;right:6px;gap:4px}
+ .actions button{width:44px;height:44px;min-height:44px;font-size:0;padding:0;border-radius:7px}
+ #pause::after{content:'Ⅱ';font-size:14px}#restart::after{content:'↻';font-size:19px}
+ .panel{top:36px;left:6px;right:auto;max-width:min(210px,62vw);width:min(210px,62vw);padding:4px 5px;line-height:1.2;z-index:4}
+ .compact-line{display:flex;align-items:center;gap:4px}
+ #status{min-width:0;min-height:0;flex:1;display:block;margin:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:10px;line-height:1.4}
+ #helpToggle{display:block;min-height:44px;min-width:44px;border:1px solid #6abcc8;border-radius:5px;background:#184b59;color:#fff;padding:3px 5px;font:700 10px system-ui;cursor:pointer;white-space:nowrap}
+ .help-body{display:none}
+ .panel.help-open .help-body{display:block;position:fixed;z-index:10;top:92px;left:6px;right:6px;bottom:57px;max-width:none;overflow:auto;overscroll-behavior:contain;border:1px solid #6abcc8;border-radius:10px;background:#071929f7;padding:10px 12px;box-shadow:0 8px 18px #000a}
+ .panel.help-open .help-body strong,.panel.help-open .help-body .help{display:block;font-size:12px;line-height:1.45}
+ .route-bar{inset:auto 6px max(5px,env(safe-area-inset-bottom));gap:4px}
+ .route-bar button{min-height:44px;padding:3px 2px}
+ /* The compact route controls remain independent of emergency commands. */
+}
+
+</style>
+</head>
+<body>
+<canvas id="track" aria-label="Rail yard: inbound trains approach the center turnout, then travel to one of four numbered depots. Select the matching numbered depot before the train reaches the turnout."></canvas>
+<div class="hud" aria-label="Dispatch status">
+<span><span class="wide-label">Delivered</span><span class="short-label" aria-hidden="true">D</span> <b id="delivered">0/8</b></span><span><span class="wide-label">Strikes</span><span class="short-label" aria-hidden="true">S</span> <b id="strikes">0/3</b></span><span><span class="wide-label">Clock</span><span class="short-label" aria-hidden="true">T</span> <b id="clock">90s</b></span><span><span class="wide-label">Points</span><span class="short-label" aria-hidden="true">Pt</span> <b id="points">0</b></span>
+</div>
+<div class="actions"><button id="pause" type="button" aria-label="Pause or resume the shift" aria-pressed="false" disabled>Pause (P)</button><button id="restart" type="button" aria-label="Restart the dispatch shift">Restart (R)</button></div>
+<div class="panel" id="helpPanel"><div class="compact-line"><span id="status" role="status" aria-live="polite" aria-atomic="true">Ready: first inbound needs depot 3. Select a depot to begin the 90-second shift.</span><button id="helpToggle" type="button" aria-label="Open or close dispatch instructions" aria-expanded="false" aria-controls="helpBody">Help</button></div><div id="helpBody" class="help-body"><strong>DISPATCH · Route 8 trains before 3 strikes or 90 active seconds.</strong><span class="help">Read the instructions without losing time. Select any depot with 1–4, ←/→, gamepad or touch to start. Then match each approaching numbered train <em>before</em> the central turnout. Browser interruptions freeze the shift and require fresh controller input. In compact landscape view, open Help to pause your shift; close Help and press P to resume.</span></div></div>
+<div class="legend">Each numbered <b>depot</b> matches its train's number and color. The amber line is the route currently armed. After a train passes the turnout, its route is locked.</div>
+<div class="route-bar" aria-label="Select a rail depot">
+<button type="button" data-route="0" aria-pressed="true"><span class="route-chip" style="color:#65e3f1">1 · CYAN</span><small>Depot 1</small></button>
+<button type="button" data-route="1" aria-pressed="false"><span class="route-chip" style="color:#f4aacb">2 · ROSE</span><small>Depot 2</small></button>
+<button type="button" data-route="2" aria-pressed="false"><span class="route-chip" style="color:#91edb0">3 · MINT</span><small>Depot 3</small></button>
+<button type="button" data-route="3" aria-pressed="false"><span class="route-chip" style="color:#ffe08e">4 · GOLD</span><small>Depot 4</small></button>
+</div>
+<script>
+'use strict';
+const canvas=document.querySelector('#track'),ctx=canvas.getContext('2d');
+const D=document.querySelector('#delivered'),S=document.querySelector('#strikes'),T=document.querySelector('#clock'),P=document.querySelector('#points'),STATUS=document.querySelector('#status');
+const PAUSE=document.querySelector('#pause'),ROUTES=[...document.querySelectorAll('[data-route]')],HELP_PANEL=document.querySelector('#helpPanel'),HELP_TOGGLE=document.querySelector('#helpToggle');
+const COLORS=['#65e3f1','#f4aacb','#91edb0','#ffe08e'];
+const LABELS=['CYAN','ROSE','MINT','GOLD'];
+const ORDER=[2,0,3,1,0,2,1,3,2,3,0,1,2,1,3,0,1,3,2,0];
+const GOAL=8,MAX_STRIKES=3,LIMIT=90;
+let w=0,h=0,pixelRatio=1,selection=0,trains=[],serial=0,delivered=0,strikes=0,points=0,elapsed=0,spawnIn=0,done=false,cleared=false,paused=false,started=false,focusPaused=false,windowBlurred=false,padNeedsNeutral=true,lastFrame=0,previousPad='';
+const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+function resize(){const size=canvas.getBoundingClientRect();w=Math.max(1,size.width);h=Math.max(1,size.height);pixelRatio=Math.min(2,window.devicePixelRatio||1);canvas.width=Math.round(w*pixelRatio);canvas.height=Math.round(h*pixelRatio);}
+function depots(){return Array.from({length:4},(_,i)=>h*(.295+i*.126));}
+function announce(message){STATUS.textContent=message;STATUS.title=message;}
+function choose(route){if(done||paused||focusPaused||HELP_PANEL.classList.contains('help-open'))return;const beginning=!started;started=true;PAUSE.disabled=false;selection=(route+4)%4;ROUTES.forEach((b,i)=>b.setAttribute('aria-pressed',String(i===selection)));announce((beginning?'Shift started. ':'')+'Route '+(selection+1)+' · '+LABELS[selection]+' armed. '+inbound());}
+function inbound(){const pending=trains.find(t=>t.route===null);const target=pending?pending.target:ORDER[serial%ORDER.length];return 'Next inbound: depot '+(target+1)+' · '+LABELS[target]+'.';}
+function reset(){HELP_PANEL.classList.remove('help-open');HELP_TOGGLE.setAttribute('aria-expanded','false');HELP_TOGGLE.textContent='Help';trains=[];serial=0;delivered=0;strikes=0;points=0;elapsed=0;spawnIn=0;done=false;cleared=false;paused=false;started=false;focusPaused=windowBlurred||document.hidden;selection=0;lastFrame=performance.now();previousPad='';padNeedsNeutral=true;ROUTES.forEach((b,i)=>b.setAttribute('aria-pressed',String(i===selection)));PAUSE.textContent='Pause (P)';PAUSE.disabled=true;PAUSE.setAttribute('aria-pressed','false');announce('Ready: first inbound needs depot 3. Select a depot to begin the 90-second shift.');sync();}
+function sync(){D.textContent=delivered+'/'+GOAL;S.textContent=strikes+'/'+MAX_STRIKES;T.textContent=Math.max(0,Math.ceil(LIMIT-elapsed))+'s';P.textContent=points.toLocaleString();}
+function event(eventName,score){const packet={type:'wwg:game-event',game:'railspire-dispatch',event:eventName,duration:Math.round(elapsed),meta:{unit:'pts',direction:'high',delivered,strikes}};if(score!==undefined)packet.score=score;try{parent.postMessage(packet,'*')}catch{}}
+// The terminal outcome is authoritative even if the eighth delivery and
+// third strike (or the time limit) settle in the same simulation step.
+function finish(success){if(done)return;done=true;cleared=!!success;const bonus=success?Math.max(0,Math.round((LIMIT-elapsed)*15)):0;points=Math.max(0,delivered*650-strikes*300+bonus);sync();
+ announce(success?'Shift cleared! 8 correct deliveries. Ranked score '+points.toLocaleString()+'. Press R to play again.':'Shift failed: '+(strikes>=MAX_STRIKES?'three routing strikes.':'dispatch time expired.')+' '+delivered+' of 8 delivered. Unranked. Press R to try again.');
+ event('shift-complete'); // neutral compatibility telemetry; never a completion or scored event
+ event(success?'shift-cleared':'shift-failed',success?points:undefined);}
+function spawnTrain(){const target=ORDER[serial%ORDER.length];trains.push({id:serial,target,progress:0,speed:.143+(serial%3)*.006,route:null});serial++;announce('Incoming train '+serial+': '+LABELS[target]+' · depot '+(target+1)+'. Route before the turnout.');}
+function position(train){const fork=w*.45,y0=h*.52,y=depots();if(train.progress<=.48){const u=clamp(train.progress/.48,0,1);return{x:24+(fork-24)*u,y:y0};}
+ const u=clamp((train.progress-.48)/.52,0,1),lane=train.route===null?selection:train.route;return{x:fork+(w-65-fork)*u,y:y0+(y[lane]-y0)*(u*u*(3-2*u))};}
+function advance(dt){if(done||paused||focusPaused||!started)return;dt=clamp(dt,0,.25);elapsed+=dt;spawnIn-=dt;
+ while(spawnIn<=0&&elapsed<LIMIT&&serial<80&&trains.length<6){spawnTrain();spawnIn+=Math.max(3.5,4.5-delivered*.08);}
+ for(const train of trains){train.progress+=dt*train.speed;if(train.route===null&&train.progress>=.48){train.route=selection;announce('Train '+(train.id+1)+' committed to depot '+(selection+1)+'. '+inbound());}}
+ // Track collisions are based on actual post-routing positions, never on colors alone.
+ for(let i=0;i<trains.length;i++)for(let j=i+1;j<trains.length;j++){
+  const a=trains[i],b=trains[j];if(a.progress>=1||b.progress>=1||a.collided||b.collided)continue;
+  const pa=position(a),pb=position(b);if(Math.hypot(pa.x-pb.x,pa.y-pb.y)<17&&Math.abs(a.progress-b.progress)<.05){a.collided=b.collided=true;strikes++;announce('Train collision — strike '+strikes+'/'+MAX_STRIKES+'.');}
+ }
+ for(const train of trains){if(train.progress<1||train.collided)continue;if(train.route===train.target){delivered++;points+=650;announce('Correct delivery '+delivered+'/'+GOAL+': '+LABELS[train.target]+'. '+inbound());}else{strikes++;announce('Wrong depot for '+LABELS[train.target]+' train — strike '+strikes+'/'+MAX_STRIKES+'. '+inbound());}train.collided=true;}
+ trains=trains.filter(t=>!t.collided);
+ // A clear must be valid at settlement: the final delivery cannot outrank a
+ // third strike or an expired active-time budget in this same simulation step.
+ // Resolve failure first so invalid runs never emit a ranked score.
+ if(strikes>=MAX_STRIKES||elapsed>=LIMIT)finish(false);else if(delivered>=GOAL)finish(true);
+ sync();}
+function draw(){if(!ctx)return;ctx.setTransform(pixelRatio,0,0,pixelRatio,0,0);ctx.fillStyle='#071725';ctx.fillRect(0,0,w,h);
+ const fork=w*.45,y0=h*.52,y=depots(),endX=w-65;
+ // Silhouetted original solar-stone structures and distant rail lights.
+ for(let i=0;i<12;i++){const bw=(w/12)*.8,x=i*w/12;ctx.fillStyle=i%2?'#112b39':'#0d2635';ctx.fillRect(x,h*.16+(i%4)*h*.027,bw,h*.63);ctx.fillStyle='#204758';ctx.fillRect(x+bw*.18,h*.2+(i%4)*h*.027,bw*.14,h*.065);}
+ function stroke(fromX,fromY,toX,toY,color,width){ctx.beginPath();ctx.moveTo(fromX,fromY);ctx.lineTo(toX,toY);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke();}
+ stroke(15,y0,fork,y0,'#416579',8);stroke(15,y0,fork,y0,'#b2d3df',2);
+ for(let i=0;i<4;i++){
+  ctx.beginPath();ctx.moveTo(fork,y0);ctx.bezierCurveTo(fork+(endX-fork)*.45,y0,fork+(endX-fork)*.55,y[i],endX,y[i]);ctx.strokeStyle=i===selection?'#f2d27a':'#395d75';ctx.lineWidth=i===selection?9:7;ctx.stroke();
+  ctx.lineWidth=2;ctx.strokeStyle=i===selection?'#fff3bc':'#a1b5c4';ctx.stroke();
+  const bw=w<480?44:57;ctx.fillStyle='#102b38';ctx.strokeStyle=COLORS[i];ctx.lineWidth=2;ctx.beginPath();ctx.roundRect(w-bw-5,y[i]-22,bw,44,7);ctx.fill();ctx.stroke();ctx.textAlign='center';ctx.font='bold 15px system-ui';ctx.fillStyle=COLORS[i];ctx.fillText(String(i+1),w-bw/2-5,y[i]+5);
+ }
+ ctx.beginPath();ctx.arc(fork,y0,11,0,Math.PI*2);ctx.fillStyle='#f2d27a';ctx.fill();ctx.fillStyle='#082131';ctx.textAlign='center';ctx.font='bold 12px system-ui';ctx.fillText('⇢',fork,y0+4);
+ for(const train of trains){const pos=position(train);ctx.save();ctx.translate(pos.x,pos.y);ctx.fillStyle='#06131b';ctx.fillRect(-17,-13,34,26);ctx.fillStyle=COLORS[train.target];ctx.fillRect(-15,-11,30,22);ctx.fillStyle='#092131';ctx.fillRect(-12,-8,24,12);ctx.fillStyle=COLORS[train.target];ctx.font='bold 14px system-ui';ctx.textAlign='center';ctx.fillText(String(train.target+1),0,4);ctx.restore();}
+ if(!started||done||paused||focusPaused){ctx.fillStyle='#04131cbb';ctx.fillRect(0,h*.29,w,h*.35);ctx.textAlign='center';ctx.fillStyle='#f5f9ff';ctx.font='bold '+(w<460?21:30)+'px system-ui';const label=done?(cleared?'SHIFT CLEARED':'SHIFT ENDED'):focusPaused?'AWAY — PAUSED':paused?'PAUSED':'READY';ctx.fillText(label,w/2,h*.47);ctx.font='13px system-ui';ctx.fillText(done?'Press R or Restart to play again':focusPaused?'Return to the game to continue':paused?'Press P or Resume to continue':'Choose depot 1–4 to begin the 90s shift',w/2,h*.51+19);}
+ }
+function togglePause(){if(done||!started||focusPaused||(HELP_PANEL.classList.contains('help-open')&&paused))return;paused=!paused;PAUSE.textContent=paused?'Resume (P)':'Pause (P)';PAUSE.setAttribute('aria-pressed',String(paused));announce(paused?'Shift paused. No dispatch time will elapse.':'Shift resumed. '+inbound());lastFrame=performance.now();}
+function toggleHelp(){const open=HELP_PANEL.classList.toggle('help-open');HELP_TOGGLE.setAttribute('aria-expanded',String(open));if(open&&started&&!done&&!paused&&!focusPaused)togglePause();HELP_TOGGLE.textContent=open?'Close':'Help';if(!open&&started&&paused)announce('Help closed. Shift remains paused. Press P or Resume to continue.');}
+function updateFocus(){const interrupted=windowBlurred||document.hidden;if(interrupted===focusPaused)return;focusPaused=interrupted;lastFrame=performance.now();previousPad='';padNeedsNeutral=true;if(focusPaused){announce('Shift interrupted. Trains and clock are frozen. Return to resume; release held controller buttons.');}else{announce(started?(paused?'Shift still manually paused. Press P or Resume.':'Shift resumed after interruption. '+inbound()):'Ready: select a depot to begin your full 90 seconds.');}}
+function pollPad(){let pad=null;try{pad=(navigator.getGamepads?.()||[])[0]||null}catch{}if(!pad){previousPad='';padNeedsNeutral=true;return;}
+ const pressed=[0,1,2,3,8,9].filter(i=>pad.buttons?.[i]?.pressed),sig=pressed.join(',');
+ if(focusPaused){previousPad=sig;padNeedsNeutral=true;return;}
+ if(padNeedsNeutral){previousPad=sig;if(!pressed.length)padNeedsNeutral=false;return;}
+ const before=previousPad.split(',');const edge=i=>pressed.includes(i)&&!before.includes(String(i));
+ if(edge(8)){reset();previousPad=sig;return;}
+ const wasPaused=paused;if(edge(9))togglePause();
+ if(!wasPaused&&!paused)for(let i=0;i<4;i++)if(edge(i))choose(i);
+ previousPad=sig;
+}
+function frame(now){const dt=Math.min(.05,Math.max(0,(now-lastFrame)/1000));lastFrame=now;pollPad();advance(dt);draw();requestAnimationFrame(frame);}
+addEventListener('resize',()=>{resize();if(window.innerWidth>700&&HELP_PANEL.classList.contains('help-open'))toggleHelp()});
+addEventListener('blur',()=>{windowBlurred=true;updateFocus()});
+addEventListener('focus',()=>{windowBlurred=false;updateFocus()});
+document.addEventListener('visibilitychange',updateFocus);
+addEventListener('keydown',e=>{const code=e.code;const control=/^(Digit|Numpad)[1-4]$/.test(code)||['ArrowLeft','ArrowRight','KeyA','KeyD','KeyR','KeyP','Escape'].includes(code);if(!control||e.altKey||e.ctrlKey||e.metaKey)return;
+ if(e.repeat||focusPaused){e.preventDefault();return;}
+ if(/^(Digit|Numpad)[1-4]$/.test(code))choose(Number(code.at(-1))-1);
+ else if(code==='ArrowLeft'||code==='KeyA')choose(selection+3);
+ else if(code==='ArrowRight'||code==='KeyD')choose(selection+1);
+ else if(code==='KeyR')reset();else togglePause();e.preventDefault();
+});
+ROUTES.forEach(b=>b.addEventListener('click',()=>choose(Number(b.dataset.route))));
+HELP_TOGGLE.addEventListener('click',toggleHelp);PAUSE.addEventListener('click',togglePause);document.querySelector('#restart').addEventListener('click',reset);
+canvas.addEventListener('pointerdown',e=>{const rect=canvas.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top;const lanes=depots();if(x<w*.63)return;let best=0;for(let i=1;i<4;i++)if(Math.abs(lanes[i]-y)<Math.abs(lanes[best]-y))best=i;choose(best);});
+resize();reset();requestAnimationFrame(frame);
+</script>
+</body>
+</html>

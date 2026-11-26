@@ -1,5 +1,12 @@
-const fs=require('fs');
-const hex=fs.readFileSync('games/hexbound-tactics/index.html','utf8');
-if(!hex.includes('const bothDestroyed=pcore<=0&&ecore<=0')) throw new Error('stalemate guard');
-if(!hex.includes('Both citadels fell in the same combat resolution')) throw new Error('stalemate text');
-console.log(JSON.stringify({release:'v64',status:'pass'}));
+const fs=require('fs'),path=require('path'),vm=require('vm'),root=path.resolve(__dirname,'..');
+const read=p=>fs.readFileSync(path.join(root,p),'utf8'),must=(x,m)=>{if(!x)throw new Error(m)};
+const catalog=read('js/games.js'),app=read('js/app.js'),sw=read('sw.js'),index=read('index.html'),detail=read('game.html'),game=read('games/hexbound-tactics/index.html'),standards=read('DEVELOPMENT_STANDARDS.md'),manifest=JSON.parse(read('manifest.webmanifest')),record=JSON.parse(read('RELEASE_RECORD.json'));
+const ctx={window:{}};vm.createContext(ctx);vm.runInContext(catalog,ctx);const games=ctx.window.WWG_GAMES;
+const block=app.slice(app.indexOf('const achievements = ['),app.indexOf('];',app.indexOf('const achievements = ['))+2),ids=[...block.matchAll(/\{id:'([^']+)'/g)].map(m=>m[1]);
+must(games.length===82,'game total '+games.length);must(new Set(games.flatMap(g=>g.genres)).size===129,'genre total');must(games.filter(g=>g.remappable).length===54,'remappable total');must(ids.length===152&&new Set(ids).size===152,'achievement total '+ids.length);
+const hex=games.find(g=>g.id==='hexbound-tactics');must(hex&&hex.version==='1.1'&&hex.updated==='2026-10-05','Hexbound metadata');must(hex.objective.includes('both citadels')&&hex.controls.some(x=>x.includes('mutual destruction')),'Hexbound objective/controls');
+for(const t of ["const bothDestroyed=pcore<=0&&ecore<=0","tied=bothDestroyed||pcore===ecore","Both citadels fell in the same combat resolution","if(win){let w=Number(localStorage.getItem('wwg:hexbound-wins')||0)+1"])must(game.includes(t),'missing '+t);
+for(const src of [...game.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]).filter(Boolean)){new Function(src)}
+must(app.includes("version:'v64'")&&app.includes('Hexbound Tactics 1.1: True Stalemate'),'release history');must(sw.includes("const CACHE='wwg-v64'"),'cache');must(index.includes('js/games.js?v64')&&index.includes('js/app.js?v64'),'index cache busters');must(detail.includes('js/games.js?v64'),'detail cache buster');must(manifest.shortcuts[0]?.url==='game.html?id=hexbound-tactics','PWA shortcut');
+must(standards.includes('# WorldWideGames Development Standards')&&standards.includes('player-facing correctness'),'public development standards preserved');must(record.version==='v64'&&record.status==='READY FOR RELEASE TASK','release record version/status');must(record.library.sourcePackageTarget.endsWith('WorldWideGames_v64.zip'),'source target');must(record.library.recordsPackageTarget.endsWith('WorldWideGames_v64_records.zip'),'records target');must(record.library.checksumRecordTarget.endsWith('WorldWideGames_v64_SHA256.txt'),'checksum target');
+console.log(JSON.stringify({games:82,genres:129,achievements:152,remappable:54,fix:'hexbound-1.1',cache:'wwg-v64',record:'v64'}));

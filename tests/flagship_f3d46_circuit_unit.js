@@ -1,0 +1,37 @@
+'use strict';
+const assert=require('node:assert/strict');
+const C=require('../games/aegis-verge/flux-circuit.js');
+const CP=require('../games/aegis-verge/checkpoint.js');
+let passed=0;function test(label,fn){fn();passed++;}
+const travel=(s,i)=>{const g=C.GATES[i];return C.cross(s,{x:0,z:g.z-g.direction*.3},{x:0,z:g.z+g.direction*.3},{id:g.track});};
+test('four original distinct gates',()=>assert.equal(C.GATES.length,4));
+test('gates immutable',()=>assert.ok(C.GATES.every(Object.isFrozen)));
+test('new state begins empty',()=>assert.deepEqual(C.create(),{progress:0,awarded:false,completedAt:null}));
+test('fail-closed invalid progress',()=>assert.equal(C.create(999).progress,0));
+test('wrong order cannot trigger',()=>{const s=C.create();assert.equal(travel(s,1).crossed,false)});
+test('wrong lane cannot trigger',()=>{const s=C.create();const g=C.GATES[0];assert.equal(C.cross(s,{x:0,z:g.z-1},{x:0,z:g.z+1},{id:'return'}).crossed,false)});
+test('crossing in reverse direction rejected',()=>{const s=C.create();assert.equal(C.cross(s,{x:0,z:-22},{x:0,z:-24},{id:'departure'}).crossed,false)});
+test('lateral bypass rejected',()=>{const s=C.create();assert.equal(C.cross(s,{x:3,z:-24},{x:3,z:-22},{id:'departure'}).crossed,false)});
+test('segment crossing at actual x not final x',()=>{const s=C.create();assert.equal(C.cross(s,{x:5,z:-24},{x:0,z:-22},{id:'departure'}).crossed,false)});
+test('wrong position rejected',()=>{const s=C.create();assert.equal(C.cross(s,{x:0,z:-20},{x:0,z:-19},{id:'departure'}).crossed,false)});
+test('NaN fails closed',()=>{const s=C.create();assert.equal(C.cross(s,{x:NaN,z:-24},{x:0,z:-22},{id:'departure'}).crossed,false)});
+test('each gate advances precisely once',()=>{const s=C.create();assert.equal(travel(s,0).progress,1);assert.equal(travel(s,0).crossed,false);assert.equal(travel(s,1).progress,2);assert.equal(travel(s,2).progress,3);assert.equal(travel(s,3).progress,4);assert.equal(s.awarded,true)});
+test('completion blocked until all four',()=>{const s=C.create();assert.equal(travel(s,0).complete,false);assert.equal(travel(s,1).complete,false);assert.equal(travel(s,2).complete,false);assert.equal(travel(s,3).complete,true)});
+test('repeated final gate cannot generate extra',()=>{const s=C.create();for(let i=0;i<4;i++)travel(s,i);assert.equal(travel(s,3).crossed,false)});
+test('finite hull and energy reward',()=>{const s=C.create(4),p={hull:45,energy:31,score:99};let r=C.reward(s,p);assert.deepEqual(r,{hull:18,energy:30});assert.equal(p.score,99)});
+test('cannot double reward',()=>{const s=C.create(4),p={hull:45,energy:31};C.reward(s,p);assert.equal(C.reward(s,p),null);assert.equal(p.hull,63)});
+test('clamps reward at full',()=>{const s=C.create(4),p={hull:95,energy:99};assert.deepEqual(C.reward(s,p),{hull:5,energy:1})});
+test('no partial reward',()=>{const s=C.create(),p={hull:1,energy:1};assert.equal(C.reward(s,p),null)});
+test('resumed complete state cannot cross',()=>{const s=C.create(4);assert.equal(travel(s,3).crossed,false)});
+test('render finite low-tier geometry',()=>{let n=0;C.render({cube(){n++}},true,0,true,0);assert.ok(n<=16)});
+test('render finite full-tier geometry',()=>{let n=0;C.render({cube(){n++}},false,0,false,1);assert.ok(n<=17)});
+function snap(extra={}){return {op:0,relay:1,hull:88,energy:59,score:500,recoveriesLeft:1,elapsed:64,damageTaken:4,clean:true,savedAt:1000,...extra};}
+test('old checkpoint retains backwards compatibility',()=>{const v=CP.validate({...snap(),version:CP.VERSION});assert.equal(v.circuitProgress,0);assert.equal(v.circuitAwarded,false)});
+test('partial checkpoint is valid',()=>{const v=CP.validate({...snap({circuitProgress:2,circuitAwarded:false}),version:CP.VERSION});assert.equal(v.circuitProgress,2)});
+test('completed checkpoint is valid',()=>{const v=CP.validate({...snap({circuitProgress:4,circuitAwarded:true}),version:CP.VERSION});assert.equal(v.circuitAwarded,true)});
+test('negative checkpoint progress rejected',()=>assert.equal(CP.validate({...snap({circuitProgress:-1}),version:CP.VERSION}),null));
+test('mismatched award/progress rejected',()=>assert.equal(CP.validate({...snap({circuitProgress:2,circuitAwarded:true}),version:CP.VERSION}),null));
+test('missing award for completed progress rejected',()=>assert.equal(CP.validate({...snap({circuitProgress:4}),version:CP.VERSION}),null));
+test('nonboolean award rejected',()=>assert.equal(CP.validate({...snap({circuitProgress:1,circuitAwarded:1}),version:CP.VERSION}),null));
+test('separate runs do not share mutable state',()=>{const a=C.create(),b=C.create();travel(a,0);assert.equal(b.progress,0)});
+console.log(`F3D46 Flux Circuit ${passed}/${passed} passed`);

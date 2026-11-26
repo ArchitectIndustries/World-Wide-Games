@@ -52,6 +52,7 @@
     ],
     "changed": true,
     "events": [
+      "mission-start",
       "mission-start"
     ],
     "mobile_overflow": false,
@@ -480,7 +481,7 @@
       "\u25c0 Pin",
       "Pin \u25b6"
     ],
-    "changed": false,
+    "changed": true,
     "events": [],
     "mobile_overflow": false,
     "bad_text": false,
@@ -597,9 +598,9 @@
       "3,5",
       "4,5",
       "5,5",
-      "WW\nSelected",
-      "WS\nChoose tile",
-      "LW\nChoose tile",
+      "GW\nSelected",
+      "GS\nChoose tile",
+      "LG\nChoose tile",
       "Cycle tile",
       "Place tile"
     ],
@@ -997,7 +998,8 @@
     ],
     "changed": false,
     "events": [],
-    "mobile_overflow": false,    "bad_text": false,
+    "mobile_overflow": false,
+    "bad_text": false,
     "canvas": 1,
     "ok": true
   },
@@ -1068,11 +1070,11 @@
     "buttons": [
       "End turn",
       "Restart",
-      "1 / 1 energy\nKindle\nDeal 4 damage. Gain 1 energy.",
+      "1 / 1 energy\nMend\nRestore 5 HP.",
       "2 / 1 energy\nWard\nGain 7 block.",
-      "3 / 0 energy\nFocus\nGain 3 block and 1 score combo.",
-      "4 / 1 energy\nStrike\nDeal 7 damage.",
-      "5 / 1 energy\nMend\nRestore 5 HP."
+      "3 / 1 energy\nStrike\nDeal 7 damage.",
+      "4 / 1 energy\nWard\nGain 7 block.",
+      "5 / 1 energy\nKindle\nDeal 4 damage. Gain 1 energy."
     ],
     "changed": true,
     "events": [],
@@ -1435,8 +1437,8 @@
     "buttons": [
       "End Turn",
       "2\nRune Archer\n\nHeavy ranged pressure.\n\n\u2694 3\n\u2665 2",
-      "2\nGale Adept\n\nFast, balanced unit.\n\n\u2694 2\n\u2665 4",
       "3\nHexblade\n\nHigh-risk finisher.\n\n\u2694 5\n\u2665 3",
+      "1\nLantern Fox\n\nCheap lane blocker.\n\n\u2694 1\n\u2665 4",
       "1\nAshguard\n\nReliable frontliner.\n\n\u2694 2\n\u2665 3",
       "2\nGale Adept\n\nFast, balanced unit.\n\n\u2694 2\n\u2665 4"
     ],

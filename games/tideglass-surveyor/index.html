@@ -1,15 +1,156 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tideglass Surveyor</title><style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 30% 15%,#163650,#07101b 55%,#03070c);color:#e6f7ff;font-family:system-ui,sans-serif;padding:18px}main{max-width:960px;margin:auto}.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.eyebrow{font-size:11px;letter-spacing:.16em;color:#7dd3fc;font-weight:900}h1{margin:.15rem 0;font-size:clamp(26px,5vw,44px)}.stats{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.stats span,.clue{background:#081c2bdd;border:1px solid #244a64;border-radius:12px;padding:8px 11px}.board-wrap{margin-top:14px;display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:14px}.board{display:grid;grid-template-columns:repeat(9,1fr);aspect-ratio:1;border:1px solid #315b73;border-radius:18px;overflow:hidden;background:#092132}.cell{position:relative;border:0;border-right:1px solid #17384c;border-bottom:1px solid #17384c;background:transparent;color:#fff;min-width:0}.cell:nth-child(9n){border-right:0}.cell.cursor{outline:3px solid #fbbf24;outline-offset:-4px;background:#fbbf2417}.cell.miss::after{content:'×';position:absolute;inset:0;display:grid;place-items:center;color:#fb7185;font-weight:900;font-size:20px}.cell.beacon::before{content:'◆';position:absolute;inset:0;display:grid;place-items:center;color:#67e8f9;font-size:18px;text-shadow:0 0 12px #22d3ee}.cell.found::after{content:'✦';position:absolute;inset:0;display:grid;place-items:center;color:#fde68a;font-size:24px;text-shadow:0 0 14px #f59e0b}.panel{display:flex;flex-direction:column;gap:9px}.panel button{border:1px solid #3b6d86;background:#0a2940;color:#effcff;border-radius:12px;padding:12px;font-weight:900}.panel button.primary{background:#0e7490}.clue strong{display:block;color:#67e8f9}.clue small{color:#9fc0d2}.message{min-height:56px;line-height:1.35;color:#cdeaf7}.legend{font-size:12px;color:#95b6c8}.done{padding:18px;border:1px solid #31647b;border-radius:16px;background:#071a28}.done h2{color:#fde68a}@media(max-width:720px){body{padding:10px}.board-wrap{grid-template-columns:1fr}.panel{display:grid;grid-template-columns:repeat(2,1fr)}.panel .clues,.panel .message,.panel .legend{grid-column:1/-1}.stats{justify-content:flex-start}.top{display:block}}
-</style></head><body><main><div class="top"><div><span class="eyebrow">ARCHITECT INDUSTRIES • FIELD LOGIC</span><h1>Tideglass Surveyor</h1><p>Triangulate hidden waymarks from lighthouse distance readings. Six charts, four probes each.</p></div><div class="stats"><span>Chart <b id="chart">1/6</b></span><span>Probes <b id="probes">4</b></span><span>Score <b id="score">0</b></span></div></div><div id="game" class="board-wrap"><div id="board" class="board" aria-label="Survey grid"></div><aside class="panel"><div class="clues" id="clues"></div><button id="probe" class="primary">PROBE SITE</button><button id="reset">Reset chart</button><div class="message" id="message">Use the three lighthouse readings to find the one matching cell.</div><div class="legend">Arrow keys move the survey cursor. Enter probes. R resets the current chart. Click/tap any cell to select it.</div></aside></div><div id="done" class="done" hidden><h2>Atlas sealed.</h2><p id="doneText"></p><button id="again">Survey again</button></div></main><script>
-const charts=[
- {t:[6,2],b:[[1,1],[7,7],[2,6]]},{t:[3,7],b:[[0,3],[8,2],[6,8]]},{t:[7,4],b:[[1,7],[4,0],[8,8]]},{t:[2,3],b:[[0,8],[5,1],[8,5]]},{t:[5,6],b:[[2,0],[8,1],[0,6]]},{t:[4,4],b:[[0,0],[8,0],[4,8]]}
-],B=document.getElementById('board'),CL=document.getElementById('clues'),M=document.getElementById('message'),CH=document.getElementById('chart'),PR=document.getElementById('probes'),SC=document.getElementById('score'),DONE=document.getElementById('done'),GAME=document.getElementById('game'),DT=document.getElementById('doneText');let chart=0,probes=4,score=0,cursor=[4,4],misses=[],found=false,start=performance.now();const dist=(a,b)=>Math.abs(a[0]-b[0])+Math.abs(a[1]-b[1]);
-function cur(){return charts[chart]}function sync(){CH.textContent=(chart+1)+'/6';PR.textContent=probes;SC.textContent=score;CL.innerHTML=cur().b.map((b,i)=>`<div class="clue"><strong>Lighthouse ${String.fromCharCode(65+i)} • ${String.fromCharCode(65+b[0])}${b[1]+1}</strong><small>Distance reading: ${dist(b,cur().t)} sectors</small></div>`).join('');render()}
-function render(){const h=cur(),beacons=new Set(h.b.map(x=>x.join(','))),miss=new Set(misses.map(x=>x.join(',')));B.innerHTML='';for(let y=0;y<9;y++)for(let x=0;x<9;x++){const b=document.createElement('button');b.className='cell'+(cursor[0]===x&&cursor[1]===y?' cursor':'')+(beacons.has([x,y].join(','))?' beacon':'')+(miss.has([x,y].join(','))?' miss':'')+(found&&x===h.t[0]&&y===h.t[1]?' found':'');b.ariaLabel=`Sector ${String.fromCharCode(65+x)}${y+1}`;b.onclick=()=>{cursor=[x,y];render()};B.appendChild(b)}}
-function resetChart(){probes=4;misses=[];found=false;cursor=[4,4];M.textContent='Chart reset. Re-read the lighthouse distances and triangulate again.';sync()}
-function probe(){if(found)return;const h=cur(),match=cursor[0]===h.t[0]&&cursor[1]===h.t[1];if(match){found=true;const gain=700+probes*125;score+=gain;M.textContent=`Waymark confirmed at ${String.fromCharCode(65+cursor[0])}${cursor[1]+1}. +${gain} survey points.`;render();setTimeout(next,520);return}probes--;misses.push([...cursor]);const dx=h.t[0]-cursor[0],dy=h.t[1]-cursor[1],dir=Math.abs(dx)>Math.abs(dy)?(dx>0?'east':'west'):(dy>0?'south':'north');M.textContent=`No waymark. The residual tideglass signal pulls ${dir}. ${probes} probe${probes===1?'':'s'} remain.`;if(probes<=0){score=Math.max(0,score-200);M.textContent=`Chart exhausted. Waymark revealed; 200-point correction penalty.`;cursor=[...h.t];found=true;render();setTimeout(next,700)}else sync()}
-function next(){if(chart===charts.length-1){finish();return}chart++;probes=4;misses=[];found=false;cursor=[4,4];M.textContent='Fresh chart loaded. Triangulate the next hidden waymark.';sync()}
-function finish(){const duration=Math.max(1,Math.round((performance.now()-start)/1000));GAME.hidden=true;DONE.hidden=false;DT.textContent=`Six charts completed with ${score.toLocaleString()} survey points in ${duration} seconds.`;try{parent.postMessage({type:'wwg:game-event',game:'tideglass-surveyor',event:'survey-complete',score,duration,meta:{unit:'pts',direction:'high',charts:6}},'*')}catch{}}
-function restart(){chart=0;probes=4;score=0;cursor=[4,4];misses=[];found=false;start=performance.now();GAME.hidden=false;DONE.hidden=true;M.textContent='Use the three lighthouse readings to find the one matching cell.';sync()}
-document.getElementById('probe').onclick=probe;document.getElementById('reset').onclick=resetChart;document.getElementById('again').onclick=restart;addEventListener('keydown',e=>{if(e.code==='ArrowLeft')cursor[0]=Math.max(0,cursor[0]-1);if(e.code==='ArrowRight')cursor[0]=Math.min(8,cursor[0]+1);if(e.code==='ArrowUp')cursor[1]=Math.max(0,cursor[1]-1);if(e.code==='ArrowDown')cursor[1]=Math.min(8,cursor[1]+1);if(e.code==='Enter'||e.code==='Space'){e.preventDefault();probe()}if(e.code==='KeyR')resetChart();if(e.code.startsWith('Arrow')){e.preventDefault();render()}});sync();
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tideglass Surveyor 1.6 - Controller Survey</title><style>
+[hidden]{display:none!important}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 30% 15%,#163650,#07101b 55%,#03070c);color:#e6f7ff;font-family:system-ui,sans-serif;padding:18px}main{max-width:960px;margin:auto}.top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.eyebrow{font-size:11px;letter-spacing:.16em;color:#7dd3fc;font-weight:900}h1{margin:.15rem 0;font-size:clamp(26px,5vw,44px)}.stats{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.stats span,.clue{background:#081c2bdd;border:1px solid #244a64;border-radius:12px;padding:8px 11px}.board-wrap{margin-top:14px;display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:14px}.board{display:grid;grid-template-columns:repeat(9,1fr);aspect-ratio:1;border:1px solid #315b73;border-radius:18px;overflow:hidden;background:#092132}.cell{position:relative;border:0;border-right:1px solid #17384c;border-bottom:1px solid #17384c;background:transparent;color:#fff;min-width:0}.cell:nth-child(9n){border-right:0}.cell.candidate{background:linear-gradient(135deg,#22d3ee24,#7dd3fc36);box-shadow:inset 0 0 0 2px #67e8f9a8}.cell.cursor{outline:3px solid #fbbf24;outline-offset:-4px;background:#fbbf2417}.cell.miss::after{content:'×';position:absolute;inset:0;display:grid;place-items:center;color:#fb7185;font-weight:900;font-size:20px}.cell.beacon::before{content:'◆';position:absolute;inset:0;display:grid;place-items:center;color:#67e8f9;font-size:18px;text-shadow:0 0 12px #22d3ee}.cell.found::after{content:'✦';position:absolute;inset:0;display:grid;place-items:center;color:#fde68a;font-size:24px;text-shadow:0 0 14px #f59e0b}.panel{display:flex;flex-direction:column;gap:9px}.panel button{border:1px solid #3b6d86;background:#0a2940;color:#effcff;border-radius:12px;padding:12px;font-weight:900}.panel button.primary{background:#0e7490}.panel button:disabled{opacity:.48;cursor:not-allowed}#controllerStatus{font-size:12px;color:#bfebfa;line-height:1.35;min-height:2.6em}#controllerStatus strong{color:#facc15}#lens[aria-pressed="true"]{background:#16405c;border-color:#67e8f9}#lensStatus{font-size:12px;color:#c4eaf9;line-height:1.4;min-height:2.6em}@media(forced-colors:active){.cell.candidate{outline:2px dashed Highlight;outline-offset:-5px}}.panel button:focus-visible,.cell:focus-visible{outline:3px solid #facc15;outline-offset:2px}.clue strong{display:block;color:#67e8f9}.clue small{color:#9fc0d2}.message{min-height:56px;line-height:1.35;color:#cdeaf7}.legend{font-size:12px;color:#95b6c8}.done{padding:18px;border:1px solid #31647b;border-radius:16px;background:#071a28}.done h2{color:#fde68a}@media(max-width:720px){body{padding:10px}.board-wrap{grid-template-columns:1fr}.panel{display:grid;grid-template-columns:repeat(2,1fr)}.panel .clues,.panel .message,.panel .legend{grid-column:1/-1}.stats{justify-content:flex-start}.top{display:block}}
+</style></head><body><main><div class="top"><div><span class="eyebrow">ARCHITECT INDUSTRIES • FIELD LOGIC</span><h1>Tideglass Surveyor</h1><p>Triangulate hidden waymarks from lighthouse distance readings. Six uniquely solvable charts, four probes per attempt. Controller: D-pad/left stick moves, A probes, B cycles the lens, X retries; A starts a new atlas after completion. Use the Evidence Lens to study either lighthouse ring; compare both and the third clue yourself. Find each waymark; retries cost points.</p></div><div class="stats"><span>Chart <b id="chart">1/6</b></span><span>Confirmed <b id="confirmed">0</b>/6</span><span>Probes <b id="probes">4</b></span><span>Score <b id="score">0</b></span><span>Atlas <b id="atlasCode">—</b></span></div></div><div id="game" class="board-wrap"><div id="board" class="board" aria-label="Survey grid"></div><aside class="panel"><div class="clues" id="clues"></div><button id="lens" type="button" aria-pressed="false" aria-describedby="lensStatus">Evidence Lens: OFF (L)</button><div id="lensStatus" role="status" aria-live="polite">Lens off. Press L or use the button to highlight candidate sectors for Lighthouse A or B, one at a time.</div><div id="controllerStatus" role="status" aria-live="polite">Controller: connect a standard gamepad, then release all buttons to arm it. D-pad moves; A probes; B changes lens; X retries.</div><button id="probe" class="primary">PROBE SITE</button><button id="reset">Retry chart (−200 potential pts)</button><div class="message" id="message" role="status" aria-live="polite">Every new atlas changes the hidden waymarks. Compare the three lighthouse readings. The optional Evidence Lens highlights one measured distance ring at a time, not the answer.</div><div class="legend">Arrow keys or gamepad D-pad/stick move the survey cursor. Controller A probes, B cycles the lens, X retries, and A begins a new atlas after completion. Controller commands require a fresh button press; reconnecting requires neutral input. L cycles the Evidence Lens: OFF → A → B → OFF. It highlights unprobed sites matching one lighthouse distance, never a solved three-lighthouse position. Enter or Space probes when not focused on a button; Tab reaches the native probe and restart controls. Click/tap a cell to select it. Restarting a chart costs 200 potential points and never refunds earlier missed probes. An exhausted chart is not cleared: use Retry chart to replenish probes. Previously tested sectors cannot consume a second probe. Each new atlas has six fresh charts, with exactly one solution per chart. Only six confirmed waymarks earn a recorded completion.</div></aside></div><div id="done" class="done" role="status" aria-live="polite" hidden><h2>Atlas sealed.</h2><p id="doneText"></p><button id="again">New Atlas · Survey Again</button></div></main><script>
+// First-party procedural chart engine. Candidate solutions are exhaustively
+// checked on the actual 9x9 grid: the first two readings leave multiple sites,
+// while all three must determine exactly one. No solver library is imported.
+const BASE_CHARTS=[
+ {t:[6,2],b:[[1,1],[7,7],[2,6]]},{t:[3,7],b:[[0,3],[8,2],[6,8]]},
+ {t:[7,4],b:[[1,7],[4,0],[8,8]]},{t:[2,3],b:[[0,8],[5,1],[8,5]]},
+ {t:[5,6],b:[[2,0],[8,1],[0,6]]},{t:[4,4],b:[[0,0],[8,0],[4,8]]}
+];
+function seededRandom(seed){let a=(seed>>>0)||0x6d2b79f5;return()=>{a^=a<<13;a^=a>>>17;a^=a<<5;return(a>>>0)/4294967296}}
+function distance(a,b){return Math.abs(a[0]-b[0])+Math.abs(a[1]-b[1])}
+function matchesReadings(target,beacons,n){const readings=beacons.slice(0,n).map(b=>distance(target,b));const matches=[];
+ for(let y=0;y<9;y++)for(let x=0;x<9;x++)if(beacons.slice(0,n).every((b,i)=>distance([x,y],b)===readings[i]))matches.push([x,y]);
+ return matches;
+}
+function makeAtlas(seed){const rng=seededRandom(seed),used=new Set(),out=[];
+ for(let stage=0;stage<6;stage++){
+  let selected=null;
+  for(let attempts=0;attempts<1200;attempts++){
+   const target=[1+Math.floor(rng()*7),1+Math.floor(rng()*7)],key=target.join(',');
+   if(used.has(key))continue;
+   const beacons=[];while(beacons.length<3){const b=[Math.floor(rng()*9),Math.floor(rng()*9)];if((b[0]!==target[0]||b[1]!==target[1])&&!beacons.some(v=>v[0]===b[0]&&v[1]===b[1]))beacons.push(b)}
+   const midway=matchesReadings(target,beacons,2),final=matchesReadings(target,beacons,3);
+   if(midway.length<2+Math.floor(stage/2)||midway.length>12||final.length!==1)continue;
+   selected={t:target,b:beacons};break;
+  }
+  // Constrained sampling normally succeeds in a few attempts. In pathological
+  // seeds, transformed known-unique fallback charts preserve puzzle integrity.
+  if(!selected){const base=BASE_CHARTS[stage];const mirror=rng()>.5,rotate=Math.floor(rng()*4);
+   const transform=([x,y])=>{if(mirror)x=8-x;for(let i=0;i<rotate;i++){const old=x;x=8-y;y=old}return[x,y]};
+   selected={t:transform(base.t),b:base.b.map(transform)};
+  }
+  used.add(selected.t.join(','));out.push(selected);
+ }
+ return out;
+}
+let serial=0,lastAtlasSeed=null,atlasSeed=0,charts=[];
+function newSeed(){let value=0;try{const a=new Uint32Array(1);crypto.getRandomValues(a);value=a[0]}catch{value=(Date.now()^Math.floor(Math.random()*4294967296))>>>0}
+ value=(value+serial++*0x9e3779b9)>>>0;if(value===lastAtlasSeed)value=(value+1)>>>0;
+ lastAtlasSeed=value;return value;
+}
+const B=document.getElementById('board'),CL=document.getElementById('clues'),M=document.getElementById('message'),CH=document.getElementById('chart'),PR=document.getElementById('probes'),SC=document.getElementById('score'),CODE=document.getElementById('atlasCode'),DONE=document.getElementById('done'),GAME=document.getElementById('game'),DT=document.getElementById('doneText');
+let chart=0,probes=4,score=0,cursor=[4,4],misses=[],found=false,lensMode=0,start=performance.now(),missesTotal=0,chartRestarts=0,completed=false,confirmed=new Set(),advanceTimer=null,advanceToken=0;
+const dist=distance;
+// Evidence Lens is a non-scoring observation tool: A or B only, never the
+// unique third-clue intersection. Known lighthouses and spent probes are excluded.
+function lensCandidates(){
+ if(lensMode===0||found||completed)return [];
+ const h=cur(),beacon=h.b[lensMode-1],required=dist(beacon,h.t),blocked=new Set(h.b.map(v=>v.join(',')));
+ for(const m of misses)blocked.add(m.join(','));
+ const possible=[];
+ for(let y=0;y<9;y++)for(let x=0;x<9;x++)if(!blocked.has([x,y].join(','))&&dist([x,y],beacon)===required)possible.push([x,y]);
+ return possible;
+}
+function syncLens(){
+ const button=document.getElementById('lens'),status=document.getElementById('lensStatus');
+ const name=['OFF','A','B'][lensMode],places=lensCandidates();
+ button.textContent=`Evidence Lens: ${name} (L)`;
+ button.setAttribute('aria-pressed',String(lensMode!==0));
+ button.disabled=found||completed;
+ status.textContent=found?'Waymark found. Lens rests until the next chart.':lensMode===0?'Lens off. Cycle with L or the button to inspect Lighthouse A, then B, without exposing the answer.':`Lighthouse ${name} distance matches ${places.length} unprobed sector${places.length===1?'':'s'}. Compare the other two readings before probing.`;
+ return places;
+}
+function cycleLens(){if(found||completed)return;lensMode=(lensMode+1)%3;syncLens();render()}
+function cur(){return charts[chart]}function sync(){document.getElementById('probe').disabled=found||completed||probes<=0;document.getElementById('reset').disabled=found||completed;document.getElementById('reset').textContent=probes<=0&&!found?'Retry exhausted chart (−200 potential pts)':'Retry chart (−200 potential pts)';CH.textContent=(chart+1)+'/6';document.getElementById('confirmed').textContent=confirmed.size;PR.textContent=probes;SC.textContent=score;syncController();CL.innerHTML=cur().b.map((b,i)=>`<div class="clue"><strong>Lighthouse ${String.fromCharCode(65+i)} • ${String.fromCharCode(65+b[0])}${b[1]+1}</strong><small>Distance reading: ${dist(b,cur().t)} sectors</small></div>`).join('');syncLens();render()}
+function render(){const h=cur(),beacons=new Set(h.b.map(x=>x.join(','))),miss=new Set(misses.map(x=>x.join(','))),candidates=new Set(lensCandidates().map(x=>x.join(',')));B.innerHTML='';for(let y=0;y<9;y++)for(let x=0;x<9;x++){const b=document.createElement('button');b.className='cell'+(cursor[0]===x&&cursor[1]===y?' cursor':'')+(beacons.has([x,y].join(','))?' beacon':'')+(miss.has([x,y].join(','))?' miss':'')+(found&&x===h.t[0]&&y===h.t[1]?' found':'')+(candidates.has([x,y].join(','))?' candidate':'');b.ariaLabel=`Sector ${String.fromCharCode(65+x)}${y+1}${candidates.has([x,y].join(','))?', matches Lighthouse '+['','A','B'][lensMode]+' distance':''}`;b.onclick=()=>{if(found||completed)return;cursor=[x,y];render()};B.appendChild(b)}}
+// Chart outcomes have a single owner. No asynchronous completion may survive a reset.
+function cancelAdvance(){advanceToken++;if(advanceTimer!==null){clearTimeout(advanceTimer);advanceTimer=null}}
+function queueAdvance(delay){cancelAdvance();const token=advanceToken;advanceTimer=setTimeout(()=>{if(token!==advanceToken||!found||completed)return;advanceTimer=null;next()},delay)}
+function resetChart(){
+ if(found||completed){M.textContent='This chart is already resolved. The next chart is loading; earned points cannot be replayed.';return}
+ chartRestarts++;lensMode=0;
+ probes=4;misses=[];cursor=[4,4];
+ M.textContent='Chart restarted. Four fresh probes. Only confirmed waymarks advance; this retry costs 200 potential points and earlier misses still count.';
+ sync()
+}
+function probe(){
+ if(found||completed||probes<=0)return;
+ if(misses.some(p=>p[0]===cursor[0]&&p[1]===cursor[1])){M.textContent='Already probed this sector. Choose a different sector; no additional probe was spent.';return}
+ const h=cur(),match=cursor[0]===h.t[0]&&cursor[1]===h.t[1];
+ if(match){
+  found=true;confirmed.add(chart);
+  // Each earned award belongs to this chart exactly once. Restarting never erases misses.
+  const gain=Math.max(0,1200-missesTotal*125-chartRestarts*200);
+  score+=gain;
+  M.textContent=`Waymark confirmed at ${String.fromCharCode(65+cursor[0])}${cursor[1]+1}. +${gain} survey points. Next chart loading.`;
+  sync();queueAdvance(520);return
+ }
+ probes--;missesTotal++;misses.push([...cursor]);
+ const dx=h.t[0]-cursor[0],dy=h.t[1]-cursor[1],dir=Math.abs(dx)>Math.abs(dy)?(dx>0?'east':'west'):(dy>0?'south':'north');
+ M.textContent=`No waymark. The residual tideglass signal pulls ${dir}. ${probes} probe${probes===1?'':'s'} remain.`;
+ if(probes<=0){M.textContent='No probes remain. Chart NOT confirmed and no waymark revealed. Select Retry exhausted chart to try again with a 200-point potential penalty.';sync();document.getElementById('reset').focus()}else sync()
+}
+function next(){
+ if(!found||completed)return;
+ cancelAdvance();
+ if(chart===charts.length-1){finish();return}
+ chart++;lensMode=0;probes=4;misses=[];found=false;cursor=[4,4];missesTotal=0;chartRestarts=0;
+ M.textContent='Fresh chart loaded. Triangulate the next hidden waymark.';sync()
+}
+function finish(){
+ if(completed||!found||chart!==charts.length-1||confirmed.size!==charts.length)return;
+ cancelAdvance();completed=true;
+ const duration=Math.max(1,Math.round((performance.now()-start)/1000));GAME.hidden=true;DONE.hidden=false;
+ DT.textContent=`Six fresh charts completed with ${score.toLocaleString()} survey points in ${duration} seconds. Atlas ${atlasSeed.toString(16).padStart(8,'0')}.`;
+ try{parent.postMessage({type:'wwg:game-event',game:'tideglass-surveyor',event:'survey-complete',score,duration,meta:{unit:'pts',direction:'high',charts:6,confirmed:confirmed.size}},'*')}catch{}
+}
+function restart(seed=newSeed()){
+ cancelAdvance();atlasSeed=seed>>>0;charts=makeAtlas(atlasSeed);CODE.textContent=atlasSeed.toString(16).padStart(8,'0').toUpperCase();completed=false;confirmed=new Set();chart=0;probes=4;score=0;lensMode=0;cursor=[4,4];misses=[];missesTotal=0;chartRestarts=0;found=false;
+ start=performance.now();GAME.hidden=false;DONE.hidden=true;
+ M.textContent='New atlas generated: all six charts have unique solutions. Use all three lighthouse distances to triangulate.';sync()
+}
+// Standard Gamepad API: intentional one-press grid navigation and probe actions.
+// No polling loop modifies the puzzle when the page is hidden/unfocused.
+let padPrevious=new Set(),padNeedsNeutral=true,padConnected=false,padSuspended=false;
+function sectorName(){return String.fromCharCode(65+cursor[0])+(cursor[1]+1)}
+function syncController(){
+ const el=document.getElementById('controllerStatus');if(!el)return;
+ const connection=padConnected?(padNeedsNeutral?'Release gamepad controls to arm.':'Gamepad ready.'):'Gamepad not connected.';
+ el.textContent=`${connection} Selected ${sectorName()}; ${probes} probes; lens ${['OFF','A','B'][lensMode]}. D-pad/stick move · A probe · B lens · X retry${completed?' · A new atlas':''}.`;
+}
+function neutralizePad(){padPrevious.clear();padNeedsNeutral=true;syncController()}
+addEventListener('blur',()=>{padSuspended=true;neutralizePad()});
+addEventListener('focus',()=>{if(!document.hidden){padSuspended=false;neutralizePad()}});
+document.addEventListener('visibilitychange',()=>{padSuspended=document.hidden;if(padSuspended)neutralizePad();else neutralizePad()});
+function pollGamepad(){
+ requestAnimationFrame(pollGamepad);
+ let gp=null;
+ try{gp=Array.from(navigator.getGamepads?.()||[]).find(p=>p&&p.connected!==false&&p.mapping==='standard')||null}catch{}
+ if(!gp){if(padConnected){padConnected=false;neutralizePad()}return}
+ if(!padConnected){padConnected=true;neutralizePad()}
+ const pressed=new Set();
+ for(let i of [0,1,2,12,13,14,15])if(gp.buttons?.[i]?.pressed||gp.buttons?.[i]?.value>=.6)pressed.add(i);
+ // Stick is digital for discrete puzzle coordinates; no auto-repeat while held.
+ if((gp.axes?.[0]||0)<-.62)pressed.add(14);
+ if((gp.axes?.[0]||0)>.62)pressed.add(15);
+ if((gp.axes?.[1]||0)<-.62)pressed.add(12);
+ if((gp.axes?.[1]||0)>.62)pressed.add(13);
+ if(padSuspended||document.hidden){neutralizePad();return}
+ if(padNeedsNeutral){if(!pressed.size){padNeedsNeutral=false;padPrevious.clear();syncController()}return}
+ const previous=padPrevious;
+ const fresh=i=>pressed.has(i)&&!previous.has(i);
+ padPrevious=new Set(pressed);
+ // Deliberate action priority prevents a held probe from also moving the cursor.
+ if(fresh(2)){if(!completed)resetChart();else restart();return}
+ if(fresh(1)){cycleLens();return}
+ if(fresh(0)){if(completed)restart();else probe();return}
+ if(found||completed)return;
+ let dx=(fresh(15)?1:0)-(fresh(14)?1:0),dy=(fresh(13)?1:0)-(fresh(12)?1:0);
+ if(dx||dy){cursor=[Math.max(0,Math.min(8,cursor[0]+dx)),Math.max(0,Math.min(8,cursor[1]+dy))];render();syncController()}
+}
+requestAnimationFrame(pollGamepad);
+document.getElementById('lens').onclick=cycleLens;document.getElementById('probe').onclick=probe;document.getElementById('reset').onclick=resetChart;document.getElementById('again').onclick=()=>restart();addEventListener('keydown',e=>{if(e.code==='KeyL'&&!e.repeat&&!e.ctrlKey&&!e.altKey&&!e.metaKey){e.preventDefault();cycleLens();return}if(e.code==='ArrowLeft')cursor[0]=Math.max(0,cursor[0]-1);if(e.code==='ArrowRight')cursor[0]=Math.min(8,cursor[0]+1);if(e.code==='ArrowUp')cursor[1]=Math.max(0,cursor[1]-1);if(e.code==='ArrowDown')cursor[1]=Math.min(8,cursor[1]+1);if((e.code==='Enter'||e.code==='Space')&&!e.target.closest?.('button,a,input,select,textarea,[role=button]')){e.preventDefault();probe()}if(e.code==='KeyR')resetChart();if(e.code.startsWith('Arrow')){e.preventDefault();render()}});restart();
 </script></body></html>

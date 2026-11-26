@@ -1,38 +1,1019 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Aegis Verge</title><style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#030712;color:#eef6ff;font:14px system-ui;touch-action:none}canvas{width:100%;height:100%;display:block}.hud{position:fixed;inset:10px 10px auto;display:flex;gap:7px;flex-wrap:wrap;z-index:4}.pill,.objective,.brand{background:#07111ddd;border:1px solid #38506c;border-radius:11px;padding:7px 9px}.pill b{color:#93c5fd}.objective{position:fixed;top:52px;left:10px;z-index:4;max-width:560px}.bar{height:6px;background:#111827;border-radius:10px;margin-top:7px;overflow:hidden}.bar i{display:block;height:100%;width:100%;background:#67e8f9}.brand{position:fixed;bottom:10px;left:10px;z-index:4;font-size:10px}.launch,.done{position:fixed;inset:0;z-index:10;display:grid;place-items:center;background:#020617e8}.done{display:none}.card{width:min(650px,calc(100vw - 24px));background:#0b1424;border:1px solid #4b6584;border-radius:20px;padding:22px}.ops{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}button{border:1px solid #55708f;border-radius:10px;background:#13233a;color:#fff;padding:11px;font-weight:800}.ops button.lock{opacity:.45}.ops button.sel{outline:2px solid #67e8f9}.touch{display:none;position:fixed;inset:auto 8px 8px;z-index:5;justify-content:space-between}.steer{display:grid;grid-template-columns:repeat(3,48px);grid-template-areas:". u ." "l d r";gap:5px}.steer [data-k=up]{grid-area:u}.steer [data-k=left]{grid-area:l}.steer [data-k=down]{grid-area:d}.steer [data-k=right]{grid-area:r}.actions{display:grid;grid-template-columns:72px 72px;gap:6px}.touch button{padding:0;height:48px}.shield.on{box-shadow:0 0 18px #67e8f9 inset}@media(pointer:coarse){.touch{display:flex}.brand{bottom:120px}}@media(max-width:560px){.ops{grid-template-columns:1fr}.hud{gap:4px}.pill{padding:5px;font-size:11px}.objective{top:84px;font-size:11px;max-width:calc(100vw - 20px)}}
-</style></head><body><canvas id="c"></canvas><div class="hud"><div class="pill">OP <b id="op">1/3</b></div><div class="pill">RELAY <b id="relay">1/3</b></div><div class="pill">HOSTILES <b id="threat">0</b></div><div class="pill">HULL <b id="hull">100</b></div><div class="pill">AEGIS <b id="energy">100</b></div><div class="pill">SCORE <b id="score">0</b></div></div><div class="objective"><strong>AEGIS VERGE · RELAY SALVAGE</strong><div id="objText">Select an unlocked operation and deploy.</div><div class="bar"><i id="energyBar"></i></div></div><div class="brand"><strong>ARCHITECT INDUSTRIES · WORLDWIDEGAMES</strong><br>WASD / arrows drive · Space/Primary fires · hold E/Secondary for Aegis shield · P pauses · R restarts.</div><div class="touch"><div class="steer"><button data-k="left">◀</button><button data-k="right">▶</button><button data-k="down">REV</button><button data-k="up">THRUST</button></div><div class="actions"><button class="shield" data-action="shield">AEGIS</button><button data-action="fire">FIRE</button></div></div><div class="launch" id="launch"><div class="card"><h1>Aegis Verge</h1><p>A three-operation procedural 3D hover-combat campaign. Break hostile patrols, recover repair and energy salvage, stabilize each Verge relay, and extract while managing hull and continuous Aegis shielding.</p><div class="ops" id="ops"></div><button id="start">Deploy Aegis rig</button><p>Generated locally at runtime with original WorldWideGames geometry, effects, and synthesized audio. Touch and gamepad supported.</p></div></div><div class="done" id="done"><div class="card"><h2 id="doneTitle"></h2><p id="doneText"></p><button id="continue">Continue</button></div></div><script src="../../assets/wwg-input.js"></script><script src="../../assets/wwg-webgl.js"></script><script>
-const $=s=>document.querySelector(s),C=$('#c'),clamp=WWG3D.clamp,A=WWG3D.synth();let engine=null;try{engine=new WWG3D.Engine(C,{fog:'#0b1424',fogNear:28,fogFar:145,far:190,quality:.8})}catch(e){}
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aegis Verge 2.95 — Full-Range Threat Geometry</title><style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#030712;color:#eef6ff;font:14px system-ui;touch-action:none}canvas{width:100%;height:100%;display:block}.hud{position:fixed;inset:10px 10px auto;display:flex;gap:7px;flex-wrap:wrap;z-index:4}.pill,.objective,.brand{background:#07111ddd;border:1px solid #38506c;border-radius:11px;padding:7px 9px}.pill b{color:#93c5fd}.objective{position:fixed;top:52px;left:10px;z-index:4;max-width:560px}.bar{height:6px;background:#111827;border-radius:10px;margin-top:7px;overflow:hidden}.bar i{display:block;height:100%;width:100%;background:#67e8f9}.brand{position:fixed;bottom:10px;left:10px;z-index:4;font-size:10px}.launch,.done{position:fixed;inset:0;z-index:10;display:grid;place-items:center;background:#020617e8}.done{display:none}.card{width:min(650px,calc(100vw - 24px));background:#0b1424;border:1px solid #4b6584;border-radius:20px;padding:22px}.ops{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}button{border:1px solid #55708f;border-radius:10px;background:#13233a;color:#fff;padding:11px;font-weight:800}.ops button.lock{opacity:.45}.ops button.sel{outline:2px solid #67e8f9}.touch{display:none;position:fixed;inset:auto 8px 8px;z-index:5;justify-content:space-between}.steer{display:grid;grid-template-columns:repeat(3,48px);grid-template-areas:". u ." "l d r";gap:5px}.steer [data-k=up]{grid-area:u}.steer [data-k=left]{grid-area:l}.steer [data-k=down]{grid-area:d}.steer [data-k=right]{grid-area:r}.actions{display:grid;grid-template-columns:repeat(2,72px);gap:6px}.touch button{padding:0;height:48px}.shield.on{box-shadow:0 0 18px #67e8f9 inset}#rankStatus{margin-top:7px;color:#a5f3fc;font-size:12px;line-height:1.4;font-weight:700}@media(pointer:coarse){.touch{display:flex}.brand{bottom:120px}}@media(max-width:560px){.ops{grid-template-columns:1fr}.hud{gap:4px}.pill{padding:5px;font-size:11px}.objective{top:84px;font-size:11px;max-width:calc(100vw - 20px)}}
+
+:root{color-scheme:dark}button,select,input{font:inherit}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #fef08a;outline-offset:3px}.hud{top:18px;left:20px;right:20px;gap:8px}.pill{border-color:#3c5265;border-radius:5px;background:#08131deb;font-size:10px;letter-spacing:.08em;padding:8px 12px}.pill b{font-size:16px;color:#e0f2fe;margin-left:6px}.objective{left:20px;top:77px;width:340px;max-width:48vw;border:0;border-left:3px solid #67e8f9;border-radius:0;background:#07111de8;padding:12px 16px;font-size:12px;line-height:1.5}.objective strong{display:block;color:#b7f4ff;font-size:10px;letter-spacing:.15em;margin-bottom:5px}#rankStatus{font-size:9px;letter-spacing:.05em;color:#94a3b8}.brand{bottom:18px;left:20px;border:0;background:#07111dd9;line-height:1.6;max-width:440px}.brand strong{letter-spacing:.14em;font-size:9px;color:#8be6f9}.launch{background:radial-gradient(ellipse at 70% 25%,#0b3446ed,#030712f5 68%)}.card{background:linear-gradient(150deg,#102335f7,#050c18fc);border-color:#365168;border-radius:14px;padding:28px;box-shadow:0 20px 100px #0008;max-height:90vh;overflow:auto}.card h1{font-size:clamp(30px,6vw,54px);letter-spacing:-.05em;margin:8px 0 14px}.card p{line-height:1.6;font-size:13px;color:#bdcfdf}.card h2{font-size:28px}.kicker{font-size:10px;letter-spacing:.22em;color:#67e8f9}.card #start,.card #continue{background:#a5f3fc;color:#06222d;border:0;padding:13px 22px;font-size:14px}.ops button{font-size:12px;background:#0b1727}.ops button.sel{background:#103749;outline:2px solid #67e8f9}#radar{position:fixed;right:20px;top:77px;width:164px;height:164px;border:1px solid #38556a;background:#06111de6;border-radius:8px;z-index:4}#radarLabel{position:fixed;right:20px;top:247px;width:164px;text-align:center;z-index:4;color:#b6d6e9;font-size:10px;letter-spacing:.07em}#combatStatus{position:fixed;left:50%;top:30%;transform:translateX(-50%);padding:8px 13px;background:#4a1b08e8;border:1px solid #fbbf24;color:#fff4d5;z-index:4;font-size:12px;font-weight:750;max-width:90vw;text-align:center;pointer-events:none}#combatStatus:empty{display:none}#toolbar{position:fixed;right:20px;bottom:18px;display:flex;gap:9px;align-items:center;z-index:6;background:#07111de8;padding:8px;border:1px solid #30475d;border-radius:8px;font-size:11px}#toolbar button{padding:7px 10px}#toolbar label{display:flex;gap:5px;align-items:center}#renderBadge{position:fixed;right:20px;top:267px;max-width:170px;text-align:center;color:#91a8bc;z-index:4;font:9px system-ui}#aimCue{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);border:1px solid #36536a;background:#07111de6;padding:8px 14px;border-radius:4px;font-size:11px;color:#ddf9ff;z-index:4;pointer-events:none}#hitMarker{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) rotate(45deg);width:21px;height:21px;border:2px solid #fff;opacity:0;pointer-events:none;z-index:5}.touch button{touch-action:none}.touch button.active{background:#206078}.touch{bottom:max(12px,env(safe-area-inset-bottom))}
+@media(max-width:700px){.hud{top:8px;left:8px;right:8px;gap:4px}.pill{font-size:8px;padding:5px 6px}.pill b{font-size:12px;margin-left:3px}.objective{top:72px;left:8px;width:270px;max-width:calc(100vw - 16px);padding:8px 10px;font-size:10px}#rankStatus{font-size:8px}#radar,#radarLabel{display:none}#renderBadge{top:auto;bottom:174px;right:8px;font-size:8px}#toolbar{bottom:auto;top:215px;right:8px;padding:3px;gap:6px;font-size:9px}#toolbar button{font-size:10px;padding:5px}.brand{bottom:126px;left:8px;font-size:8px;max-width:calc(100vw - 16px)}#aimCue{bottom:181px;white-space:nowrap;font-size:9px;padding:5px 8px}#combatStatus{top:34%;font-size:10px}.card{padding:20px}.ops{grid-template-columns:1fr}.ops button{padding:9px}.card p{font-size:11px}.touch .actions{grid-template-columns:repeat(3,60px)}.touch .steer{grid-template-columns:repeat(3,44px)}.touch button{height:44px;font-size:10px}}
+.pill#decoyPill b{color:#e9d5ff}#decoyAction{color:#e9d5ff;border-color:#a78bfa}.pill.spent{border-color:#f87171;background:#34141adf}.pill.cooling{border-color:#fbbf24;background:#30200cdd}#pulseAction[disabled],#decoyAction[disabled],#dashAction[disabled]{opacity:.5;filter:grayscale(.5)}.pill.spent b{color:#fecaca}.done .card h2{color:#d6f6ff}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+#dashPill.ready b{color:#6ee7b7}#dashPill.cooling{border-color:#fbbf24}#dashAction{color:#baf7ef;border-color:#2a948b}#dashAction.active{box-shadow:0 0 16px #2dd4bf77 inset}
+@media(max-width:700px){.objective{top:106px}#toolbar{top:252px}#aimCue{bottom:220px}}
+#checkpointWarning:not(:empty){position:fixed;z-index:8;top:240px;left:20px;width:min(460px,calc(100vw - 40px));background:#40220beF;color:#fff4d6;border:2px solid #fbbf24;padding:10px 14px;border-radius:8px;line-height:1.45;font-size:12px;box-shadow:0 8px 24px #0008;pointer-events:none}@media(max-width:700px){#checkpointWarning:not(:empty){top:309px;left:8px;width:calc(100vw - 16px);font-size:10px;padding:8px 10px}}
+@media(min-width:701px){.hud{gap:5px}.hud .pill{padding:7px 8px}.hud .pill b{margin-left:3px}}
+@media(max-width:700px){.brand .controlHelp{display:none}.brand{bottom:137px;padding:5px 7px;max-height:27px}.brand strong{font-size:8px}#aimCue{bottom:205px}#toolbar{top:auto;bottom:154px;right:8px}.objective{max-height:165px;overflow:auto}}
+#focusNotice{display:none;position:fixed;z-index:9;left:50%;top:51%;transform:translate(-50%,-50%);background:#101c2cf2;border:2px solid #fbbf24;box-shadow:0 22px 70px #000c;max-width:min(420px,calc(100vw - 24px));width:380px;border-radius:10px;padding:19px 20px;text-align:center;line-height:1.55}
+#focusNotice strong{display:block;color:#fde68a;letter-spacing:.11em;margin-bottom:7px}#focusNotice button{background:#fde68a;color:#132033;border:0;margin-top:12px;padding:11px 20px;min-width:135px}#focusNotice p{font-size:12px;margin:0;color:#d7e5ef}
+@media(max-width:560px){#focusNotice{top:44%;padding:12px 15px;width:calc(100vw - 28px)}#focusNotice button{margin-top:7px;padding:9px}}
+#guardPill b{color:#bef264}#guardPill.window{border-color:#a3e635;background:#23351bdf}#guardPill.cooling{border-color:#64748b}#guardPill.cooling b{color:#b3c3d7}#interceptPill b{color:#fde68a}#recoveryPill.protected{border-color:#fcd34d;background:#3b2c16eb}#recoveryGrace:not(:empty){color:#fde68a;margin-left:5px;font-size:10px;font-weight:800}#cachePill b{color:#86efac}#cachePill.channel{border-color:#86efac;background:#153524ec}#cacheAction{color:#86efac;border-color:#4ade80}#cacheAction[disabled]{opacity:.45}
+@media(pointer:coarse){.brand{bottom:200px}}@media(max-width:700px){.hud{display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,auto);grid-auto-columns:max-content;overflow-x:auto;overflow-y:hidden;max-width:calc(100vw - 16px);padding-bottom:4px}.objective{top:91px}.brand{bottom:188px}#toolbar{bottom:200px}#aimCue{bottom:250px}#renderBadge{bottom:230px}.touch .actions{grid-template-columns:repeat(3,55px)}.touch button{height:42px}}
+@media(min-width:701px){.hud{display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,max-content);grid-auto-columns:max-content;overflow-x:auto;overflow-y:hidden;padding-bottom:4px}.objective{top:112px}#radar{top:112px}#radarLabel{top:282px}#renderBadge{top:302px}}
+
+/* Skyworks environment readability: the full control legend remains in the launch briefing and accessible DOM;
+   do not cover almost half the live desktop arena with persistent paragraph text. */
+.brand{max-height:38px;overflow:hidden;max-width:335px;padding:6px 10px}
+.brand .controlHelp{display:none}
+/* F3D25 first-screen playable launch: the deploy gate must not sit behind the
+   3,000+ word optional briefing on a compact touchscreen. */
+.launch .card h1{margin:7px 0 9px}
+.launch #launchSummary{color:#e2f5fc;font-size:13px;line-height:1.45;margin:6px 0 8px}
+.launch .ops{margin:10px 0}
+.launch .deployActions{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.launch #checkpointInfo{margin:7px 0;font-size:11px;line-height:1.4}
+.launch #missionBriefing{margin-top:9px;border-top:1px solid #324d65;padding-top:7px}
+.launch #missionBriefing summary{cursor:pointer;color:#a5f3fc;padding:7px 0;font-weight:700;line-height:1.4}
+.launch #missionBriefing summary:focus-visible{outline:3px solid #fef08a;outline-offset:2px}
+.launch #missionBriefing p{margin:10px 0;font-size:12px}
+@media(max-height:430px) and (orientation:landscape){
+ .launch .card{max-height:94dvh;padding:10px 14px;width:min(670px,calc(100vw - 14px))}
+ .launch .card h1{font-size:27px;margin:1px 0 3px}
+ .launch .kicker{font-size:9px}
+ .launch #launchSummary{font-size:11px;line-height:1.3;margin:3px 0 6px}
+ .launch .ops{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:5px 0}
+ .launch .ops button{padding:7px 3px;font-size:10px;min-width:0}
+ .launch .deployActions button{padding:8px 12px;font-size:11px}
+ .launch #checkpointInfo{margin:3px 0;font-size:10px}
+ .objective{top:53px;left:8px;width:min(220px,42vw);max-width:42vw;max-height:95px;overflow:auto;font-size:9px;padding:5px 7px}
+ .objective strong{font-size:9px;margin-bottom:2px}
+ #rankStatus{font-size:8px}
+ #toolbar{top:74px;bottom:auto;right:8px}
+ #aimCue{top:40px;bottom:auto;left:60%;font-size:9px}
+ .brand{display:none}
+ #checkpointWarning:not(:empty){top:130px;left:8px;width:min(265px,46vw);max-height:85px;overflow:auto}
+}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+#aimCue[data-line='cover']{border-color:#fbbf24;color:#fde68a}#aimCue[data-line='hostile']{border-color:#67e8f9;color:#cffafe}#aimCue[data-line='mine']{border-color:#fb923c;color:#fed7aa}
+#spatialCue:not(:empty){position:fixed;right:20px;top:329px;z-index:5;max-width:235px;pointer-events:none;background:#2a180bef;border-left:3px solid #fbbf24;color:#ffedc0;padding:7px 10px;font-size:10px;letter-spacing:.08em;font-weight:800;border-radius:2px}
+@media(max-width:700px){#spatialCue:not(:empty){top:177px;right:8px;max-width:175px;padding:5px 7px;font-size:9px}}
+@media(max-height:430px) and (orientation:landscape){#spatialCue:not(:empty){top:106px;right:8px;max-width:140px;font-size:8px}}
+#crosswindNotice{position:fixed;left:50%;top:38%;transform:translateX(-50%);z-index:4;pointer-events:none;padding:6px 12px;border:1px solid #22d3ee;border-radius:6px;background:#062c35ed;color:#c8fafe;font-weight:750;font-size:12px;text-align:center;max-width:90vw}#crosswindNotice:empty{display:none}@media(max-width:700px){#crosswindNotice{top:43%;font-size:10px;padding:5px 9px}}
+#silenceNotice{position:fixed;left:50%;top:43%;transform:translateX(-50%);z-index:4;pointer-events:none;padding:6px 12px;background:#073344e8;border:1px solid #22d3ee;border-radius:6px;color:#ecfeff;font-weight:750;font-size:12px;text-align:center;max-width:min(90vw,460px)}#silenceNotice:empty{display:none}
+#shockfrontNotice{position:fixed;left:50%;top:37%;transform:translateX(-50%);z-index:4;pointer-events:none;padding:6px 12px;background:#44220de8;border:1px solid #fdba74;border-radius:6px;color:#fff7ed;font-weight:750;font-size:12px;text-align:center;max-width:min(90vw,460px)}#shockfrontNotice:empty{display:none}
+#counterpulseNotice{position:fixed;left:50%;top:30%;transform:translateX(-50%);z-index:4;pointer-events:none;padding:6px 12px;border:1px solid #86efac;border-radius:6px;background:#082a1fe8;color:#dcfce7;font-weight:750;font-size:12px;text-align:center;max-width:85vw}#counterpulseNotice:empty{display:none}
+#scatterNotice{position:fixed;left:50%;top:54%;transform:translateX(-50%);z-index:4;pointer-events:none;padding:5px 10px;border:1px solid #67e8f9;border-radius:6px;background:#082c39e8;color:#cffafe;font-weight:750;font-size:12px;text-align:center;max-width:85vw}#scatterNotice:empty{display:none}
+#demolitionNotice{position:fixed;left:50%;top:47%;transform:translateX(-50%);z-index:4;pointer-events:none;padding:6px 12px;border:1px solid #fbbf24;border-radius:6px;background:#3a220aea;color:#fef3c7;font-weight:750;font-size:12px;text-align:center;max-width:90vw}#demolitionNotice:empty{display:none}@media(max-width:700px){#demolitionNotice{top:52%;font-size:10px;padding:5px 9px}}
+.courseReadout{position:fixed;z-index:7;bottom:103px;left:20px;max-width:min(460px,calc(100vw - 40px));background:#140e2be8;color:#f5d0fe;border:1px solid #a78bfa;padding:8px 12px;border-radius:7px;font-size:12px;letter-spacing:.06em;pointer-events:none;box-shadow:0 4px 20px #0009}.courseReadout:not(.on){display:none}@media(max-width:700px){.courseReadout{bottom:166px;left:8px;max-width:calc(100vw - 16px);font-size:11px;padding:5px 8px}}
+.trialReadout{position:fixed;z-index:7;bottom:148px;left:20px;max-width:min(460px,calc(100vw - 40px));background:#05251eee;color:#d1fae5;border:1px solid #34d399;padding:8px 12px;border-radius:7px;font-size:11px;letter-spacing:.05em;pointer-events:none;box-shadow:0 4px 16px #0008;white-space:normal}.trialReadout #phaseStatus{color:#fde68a}.trialReadout b{font-size:12px;color:#a7f3d0;letter-spacing:.02em}@media(max-width:700px){.trialReadout{bottom:211px;left:8px;max-width:calc(100vw - 16px);font-size:10px;padding:5px 8px}.trialReadout b{font-size:10px}}
+#hitDirection:not(:empty){position:fixed;top:137px;left:50%;transform:translateX(-50%);z-index:7;pointer-events:none;border:1px solid #fb923c;border-left:4px solid #fb923c;background:#25150aee;color:#ffedd5;border-radius:5px;padding:7px 12px;font-size:11px;font-weight:750;letter-spacing:.05em;white-space:nowrap;max-width:88vw;overflow:hidden;text-overflow:ellipsis}@media(max-width:700px){#hitDirection:not(:empty){top:46px;left:50%;padding:4px 7px;font-size:9px;max-width:76vw}}
+#pickupNotice:not(:empty){margin-top:4px;color:#86efac;font-size:10px;font-weight:700;border-left:3px solid #34d399;padding-left:7px}
+#crossfireNotice:not(:empty){margin-top:4px;color:#fca5a5;font-size:10px;font-weight:700;border-left:3px solid #fb923c;padding-left:7px}
+#crossfirePreview:not(:empty){margin-top:4px;color:#baf7ef;font-size:10px;font-weight:750;border-left:3px solid #5eead4;padding-left:7px;line-height:1.35}
+#dashImpactNotice:not(:empty){margin-top:4px;color:#5eead4;font-size:11px;font-weight:800;border-left:3px solid #5eead4;padding-left:7px}
+#bodyContact:not(:empty){margin-top:4px;color:#fbbf24;font-size:10px;font-weight:700;border-left:3px solid #fbbf24;padding-left:7px}
+#conduitScanner:not(:empty){margin-top:4px;color:#fde68a;border-left:3px solid #fbbf24;padding-left:7px;font-size:10px;font-weight:700;line-height:1.3}
+@media(max-width:700px){#conduitScanner:not(:empty){font-size:9px;max-width:240px}}
+#deploymentConsent:not(:empty){background:#39200bee;border-left:3px solid #fbbf24;padding:8px 11px;border-radius:4px;color:#fef3c7;font-size:12px;line-height:1.45}#start.pendingDiscard{background:#fbbf24;color:#2e1909;border:2px solid #fef3c7}
+#relayLockStatus:not(:empty){margin:6px 0 2px;padding:5px 7px;border-left:3px solid #86efac;color:#bbf7d0;background:#06251e;font:700 11px/1.35 system-ui;letter-spacing:.025em}
+#rendererFatal{position:fixed;inset:0;z-index:100;background:#07111d;color:#fff;display:grid;place-content:center;padding:24px;text-align:center}#rendererFatal[hidden]{display:none}</style><link rel="stylesheet" href="compact-combat-hud.css"></head><body><canvas id="c" tabindex="-1" aria-label="Aegis Verge real-time 3D combat arena. Use the controls described below."></canvas><div id="rendererFatal" role="alert" tabindex="-1" hidden><h2>Graphics unavailable</h2><p>Neither graphics mode could start. Gameplay is stopped. Your existing relay checkpoint has not been discarded. Reload with graphics enabled or use another supported browser.</p></div><div class="hud"><div class="pill">OP <b id="op">1/3</b></div><div class="pill">RELAY <b id="relay">1/3</b></div><div class="pill">HOSTILES <b id="threat">0</b></div><div class="pill">HULL <b id="hull">100</b></div><div class="pill">AEGIS <b id="energy">100</b></div><div class="pill">SCORE <b id="score">0</b></div><div class="pill" id="ghostPill" aria-label="Optional personal best-route replay, non-colliding and unranked">ECHO <b id="ghostStatus">NONE</b></div><div class="pill" id="interceptPill" aria-label="Enemy projectiles intercepted, Warden reactor flanks and real moving evasions">INTERCEPT <b id="interceptCount">0</b> · ENEMY FF <b id="friendlyFireCount">0</b> · COUNTER <b id="counterpulseCount">0</b> · FLANK <b id="flankCount">0</b> · EVADE <b id="evadeCount">0</b><span id="flankNotice" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></span><span id="evadeNotice" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></span></div><div class="pill" id="recoveryPill" aria-label="Field recoveries remaining">RECOVERY <b id="recoveries">1/1</b><span id="recoveryGrace" role="status" aria-live="polite"></span></div><div class="pill" id="overguardPill" aria-label="Enemies currently shielded by a Warden overguard tether">OVERGUARD <b id="overguardStatus">0</b> · REFORM <b id="reformStatus">0</b></div><span id="shieldNotice" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></span><div id="hitDirection" role="status" aria-live="polite" aria-atomic="true"></div><div class="pill" id="guardPill" aria-label="Perfect guard readiness">PARRY <b id="guardReady">READY</b></div><div class="pill" id="pulsePill" aria-label="Pulse break readiness">PULSE <b id="pulseReady">READY</b></div><div class="pill" id="dashPill" aria-label="Vector dash readiness">DASH <b id="dashReady">READY</b></div><div class="pill" id="decoyPill" aria-label="Holographic decoy readiness">DECOY <b id="decoyReady">READY</b></div><div class="pill" id="breachPill" aria-label="Breachable barriers and capacitor mines">BARRIER <b id="barriers">3</b> · MINE <b id="mineStatus">3</b></div><div class="pill" id="fluxPill" aria-label="Active traversal boost, requires Aegis energy">FLUX <b id="fluxStatus">IDLE</b></div><div class="pill" id="circuitPill" aria-label="Optional directional Flux Circuit course progress; completing it gives unranked hull and Aegis aid">CIRCUIT <b id="circuitStatus">0/4</b><span id="circuitNotice" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></span></div><div class="pill" id="guidePill"><button id="guideButton" type="button" aria-pressed="false" aria-label="Toggle collision-aware route to the next Flux Circuit arch">GUIDE OFF</button></div><div class="pill" id="cachePill" aria-label="Recoverable field-salvage caches">SALVAGE <b id="cacheStatus">3/3</b></div><div class="pill" id="uplinkPill" aria-label="Signal uplink control">UPLINK <b id="uplinkStatus">3</b></div></div><div class="trialReadout" id="trialPill" aria-label="Optional simulation-time local Flux Circuit split trial, not competitive score">SPLITS <b id="trialStatus">READY · GATE 1</b> · PHASE <b id="phaseStatus">STANDBY</b><span id="phaseTelegraphNotice" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></span><span id="phaseReturnNotice" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></span><span id="phaseNotice" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></span><span id="trialNotice" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></span></div><div class="courseReadout" id="courseGuide" role="status" aria-live="polite" aria-atomic="true">GUIDE OFF</div><div class="objective" id="objectivePanel"><strong>AEGIS VERGE · RELAY SALVAGE / FLUX CIRCUIT</strong><div id="objText">Select an unlocked operation and deploy.</div><div id="relayLockStatus" aria-hidden="true"></div><span id="relayLockVoice" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></span><div id="breachWaveNotice" role="status" aria-live="polite" aria-atomic="true"></div><div id="breachCue" role="status" aria-live="polite" aria-atomic="true"></div><div id="conduitScanner" role="status" aria-live="polite" aria-atomic="true"></div><div id="bodyContact" role="status" aria-live="polite" aria-atomic="true"></div><div id="dashImpactNotice" role="status" aria-live="polite" aria-atomic="true"></div><div id="pickupNotice" role="status" aria-live="polite" aria-atomic="true"></div><div id="crossfireNotice" role="status" aria-live="polite" aria-atomic="true"></div><div id="crossfirePreview" role="status" aria-live="polite" aria-atomic="true"></div><div id="rankStatus" role="status" aria-live="polite" aria-atomic="true">Ranked circuit: clear operations 1–3 in order without restarting or field recovery.</div><div class="bar"><i id="energyBar"></i></div></div><div class="brand"><strong>ARCHITECT INDUSTRIES · WORLDWIDEGAMES</strong><br><span class="controlHelp">Relay Stabilization: after defeating a wave, drive into the cyan relay perimeter and hold for three real simulation seconds. The new in-world mint segments and cockpit readout reflect actual capture progress, decay if you leave, and never affect enemies or score. Decoy-Aware Crossfire: a projected hostile-to-hostile shot continues to show its teal opening even with an active holographic decoy elsewhere; the cue is suppressed only when the decoy physically intercepts that lane first. Crossfire Opening: when a locked hostile volley has an unobstructed projected path through another living hostile, a restrained teal impact ring and text cue show a possible opportunity. The target may still move before impact; solid cover, actual bullets, damage, scoring and game AI are unchanged. Hostile Crossfire: hostile bolts can strike other live enemy rigs on their actual flight path. A surviving enemy struck while charging is interrupted and briefly vulnerable to cannon fire; bait clean lanes through incoming volleys. Friendly-fire knockouts award no score or drops. Physical Salvage: drive or dash directly through a dropped repair/energy core to claim its normal resource reward, even on a fast Flux lane. Solid walls still block pickups. Solid Chassis Contact: living hostile rigs have swept physical bodies; drive or dash around enemies instead of passing through them. Living hostile rigs now also maintain physical clearance from each other rather than passing through the same chassis, with short amber compression glints on real contact. Contact does not deal damage or award points. Slide Steering: drag a held finger between the directional buttons to change course; lifting or leaving the pad releases steering, and a second finger can fire or shield. Compact Cockpit: short-landscape touch players can open Brief, Tools, and Menu without losing the primary combat controls. Armor breach: at half HP, hit the exposed RIGHT flank of a Skirmisher, Lancer or Bulwark for +1 true damage, subject to Warden Overguard and solid cover; no bonus score. Battle-worn enemies: damaged skirmishers, lancers, bulwarks and Wardens progressively lose modeled armor; exposed conduits indicate actual HP loss, not changed hitboxes. Warden Rescue Priority: watch for amber REFORM from Wardens that choose a reachable ally over a permanently enclosed one; keep the escort separated with cover or jam/stagger the Warden. No extra damage or score. Optional Flux Capacitors: each screen has an orange low-mounted reactor to its side. During that leg, land two unobstructed cannon shots to turn the shutter green and OFFLINE for the attempt, but forfeit the local split record; otherwise time the passage for a valid record. Phase Backtrack: previously cleared pink screens remain dangerous in either direction when live; re-enter safely when cyan, hold AEGIS, or disable the capacitor. Optional Phase Telegraph: illuminated side columns count down each shutter state; the SPLITS display shows seconds to the next change, with one alert on approaching or changing danger, and reduced-effects support. Optional Flux Phase Screens: amber warning precedes a pink active shutter between the first and second gates on each leg; wait for cyan open time, dash past, or hold shield to avoid a 9 hull/12 Aegis strike that disqualifies that local split record. Screens never grant score. Optional local split trial: gate 1 starts a pause-safe timer; later real gate crossings record splits and show your best local time for that operation when browser storage permits. Checkpoint resumes run practice-only and cannot claim a new personal best. Timing never grants resources, score or ranked credit. Optional course navigator: G / gamepad START / tap GUIDE toggles a cover-aware violet course path without steering or scoring. Follow the indicated approach and drive through the lit arch in the marked direction. Optional FLUX CIRCUIT: pass four glowing arches in order while boosted (two departure, two return) to recover up to 18 hull and 30 Aegis, once per operation. This tactical aid forfeits competitive/ranked eligibility and awards no score. Traverse illuminated teal FLUX lanes in their chevron direction for 50% faster travel. Costs Aegis charge and disables during shielding/dash; collision remains solid. WASD / arrows drive · hold Space/Primary fires and can intercept hostile orange bolts (no score) · hold E/Secondary to shield, tap as a bolt arrives for a 0.24s single-shot Perfect Guard (2.4s cooldown, reflects a real shot) · tap Q/Y or PULSE to break hostile lock-on or jam relay surge (35 energy) · Shift/gamepad X/touch DASH for cover-aware evasive burst (28 energy) · F/gamepad LB/touch UPLINK near the active relay signal spire suppresses hostile lock-on for 6s (30 energy, one use per relay) · Amber-striped barricades progressively fracture under real damage, eject temporary 3D fragments and then open collision routes; breaches persist at relay checkpoints and reopen their original routes when resumed (no score). The cannon sightline reports COVER, HOSTILE, CAPACITOR or CLEAR and places a small colored ground marker at the first current impact; this is a snapshot, not guaranteed future accuracy. The Clearview camera boom stays outside real 3D cover. Light skirmishers may visibly scatter from a live Warden Skyburst if an unobstructed walkable escape exists; armored Lancers and Bulwarks remain exposed, and attacks already charging cannot be cancelled by this tactic. COUNTERPULSE: Q / Y / PULSE can neutralize an actual flying Warden artillery shell when its airborne 3D position enters the existing 10m pulse sphere and intact cover does not block it. The pulse costs 35 Aegis; a shell at its high apex may be unreachable. No damage, score or salvage is awarded for disarming a shell. Warden Skyburst impacts can hurt *other* exposed hostiles without awarding score; two blasts near a vulnerable striped barricade can destroy it, opening the real collision route. Intact physical cover shields other barriers. The firing Warden is immune. V / gamepad Select / touch VIEW toggles the optional Tactical Vista, showing a higher and wider arena perspective with collision-tested camera movement; switching views never changes cannon aim or scoring. Warden rear reactors glow cyan; shots entering from behind deal one extra hull damage (FLANK HUD), without extra points. DIRECTIONAL THREATS: an original stereo cue and text bearing (left/right/rear/ahead) identify genuine hostile locks, fired volleys, capacitor warnings and relay surges; intervening solid cover muffles the sound, mute leaves visual bearings. SLIPSTREAM EVADE: move alongside an incoming bolt so it narrowly misses your unshielded hull; a genuine cover-clear graze restores up to 6 Aegis energy with a 1.25s simulation-time cooldown (never scores, and collisions still hurt). Once you clear a fresh operation, a local best-time Echo replays as a small violet 3D rig on future attempts; the Echo never blocks, shoots, scores or changes enemies. It disappears after its recorded time. Once enemies fall, follow cyan Wayfinder pips and the dashed tactical-radar route around surviving barricades to the next relay or extraction. T / gamepad RB / touch DECOY projects a 5.5s hologram that draws enemy aim and absorbs two hits (38 energy, 10s cooldown), but never makes the player immune. C / gamepad RS / touch SALVAGE near green field cache: the 3D mint ring fills from empty to full over 1.35 seconds only while you hold still and avoid hits or shields; recover to restore hull and Aegis energy once per site; damage, movement or shielding interrupts, no score. V / gamepad Select / touch toolbar switches between Chase and collision-safe Tactical Vista cameras (cosmetic only, no aim assist). P pauses · switching apps/tabs pauses until you press Resume or P · R restarts.</span></div><div class="touch"><div class="steer"><button aria-label="Turn left" data-k="left">◀</button><button aria-label="Turn right" data-k="right">▶</button><button aria-label="Reverse" data-k="down">REV</button><button aria-label="Thrust forward" data-k="up">THRUST</button></div><div class="actions" id="touchActions"><button class="shield" data-action="shield">AEGIS</button><button data-action="fire">FIRE</button><button id="pulseAction" data-action="pulse" aria-label="Pulse break: interrupt hostile lock-ons or jam charging relay surge">PULSE</button><button id="dashAction" data-action="dash" aria-label="Vector Dash: quick forward or reverse evade; consumes 28 Aegis energy">DASH</button><button id="decoyAction" data-action="decoy" aria-label="Deploy a holographic decoy at an unobstructed position ahead to draw enemy fire for 5.5 seconds; costs 38 energy">DECOY</button><button id="uplinkAction" data-action="uplink" aria-label="Activate nearby single-use signal spire to jam hostile weapons for six seconds">UPLINK</button><button id="cacheAction" data-action="cache" aria-label="Recover from a nearby green field cache, hold still and avoid enemy hits during its channel">SALVAGE</button></div></div><canvas id="radar" width="164" height="164" aria-hidden="true"></canvas><div id="radarLabel">TACTICAL / NORTH UP</div><div id="renderBadge" role="status" aria-live="polite"></div><div id="checkpointWarning" role="alert" aria-live="assertive" aria-atomic="true"></div><div id="focusNotice" role="alert" aria-live="assertive" aria-atomic="true"><strong>COMBAT SAFELY PAUSED</strong><p>You switched away from Aegis Verge. Movement, combat, hull damage and mission timers stay frozen until you choose to resume.</p><button id="focusResume" type="button" aria-label="Resume Aegis Verge combat">Resume combat</button><p>Or press P / use the Pause toolbar.</p></div><div id="combatStatus" role="status" aria-live="polite" aria-atomic="true"></div><div id="crosswindNotice" role="status" aria-live="polite" aria-atomic="true"></div><div id="demolitionNotice" role="status" aria-live="polite" aria-atomic="true"></div><div id="scatterNotice" role="status" aria-live="polite" aria-atomic="true"></div><div id="silenceNotice" role="status" aria-live="polite" aria-atomic="true"></div><div id="overguardNotice" role="status" aria-live="polite" aria-atomic="true"></div><div id="shockfrontNotice" aria-live="polite" role="status"></div><div id="counterpulseNotice" role="status" aria-live="polite" aria-atomic="true"></div><div id="spatialCue" role="status" aria-live="polite" aria-atomic="true"></div><div id="aimCue" aria-live="off"></div><div id="hitMarker" aria-hidden="true"></div><button class="compact-control" id="compactBriefButton" type="button" aria-controls="objectivePanel" aria-expanded="false">Brief</button><button class="compact-control" id="compactToolsButton" type="button" aria-controls="touchActions" aria-expanded="false">Tools</button><button class="compact-control" id="compactMenuButton" type="button" aria-controls="toolbar" aria-expanded="false">Menu</button><div id="toolbar"><button id="viewButton" type="button" aria-pressed="false" aria-label="Switch 3D camera between chase and tactical overhead views">View: Chase</button><button id="pauseButton" type="button" aria-pressed="false">Pause</button><label><input type="checkbox" id="quiet">Mute</label><label><input type="checkbox" id="calm">Reduce FX</label></div><div class="launch" id="launch"><div class="card">
+<div class="kicker">AEGIS / FLUX CIRCUIT / 2.95</div>
+<h1>Aegis Verge</h1><p id="recordNotice" role="status" aria-live="polite" hidden></p>
+<p id="launchSummary">Drive through three tactical operations. Neutralize hostiles, secure relays and reach extraction. Use cover and read enemy warning beams.</p>
+<div class="ops" id="ops" aria-label="Choose an unlocked operation"></div>
+<div class="deployActions"><button id="start">Deploy Aegis rig</button> <button id="resume" hidden>Resume saved relay · practice</button></div>
+<p id="checkpointInfo" role="status" aria-live="polite"></p> <p id="deploymentConsent" role="status" aria-live="polite"></p>
+<details id="missionBriefing"><summary>Full mission briefing, controls and ranked rules</summary>
+<p>Use solid cover. Read the lock-on beam. Move before the shot. Three original 3D operations feature flanking skirmishers, telegraphed lancer shots, bulwark spread fire and Warden volleys. The cannon sightline now marks the first current enemy, mine or surviving wall along real projectile collision geometry; it never aims for you or predicts moving opponents. Warden rear reactors glow cyan; physically flank and fire into a Warden from behind for +1 shot damage, with no extra scoring credit. Destroy each patrol, defend against the telegraphed relay surge during stabilization, then extract from all three cleared relays. Tap Q, gamepad Y or PULSE to spend 35 Aegis energy on a 10-meter pulse: break a nearby charged hostile lock-on for double-damage follow-up, or jam the amber relay security surge while holding a cleared beacon. The warning surge strikes exposed rigs for 18 hull; shield with E/AEGIS or leave the 5-meter relay perimeter to evade it. A pulse does not pass through solid cover. One emergency field recovery is available per operation; a second hull collapse causes a genuine mission defeat and must be retried. Shift / gamepad X / touch DASH spends 28 energy on a 6-meter collision-tested evasive burst; hold reverse to dash backward. It does not grant invulnerability or pass through cover. Three single-use field salvage modules are optional exploration stops: C / gamepad right-stick click / mobile SALVAGE near a green cache starts a 1.35-second exposed recovery channel. Movement, shielding or hull damage cancels it; successful recovery restores 22 hull and 32 energy once and persists at the next relay checkpoint without awarding score. Three single-use signal spires near the current relay are optional tactical objectives: approach the lit uplink and tap F / gamepad LB / mobile UPLINK to spend 30 energy, cancel charging enemy weapons and disable new hostile firing for six seconds. Spires cannot be farmed for score, and used stations persist in saved checkpoints. Three amber-striped security barricades can be breached by either side: every real projectile impact damages a barrier, and destroyed barriers truly disappear from vehicle collision, shots and enemy pathfinding. Breaches grant no points. Secured relay boundaries save a local practice checkpoint for returning players; resuming never qualifies for ranked circuit scores.</p>
+<p>Practice Score Integrity: unranked practice clears now preserve operation unlocks and legitimate campaign completion, but cannot update any operation local best score. Historical best scores cannot be reclassified after the fact. Competitive score: begin in operation 1 and clear all three operations consecutively without a restart or hull-loss field recovery. Individual unlocked operations are unranked practice. Intermediate combat, failed operations and relays never rank. One field recovery forfeits ranking and provides two simulation seconds of amber recovery shielding to prevent an unfair double death from the same enemy volley; two separate hull collapses defeat the operation. Resume a saved relay only in unranked practice; use Deploy from operation 1 to begin a fresh ranked circuit.</p>
+<p>Hold Space / Primary or FIRE for the cannon. Fire directly into orange hostile bolts to cancel them through swept projectile collision; bright yellow crossfire bursts count successful interceptions but never award score. Interceptions require a clear path, and shield/evade remain safer defensive choices. WASD / arrows drive. Hold E / Secondary for the shield; low charge absorbs only part of a hit and flashes amber when hull damage breaks through. A localized amber hull-hit arc and readable compass sector indicate the true direction of damaging fire, including partially shielded hits; fully blocked strikes cannot trigger a false hull cue. A fresh E / gamepad B / touch AEGIS press briefly opens a 0.24-second Perfect Guard: catch one incoming projectile to reflect a real shot toward the attacker; the opening has a 2.4-second cooldown, a held shield cannot repeatedly parry, and cover or a decoy takes precedence. Tap Q / gamepad Y / mobile PULSE to counter charged enemies or jam an amber relay surge while in the beacon radius (35 energy, short cooldown). Press Shift / gamepad X / mobile DASH to evade and reposition around cover (28 energy, 2.8-second cooldown); hold reverse first to dash backward. Shield with E or leave the relay to evade the surge. P pauses. R restarts and forfeits ranking. Orange ground lanes show the exact direction of every impending hostile volley (heavy enemies fire three lanes); cover stops visible warnings as it stops the live shots. Evade all lanes, intercept, shield or use solid cover. A precisely timed shield press reflects one hostile projectile within a 0.24-second window (2.4-second cooldown); hold shield for ordinary energy-consuming defense, and release/re-press after cooldown. A nearby lit signal spire can be activated with F, gamepad LB or touch UPLINK once per relay for six seconds of enemy-fire suppression (30 energy); incoming bolts already in flight still require evasion. Orange capacitor mines arm near the current relay: exit the marked 4.6m blast radius during the 1.35s charge, shield, shelter behind solid cover, or destroy the mine with two cannon hits before it detonates. Mines yield no points; disabled mines remain disabled at checkpoints. An unsuccessful operation has a Retry button and can never record a clear. Amber-striped barricades take damage from cannon or enemy bolts, collapse after sustained hits, and open real vehicle, projectile and enemy routes without awarding points. When hostiles are cleared, original cyan floor waypoints and a dashed radar corridor show a collision-checked route around standing cover toward the next relay or extraction. Breaching armored cover dynamically updates the route; the route does not control movement or award points. The mini-map and distance cue show the next relay. Suspended Skyworks frames glow cyan or amber on active relays, green on secured relays, and dim on future objectives; their architecture is decorative and does not block cannon fire or driving. Orange capacitor mines arm when approached, flash for 1.35 seconds and discharge for 15 hull damage within 4.6m; retreat, shield or shoot the core twice to disarm safely. Cover blocks blast damage, but exposed amber barriers lose 2 HP and may breach; collapsing cover still shields actors in that same blast. Dismantling earns no score. Press T / gamepad RB / touch DECOY to place a short-lived hologram on an unobstructed lane ahead; enemies can pursue and shoot it, consuming its two hit points. The 38-energy lure does not grant player immunity and cannot score. Armored cover progressively fractures and sheds bounded 3D debris on real hits; these visual fragments cannot injure or block vehicles, and damaged cover still blocks until breached. All geometry and synthesized audio are original. WebGL2 with a real-time software 3D fallback; no downloads or paid generation calls. A bounded optional local Wayback Echo records your shortest legitimately completed fresh operation and visually replays it against the same mission clock without controlling the game; unavailable storage only disables persistence. Optional green field salvage caches appear off the direct relay route. Press C, right-stick click or touch SALVAGE nearby while damaged or low on energy; maintain position unshielded for 1.35 seconds to recover 22 hull and 32 energy. Taking hull damage or moving cancels the channel. Each cache works once per operation and persists at checkpoints without awarding score.</p>
+<p><strong>Frame pacing:</strong> Active foreground combat follows elapsed time even on slow 5–10 Hz rendering, while physics retains fine collision substeps. Pausing or switching tabs freezes gameplay; an exceptional stall over 250 ms is bounded to prevent unsafe simulation leaps. Lower frame rates may still feel less responsive.</p>
+<p><strong>Breach Concussion:</strong> Destroying a true amber-striped barricade releases one brief amber pressure ring. Only exposed living hostiles within eight world units already charging a weapon are staggered for a real double-damage countershot opportunity; another intact wall protects them. This never applies damage, drops, score, auto-aim, cover penetration or a free player attack. <strong>Breach Scanner:</strong> When your cannon line first intersects an intact amber-striped barricade, a five-segment 3D integrity readout and accessible armor text reveal its real remaining structure. Enemies, mines, capacitors, and other solid cover still take first-contact precedence. The readout does not aim, shoot, alter the collider, award points or see through walls.</p><p><strong>Hostile Crossfire:</strong> lure active enemy bolts through other hostile rigs for real, cover-aware friendly damage. A surviving hostile struck during weapon windup has its attack interrupted and becomes briefly vulnerable to cannon counterplay. Hostile knockouts do not grant player score or salvage. Your own cannon intercepts, solid cover, decoys and player hits retain first-contact precedence. </p><p><strong>Dash Break:</strong> A real vector-dash chassis impact into a living hostile preparing a charged shot interrupts that windup and exposes a brief double-damage cannon countershot window. One interruption per paid dash, no ram damage, free points, salvage, invulnerability or enlarged hitboxes; ordinary driving contacts do not interrupt attacks. <strong>Living Rig Bypass:</strong> When a moving hostile encounters a live ally, it selects a deterministic visible sidestep lane instead of indefinitely pressing against that ally. Amber chassis collisions remain solid; a brief teal thruster cue marks actual steering. Intact cover, player collision, weapon charge, HP and scoring are unchanged.</p><p><strong>Physical Salvage:</strong> repair and energy cores require real chassis contact along driven or dashed movement. Fast traversal no longer skips drops between physics steps, but intact cover prevents claiming cores through walls. Salvage grants the existing +100 points and capped resources once only. No auto-loot from a distance. </p><p><strong>Conduit Tactical Scanner:</strong> A nearby physically visible, half-damaged Skirmisher, Lancer or Bulwark displays a tactical right-flank hint. When you reach the true right side, a bounded amber 3D glyph marks its exposed conduit. Solid cover prevents scanning; this is information only, never auto-aim, extra score or wall vision. </p><p><strong>Exposed Conduit Flanks:</strong> When a Skirmisher, Lancer or Bulwark falls to half health, its right armor tears away. Flank its exposed right side and land a true cannon hit from that side for +1 damage (Overguard can still absorb it). Wardens retain their separate rear-reactor counterplay. No extra score. </p><p><strong>Battle-Worn Enemy Rigs:</strong> Hostile skirmishers, Lancers, Bulwarks, and Wardens lose armor and expose lit internals as their actual HP falls. Severely damaged enemies retain their real attacks and collision; the visual damage is an early threat cue, not bonus damage or score.</p><p><strong>Shield Fracture:</strong> Aegis charge absorbs damage proportionally. A nearly empty generator cannot cancel an entire hostile hit: the remaining force damages hull and emits a brief amber 3D fracture warning (reduced-effects mode retains a still indicator). Perfect Guard timing remains a separate full intercept. No extra score. </p><p><strong>Salvage Fabricator:</strong> A cache is a green standing machine while available, opens illuminated side clamps as its real recovery channel advances, and folds into a grey exhausted machine once used. The nearby ring remains tied to the 1.35-second interaction. These animations do not bypass cover, collision, damage, or ranked restrictions.</p><p><strong>Warden Skyburst:</strong> every third Warden attack locks an amber artillery ring on the ground. Evade its radius, shield, or put solid cover between you and the impact. A moving shell follows the marked target before detonation. <strong>Crosswind:</strong> lure other hostiles into the marked impact to deal 2 damage through exposed lanes (never score, drop salvage or injure the firing Warden); real cover shelters them too. <strong>Scatter:</strong> during the final 0.56 seconds of a live shell's flight, uncovered uncommitted skirmishers may dodge away along actual collision-safe paths; charging enemies, armored units and sheltered units do not dodge. Cyan thrusters mark a successful move and all environmental damage and rewards stay unchanged. <strong>Demolition:</strong> an artillery impact deals 3 structural damage to an exposed amber-striped barricade within the ring; repeat to breach its 5-point armor. Other intact cover blocks the blast, and the opened route persists at the next relay checkpoint without bonus score.</p><p><strong>Counterpulse Roofline:</strong> real 3D rays now check the actual height of intact cover. Reachable shells can be disarmed over a low barricade; tall cover still blocks the pulse. A short green world-space arc links the actual pulse to a neutralized shell; no bonus score.</p><p><strong>Skyburst Shockfront:</strong> an exposed artillery hit also pushes the rig away from the impact and shifts exposed surviving hostiles. A held Aegis shield or intact cover prevents player knockback. The pressure wave follows real vehicle/enemy collision boundaries, cannot pass through walls or leave the arena, and grants no extra damage, score, salvage or ranked credits.</p><p><strong>Flux Slipways:</strong> inlaid operation-colored induction roads with teal arrows pointing in the permitted direction in the departure and return corridors give 50% forward speed while aligned with their chevrons. Only the rig uses them. The acceleration costs Aegis energy and never bypasses physical cover, grants score, or affects ranking.</p><p><strong>Course Resume Integrity:</strong> The next genuinely secured relay now saves Flux capacitor health, cleared shutters and verified split-clock progress. Resume remains practice-only, never writes a personal best or awards score, and an entirely new operation restores the original challenge. Corrupt/old local saves are validated or migrated conservatively.</p><p><strong>Flux Phase Screens:</strong> first-party 3D energy shutters between each pair of Flux arches cycle with the pause-safe trial clock. Cyan means open, amber charges and pink means active. Cross cleanly or shield your vehicle. An unshielded active crossing costs 9 hull, 12 Aegis, slows the rig and voids this attempt’s local personal-best eligibility; the cannon can disable its separate capacitor in two hits, but that also voids the record; the mission and gate challenge continue. Checkpoint restores are always practice-only and hazards grant no score.</p><p><strong>Phase Backtrack Integrity:</strong> already-cleared Flux shutters remain physically active on the course. Reversing or re-entering an active pink plane unshielded costs 9 hull and 12 Aegis, slows the vehicle and invalidates the local split record. Shielding prevents it; wait for cyan or disable the capacitor instead. No score or salvage, no duplicate damage within a short crossing cooldown.</p><p><strong>Flux Split Trial:</strong> cross the first Flux Circuit arch to start a simulation-time local split clock. The remaining three real arches record splits and compare with your saved best for this operation. Pausing freezes the clock, and a checkpoint resume cannot claim a new best. Local storage can be disabled; the timer still works without creating a record. No ranking, score or extra resources are awarded.</p><p><strong>Flux Circuit:</strong> optional four-gate traversal route. Pass two arches on the departure lane in its boost direction, then turn around and cross the two return-lane arches in their boost direction. The once-per-operation +18 hull/+30 Aegis resupply cancels ranked eligibility and never changes score. The game saves earned progress at secured relay checkpoints.</p><p><strong>Warden Overguard:</strong> In the final relay waves, a Warden can project a cyan, visible 3D tether through clear space to nearby allied hostiles. A charged tether absorbs one point of direct cannon damage, then takes six seconds to recharge. Use cover to sever the beam, interrupt or eliminate the Warden, or activate a signal jam. Staggered allies cannot be linked. The link does not protect against collateral explosions, bypass existing projectile collision, or award points.</p><p><strong>Combat Hold Integrity:</strong> FIRE and SHIELD now preserve each finger independently during simultaneous or overlapping touch presses, and cleanly release on cancellation, lost capture, pause or restart. Keyboard activation does not cancel an active touch. <strong>Compact Combat Cockpit:</strong> In short landscape, the briefing is compact, touch steering and four primary combat controls stay visible at 44 CSS pixels, and Brief, Tools, and Menu reveal optional commands. Touch combat, physics, scoring and wins remain unchanged. <strong>Warden Rescue Priority:</strong> If the nearest allied hostile is entirely walled off and cannot be reached, a Warden now abandons that impossible escort route and physically helps a different, reachable ally instead. Destroying cover or moving either combatant causes a bounded route reconsideration. It continues approaching inside the active tether range to give the link a stable buffer against immediate retreat. Real projectiles, jamming, stagger, score and combat rules are unchanged. <strong>Warden Reformation:</strong> When a Warden loses contact with an allied hostile, it moves to re-establish its cyan protection tether. An amber halo marks its repositioning phase; intercept the Warden or use solid cover, a signal jam or a stagger to prevent the link. Wardens follow the same physical collision boundaries as every other enemy and still commit to their existing telegraphed attacks. <strong>Sightline Flank:</strong> a nearby ally behind solid cover is not protected: the Warden follows an actual collision-safe detour, signaled by an extra amber heading bar, until it gains a clear tether line. If you maintain the cover, disable the Warden, stagger or jam it, the shield cannot reach through walls.</p><p><strong>Skyburst Silence:</strong> a Warden artillery strike now disrupts surviving exposed hostiles: a charged attack is canceled into the existing cyan stagger window, while an idle attacker has its next lock delayed by at most 0.65s. Solid cover still protects; the firing Warden is excluded. No extra damage, score or salvage is awarded.</p></details></div></div><div class="done" id="done"><div class="card"><h2 id="doneTitle"></h2><p id="doneText"></p><p id="progressWarning" role="alert" aria-live="assertive" style="color:#fde68a;font-weight:800"></p><button id="continue">Continue</button></div></div><script src="../../assets/wwg-input.js"></script><script src="../../assets/wwg-webgl.js"></script><script src="tactics.js"></script><script src="faceted-mesh.js"></script><script src="renderer-recovery.js"></script><script src="rendering.js"></script><script src="counterplay.js"></script><script src="relay-surge.js"></script><script src="relay-stabilization.js"></script><script src="checkpoint.js"></script><script src="vector-dash.js"></script><script src="breachable-cover.js"></script><script src="signal-uplink.js"></script><script src="arc-mines.js"></script><script src="hazard-evasion.js"></script><script src="tactical-decoy.js"></script><script src="focus-guard.js"></script><script src="perfect-guard.js"></script><script src="progression-store.js"></script><script src="field-cache.js"></script><script src="salvage-beacon.js"></script><script src="salvage-fabricator.js"></script><script src="recovery-grace.js"></script><script src="shot-intercept.js"></script><script src="projectile-lifetime.js"></script><script src="structural-debris.js"></script><script src="wayfinder.js"></script><script src="camera-occlusion.js"></script><script src="camera-vista.js"></script><script src="enemy-armor-wear.js"></script><script src="enemy-silhouettes.js"></script><script src="player-chassis.js"></script><script src="slipstream-evasion.js"></script><script src="spatial-threat.js"></script><script src="hostile-telegraphs.js"></script><script src="replay-ghost.js"></script><script src="reactor-flank.js"></script><script src="armor-weakpoint.js"></script><script src="conduit-scanner.js"></script><script src="body-contact.js"></script><script src="enemy-spacing.js"></script><script src="crowd-bypass.js"></script><script src="dash-intercept.js"></script>
+<script src="hostile-crossfire.js"></script><script src="crossfire-preview.js"></script><script src="crossfire-disruption.js"></script><script src="pickup-sweep.js"></script><script src="shot-trace.js"></script><script src="breach-scanner.js"></script><script src="breach-concussion.js"></script><script src="siege-barrage.js"></script><script src="siege-shockfront.js"></script><script src="skyburst-suppression.js"></script><script src="warden-overguard.js"></script><script src="warden-support-maneuver.js"></script><script src="compact-combat-hud.js"></script><script src="touch-steering.js"></script><script src="combat-holds.js"></script><script src="score-integrity.js"></script><script src="shield-fracture.js"></script><script src="impact-direction.js"></script><script src="gamepad-neutral.js"></script><script src="frame-clock.js"></script><script src="launch-reset-guard.js"></script><script src="deployment-consent.js"></script><script src="skyburst-demolition.js"></script><script src="skyburst-scatter.js"></script><script src="elevated-cover.js"></script><script src="skyburst-counterpulse.js"></script><script src="skyworks.js"></script><script src="extraction-pad.js"></script><script src="cover-architecture.js"></script><script src="flux-slipways.js"></script><script src="flux-circuit.js"></script><script src="flux-guidance.js"></script><script src="flux-trial.js"></script><script src="flux-phase-screens.js"></script><script src="flux-phase-telegraph.js"></script><script src="flux-return-hazard.js"></script><script src="flux-capacitors.js"></script><script>
+/* F3D19: keep gameplay state/functions private on served game origins. */
+(function(){
+'use strict';
+const $=s=>document.querySelector(s),clamp=WWG3D.clamp,A=WWG3D.synth();let C=$('#c'),engine=null;
+const rendererOptions={create:canvas=>new WWG3D.Engine(canvas,{fog:'#0b1424',fogNear:28,fogFar:145,far:190,quality:.8}),install:e=>{AegisRender.install(e);AegisFacetedMesh.install(e);}};
+let rendererRecovered=false;
+function bootRenderer(software=false){
+ const result=AegisRendererRecovery.boot(C,{...rendererOptions,software});C=result.canvas;engine=result.engine;rendererRecovered=result.recovered;
+ const fatal=$('#rendererFatal');fatal.hidden=!!engine;$('#start').disabled=!engine;$('#resume').disabled=!engine;
+ if(!engine){for(const el of document.body.children)if(el!==fatal&&el.tagName!=='SCRIPT'&&el.tagName!=='STYLE')el.inert=true;fatal.focus();}
+ if(engine?.mode==='webgl2')C.addEventListener('webglcontextlost',recoverRenderer,{once:true});
+}
+function recoverRenderer(event){
+ if(event.currentTarget!==C||engine?.mode!=='webgl2')return;
+ // Keep the mission, checkpoint and ranking intact; require a deliberate
+ // resume after the display changes, rather than running unseen combat.
+ if(active&&!finished&&!defeated){paused=true;clearControls();FG.interrupt(focusGuard,true);$('#focusNotice p').textContent='The graphics device stopped responding. Combat is paused while the local software renderer takes over. Choose Resume combat when ready.';}
+ try{engine.dispose();}catch{}bootRenderer(true);last=performance.now();sync();render();
+}
+bootRenderer();
 const OPS=[
  {name:'Salt Bastion',fog:'#07111d',ground:'#152335',accent:'#67e8f9',exit:[0,31],relays:[[-22,-13],[20,-8],[0,17]],waves:[['skirmisher','skirmisher','lancer'],['skirmisher','lancer','lancer','bulwark'],['lancer','bulwark','warden']]},
  {name:'Relay Scar',fog:'#150b12',ground:'#30202c',accent:'#fb7185',exit:[-28,24],relays:[[18,-18],[-20,-2],[12,17]],waves:[['skirmisher','lancer','lancer'],['lancer','lancer','bulwark','bulwark'],['skirmisher','lancer','bulwark','warden']]},
  {name:'Null Crown',fog:'#0c0717',ground:'#211a34',accent:'#c084fc',exit:[30,-25],relays:[[-20,17],[18,15],[0,-17]],waves:[['lancer','lancer','bulwark'],['skirmisher','bulwark','bulwark','lancer'],['lancer','bulwark','warden','warden']]}
 ],TYPES={skirmisher:{hp:2,speed:4.3,rate:1.15,color:'#dbeafe',size:1.4},lancer:{hp:3,speed:3.5,rate:.9,color:'#fde68a',size:1.7},bulwark:{hp:5,speed:2.2,rate:1.35,color:'#fca5a5',size:2.1},warden:{hp:8,speed:2.6,rate:.7,color:'#c4b5fd',size:2.4}},META='wwg:aegis-verge:meta-v1';
-let meta={unlocked:1,best:[0,0,0],clears:0,bestHull:0};try{Object.assign(meta,JSON.parse(localStorage.getItem(META)||'{}'))}catch(e){}meta.unlocked=clamp(Number(meta.unlocked)||1,1,3);meta.best=Array.isArray(meta.best)?meta.best.slice(0,3):[0,0,0];while(meta.best.length<3)meta.best.push(0);
-let op=0,data=OPS[0],player={},relay=0,capture=0,enemies=[],shots=[],bolts=[],pickups=[],active=false,paused=false,finished=false,score=0,elapsed=0,last=performance.now(),keys={up:false,down:false,left:false,right:false,shield:false},cool=0,clean=true,damageTaken=0,shieldTime=0,gpFire=false,gpShield=false,compatPylons=[false,false,false];
-function post(event,detail={}){try{parent.postMessage({type:'wwg:game-event',game:'aegis-verge',gameId:'aegis-verge',event,score:Math.round(score),detail},'*')}catch(e){}}
-function save(){try{localStorage.setItem(META,JSON.stringify(meta))}catch(e){}}
+// Browser records are untrusted, independently validated fields, never live gameplay objects.
+// A malformed value in one operation must not erase legitimate other operation bests.
+function loadMeta(){
+ const clean={unlocked:1,best:[0,0,0],clears:0,bestHull:0},notice=$('#recordNotice');
+ const announce=text=>{notice.textContent=text;notice.hidden=false};
+ let raw;
+ try{raw=localStorage.getItem(META)}catch{announce('Browser storage is unavailable. Progress remains playable for this session only.');return clean}
+ if(raw===null)return clean;
+ let saved;
+ try{saved=JSON.parse(raw)}catch{announce('A damaged operation record could not be read. New victories can create a clean record.');return clean}
+ if(!saved||typeof saved!=='object'||Array.isArray(saved)){announce('Invalid saved operation data was ignored. New victories can create a clean record.');return clean}
+ let damaged=false;
+ const validInt=(v,min,max)=>typeof v==='number'&&Number.isSafeInteger(v)&&v>=min&&v<=max;
+ if(saved.unlocked!==undefined){if(validInt(saved.unlocked,1,3))clean.unlocked=saved.unlocked;else damaged=true}
+ if(saved.best!==undefined){
+  if(!Array.isArray(saved.best))damaged=true;
+  else{
+   for(let i=0;i<3;i++){
+    if(saved.best[i]===undefined)continue;
+    if(validInt(saved.best[i],0,100000000))clean.best[i]=saved.best[i];else damaged=true;
+   }
+   if(saved.best.length>3)damaged=true;
+  }
+ }
+ if(saved.clears!==undefined){if(validInt(saved.clears,0,1000000))clean.clears=saved.clears;else damaged=true}
+ if(saved.bestHull!==undefined){if(validInt(saved.bestHull,0,100))clean.bestHull=saved.bestHull;else damaged=true}
+ if(damaged){
+  announce('Damaged operation progress was repaired. Valid records were preserved.');
+  try{localStorage.setItem(META,JSON.stringify(clean))}catch{announce('Damaged operation progress was repaired for this session, but browser saving is unavailable.')}
+ }
+ return clean;
+}
+let meta=loadMeta();
+let op=0,data=OPS[0],player={},relay=0,capture=0,enemies=[],shots=[],bolts=[],pickups=[],active=false,paused=false,finished=false,score=0,intercepts=0,elapsed=0,last=performance.now(),keys={up:false,down:false,left:false,right:false,shield:false},cool=0,clean=true,damageTaken=0,shieldTime=0,gpFire=false,gpShield=false,compatPylons=[false,false,false],rankedRun=false,chainWins=0,circuitScore=0;
+const CFVIEW=AegisCrossfirePreview,DASHCONTACT=AegisDashIntercept,BYPASS=AegisCrowdBypass,SPACING=AegisEnemySpacing,FLIGHT=AegisProjectileLifetime,CROSSFIRE=AegisHostileCrossfire,DISRUPT=AegisCrossfireDisruption,FRACTURE=AegisShieldFracture,IMPACTDIR=AegisImpactDirection,FAB=AegisSalvageFabricator;const RELAYLOCK=AegisRelayStabilization,EX=AegisExtractionPad;const BREACHSCAN=AegisBreachScanner,BREACHWAVE=AegisBreachConcussion;const FLUX=AegisFluxSlipways,CIRCUIT=AegisFluxCircuit,GUIDE=AegisFluxGuidance,TRIAL=AegisFluxTrial,TELEGRAPH=AegisFluxPhaseTelegraph,PHASE=AegisFluxPhaseScreens,RETURN=AegisFluxReturnHazard,CAP=AegisFluxCapacitors,SB=AegisSiegeBarrage,SHOCK=AegisSiegeShockfront,SILENCE=AegisSkyburstSuppression,OVERGUARD=AegisWardenOverguard,LOS3=AegisElevatedCover,COUNTER=AegisSkyburstCounterpulse,DEM=AegisSkyburstDemolition,SCATTER=AegisSkyburstScatter,VP=AegisCameraVista,SP=AegisSpatialThreat,SE=AegisSlipstreamEvasion,PC=AegisPlayerChassis,SKY=AegisSkyworks,TRACE=AegisShotTrace,RF=AegisReactorFlank,AW=AegisArmorWeakpoint,SCAN=AegisConduitScanner,CONTACT=AegisBodyContact,PICKUP=AegisPickupSweep,GHOST=AegisReplayGhost,HT=AegisHostileTelegraphs,ES=AegisEnemySilhouettes,CAM=AegisCameraOcclusion,WF=AegisWayfinder,SD=AegisStructuralDebris,SI=AegisShotIntercept,RG=AegisRecoveryGrace,T=AegisTactics,CB=AegisCounterplay,SR=AegisRelaySurge,CP=AegisCheckpoint,VD=AegisVectorDash,BC=AegisBreachableCover,SU=AegisSignalUplink,AM=AegisArcMines,TD=AegisTacticalDecoy,FG=AegisFocusGuard,PG=AegisPerfectGuard,FC=AegisFieldCache,BEACON=AegisSalvageBeacon;
+let fluxState=FLUX.create(),circuitState=CIRCUIT.create(),courseGuide=GUIDE.create(AegisWayfinder),fluxTrial=TRIAL.create(0,()=>localStorage),phaseTelegraph=TELEGRAPH.create(),phaseScreens=PHASE.create(),phaseReturn=RETURN.create(),phaseCapacitors=CAP.create(),padGuidePressed=false,circuitNoticeLeft=0,fluxNoticeLeft=0,cameraVista=VP.create(),cameraRenderAt=performance.now(),padViewPressed=false,siegeShells=[],crosswindLeft=0,crosswindText='',demolitionLeft=0,demolitionText='',scatterLeft=0,scatterText='',counterpulseLeft=0,counterpulseText='',counterpulseCount=0,counterBursts=[],shockBursts=[],shockfrontLeft=0,shockfrontText='',silenceLeft=0,silenceText='',overguardLeft=0,overguardText='',phaseReturnNoticeLeft=0;
+let shieldFractureFlash=0,shieldFractureCount=0,impactDirection=IMPACTDIR.create(),spatial=SP.create(),evasion=SE.create(),playerRig=PC.create(),flankHits=0,ghost=GHOST.create(),sessionGhosts=[null,null,null],wayfinder=WF.create(),cover=[],barriers=null,uplinks=null,mines=null,fieldCaches=null,fieldCollision=[],scenery=[],sceneryLow=[],particles=[],debris=[],impact=0,muzzle=0,suspended=false,navClock=0,defeated=false,recoveriesLeft=1,recoveryGrace=RG.create(),pulseCooldown=0,pulseFlash=0,padPulsePressed=false,padDashPressed=false,padCachePressed=false,relaySurge=null,dash=VD.create(),dashYaw=0,dashFlash=0,decoy=TD.create(),focusGuard=FG.create(),perfectGuard=PG.create(),shieldHeldLast=false;
+let breachWave=BREACHWAVE.create();
+const held={up:false,down:false,left:false,right:false,shield:false,fire:false},touchHeld={...held},steerHeld={up:false,down:false,left:false,right:false};
+let padHeld={...held},padIndex=null,padIdentity=null,padReady=false,padUplinkPressed=false,padDecoyPressed=false;
+let dashImpact=DASHCONTACT.create(),bodyContactLeft=0,bodyContactCooldown=0,pickupFX=PICKUP.create(),pickupMotion=[];const diagnostics={blockedHostile:0,hostileCrossfireHits:0,hostileCrossfireDown:0,hostileCrossfireInterrupts:0,hostileBodyContacts:0,dashIntercepts:0,blockedPlayer:0,windups:0,shotsFired:0,intercepts:0,reactorHits:0,armorWeakpointHits:0,evades:0,siegeFired:0,siegeHits:0,siegeSheltered:0,siegeHostileHits:0,siegeHostileDown:0,siegeBarrierHits:0,siegeBarrierBreaches:0,skyburstDodges:0,skyburstNeutralized:0,shockfrontPlayer:0,shockfrontHostiles:0,skyburstSuppressed:0,frameMs:[],renderMs:[]};
+const calmPreference=matchMedia('(prefers-reduced-motion: reduce)').matches;
+$('#calm').checked=calmPreference;
+function sound(...a){if(!$('#quiet').checked)A.tone(...a)}
+function soundPrefs(){try{const p=JSON.parse(localStorage.getItem('wwg:prefs')||'{}');return{muted:!!p.muted,volume:clamp(Number.isFinite(Number(p.volume))?Number(p.volume):.7,0,1)};}catch{return{muted:false,volume:.7};}}
+function audible(){return !$('#quiet').checked&&!soundPrefs().muted;}
+function spatialSignal(kind,source){
+ if(!active||paused||suspended||finished||defeated||!source)return null;
+ const pos=SP.locate(player,source,cover,T.firstCover);if(!pos)return null;
+ const cue=SP.signal(spatial,kind,pos,audible(),{volume:soundPrefs().volume});
+ $('#spatialCue').textContent=cue?.text||'';return cue;
+}
+function say(text){if($('#combatStatus').textContent!==text)$('#combatStatus').textContent=text}
+function fx(x,z,color,count=7){if($('#calm').checked)return;for(let i=0;i<count;i++){const a=i*Math.PI*2/count;particles.push({x,z,y:1.1,vx:Math.sin(a)*(2+i%3),vz:Math.cos(a)*(2+i%3),vy:2+i%2,life:.5,size:.12+(i%2)*.06,color});}if(particles.length>72)particles.splice(0,particles.length-72)}
+function clearControls(){resetPadEdges();touchSteering?.reset();combatHolds?.reset();shieldHeldLast=false;perfectGuard.window=0;for(const k of Object.keys(held)){held[k]=false;touchHeld[k]=false;padHeld[k]=false;}for(const k of Object.keys(keys))keys[k]=false;padReady=false;player.speed=0;}
+function syncControls(){for(const k of Object.keys(keys))keys[k]=held[k]||touchHeld[k]||steerHeld[k]||padHeld[k];
+ const now=!!keys.shield;
+ if(now&&!shieldHeldLast&&active&&!paused&&!suspended&&!finished&&!defeated&&player.energy>0){PG.press(perfectGuard,true);}
+ shieldHeldLast=now;
+}
+const touchSteering=AegisTouchSteering.install(document.querySelector('.steer'),next=>{for(const k of Object.keys(steerHeld))steerHeld[k]=next[k];syncControls();});
+function liveCover(){return BC.live(barriers).concat(fieldCollision)}
+function cacheSightCover(index){return cover.filter(b=>b.id!==100+index)}
+function makeScenery(low=false){
+ const a=[];const box=(x,y,z,sx,sy,sz,color,yaw=0,em=0)=>a.push({x,y,z,sx,sy,sz,color,yaw,em});
+ box(0,-.4,0,84,.6,84,data.ground);a[0].ground=true;
+ for(let n=-32;n<=32;n+=8){box(n,-.07,0,.06,.025,78,'#32465a');box(0,-.07,n,78,.025,.06,'#32465a');}
+ a.push(...FLUX.surface(op,low));
+ a.push(...SKY.skyline(op));
+ for(const b of cover){
+  if(b.id>=100)continue; // field salvage is separately modeled, never an armored barricade
+  const status=BC.status(barriers,b.id);
+  if(status){a.push(...SD.armor(b,status.hp));continue;}
+  a.push(...(low?AegisCoverArchitecture.geometry(b,op):AegisCoverArchitecture.detailed(b,op)));
+ }
+ for(const z of [-39,39])box(0,.18,z,79,.3,.18,'#597387');for(const x of [-39,39])box(x,.18,0,.18,.3,79,'#597387');
+ return a;
+}
+
+function post(event,detail={}){try{const earned=event==='campaign-complete'&&finished&&op===2&&rankedRun&&chainWins===3;const tally=Math.max(0,Math.round(circuitScore+(finished?0:score)));const msg={type:'wwg:game-event',game:'aegis-verge',gameId:'aegis-verge',event,detail,meta:{unit:'pts',direction:'high',attemptScore:tally,ranked:earned,operation:op+1}};if(earned)msg.score=Math.round(circuitScore);parent.postMessage(msg,'*')}catch(e){}}
+function save(){const saved=AegisProgressStore.save(()=>localStorage,META,meta);$('#progressWarning').textContent=saved?'':'PROGRESS NOT SAVED — this operation is complete, but browser storage is unavailable or failed verification. Your unlocks and best score may be lost when this tab closes.';return saved;}
+function storedCheckpoint(){try{return CP.load(localStorage,meta.unlocked)}catch{return null}}
+function clearCheckpoint(){let cleared=false;try{cleared=CP.clear(localStorage)}catch{}if(!cleared)$('#checkpointWarning').textContent='CHECKPOINT RESET NOT VERIFIED: browser storage refused or ignored the removal. An older local save may remain until storage works again.';return cleared;}
+function refreshCheckpointChoice(){
+ const saved=storedCheckpoint(),button=$('#resume'),label=$('#checkpointInfo');
+ button.hidden=!saved;
+ if(saved){button.textContent=`Resume ${OPS[saved.op].name} · relay ${saved.relay===3?'extraction':saved.relay+1+'/3'} · practice`;const breached=saved.barrierHp.filter(hp=>hp===0).length;const used=saved.uplinkUsed.filter(Boolean).length;label.textContent=`Local checkpoint: ${breached}/3 barriers breached; ${used}/3 signal spires expended; damaged cover, hull, salvage and Flux screen state retained. Resume is always unranked and starts at the next wave. Briefing hotkeys R and 1–3 cannot erase this checkpoint.`;}
+ else label.textContent='Relay checkpoints save hull, salvage and damaged/breached cover locally after a secured beacon when browser storage is available. New deployment resets it.';
+}
+function writeCheckpoint(){
+ if(defeated||finished||relay<1||relay>3)return false;
+ // Accessing window.localStorage itself may throw SecurityError when storage is denied.
+ // A failed checkpoint is never allowed to interrupt relay progression or ranked state.
+ let saved=false;
+ try{saved=CP.save(localStorage,{op,relay,hull:player.hull,energy:player.energy,score,
+  recoveriesLeft,elapsed,damageTaken,clean,barrierHp:BC.snapshot(barriers),uplinkUsed:SU.snapshot(uplinks),mineHp:AM.snapshot(mines),cacheUsed:FC.snapshot(fieldCaches),circuitProgress:circuitState.progress,circuitAwarded:circuitState.awarded,
+  capacitorHp:[...phaseCapacitors.hp],phaseResolved:[...phaseScreens.resolved],phaseHits:phaseScreens.hits,phaseGuards:phaseScreens.guards,
+  trialState:fluxTrial.startedAt===null||fluxTrial.splits.length!==circuitState.progress?null:{startedAt:fluxTrial.startedAt,splits:[...fluxTrial.splits],complete:fluxTrial.complete}});}catch(e){saved=false;}
+ $('#checkpointWarning').textContent=saved?'':'CHECKPOINT NOT SAVED: browser storage is blocked or full. This operation remains playable, but closing this tab may lose relay progress.';
+ if(saved){post('relay-checkpoint',{operation:op+1,nextRelay:relay+1,ranked:false});}
+ return saved;
+}
+function resumeCheckpoint(){
+ if(!engine)return false;
+ const saved=storedCheckpoint();if(!saved){refreshCheckpointChoice();return false;}
+ SP.unlock(spatial,audible());resetOperation(saved.op,false,saved);active=true;rankedRun=false;chainWins=0;circuitScore=0;
+ $('#launch').style.display='none';C.focus();sync();
+ post('checkpoint-resumed',{operation:op+1,relay:relay+1,ranked:false});return true;
+}
 function randSeed(i){let x=(i+1)*1103515245+(op+1)*12345+(relay+1)*97531;return()=>((x=(x*1664525+1013904223)>>>0)/4294967296)}
-function spawnWave(){enemies=[];const specs=data.waves[relay]||[],base=data.relays[relay],rng=randSeed(relay+op*7);specs.forEach((type,i)=>{const q=TYPES[type],a=(i/specs.length)*Math.PI*2+relay*.8,r=10+(i%2)*4+rng()*2;enemies.push({idx:i,type,x:base[0]+Math.sin(a)*r,z:base[1]+Math.cos(a)*r,yaw:a+Math.PI,hp:q.hp,max:q.hp,cool:.35+rng()*q.rate,flash:0,dead:false})});post('wave-start',{operation:op+1,relay:relay+1,hostiles:enemies.length})}
-function resetOperation(i=op){op=clamp(i,0,meta.unlocked-1);data=OPS[op];player={x:0,z:-27,yaw:0,speed:0,hull:100,energy:100};relay=0;capture=0;shots=[];bolts=[];pickups=[];finished=false;paused=false;score=0;elapsed=0;cool=0;clean=true;damageTaken=0;shieldTime=0;compatPylons=[false,false,false];spawnWave();sync()}
-function start(){active=true;$('#launch').style.display='none';resetOperation(op);post('operation-start',{operation:op+1})}
+function engageFieldCache(){
+ if(!active||paused||suspended||finished||defeated||!FC.begin(fieldCaches,relay,player,cacheSightCover(relay),T.firstCover))return false;
+ player.speed=0;say("FIELD SALVAGE CHANNEL · hold position, release shield, evade damage by cancelling");post("field-cache-channel",{operation:op+1,relay:relay+1,ranked:false});sync();return true;
+}
+function deployDecoy(){
+ if(!TD.deploy(decoy,player,cover,T,player.energy,active&&!paused&&!suspended&&!finished&&!defeated))return false;
+ player.energy-=TD.COST;fx(decoy.x,decoy.z,'#a78bfa',8);sound(650,.11,.026,'sine',160);
+ post('holo-decoy-deployed',{operation:op+1,relay:relay+1,ranked:false});sync();return true;
+}
+function spawnWave(){
+ enemies=[];relaySurge=null;const specs=data.waves[relay]||[],base=data.relays[relay],rng=randSeed(relay+op*7);
+ specs.forEach((type,i)=>{const q=TYPES[type],a=(i/specs.length)*Math.PI*2+relay*.8,r=10+(i%2)*4+rng()*2,pos=T.nearestFree(base[0]+Math.sin(a)*r,base[1]+Math.cos(a)*r,cover,q.size*.65);
+ enemies.push({idx:i,type,x:pos.x,z:pos.z,yaw:a+Math.PI,hp:q.hp,max:q.hp,cool:.5+rng()*q.rate,flash:0,dead:false,state:'seek',windup:0,staggerLeft:0,aimX:pos.x,aimZ:pos.z,path:[],navAt:0,cycles:0,travelDistance:0,motionRate:0});});
+ post('wave-start',{operation:op+1,relay:relay+1,hostiles:enemies.length});
+}
+function resetOperation(i=op,continueRanked=false,checkpoint=null,preserveStored=false){fluxState=FLUX.create();circuitState=CIRCUIT.create(checkpoint?.circuitProgress||0);courseGuide=GUIDE.create(WF);fluxTrial=TRIAL.create(i,()=>localStorage,!!checkpoint);phaseScreens=PHASE.create();phaseReturn=RETURN.create();phaseTelegraph=TELEGRAPH.create();phaseCapacitors=CAP.create();
+ if(checkpoint){
+  // A restored relay is always practice; preserve the real course hazard state,
+  // not an exploitably fresh capacitor or fabricated split record.
+  phaseCapacitors.hp=[...checkpoint.capacitorHp];
+  phaseCapacitors.hits=phaseCapacitors.hp.reduce((n,h)=>n+CAP.HP-h,0);
+  phaseCapacitors.disabled=phaseCapacitors.hp.filter(h=>h===0).length;
+  phaseScreens.resolved=[...checkpoint.phaseResolved];
+  phaseScreens.hits=checkpoint.phaseHits;phaseScreens.guards=checkpoint.phaseGuards;
+  if(checkpoint.trialState){fluxTrial.startedAt=checkpoint.trialState.startedAt;fluxTrial.splits=[...checkpoint.trialState.splits];fluxTrial.complete=checkpoint.trialState.complete;}
+  fluxTrial.ineligible=true;
+ }
+ $('#phaseTelegraphNotice').textContent='';$('#phaseNotice').textContent='';$('#phaseReturnNotice').textContent='';phaseReturnNoticeLeft=0;$('#trialNotice').textContent='';circuitState.rewarded=!!checkpoint?.circuitAwarded;circuitNoticeLeft=0;fluxNoticeLeft=0;scatterLeft=0;scatterText='';counterpulseLeft=0;counterpulseText='';counterpulseCount=0;counterBursts=[];shockBursts=[];shockfrontLeft=0;shockfrontText='';silenceLeft=0;silenceText='';overguardLeft=0;overguardText='';$('#overguardNotice').textContent='';$('#shockfrontNotice').textContent='';$('#silenceNotice').textContent='';$('#counterpulseNotice').textContent='';$('#scatterNotice').textContent='';VP.reset(cameraVista);SP.reset(spatial);$('#spatialCue').textContent='';$('#checkpointWarning').textContent='';if(!checkpoint&&!preserveStored)clearCheckpoint();$('#done').style.display='none';const canCarry=continueRanked&&finished&&rankedRun&&chainWins===i&&i===op+1;if(!canCarry){rankedRun=false;chainWins=0;circuitScore=0}op=clamp(i,0,meta.unlocked-1);data=OPS[op];GHOST.reset(ghost,GHOST.load(op,()=>localStorage)||sessionGhosts[op],!checkpoint);player={x:0,z:-27,yaw:0,speed:0,hull:100,energy:100};playerRig=PC.create();evasion=SE.create();siegeShells=[];crosswindLeft=0;crosswindText='';demolitionLeft=0;demolitionText='';$('#demolitionNotice').textContent='';relay=0;capture=0;shots=[];bolts=[];pickups=[];flankHits=0;$('#flankNotice').textContent='';$('#conduitScanner').textContent='';$('#bodyContact').textContent='';$('#dashImpactNotice').textContent='';$('#crossfirePreview').textContent='';DASHCONTACT.reset(dashImpact);bodyContactLeft=0;bodyContactCooldown=0;pickupFX=PICKUP.create();pickupMotion=[];$('#pickupNotice').textContent='';$('#crossfireNotice').textContent='';$('#evadeNotice').textContent='';finished=false;defeated=false;recoveriesLeft=1;RG.reset(recoveryGrace);relaySurge=null;pulseCooldown=0;pulseFlash=0;padPulsePressed=false;padDashPressed=false;padUplinkPressed=false;padDecoyPressed=false;padCachePressed=false;dash=VD.create();decoy=TD.create();perfectGuard=PG.create();shieldHeldLast=false;shieldFractureFlash=0;shieldFractureCount=0;impactDirection=IMPACTDIR.create();$('#shieldNotice').textContent='';FG.acknowledge(focusGuard);$('#focusNotice p').textContent='You switched away from Aegis Verge. Movement, combat, hull damage and mission timers stay frozen until you choose to resume.';dashYaw=0;dashFlash=0;paused=false;score=0;intercepts=0;elapsed=0;cool=0;clean=true;damageTaken=0;shieldTime=0;compatPylons=[false,false,false];barriers=BC.create(T.coverFor(op));if(checkpoint)BC.restore(barriers,checkpoint.barrierHp);cover=BC.live(barriers);uplinks=SU.create(data.relays.map((q,j)=>T.nearestFree(q[0]+(j%2?7:-7),q[1]+(j===2?-7:6),cover,1.2)),checkpoint?.uplinkUsed);
+ mines=AM.create(data.relays.map((q,j)=>T.nearestFree(q[0]+(j%2?-9:9),q[1]+(j===2?8:-8),cover,1.3)),checkpoint?.mineHp);
+ fieldCaches=FC.create(data.relays.map((q,j)=>T.nearestFree(q[0]+(j%2?-14:14),q[1]+(j===2?12:-12),[...cover,...uplinks.sites.map((p,i)=>({id:200+i,x:p.x,z:p.z,w:2,d:2})),...mines.sites.map((p,i)=>({id:210+i,x:p.x,z:p.z,w:2,d:2}))],1.6)),checkpoint?.cacheUsed);
+ fieldCollision=fieldCaches.sites.map((q,i)=>Object.freeze({id:100+i,x:q.x,z:q.z,w:1.5,d:1.5,h:1.7}));cover=liveCover();
+ scenery=makeScenery();sceneryLow=SKY.limited(makeScenery(true),true);particles=[];debris=[];BREACHWAVE.clear(breachWave);$('#breachWaveNotice').textContent='';wayfinder=WF.create();navClock=0;clearControls();
+ if(checkpoint){relay=checkpoint.relay;capture=0;player.hull=checkpoint.hull;player.energy=checkpoint.energy;score=checkpoint.score;elapsed=checkpoint.elapsed;damageTaken=checkpoint.damageTaken;recoveriesLeft=checkpoint.recoveriesLeft;clean=checkpoint.clean;compatPylons=compatPylons.map((_,j)=>j<relay);}
+ if(relay<3)spawnWave();sync();if(active)C.focus({preventScroll:true})}
+const deploymentConsent=AegisDeploymentConsent.create();
+function clearDeploymentWarning(){AegisDeploymentConsent.cancel(deploymentConsent);$('#start').textContent='Deploy Aegis rig';$('#start').classList.remove('pendingDiscard');$('#deploymentConsent').textContent='';}
+function requestDeployment(event){
+ if(!engine)return false;
+ const saved=storedCheckpoint(),decision=AegisDeploymentConsent.request(deploymentConsent,saved,Date.now(),event?.detail||0);
+ if(decision==='warn'){
+  $('#start').textContent='CONFIRM NEW DEPLOYMENT · DISCARD RELAY';
+  $('#start').classList.add('pendingDiscard');
+  $('#deploymentConsent').textContent='Saved relay detected. A new deployment discards this checkpoint. Read this warning, then press Confirm again after a moment (within 15 seconds), or Resume saved relay to keep it. A rapid double-click is not confirmation.';
+  return false;
+ }
+ if(decision==='wait'){
+  $('#deploymentConsent').textContent='Saved relay protected: rapid repeated clicks do not confirm deletion. Read the warning, then deliberately select Confirm again after a moment, or Resume saved relay.';
+  return false;
+ }
+ if(decision==='blocked')return false;
+ if(saved&&!clearCheckpoint()){
+  clearDeploymentWarning();
+  $('#deploymentConsent').textContent='Cannot verify checkpoint removal because browser storage is blocked. Saved relay was not deliberately discarded; use Resume or restore storage access.';
+  return false;
+ }
+ clearDeploymentWarning();start();return true;
+}
+function start(){if(!engine)return false;SP.unlock(spatial,audible());active=true;$('#launch').style.display='none';resetOperation(op);rankedRun=op===0;C.focus();sync();post('operation-start',{operation:op+1})}
 function currentRelay(){return data.relays[relay]||null}
-function fire(){if(!active||paused||finished||cool>0)return;cool=.16;shots.push({x:player.x,z:player.z,vx:Math.sin(player.yaw)*38,vz:Math.cos(player.yaw)*38,life:1.35});A.tone(330,.045,.02,'square',110)}
-function spawnPickup(e){if(e.idx!==0&&e.idx!==2&&((e.idx+relay+op)&1))return;const type=e.idx===0?'repair':e.idx===2?'energy':((e.idx+relay+op)%3?'energy':'repair');pickups.push({x:e.x,z:e.z,type,life:12,bob:(e.idx+1)*.8,collected:false});post('pickup-drop',{operation:op+1,relay:relay+1,type})}
-function collectPickup(q){if(q.collected)return;q.collected=true;if(q.type==='repair'){const before=player.hull;player.hull=clamp(player.hull+28,0,100);post('pickup-repair',{operation:op+1,relay:relay+1,gain:Math.round(player.hull-before),hull:Math.round(player.hull)})}else{const before=player.energy;player.energy=clamp(player.energy+40,0,100);post('pickup-energy',{operation:op+1,relay:relay+1,gain:Math.round(player.energy-before),energy:Math.round(player.energy)})}score+=100;A.tone(q.type==='repair'?540:760,.09,.025,'sine',180)}
-function killEnemy(e,drop=true){if(!e||e.dead)return;e.dead=true;e.hp=0;score+=e.type==='warden'?720:e.type==='bulwark'?420:260;if(drop)spawnPickup(e);post('hostile-disabled',{operation:op+1,relay:relay+1,type:e.type});post('drone-down',{operation:op+1,relay:relay+1,type:e.type});A.tone(e.type==='warden'?80:210,.08,.03,'square',180)}
-function shieldActive(){return !!keys.shield&&player.energy>0&&active&&!paused&&!finished}
-function pulse(){if(!active||paused||finished||player.energy<35)return;player.energy-=35;let hits=0;bolts=bolts.filter(b=>{const hit=Math.hypot(b.x-player.x,b.z-player.z)<8;if(hit)hits++;return !hit});for(const e of enemies)if(!e.dead&&Math.hypot(e.x-player.x,e.z-player.z)<7){e.hp-=2;hits++;if(e.hp<=0)killEnemy(e)}score+=hits*55;post('aegis-pulse',{operation:op+1,relay:relay+1,hits});A.tone(120,.15,.04,'sine',500);sync()}
-function damage(n,shielded=shieldActive()){if(finished)return;if(shielded&&player.energy>0){player.energy=clamp(player.energy-Math.max(2,n*.8),0,100);post('shield-block',{operation:op+1,relay:relay+1,damage:n});return}player.hull=Math.max(0,player.hull-n);damageTaken+=n;clean=false;post('hull-hit',{operation:op+1,relay:relay+1,hull:Math.round(player.hull)});if(player.hull<=0){player.hull=55;player.x=0;player.z=-27;player.speed=0;bolts=[];score=Math.max(0,score-700);post('field-recovery',{operation:op+1,relay:relay+1})}}
-function projectileHit(s){for(const e of enemies)if(!e.dead&&Math.hypot(s.x-e.x,s.z-e.z)<TYPES[e.type].size){e.hp--;e.flash=.08;if(e.hp<=0)killEnemy(e);return true}return false}
-function completeRelay(force=false){if(relay>=3)return;const hostiles=enemies.some(e=>!e.dead);if(hostiles&&!force)return;compatPylons[relay]=true;score+=900+Math.round(player.hull*4);post('relay-secured',{operation:op+1,relay:relay+1,hull:Math.round(player.hull)});post('pylon-down',{operation:op+1,relay:relay+1,compat:true});A.tone(360+relay*90,.12,.04,'square',250);relay++;capture=0;player.energy=clamp(player.energy+28,0,100);player.hull=clamp(player.hull+6,0,100);if(relay<3)spawnWave();sync()}
-function captureRelay(){if(relay>=3)return false;if(enemies.some(e=>!e.dead))return false;capture=3;completeRelay();return true}
-function finish(){if(finished)return;finished=true;score+=Math.round(4200+Math.max(0,2200-elapsed*12)+player.hull*10);meta.best[op]=Math.max(meta.best[op]||0,Math.round(score));meta.unlocked=Math.max(meta.unlocked,Math.min(3,op+2));meta.bestHull=Math.max(meta.bestHull||0,Math.round(player.hull));if(op===2)meta.clears=(Number(meta.clears)||0)+1;save();post('operation-complete',{operation:op+1,hull:Math.round(player.hull),clean,damage:Math.round(damageTaken),best:meta.best[op]});if(clean||damageTaken<20)post('untouched-verge',{operation:op+1});if(op===2)post('campaign-complete',{clears:meta.clears,best:meta.best});$('#doneTitle').textContent=op===2?'Aegis Verge secured':'Operation secured';$('#doneText').textContent=`${data.name} · hull ${Math.round(player.hull)}% · score ${Math.round(score).toLocaleString()}${clean?' · unbroken Aegis':''}.`;$('#continue').textContent=op===2?'Replay campaign':'Next operation';$('#done').style.display='grid';renderOps();sync()}
-function updateEnemies(dt){for(const e of enemies){if(e.dead)continue;const q=TYPES[e.type],dx=player.x-e.x,dz=player.z-e.z,r=Math.hypot(dx,dz)||1,preferred=e.type==='lancer'?8:e.type==='warden'?15:11;if(r>preferred)e.x+=dx/r*q.speed*dt,e.z+=dz/r*q.speed*dt;else if(e.type==='lancer'&&r<5)e.x-=dx/r*q.speed*.5*dt,e.z-=dz/r*q.speed*.5*dt;e.yaw=Math.atan2(dx,dz);e.cool-=dt;e.flash=Math.max(0,e.flash-dt);if(e.cool<=0&&r<28){e.cool=q.rate+.25*Math.random();const sp=e.type==='warden'?15:12;bolts.push({x:e.x,z:e.z,vx:dx/r*sp,vz:dz/r*sp,life:2.8,damage:e.type==='warden'?11:e.type==='bulwark'?9:7})}}}
-function update(dt){if(!active||paused||finished)return;elapsed+=dt;cool=Math.max(0,cool-dt);const shielding=shieldActive();if(shielding){player.energy=Math.max(0,player.energy-24*dt);shieldTime+=dt}else player.energy=Math.min(100,player.energy+13*dt);let th=(keys.up?1:0)-(keys.down?1:0),st=(keys.right?1:0)-(keys.left?1:0);player.speed+=(th*12-player.speed*2.4)*dt;player.speed=clamp(player.speed,-5,12);player.yaw+=st*1.5*dt*(player.speed>=0?1:-.7);player.x+=Math.sin(player.yaw)*player.speed*dt;player.z+=Math.cos(player.yaw)*player.speed*dt;if(Math.abs(player.x)>38||Math.abs(player.z)>38){player.x=clamp(player.x,-38,38);player.z=clamp(player.z,-38,38);player.speed*=-.25;damage(3)}for(const s of shots){s.x+=s.vx*dt;s.z+=s.vz*dt;s.life-=dt;if(projectileHit(s))s.life=0}shots=shots.filter(s=>s.life>0);updateEnemies(dt);for(const b of bolts){b.x+=b.vx*dt;b.z+=b.vz*dt;b.life-=dt;if(Math.hypot(b.x-player.x,b.z-player.z)<1.35){b.life=0;damage(b.damage,shielding)}}bolts=bolts.filter(b=>b.life>0);for(const q of pickups){q.life-=dt;if(!q.collected&&Math.hypot(q.x-player.x,q.z-player.z)<2.1)collectPickup(q)}pickups=pickups.filter(q=>!q.collected&&q.life>0);const target=currentRelay();if(target&&!enemies.some(e=>!e.dead)&&Math.hypot(player.x-target[0],player.z-target[1])<5){capture+=dt;if(capture>=3)completeRelay()}else if(target)capture=Math.max(0,capture-dt*.5);if(relay>=3&&Math.hypot(player.x-data.exit[0],player.z-data.exit[1])<4)finish();sync()}
-function sync(){const hostiles=enemies.filter(e=>!e.dead).length;$('#op').textContent=`${op+1}/3`;$('#relay').textContent=finished?'3/3':`${Math.min(3,relay+1)}/3`;$('#threat').textContent=hostiles;$('#hull').textContent=Math.max(0,Math.round(player.hull||0));$('#energy').textContent=Math.max(0,Math.round(player.energy||0));$('#score').textContent=Math.round(score).toLocaleString();$('#energyBar').style.width=clamp(player.energy||0,0,100)+'%';const target=currentRelay();if(finished)$('#objText').textContent='Operation secured.';else if(hostiles)$('#objText').textContent=`Relay ${relay+1}: neutralize ${hostiles} hostile${hostiles===1?'':'s'}. Destroyed units may drop repair or Aegis-energy salvage.`;else if(target){const d=Math.hypot(player.x-target[0],player.z-target[1]);$('#objText').textContent=d<5?`Hold relay perimeter: ${Math.min(100,Math.round(capture/3*100))}% stabilized.`:`Relay ${relay+1} is clear. Drive into its beacon to stabilize it.`}else $('#objText').textContent='All relays secured. Drive through the extraction gate.';$('.shield').classList.toggle('on',shieldActive())}
-function render(){if(!engine)return;const fx=Math.sin(player.yaw||0),fz=Math.cos(player.yaw||0);engine.begin({x:player.x-fx*10,y:7,z:player.z-fz*10},{x:player.x+fx*8,y:1,z:player.z+fz*8});engine.cube(0,-.3,0,86,.5,86,data.ground);for(let i=0;i<18;i++){const a=i*2.31+op,r=26+(i%3)*4,h=2+(i%5)*1.4;engine.cube(Math.sin(a)*r,h/2,Math.cos(a)*r,2.5,h,2.5,i%2?'#172438':'#221b31',a,.04)}for(let i=0;i<3;i++){const q=data.relays[i],done=i<relay,activeRelay=i===relay;engine.cube(q[0],.3,q[1],6,.35,6,done?'#183c43':'#1d2435',0,.1);for(const s of[-1,1])engine.cube(q[0]+s*2.5,2.1,q[1],.35,4.4,.35,done?'#34d399':activeRelay?data.accent:'#64748b',0,done?.8:activeRelay?.65:.08);engine.cube(q[0],4.1,q[1],5.3,.3,.3,done?'#34d399':activeRelay?data.accent:'#64748b',0,done?.8:activeRelay?.65:.08)}if(relay>=3){const ex=data.exit;for(const s of[-1,1])engine.cube(ex[0]+s*2.8,2.5,ex[1],.4,5,.4,'#34d399',0,.8);engine.cube(ex[0],5,ex[1],6,.35,.35,'#34d399',0,.8)}for(const e of enemies)if(!e.dead){const q=TYPES[e.type],c=e.flash?'#ffffff':q.color;engine.cube(e.x,1.2,e.z,q.size*1.6,.55,q.size,c,e.yaw,.14);engine.cube(e.x,1.45,e.z,q.size*2.2,.16,.35,data.accent,e.yaw,.4)}for(const s of shots)engine.cube(s.x,1.1,s.z,.25,.25,.9,'#fff',Math.atan2(s.vx,s.vz),1);for(const b of bolts)engine.cube(b.x,1.1,b.z,.3,.3,.8,'#fb7185',Math.atan2(b.vx,b.vz),1);for(const q of pickups){const y=1+Math.sin(elapsed*4+q.bob)*.25;engine.cube(q.x,y,q.z,.8,.8,.8,q.type==='repair'?'#86efac':'#e879f9',elapsed*1.8,.7)}engine.shadow(player.x,.02,player.z,3,4,player.yaw);engine.cube(player.x,.8,player.z,1.7,.8,3.5,'#e8f2ff',player.yaw,.08);engine.cube(player.x,.9,player.z,4.5,.18,.8,data.accent,player.yaw,.3);if(shieldActive()){for(let i=0;i<8;i++){const a=i*Math.PI/4+elapsed*2;engine.cube(player.x+Math.sin(a)*2.7,1.15,player.z+Math.cos(a)*2.7,.22,1.9,.22,'#67e8f9',a,1)}}}
-function km(e,on){for(const k of['up','down','left','right'])if(WWGInput.is(e,k)){keys[k]=on;return true}if(WWGInput.is(e,'secondary')||e.code==='KeyE'){if(on&&!keys.shield&&player.energy>0){player.energy=Math.max(0,player.energy-2);post('shield-raised',{operation:op+1,relay:relay+1})}keys.shield=on;return true}return false}addEventListener('keydown',e=>{if(km(e,true))return;if(WWGInput.is(e,'primary')||e.code==='Space')fire();if(e.code==='KeyP')paused=!paused;if(e.code==='KeyR')resetOperation();if(/^Digit[1-3]$/.test(e.code)){const i=+e.code[5]-1;if(i<meta.unlocked)resetOperation(i)}});addEventListener('keyup',e=>km(e,false));document.querySelectorAll('[data-k]').forEach(b=>{b.onpointerdown=()=>keys[b.dataset.k]=true;b.onpointerup=b.onpointercancel=()=>keys[b.dataset.k]=false});document.querySelector('[data-action=fire]').onpointerdown=fire;const sb=document.querySelector('[data-action=shield]');sb.onpointerdown=()=>keys.shield=true;sb.onpointerup=sb.onpointercancel=()=>keys.shield=false;
-function renderOps(){const x=$('#ops');x.innerHTML='';OPS.forEach((o,i)=>{const b=document.createElement('button');b.textContent=`${i+1}. ${o.name}${meta.best[i]?' · '+meta.best[i]:''}`;b.disabled=i>=meta.unlocked;if(b.disabled)b.className='lock';if(i===op&&!b.disabled)b.classList.add('sel');b.onclick=()=>{op=i;renderOps()};x.appendChild(b)})}renderOps();$('#start').onclick=start;$('#continue').onclick=()=>{$('#done').style.display='none';op=op===2?0:op+1;resetOperation(op)};
-function gp(){try{const g=navigator.getGamepads&&navigator.getGamepads()[0];if(!g)return;const x=g.axes[0]||0,y=g.axes[1]||0;keys.left=x<-.2;keys.right=x>.2;keys.up=y<-.2;keys.down=y>.2;const a=!!(g.buttons[0]&&g.buttons[0].pressed);if(a&&!gpFire)fire();gpFire=a;keys.shield=!!(g.buttons[1]&&g.buttons[1].pressed)}catch(e){}}function loop(n){const dt=Math.min(.04,(n-last)/1000);last=n;gp();update(dt);render();requestAnimationFrame(loop)}resetOperation(0);requestAnimationFrame(loop);
-window.__aegisVerge={state:()=>({op,mission:op,relay,capture,hostiles:enemies.filter(e=>!e.dead).length,hull:player.hull,energy:player.energy,score,damageTaken,active,paused,finished,clean,unlocked:meta.unlocked,best:[...meta.best],x:player.x,z:player.z,yaw:player.yaw,shots:shots.length,pickups:pickups.map(q=>({type:q.type,x:q.x,z:q.z,l:q.life})),pylons:compatPylons.map(d=>({hp:d?0:1,down:d})),core:{hp:relay>=3?0:1,exposed:relay>=3}}),start,resetOperation,startMission:resetOperation,fire,pulse,damage,hit:()=>damage(10,false),clearWave:()=>{for(const e of enemies)if(!e.dead)killEnemy(e,false);enemies=[];sync()},captureCurrent:captureRelay,teleportRelay:()=>{const q=currentRelay();if(q){player.x=q[0];player.z=q[1]}},teleportExit:()=>{player.x=data.exit[0];player.z=data.exit[1]},killDrone:i=>{const e=enemies[i||0];if(e)killEnemy(e)},collectPickup:i=>{const q=pickups[i||0];if(q){player.x=q.x;player.z=q.z;update(.01)}},breakPylons:()=>{while(relay<3){for(const e of enemies)if(!e.dead)killEnemy(e,false);enemies=[];completeRelay(true)}},destroyCore:()=>{if(relay<3){while(relay<3){for(const e of enemies)if(!e.dead)killEnemy(e,false);enemies=[];completeRelay(true)}}finish()},engineReady:()=>!!engine};
+function fire(){if(!active||paused||suspended||finished||defeated||cool>0)return;cool=.16;muzzle=.07;diagnostics.shotsFired++;shots.push({x:player.x,z:player.z,vx:Math.sin(player.yaw)*38,vz:Math.cos(player.yaw)*38,life:1.35});sound(330,.045,.02,'square',110)}
+function spawnPickup(e){if(e.idx!==0&&e.idx!==2&&((e.idx+relay+op)&1))return;const type=e.idx===0?'repair':e.idx===2?'energy':((e.idx+relay+op)%3?'energy':'repair');pickups.push({x:e.x,z:e.z,type,life:12,bob:(e.idx+1)*.8,collected:false,spawnedAt:elapsed});post('pickup-drop',{operation:op+1,relay:relay+1,type})}
+function collectPickup(q){if(q.collected)return;q.collected=true;if(q.type==='repair'){const before=player.hull;player.hull=clamp(player.hull+28,0,100);post('pickup-repair',{operation:op+1,relay:relay+1,gain:Math.round(player.hull-before),hull:Math.round(player.hull)})}else{const before=player.energy;player.energy=clamp(player.energy+40,0,100);post('pickup-energy',{operation:op+1,relay:relay+1,gain:Math.round(player.energy-before),energy:Math.round(player.energy)})}score+=100;PICKUP.mark(pickupFX,q);$('#pickupNotice').textContent=(q.type==='repair'?'REPAIR SALVAGED · +28 hull maximum':'ENERGY SALVAGED · +40 Aegis maximum')+' · +100 earned';fx(q.x,q.z,q.type==='repair'?'#86efac':'#e879f9',5);sound(q.type==='repair'?540:760,.09,.025,'sine',180)}
+function killEnemy(e,drop=true,credited=true,cause='arc-mine'){if(!e||e.dead)return;e.dead=true;e.hp=0;fx(e.x,e.z,TYPES[e.type].color,12);
+ if(credited){score+=e.type==='warden'?720:e.type==='bulwark'?420:260;if(drop)spawnPickup(e);post('hostile-disabled',{operation:op+1,relay:relay+1,type:e.type});post('drone-down',{operation:op+1,relay:relay+1,type:e.type});}
+ else post(cause==='skyburst'?'skyburst-hostile-disabled':cause==='hostile-crossfire'?'hostile-crossfire-disabled':'arc-mine-hostile-disabled',{operation:op+1,relay:relay+1,type:e.type,credited:false,ranked:false});
+ sound(e.type==='warden'?80:210,.08,.03,'square',180)}
+function shieldActive(){return !!keys.shield&&player.energy>0&&active&&!paused&&!finished&&!defeated}
+function pulse(){
+ if(!active||paused||suspended||finished||defeated||player.energy<CB.COST||pulseCooldown>0)return false;
+ player.energy-=CB.COST;pulseCooldown=CB.COOLDOWN;pulseFlash=.32;
+ let hits=0,interrupts=0,jammed=false;
+ // Existing Pulse's real 10m spherical reach also counters a live airborne
+ // artillery shell, but only if intact cover does not obstruct line of sight.
+ // Removal precedes any future SB.step blast, so nothing takes collateral hits.
+ const neutralized=COUNTER.intercept(siegeShells,player,cover,T.firstCover,CB.RADIUS,LOS3.blocked);
+ if(neutralized.length){
+  counterpulseCount+=neutralized.length;
+  diagnostics.skyburstNeutralized+=neutralized.length;
+  counterpulseText=`COUNTERPULSE · ${neutralized.length} Warden shell${neutralized.length===1?'':'s'} disarmed · no score`;
+  counterpulseLeft=2.15;
+  COUNTER.emit(counterBursts,neutralized,player);
+  post('skyburst-shell-neutralized',{operation:op+1,relay:relay+1,count:neutralized.length,credited:false,ranked:false});
+ }
+
+ bolts=bolts.filter(b=>{const hit=Math.hypot(b.x-player.x,b.z-player.z)<CB.RADIUS&&!T.firstCover(player.x,player.z,b.x,b.z,cover,.08);if(hit)hits++;return !hit});
+ for(const e of enemies)if(!e.dead&&Math.hypot(e.x-player.x,e.z-player.z)<CB.RADIUS&&!T.firstCover(player.x,player.z,e.x,e.z,cover,.08)){
+  e.hp-=2;hits++;
+  if(e.hp<=0)killEnemy(e);
+  else if(CB.interrupt(e)){interrupts++;fx(e.x,e.z,'#67e8f9',9);}
+ }
+ const beacon=currentRelay();
+ if(beacon&&relaySurge?.phase==='warning'&&Math.hypot(player.x-beacon[0],player.z-beacon[1])<=SR.RADIUS&&!T.firstCover(player.x,player.z,beacon[0],beacon[1],cover,.08)){
+  jammed=SR.jam(relaySurge);
+  if(jammed){fx(beacon[0],beacon[1],'#22d3ee',10);post('relay-surge-jammed',{operation:op+1,relay:relay+1});}
+ }
+ score+=interrupts*90; // never award ranked points for bolt interception or repeatable relay surge jams
+ post('aegis-pulse',{operation:op+1,relay:relay+1,hits,interrupts,jammed});
+ if(jammed)say('RELAY SURGE JAMMED · stabilization window secured.');else if(interrupts)say(`PULSE BREAK · ${interrupts} charging hostile${interrupts===1?'':'s'} staggered. Fire into cyan targets!`);else if(neutralized.length)say('COUNTERPULSE · live Warden artillery disarmed; no blast or bonus score.');
+ sound(120,.15,.04,'sine',500);sync();return true;
+}
+function vectorDash(){
+ if(!VD.start(dash,player.energy,active&&!paused&&!suspended&&!finished&&!defeated,(keys.down&&!keys.up)?-1:1))return false;
+ DASHCONTACT.arm(dashImpact);
+ player.energy-=VD.COST;dashYaw=player.yaw;dashFlash=.32;
+ fx(player.x,player.z,'#2dd4bf',10);
+ post('vector-dash',{operation:op+1,relay:relay+1,cost:VD.COST,direction:dash.direction});
+ sound(210,.12,.022,'sawtooth',110);sync();return true;
+}
+function activateUplink(){
+ const hostiles=enemies.some(e=>!e.dead);
+ if(!active||paused||suspended||finished||defeated||!SU.activate(uplinks,relay,player.x,player.z,player.energy,hostiles))return false;
+ player.energy-=SU.COST;
+ for(const e of enemies)if(!e.dead&&e.state==='windup'){e.state='seek';e.windup=0;e.cool=Math.max(e.cool,.18);}
+ fx(uplinks.sites[relay].x,uplinks.sites[relay].z,'#22d3ee',14);
+ say('SIGNAL UPLINK CAPTURED · hostile charge weapons disabled for six seconds');
+ post('signal-uplink-jammed',{operation:op+1,relay:relay+1,duration:SU.DURATION,cost:SU.COST,ranked:false});
+ sound(660,.16,.033,'sine',200);sync();return true;
+}
+function damage(n,shielded=shieldActive(),source=null){
+ if(!active||paused||finished||defeated||suspended)return;
+ if(RG.protects(recoveryGrace))return; // prevent simultaneous volleys from consuming both hulls
+ const impact=FRACTURE.resolve(n,player.energy,shielded);
+ if(impact.spent>0){player.energy=Math.max(0,player.energy-impact.spent);fx(player.x,player.z,'#67e8f9',3);post('shield-block',{operation:op+1,relay:relay+1,damage:n,absorbed:impact.absorbed,spill:impact.spill});}
+ if(impact.fractured){shieldFractureFlash=FRACTURE.FLASH;shieldFractureCount++;$('#shieldNotice').textContent=`AEGIS SHIELD FRACTURE · ${Math.round(impact.spill)} hull damage pierced depleted shield`;say('AEGIS SHIELD FRACTURE · generator exhausted; hull exposed!');}
+ if(impact.spill<=1e-7)return {hullDamage:0,shieldFractured:false};
+ if(fieldCaches.channel>=0)FC.cancel(fieldCaches);
+ IMPACTDIR.register(impactDirection,player,source,impact.spill);
+ fx(player.x,player.z,impact.fractured?'#fbbf24':'#fb7185',5);player.hull=Math.max(0,player.hull-impact.spill);damageTaken+=impact.spill;clean=false;
+ post('hull-hit',{operation:op+1,relay:relay+1,hull:Math.round(player.hull)});
+ if(player.hull<=0){
+  rankedRun=false;chainWins=0;circuitScore=0;clearCheckpoint();shots=[];bolts=[];clearControls();
+  if(recoveriesLeft>0){
+   recoveriesLeft--;RG.begin(recoveryGrace);player.hull=55;player.energy=Math.max(player.energy,35);player.x=0;player.z=-27;player.speed=0;
+   score=Math.max(0,score-700);post('field-recovery',{operation:op+1,relay:relay+1,recoveriesLeft,graceSeconds:RG.DURATION,ranked:false});
+   say('EMERGENCY FIELD RECOVERY · 2s collision-safe respawn / regroup now; next hull collapse ends operation.');
+  }else{
+   defeated=true;player.hull=0;score=0;capture=0;
+   post('operation-failed',{operation:op+1,relay:relay+1,reason:'hull-depleted',ranked:false});
+   $('#doneTitle').textContent='AEGIS LOST · OPERATION FAILED';
+   $('#doneText').textContent=`${data.name}: both hull collapses exhausted the one emergency recovery. Hostile fire ended this operation at relay ${Math.min(3,relay+1)}. No clear, score record, next-operation unlock or ranked credit was awarded. Retry this operation in unranked practice, or press R to restart.`;
+   $('#continue').textContent='Retry operation · practice';$('#done').style.display='grid';
+   say('OPERATION FAILED. Retry this operation; no ranked credit.');
+  }
+ }
+ sync();return {hullDamage:impact.spill,shieldFractured:impact.fractured};
+}
+function strikeBarrier(block,amount,source){
+ const result=BC.strike(barriers,block.id,amount);
+ if(!result.hit)return result;
+ SD.emit(debris,block,amount,result.breached,$('#calm').checked);
+ fx(block.x,block.z,result.breached?'#fbbf24':'#fb923c',result.breached?12:3);
+ if(result.breached){
+  cover=liveCover();
+  const concussion=BREACHWAVE.breach(breachWave,block,enemies,cover,T,CB);
+  if(concussion){
+   $('#breachWaveNotice').textContent=BREACHWAVE.label(breachWave);
+   if(concussion.count>0){
+    sound(260,.13,.025,'triangle',110);
+    post('barricade-concussion',{operation:op+1,relay:relay+1,interrupted:concussion.count,credited:false,ranked:false,score:0});
+   }
+  }
+  for(const e of enemies){e.path=[];e.navAt=0;}
+  say('BARRICADE BREACHED / new line of sight and traversal route open');
+  post('barricade-breached',{operation:op+1,relay:relay+1,id:block.id,source,ranked:false});
+ }
+ scenery=makeScenery();sceneryLow=SKY.limited(makeScenery(true),true); // render the real remaining HP and remove collapsed geometry immediately
+ sync();return result;
+}
+function projectileHit(s,ax=s.x,az=s.z){
+ const wall=T.firstCover(ax,az,s.x,s.z,cover,.08);let selected=null,t=wall?wall.t:Infinity;
+ for(const e of enemies)if(!e.dead){const at=T.segmentCircle(ax,az,s.x,s.z,e.x,e.z,TYPES[e.type].size*.8);if(at!==null&&at<t){t=at;selected=e;}}
+ const mineHit=relay<3?AM.intercept(mines,relay,ax,az,s.x,s.z,T.segmentCircle):null;
+ // Capacitor node can only be hit through open line-of-fire; cover and hostiles
+ // in front win the swept hit test, and active mines retain their priority.
+ const capacitorHit=CAP.intercept(phaseCapacitors,circuitState.progress,fluxTrial.startedAt!==null,ax,az,s.x,s.z,T.segmentCircle);
+ if(capacitorHit&&capacitorHit.t<t&&(!mineHit||capacitorHit.t<mineHit.t)){
+  const result=CAP.hit(phaseCapacitors,capacitorHit);
+  if(result){
+   fx(result.x,result.z,result.down?'#34d399':'#fbbf24',result.down?12:5);
+   sound(result.down?740:410,.09,.03,'triangle',130);
+   if(result.down){
+    fluxTrial.ineligible=true;
+    const text='FLUX CAPACITOR OFFLINE · '+result.id.toUpperCase()+' SCREEN DISABLED · PRACTICE ONLY / NO SPLIT RECORD';
+    $('#phaseNotice').textContent=text;say(text);
+    post('flux-capacitor-disabled',{operation:op+1,screen:result.id,ranked:false,credited:false,score:0});
+   }else{const text='FLUX CAPACITOR HIT · ONE MORE REAL CANNON SHOT';$('#phaseNotice').textContent=text;say(text);}
+   sync();return true;
+  }
+ }
+ if(mineHit&&mineHit.t<t){const result=AM.hit(mines,relay,1);fx(mineHit.x,mineHit.z,result.disabled?'#86efac':'#fbbf24',result.disabled?10:4);if(result.disabled){say('CAPACITOR DISARMED / safe approach opened');post('arc-mine-disabled',{operation:op+1,relay:relay+1,ranked:false});}else say('CAPACITOR DAMAGED / one more cannon hit');sound(330,.05,.03,'square',110);sync();return true;}
+ if(selected){const hx=ax+(s.x-ax)*t,hz=az+(s.z-az)*t;
+  // Existing swept circle, cover, mine, capacitor and Warden precedence is
+  // authoritative. Armor flank counterplay cannot create an extra hit.
+  const reactor=RF.evaluate(selected,s,CB.shotDamage(selected));
+  const conduit=AW.evaluate({...selected,size:TYPES[selected.type].size},s,{x:hx,z:hz},reactor.damage);
+  const hit={damage:conduit.damage,bonus:reactor.bonus};
+  const guard=OVERGUARD.apply(selected,enemies,cover,T.firstCover,uplinks.jamLeft>0,elapsed,hit.damage);
+  selected.hp-=guard.damage;selected.flash=.12;impact=.12;
+  if(guard.absorbed){
+   overguardLeft=2;overguardText='WARDEN OVERGUARD · cyan tether absorbed one cannon damage; break line of sight or neutralize Warden';
+   $('#overguardNotice').textContent=overguardText;say('WARDEN OVERGUARD · direct shot partially absorbed');
+   fx(selected.x,selected.z,'#67e8f9',7);sound(590,.06,.018,'triangle',160);
+  }
+  fx(hx,hz,conduit.bonus?'#ffd18b':hit.bonus?'#67e8f9':'#d9fbff',conduit.bonus?10:hit.bonus?9:4);
+  if(hit.bonus){flankHits++;diagnostics.reactorHits++;selected.reactorFlash=.45;$('#flankNotice').textContent='Warden rear reactor hit: plus one damage, no bonus score.';say('REACTOR FLANK · Warden rear port +1 damage');sound(820,.11,.03,'sine',360);post('warden-reactor-flank',{operation:op+1,relay:relay+1,ranked:false,bonusDamage:hit.bonus});}
+  if(conduit.bonus){flankHits++;diagnostics.armorWeakpointHits++;
+   selected.weakpointFlash=.45;$('#flankNotice').textContent='ARMOR BREACH · '+selected.type.toUpperCase()+' exposed right conduit struck · +1 direct damage (subject to Overguard), no bonus score.';
+   say('ARMOR BREACH · RIGHT CONDUIT +1');sound(745,.10,.024,'triangle',260);
+   post('armor-conduit-flank',{operation:op+1,relay:relay+1,ranked:false,credited:false,bonusDamage:conduit.bonus,score:0});}
+  if(selected.hp<=0)killEnemy(selected);sync();return true;}
+ if(wall){diagnostics.blockedPlayer++;strikeBarrier(wall.block,2,'player');fx(wall.x,wall.z,'#fcd34d',3);return true;}return false;
+}
+function completeRelay(force=false){if(defeated||relay>=3)return;const hostiles=enemies.some(e=>!e.dead);if(hostiles&&!force)return;compatPylons[relay]=true;score+=900+Math.round(player.hull*4);post('relay-secured',{operation:op+1,relay:relay+1,hull:Math.round(player.hull)});post('pylon-down',{operation:op+1,relay:relay+1,compat:true});sound(360+relay*90,.12,.04,'square',250);relay++;capture=0;relaySurge=null;uplinks.jamLeft=0;decoy.left=0;decoy.hp=0;player.energy=clamp(player.energy+28,0,100);player.hull=clamp(player.hull+6,0,100);if(relay<3)spawnWave();writeCheckpoint();sync()}
+function captureRelay(){if(defeated||relay>=3)return false;if(enemies.some(e=>!e.dead))return false;capture=3;completeRelay();return true}
+function updateRelaySurge(dt,target){
+ if(!relaySurge)relaySurge=SR.create();
+ const event=SR.step(relaySurge,dt);
+ if(event==='warning'){post('relay-surge-warning',{operation:op+1,relay:relay+1});spatialSignal('surge',{x:target[0],z:target[1]});}
+ if(event!=='strike')return;
+ const d=Math.hypot(player.x-target[0],player.z-target[1]);
+ const blocked=!!T.firstCover(target[0],target[1],player.x,player.z,cover,.08);
+ if(d<=SR.RADIUS&&!blocked){
+  const shielded=shieldActive();
+  if(!shielded)capture=Math.min(capture,.4);
+  damage(SR.DAMAGE,shielded,{x:target[0],z:target[1]});
+  post('relay-surge-strike',{operation:op+1,relay:relay+1,shielded,hull:Math.round(player.hull)});
+  if(!defeated){fx(target[0],target[1],'#f59e0b',12);sound(120,.12,.025,'sawtooth',90);}
+ }else post('relay-surge-evaded',{operation:op+1,relay:relay+1,blocked});
+}
+function finish(){if(!active||finished||defeated||relay<3)return;GHOST.record(ghost,elapsed,player);const echo=GHOST.complete(ghost,op,elapsed,()=>localStorage);if(echo.accepted)sessionGhosts[op]=ghost.previous;finished=true;clearCheckpoint();score+=Math.round(4200+Math.max(0,2200-elapsed*12)+player.hull*10);const qualified=AegisScoreIntegrity.eligible(rankedRun,chainWins,op);if(qualified){chainWins++;circuitScore+=Math.round(score)}else{rankedRun=false;chainWins=0;circuitScore=0}AegisScoreIntegrity.record(meta,op,score,qualified);meta.unlocked=Math.max(meta.unlocked,Math.min(3,op+2));meta.bestHull=Math.max(meta.bestHull||0,Math.round(player.hull));if(op===2)meta.clears=(Number(meta.clears)||0)+1;save();post('operation-complete',{operation:op+1,hull:Math.round(player.hull),clean,damage:Math.round(damageTaken),best:meta.best[op]});if(clean||damageTaken<20)post('untouched-verge',{operation:op+1});if(op===2)post('campaign-complete',{clears:meta.clears,best:meta.best});$('#doneTitle').textContent=op===2?'Aegis Verge secured':'Operation secured';$('#doneText').textContent=`${data.name} · hull ${Math.round(player.hull)}% · operation score ${Math.round(score).toLocaleString()}${echo.accepted?' · NEW LOCAL ECHO '+elapsed.toFixed(1)+'s'+(echo.persisted?'':' (session only)'):''}${clean?' · unbroken Aegis':''}. ${op===2?(rankedRun&&chainWins===3?'Earned ranked circuit '+circuitScore.toLocaleString()+' points.':'Practice completion — no competitive score or local best-score update.'):(rankedRun?'Continue directly to retain ranked circuit eligibility.':'Practice clearance — local best score unchanged; begin from operation 1 for a ranked circuit.')}`;$('#continue').textContent=op===2?'Replay campaign':'Next operation';$('#done').style.display='grid';renderOps();sync()}
+function contactNotice(){
+ bodyContactLeft=.48;
+ if(bodyContactCooldown<=0){bodyContactCooldown=1.6;$('#bodyContact').textContent='CHASSIS CONTACT · solid hostiles block traversal · flank around them';}
+}
+function solidMove(body,dx,dz,blocks,r,silent=false,onContact=null){
+ const from={x:body.x,z:body.z};const wall=T.move(body,dx,dz,blocks,r);
+ // Apply the same swept collision to driving, vector dash, shockfront
+ // displacement, and both direct and evasive hostile movement. In particular,
+ // moving the camera or destroying a body must not confer invulnerability.
+ const targets=SPACING.obstacles(body,player,enemies,CONTACT.PLAYER_RADIUS);
+ const contact=CONTACT.clip(body,from,targets,r,blocks,T.free,TYPES);
+ const hit=contact.hit;
+ if(SPACING.notice(body,contact.obstacle,player))diagnostics.hostileBodyContacts++;
+ if(body===player){pickupMotion.push([from,{x:body.x,z:body.z}]);if(pickupMotion.length>10)pickupMotion.shift();}
+ if(hit&&!silent)contactNotice();if(hit&&typeof onContact==='function')onContact(contact);return wall||hit;
+}
+const contactTactics={...T,move:(body,dx,dz,blocks,r)=>solidMove(body,dx,dz,blocks,r,true)};
+function updateEnemies(dt){
+ for(const e of enemies){if(e.dead)continue;const q=TYPES[e.type],mark=TD.target(decoy,e)||player,dx=mark.x-e.x,dz=mark.z-e.z,r=Math.hypot(dx,dz)||1,preferred=e.type==='lancer'?18:e.type==='warden'?16:e.type==='bulwark'?12:9;
+ const wasSkyburstDodging=!!e.skyburstEvading;e.skyburstEvading=false;e.supportActive=false;e.motionRate=0;e.flash=Math.max(0,e.flash-dt);e.weakpointFlash=Math.max(0,(e.weakpointFlash||0)-dt);e.reactorFlash=Math.max(0,(e.reactorFlash||0)-dt);SILENCE.tick(e,dt);e.cool=Math.max(0,e.cool-dt);if(CB.tick(e,dt)){SHOCK.advance(e,dt,cover,solidMove,q.size*.65);continue;}
+ if(e.state==='windup'&&uplinks.jamLeft>0){e.state='seek';e.windup=0;e.siegeTarget=null;}
+ if(e.state==='windup'){
+  e.windup-=dt;e.yaw=Math.atan2(e.aimX-e.x,e.aimZ-e.z);
+  if(e.windup<=0){const angle=e.yaw,volley=HT.pattern(e.type),speed=volley.speed,spread=volley.offsets;
+   if(e.siegeTarget){if(SB.launch(siegeShells,e,e.siegeTarget)){diagnostics.siegeFired++;spatialSignal('volley',e);}e.siegeTarget=null;}
+   else for(const offset of spread)bolts.push({source:e,sourceIdx:e.idx,x:e.x,z:e.z,vx:Math.sin(angle+offset)*speed,vz:Math.cos(angle+offset)*speed,life:HT.PROJECTILE_LIFE,damage:e.type==='warden'?11:e.type==='bulwark'?9:7});
+   e.state='recover';e.cool=q.rate+.25+(e.idx%3)*.08;e.cycles++;fx(e.x,e.z,'#fb923c',3);spatialSignal('volley',e);
+  }SHOCK.advance(e,dt,cover,solidMove,q.size*.65);continue;
+ }
+ // Small drones react to a mine warning when a genuinely collision-safe
+ // escape lane exists; heavy units and committed charge attacks do not.
+ if(AegisHazardEvasion.evade(e,e.type,mines,relay,dt,cover,contactTactics,AM)){SHOCK.advance(e,dt,cover,solidMove,q.size*.65);continue;}
+ // Uncommitted skirmishers can react to a LIVE friendly Warden shell.
+ // The heavy Lancer/Bulwark remain lureable, cover makes a dodge needless,
+ // and physical T.move collision prevents teleporting through barriers.
+ if(SCATTER.evade(e,siegeShells,dt,cover,contactTactics,SB.RADIUS)){
+  SHOCK.advance(e,dt,cover,solidMove,q.size*.65);e.skyburstEvading=true;
+  if(!wasSkyburstDodging){diagnostics.skyburstDodges++;scatterText='SKYBURST SCATTER · light skirmisher evading friendly artillery';scatterLeft=1.65;}
+  continue;
+ }
+ const supportMove=e.type==='warden'?AegisWardenSupport.steer(e,enemies,cover,T,navClock,uplinks.jamLeft>0):null;
+ const los=!T.firstCover(e.x,e.z,mark.x,mark.z,cover,.08);
+ if(los&&r<28&&e.cool<=0&&uplinks.jamLeft<=0){e.state='windup';e.windup=e.type==='lancer'?.95:e.type==='warden'?1.1:e.type==='bulwark'?.85:.65;e.windupTotal=e.windup;e.aimX=mark.x;e.aimZ=mark.z;e.siegeTarget=SB.chosen(e)?SB.target(mark):null;diagnostics.windups++;spatialSignal('lock',e);continue;}
+ e.state=e.cool>0?'recover':'seek';e.yaw=Math.atan2(dx,dz);
+ let mx=0,mz=0;
+ if(supportMove){mx=supportMove.mx;mz=supportMove.mz;e.yaw=Math.atan2(mx,mz);}
+ else if(!los){
+  if(navClock>=e.navAt||!e.path?.length){e.path=T.path(e.x,e.z,mark.x,mark.z,cover,q.size*.65);e.navAt=navClock+.75;}
+  while(e.path.length&&Math.hypot(e.path[0].x-e.x,e.path[0].z-e.z)<.6)e.path.shift();
+  const target=e.path[0];if(target){const d=Math.hypot(target.x-e.x,target.z-e.z)||1;mx=(target.x-e.x)/d;mz=(target.z-e.z)/d;}
+ }else{
+  const forward=r>preferred?1:r<preferred-3?-.65:0;
+  const side=e.type==='skirmisher'?(e.idx%2?-.65:.65):0;mx=dx/r*forward+dz/r*side;mz=dz/r*forward-dx/r*side;
+  const d=Math.hypot(mx,mz);if(d>1){mx/=d;mz/=d;}
+ }
+ const x0=e.x,z0=e.z;
+ // Bypass uses predicted ally positions only to select a lane; swept chassis
+ // contact and immutable cover remain the sole collision authority.
+ const bypass=BYPASS.steer(e,mx,mz,enemies,TYPES,cover,T);
+ if(bypass.avoiding){mx=bypass.mx;mz=bypass.mz;e.yaw=Math.atan2(mx,mz);}
+ solidMove(e,mx*q.speed*dt,mz*q.speed*dt,cover,q.size*.65);
+ SHOCK.advance(e,dt,cover,solidMove,q.size*.65);const traveled=Math.hypot(e.x-x0,e.z-z0);
+ e.travelDistance=(e.travelDistance||0)+traveled;
+ e.motionRate=dt>0?clamp(traveled/(q.speed*dt),0,1):0;
+ }
+}
+function update(dt){
+ if(!engine||!active||paused||suspended||finished||defeated)return;
+ AegisFrameClock.advance(dt,()=>active&&!paused&&!suspended&&!finished&&!defeated,stepSimulation);
+ sync();
+}
+function stepSimulation(dt){
+ if(defeated)return;pickupMotion=[];SPACING.tick(enemies,dt);BYPASS.tick(enemies,dt);DASHCONTACT.tick(dashImpact,dt);if(!dashImpact.flash&&$('#dashImpactNotice').textContent)$('#dashImpactNotice').textContent='';PICKUP.tick(pickupFX,dt);SP.tick(spatial,dt);if(!spatial.last&&$('#spatialCue').textContent)$('#spatialCue').textContent='';elapsed+=dt;circuitNoticeLeft=Math.max(0,circuitNoticeLeft-dt);fluxNoticeLeft=Math.max(0,fluxNoticeLeft-dt);crosswindLeft=Math.max(0,crosswindLeft-dt);demolitionLeft=Math.max(0,demolitionLeft-dt);scatterLeft=Math.max(0,scatterLeft-dt);counterpulseLeft=Math.max(0,counterpulseLeft-dt);COUNTER.tick(counterBursts,dt);SHOCK.tick(shockBursts,dt);shockfrontLeft=Math.max(0,shockfrontLeft-dt);silenceLeft=Math.max(0,silenceLeft-dt);phaseReturnNoticeLeft=Math.max(0,phaseReturnNoticeLeft-dt);overguardLeft=Math.max(0,overguardLeft-dt);GHOST.record(ghost,elapsed,player);navClock+=dt;RG.tick(recoveryGrace,dt);SE.tick(evasion,dt);PG.tick(perfectGuard,dt);SU.tick(uplinks,dt);TD.tick(decoy,dt);cool=Math.max(0,cool-dt);pulseCooldown=Math.max(0,pulseCooldown-dt);pulseFlash=Math.max(0,pulseFlash-dt);shieldFractureFlash=Math.max(0,shieldFractureFlash-dt);IMPACTDIR.tick(impactDirection,dt);if(shieldFractureFlash<=0&&$('#shieldNotice').textContent)$('#shieldNotice').textContent='';dashFlash=Math.max(0,dashFlash-dt);bodyContactLeft=Math.max(0,bodyContactLeft-dt);bodyContactCooldown=Math.max(0,bodyContactCooldown-dt);if(bodyContactLeft<=0&&$('#bodyContact').textContent)$('#bodyContact').textContent='';if(!pickupFX.flashes.length&&$('#pickupNotice').textContent)$('#pickupNotice').textContent='';impact=Math.max(0,impact-dt);muzzle=Math.max(0,muzzle-dt);
+ if(held.fire||touchHeld.fire||padHeld.fire)fire();
+ SD.tick(debris,dt);BREACHWAVE.tick(breachWave,dt);if(!breachWave.left&&$('#breachWaveNotice').textContent)$('#breachWaveNotice').textContent='';const shielding=shieldActive();if(shielding){player.energy=Math.max(0,player.energy-24*dt);shieldTime+=dt}else player.energy=Math.min(100,player.energy+13*dt);
+ const th=(keys.up?1:0)-(keys.down?1:0),st=(keys.right?1:0)-(keys.left?1:0);
+ player.speed+=(th*12-player.speed*2.4)*dt;player.speed=clamp(player.speed,-5,12);player.yaw+=st*1.5*dt*(player.speed>=0?1:-.7);
+ const px0=player.x,pz0=player.z;
+ // Boost only while driving *with* a marked ground corridor, never during shield/dash.
+ // T.move remains the single authority for solid terrain and arena boundaries.
+ const fluxTrack=FLUX.sample(player,Math.sin(player.yaw),Math.cos(player.yaw),player.speed,!keys.shield&&dash.remaining<=0);
+ const fluxRate=fluxTrack?FLUX.RATE:1;
+ const collided=solidMove(player,Math.sin(player.yaw)*player.speed*dt*fluxRate,Math.cos(player.yaw)*player.speed*dt*fluxRate,cover,1.15);
+ if(collided)player.speed*=.7;
+ const fluxDelta=Math.hypot(player.x-px0,player.z-pz0);
+ const fluxEvent=FLUX.advance(fluxState,fluxTrack,dt,fluxDelta,player);
+ GUIDE.update(courseGuide,player,CIRCUIT.GATES,circuitState.progress,cover,T,WF,elapsed,active&&!finished&&!defeated);
+ // Only *actual* swept player motion, after physical T.move collision, can
+ // complete a marked arch; a mere position or a decorative animation cannot.
+ const gateEvent=CIRCUIT.cross(circuitState,{x:px0,z:pz0},{x:player.x,z:player.z},fluxEvent.active?fluxTrack:null);
+ if(gateEvent.crossed){
+  const trialEvent=TRIAL.cross(fluxTrial,gateEvent,elapsed,()=>localStorage);
+  if(trialEvent){
+   const diff=!Number.isFinite(trialEvent.delta)?'':` · ${trialEvent.delta>0?'+':''}${trialEvent.delta.toFixed(2)}s vs best`;
+   const msg=trialEvent.kind==='start'?'FLUX SPLIT TRIAL STARTED · first arch crossed':trialEvent.kind==='split'?`FLUX SPLIT ${trialEvent.progress}/4 · ${trialEvent.time.toFixed(2)}s${diff}`:`FLUX SPLIT TRIAL COMPLETE · ${trialEvent.time.toFixed(2)}s${trialEvent.ineligible?' · PRACTICE / NO RECORD':trialEvent.saved?' · NEW SAVED BEST':trialEvent.newBest?' · LOCAL SAVE UNAVAILABLE':' · BEST UNCHANGED'}`;
+   $('#trialNotice').textContent=msg;
+   post('flux-trial-'+trialEvent.kind,{operation:op+1,progress:trialEvent.progress,seconds:trialEvent.time||0,credited:false,ranked:false});
+  }
+  circuitNoticeLeft=2.5;
+  if(gateEvent.complete){
+   const aid=CIRCUIT.reward(circuitState,player);
+   if(aid){if(rankedRun){rankedRun=false;chainWins=0;circuitScore=0;}
+    say(`FLUX CIRCUIT COMPLETE · +${Math.round(aid.hull)} hull / +${Math.round(aid.energy)} Aegis · PRACTICE ONLY`);
+    fx(player.x,player.z,'#86efac',12);sound(825,.18,.035,'triangle',330);
+    post('flux-circuit-complete',{operation:op+1,ranked:false,credited:false,score:0});
+   }
+  }else{say(`FLUX CIRCUIT · gate ${gateEvent.progress}/4 crossed; follow the next glowing arch`);sound(610,.07,.025,'triangle',210);}
+ }
+
+ // Resolve optional course shutter against the post-collision swept vehicle path.
+ // Only an active Flux time trial can arm the screen. Shielding gives a slower,
+ // legitimate counterplay choice; it cannot earn a boosted arch while held.
+ const phaseEvent=PHASE.inspect(phaseScreens,{x:px0,z:pz0},{x:player.x,z:player.z},circuitState.progress,elapsed,fluxTrial.startedAt,shielding||RG.protects(recoveryGrace),phaseCapacitors);
+ const hazardScreen=PHASE.current(circuitState.progress);
+ const hazardClock=PHASE.timing(hazardScreen,elapsed,fluxTrial.startedAt,phaseCapacitors);
+ const hazardIndex=PHASE.SCREENS.indexOf(hazardScreen);
+ const warning=TELEGRAPH.observe(phaseTelegraph,player,hazardScreen,hazardClock,hazardIndex>=0&&phaseScreens.resolved[hazardIndex]);
+ if(warning){$('#phaseTelegraphNotice').textContent=warning; if(audible())sound(hazardClock.mode==='live'?360:hazardClock.mode==='warning'?560:710,.05,.012,'triangle',150);}else if(!phaseTelegraph.lastKey&&$('#phaseTelegraphNotice').textContent)$('#phaseTelegraphNotice').textContent='';
+ if(phaseEvent){
+  if(phaseEvent.kind==='hit'){
+   fluxTrial.ineligible=true;player.energy=Math.max(0,player.energy-PHASE.ENERGY);player.speed*=.45;
+   damage(PHASE.HULL,false,{x:phaseEvent.x,z:phaseEvent.z});fx(phaseEvent.x,phaseEvent.z,'#fb7185',9);sound(190,.14,.03,'sawtooth',70);
+   const text='FLUX PHASE STRIKE · -'+PHASE.HULL+' hull / -'+PHASE.ENERGY+' Aegis · LOCAL RECORD DISQUALIFIED';
+   $('#phaseNotice').textContent=text;say(text);
+  }else{
+   const text=phaseEvent.kind==='disabled'?'FLUX SCREEN OFFLINE · capacitor disabled; practice passage':phaseEvent.kind==='guard'?'FLUX PHASE SHIELDED · crossing protected':'FLUX PHASE CLEARED · clean timing';
+   $('#phaseNotice').textContent=text;say(text);if(phaseEvent.kind==='guard')sound(580,.08,.018,'triangle',120);
+  }
+  post('flux-phase-'+phaseEvent.kind,{operation:op+1,screen:phaseEvent.id,ranked:false,credited:false,score:0});
+ }
+ // Existing shutter collision handles the first passage. The separate
+ // return test handles only PREVIOUSLY cleared planes, in both directions.
+ // Uses the same post-physics sweep and clock; live hazards cannot be made
+ // harmless by passing gate 2/4 or backtracking through cleared arches.
+ const returnEvent=RETURN.inspect(phaseReturn,{x:px0,z:pz0},{x:player.x,z:player.z},circuitState.progress,elapsed,fluxTrial.startedAt,phaseScreens.resolved,phaseCapacitors,shielding||RG.protects(recoveryGrace),PHASE);
+ if(returnEvent){
+  if(returnEvent.kind==='hit'){
+   fluxTrial.ineligible=true;player.energy=Math.max(0,player.energy-PHASE.ENERGY);player.speed*=.45;
+   damage(PHASE.HULL,false,{x:returnEvent.x,z:returnEvent.z});fx(returnEvent.x,returnEvent.z,'#fb7185',8);
+   phaseReturnNoticeLeft=2.2;const msg='PHASE BACKTRACK STRIKE · -9 hull / -12 Aegis · LOCAL RECORD DISQUALIFIED';
+   $('#phaseReturnNotice').textContent=msg;say(msg);sound(185,.12,.025,'sawtooth',80);
+  }else{
+   phaseReturnNoticeLeft=1.7;const msg='PHASE BACKTRACK SHIELDED · hazard safely crossed';
+   $('#phaseReturnNotice').textContent=msg;say(msg);sound(585,.06,.017,'triangle',100);
+  }
+  post('flux-backtrack-'+returnEvent.kind,{operation:op+1,screen:returnEvent.id,ranked:false,credited:false,score:0});
+ }
+ if(gateEvent.crossed)GUIDE.update(courseGuide,player,CIRCUIT.GATES,circuitState.progress,cover,T,WF,elapsed,active&&!finished&&!defeated);
+ if(fluxEvent.entered){fluxNoticeLeft=1.8;say('FLUX SLIPWAY · directional boost active; Aegis energy spent');post('flux-slipway-entered',{operation:op+1,relay:relay+1,ranked:false,credited:false});}
+ if(collided)player.speed*=.8;const shockMove=SHOCK.advance(player,dt,cover,solidMove,1.15);if(shockMove.blocked)player.speed*=.7;
+ const cacheOutcome=FC.tick(fieldCaches,player,dt,shieldActive(),cacheSightCover(fieldCaches.channel),T.firstCover);
+ if(cacheOutcome==='interrupted')say('SALVAGE CHANNEL INTERRUPTED · reposition and retry');
+ else if(cacheOutcome?.type==='recovered'){const forfeited=rankedRun;if(forfeited){rankedRun=false;chainWins=0;circuitScore=0;}fx(fieldCaches.sites[cacheOutcome.index].x,fieldCaches.sites[cacheOutcome.index].z,'#86efac',12);sound(770,.18,.03,'sine',200);say(`FIELD SALVAGE RECOVERED · hull +${Math.round(cacheOutcome.hull)} · Aegis +${Math.round(cacheOutcome.energy)}${forfeited?' · RANKED RUN ENDED — PRACTICE ONLY':''}`);post('field-cache-recovered',{operation:op+1,relay:relay+1,hull:cacheOutcome.hull,energy:cacheOutcome.energy,ranked:false});}
+ const beforeDash=dash.remaining,evade=VD.step(dash,dt,(dx,dz)=>solidMove(player,dx,dz,cover,1.15,false,contact=>{
+   if(DASHCONTACT.hit(dashImpact,contact,enemies,CB.interrupt)){
+    diagnostics.dashIntercepts++;$('#dashImpactNotice').textContent='DASH BREAK · hostile charge interrupted · target staggered for a double-damage countershot';
+    fx(contact.obstacle.x,contact.obstacle.z,'#5eead4',9);
+    post('dash-charge-interrupted',{operation:op+1,relay:relay+1,credited:false,score:0,ranked:false});
+    sound(420,.12,.024,'triangle',150);
+   }
+ }),dashYaw);
+ if(evade.blocked){player.speed=0;fx(player.x,player.z,'#fbbf24',5);post('vector-dash-blocked',{operation:op+1,relay:relay+1});}
+ const playerTravel=Math.hypot(player.x-px0,player.z-pz0);PC.advance(playerRig,playerTravel,dt,st,collided||evade.blocked);
+ if(beforeDash>0&&evade.moved>0){dashFlash=Math.max(dashFlash,.12);if(!$('#calm').checked&&Math.floor(elapsed*30)%3===0)fx(player.x,player.z,'#2dd4bf',2);}
+ for(const s of shots){if(!FLIGHT.advance(s,dt))continue;if(projectileHit(s,s.prevX,s.prevZ)){s.life=0;s.collided=true;}}shots=shots.filter(s=>s.life>0);
+ updateEnemies(dt);
+ SB.step(siegeShells,dt,player,cover,T.firstCover,outcome=>{
+  if(outcome.hit){diagnostics.siegeHits++;const braced=shieldActive(),impactResult=damage(SB.DAMAGE,braced,{x:outcome.x,z:outcome.z});if(!defeated&&(!braced||impactResult?.shieldFractured)&&!RG.protects(recoveryGrace)&&SHOCK.begin(player,outcome,SB.RADIUS,'player')){diagnostics.shockfrontPlayer++;shockfrontText='SKYBURST SHOCKFRONT · vehicle pushed; shield or cover stops the wave';shockfrontLeft=1.9;}}
+  else if(outcome.blocked)diagnostics.siegeSheltered++;
+  // The impact originates at the locked point. Other hostiles may be lured
+  // into it; the firing Warden is excluded, and kills are always uncredited.
+  let caught=0,down=0,suppressed=0;
+  for(const {enemy} of SB.splashHostiles(outcome,enemies,cover,T.firstCover)){
+   enemy.hp-=SB.HOSTILE_DAMAGE;enemy.flash=.22;diagnostics.siegeHostileHits++;caught++;
+   if(enemy.hp<=0){killEnemy(enemy,false,false,'skyburst');diagnostics.siegeHostileDown++;down++;}
+   else {if(SHOCK.begin(enemy,outcome,SB.RADIUS,enemy.type))diagnostics.shockfrontHostiles++;if(SILENCE.apply(enemy,CB)){diagnostics.skyburstSuppressed++;suppressed++;}fx(enemy.x,enemy.z,'#67e8f9',5);}
+  }
+  if(suppressed){silenceText=`SKYBURST SILENCE · ${suppressed} hostile${suppressed===1?'':'s'} suppressed · no bonus score`;silenceLeft=1.8;}
+  if(caught){crosswindText=`SKYBURST CROSSWIND · ${caught} hostile${caught===1?'':'s'} caught · no score`;crosswindLeft=2.4;}
+  // Resolve collateral enemy cover against the BEFORE-blast scene above.
+  // Select all structural hits against a single pre-destruction cover snapshot
+  // to prevent a freshly opened breach exposing a second barricade instantly.
+  const exposed=DEM.impacted(outcome,cover,id=>BC.status(barriers,id)?.hp??0,T.firstCover,SB.RADIUS);
+  let broken=0;
+  for(const {block} of exposed){
+   const hit=strikeBarrier(block,DEM.DAMAGE,'skyburst');
+   if(!hit.hit)continue;
+   diagnostics.siegeBarrierHits++;
+   if(hit.breached){broken++;diagnostics.siegeBarrierBreaches++;}
+  }
+  if(exposed.length){
+   demolitionText=`SKYBURST DEMOLITION · ${exposed.length} barrier${exposed.length===1?'':'s'} hit${broken?' · '+broken+' BREACHED':''} · no score`;
+   demolitionLeft=2.4;
+   post('skyburst-demolition',{operation:op+1,relay:relay+1,barriersHit:exposed.length,breached:broken,ranked:false,bonusScore:0});
+  }
+  SHOCK.emit(shockBursts,outcome,$('#calm').checked||calmPreference);fx(outcome.x,outcome.z,'#fb923c',outcome.hit?12:7);sound(115,.13,.028,'sawtooth',95);
+  post('siege-detonated',{operation:op+1,relay:relay+1,hit:outcome.hit,blocked:outcome.blocked,hostilesCaught:caught,hostilesDisabled:down,ranked:false,bonusScore:0});
+ });
+ if(defeated){sync();return;}
+ for(const b of bolts){if(!FLIGHT.advance(b,dt))continue;const ax=b.prevX,az=b.prevZ;const wall=T.firstCover(ax,az,b.x,b.z,cover,HT.COVER_PADDING),hit=T.segmentCircle(ax,az,b.x,b.z,player.x,player.z,HT.PLAYER_RADIUS),lureHit=TD.hitTime(decoy,ax,az,b.x,b.z,T),first=Math.min(hit===null?Infinity:hit,lureHit===null?Infinity:lureHit);
+  // Continuous collision: compare motion of actual cannon shot and hostile bolt
+  // through the SAME 60Hz substep. Cover, player hit, and decoy hit take priority.
+  const ally=CROSSFIRE.earliest(b,{x:ax,z:az},{x:b.x,z:b.z},enemies,TYPES,T.segmentCircle,Math.min(first,wall?wall.t:1));
+  const intercepted=SI.earliest({x:ax,z:az},{x:b.x,z:b.z,fullX:b.fullX,fullZ:b.fullZ,flightFraction:b.flightFraction},shots,cover,T.firstCover,Math.min(first,wall?wall.t:1,ally?.t??1));
+  if(intercepted){b.life=0;intercepted.shot.life=0;intercepts++;diagnostics.intercepts++;
+   fx(intercepted.x,intercepted.z,'#fef08a',9);sound(960,.06,.018,'triangle',300);
+   post('cannon-interception',{operation:op+1,relay:relay+1,ranked:false,score:0});
+   continue;
+  }
+  // The nearest real moving hostile receives the incoming round only when
+  // solid cover, player, decoy, or a cannon interception did not occur first.
+  if(ally){b.life=0;const target=ally.enemy;target.hp-=b.damage;target.flash=.18;
+   diagnostics.hostileCrossfireHits++;fx(ally.x,ally.z,'#fda4af',7);
+   // Real surviving hits against a committed hostile charge interrupt that volley.
+   // CB.interrupt owns its stagger/cooldown and the existing cyan 3D stun rig.
+   const disrupted=DISRUPT.apply(target,b.damage,CB);
+   if(disrupted){diagnostics.hostileCrossfireInterrupts++;fx(ally.x,ally.z,'#67e8f9',8);
+    $('#crossfireNotice').textContent='HOSTILE CROSSFIRE · '+target.type.toUpperCase()+' CHARGE INTERRUPTED · CANNON STAGGER WINDOW · NO SCORE';
+    post('hostile-crossfire-interrupt',{operation:op+1,relay:relay+1,type:target.type,ranked:false,credited:false,score:0});
+   }else $('#crossfireNotice').textContent='HOSTILE CROSSFIRE · '+target.type.toUpperCase()+' HIT · NO PLAYER SCORE';
+   post('hostile-crossfire-hit',{operation:op+1,relay:relay+1,type:target.type,ranked:false,credited:false,score:0});
+   if(target.hp<=0){diagnostics.hostileCrossfireDown++;killEnemy(target,false,false,'hostile-crossfire');}
+   continue;
+  }
+  // The ordinary collision/interception result always wins. Only swept
+  // cover-clear, decoy-clear, unshielded, moving near misses grant Aegis.
+  if(hit===null){const near=SE.probe(ax,az,b.x,b.z,player,wall?wall.t:Infinity,lureHit??Infinity);
+   if(SE.reward(evasion,b,player,near,playerTravel,shielding)){diagnostics.evades++;fx(player.x,player.z,'#6ee7b7',5);sound(720,.07,.018,'sine',200);$('#evadeNotice').textContent='Slipstream evade '+evasion.count+': up to +6 Aegis charge, no score.';}}
+  if(wall&&wall.t<=first){b.life=0;diagnostics.blockedHostile++;strikeBarrier(wall.block,1,'hostile');fx(wall.x,wall.z,'#fca56b',3);}else if(lureHit!==null&&(hit===null||lureHit<hit)){b.life=0;TD.absorb(decoy);fx(decoy.x,decoy.z,'#c4b5fd',6);post('holo-decoy-hit',{operation:op+1,relay:relay+1,ranked:false});}else if(hit!==null){b.life=0;
+   const rebound=PG.intercept(perfectGuard,shielding,b);
+   if(rebound){const len=Math.hypot(rebound.vx,rebound.vz);shots.push({...rebound,x:player.x+rebound.vx/len*1.6,z:player.z+rebound.vz/len*1.6});fx(player.x,player.z,'#bef264',8);sound(780,.09,.03,'triangle',300);say('PERFECT GUARD · hostile shot reflected through real cover');post('perfect-guard-reflect',{operation:op+1,relay:relay+1,ranked:false});}
+   else damage(b.damage,shielding,{x:b.x-b.vx*.35,z:b.z-b.vz*.35});
+   if(defeated)break;}
+ }if(defeated){sync();return;}bolts=bolts.filter(b=>b.life>0);shots=shots.filter(s=>s.life>0);
+ for(const q of pickups)q.life-=dt;pickupMotion.push([{x:player.x,z:player.z},{x:player.x,z:player.z}]);PICKUP.collect(pickups,pickupMotion,cover,T.firstCover,elapsed,collectPickup);pickups=pickups.filter(q=>!q.collected&&q.life>0);
+ for(const p of particles){p.life-=dt;p.x+=p.vx*dt;p.z+=p.vz*dt;p.y+=p.vy*dt;p.vy-=8*dt;}particles=particles.filter(p=>p.life>0);
+ if(relay<3){const m=AM.tick(mines,relay,player.x,player.z,dt);
+  if(m==='warning'){say('CAPACITOR ARMING / retreat, shield, take cover or shoot core');post('arc-mine-warning',{operation:op+1,relay:relay+1});spatialSignal('mine',mines.sites[relay]);}
+  if(m==='blast'){
+   const q=mines.sites[relay],occluded=(origin,actor)=>!!T.firstCover(origin.x,origin.z,actor.x,actor.z,cover,.08);
+   const targets=AM.blastTargets(mines,relay,[player,...enemies],occluded);
+   const exposed=targets.includes(player),blocked=occluded(q,player),protectedByShield=exposed&&shieldActive();
+   // Collateral is physically real, but it grants no kill points, salvage or ranked events.
+   let hostileHits=0,hostileDown=0;
+   for(const e of targets){if(e===player||e.dead)continue;hostileHits++;e.hp-=2;e.flash=.22;
+    if(e.hp<=0){killEnemy(e,false,false);hostileDown++;}else{CB.interrupt(e);fx(e.x,e.z,'#fbbf24',5);}}
+   // Pre-breach player/enemy exposure was calculated above; apply structural collateral after.
+   const exposedWalls=AM.blastCover(mines,relay,cover,T.firstCover,BC.BREACHABLE_IDS);
+   if(exposed)damage(AM.DAMAGE,protectedByShield,{x:q.x,z:q.z});
+   let coverHits=0,coverBreaches=0;
+   for(const wall of exposedWalls){const hit=strikeBarrier(wall,2,'arc-mine');
+    if(hit.hit){coverHits++;if(hit.breached)coverBreaches++;}}
+   fx(q.x,q.z,'#fb923c',14);sound(160,.14,.03,'sawtooth',90);
+   if(coverBreaches)say(`ARC SHOCKWAVE · ${coverBreaches} barricade${coverBreaches===1?'':'s'} breached / routes open`);
+   else if(coverHits)say(`ARC SHOCKWAVE · ${coverHits} armored barricade${coverHits===1?'':'s'} damaged / breach opportunity`);
+   else if(hostileHits)say(`ARC SHOCKWAVE · ${hostileHits} hostile${hostileHits===1?'':'s'} hit / use mines to disrupt pursuers`);
+   post(exposed?'arc-mine-detonated':'arc-mine-evaded',{operation:op+1,relay:relay+1,blocked,shielded:!!protectedByShield,hostileHits,hostileDown,coverHits,coverBreaches,ranked:false});
+  }
+ }
+ const target=currentRelay(),cleared=target&&!enemies.some(e=>!e.dead);
+ if(cleared)updateRelaySurge(dt,target);else relaySurge=null;
+ if(defeated){sync();return;}
+ if(cleared&&Math.hypot(player.x-target[0],player.z-target[1])<5){capture+=dt;if(capture>=3)completeRelay();}else if(target)capture=Math.max(0,capture-dt*.5);
+ if(relay>=3&&EX.inside(data.exit,player))finish();
+}
+function sync(){const label=IMPACTDIR.label(impactDirection);if($('#hitDirection').textContent!==label)$('#hitDirection').textContent=label;const direction=GUIDE.bearing(courseGuide,player);$('#courseGuide').classList.toggle('on',courseGuide.enabled&&active&&!finished&&!defeated);$('#guideButton').textContent=courseGuide.enabled?'GUIDE ON':'GUIDE OFF';$('#guideButton').setAttribute('aria-pressed',String(courseGuide.enabled));$('#courseGuide').textContent=!courseGuide.enabled?'OFF':circuitState.awarded?'COMPLETE':direction?`GATE ${circuitState.progress+1}/4 · ${direction.turn} · ${Math.ceil(direction.distance)}m${direction.route?'':' · NO SAFE PATH'}`:'NO ROUTE';if(phaseReturnNoticeLeft<=0&&$('#phaseReturnNotice').textContent)$('#phaseReturnNotice').textContent='';$('#trialStatus').textContent=TRIAL.display(fluxTrial,elapsed);const teleScreen=PHASE.current(circuitState.progress),teleClock=PHASE.timing(teleScreen,elapsed,fluxTrial.startedAt,phaseCapacitors);$('#phaseStatus').textContent=TELEGRAPH.label(teleClock,teleScreen,teleScreen&&phaseScreens.resolved[PHASE.SCREENS.indexOf(teleScreen)])+(phaseScreens.hits?' · '+phaseScreens.hits+' STRIKE'+(phaseScreens.hits===1?'':'S'):'');$('#fluxStatus').textContent=fluxState.active?'BOOST':'IDLE';$('#circuitStatus').textContent=circuitState.awarded?'COMPLETE':circuitState.progress+'/4';$('#circuitNotice').textContent=circuitNoticeLeft>0?(circuitState.awarded?'Flux Circuit completed: non-ranked resupply awarded.':'Flux Circuit arch '+circuitState.progress+' of 4 passed.') : ''; const crosswindLabel=crosswindLeft>0?crosswindText:'';const demolitionLabel=demolitionLeft>0?demolitionText:'';const scatterLabel=scatterLeft>0?scatterText:'';const counterpulseLabel=counterpulseLeft>0?counterpulseText:'';const shockfrontLabel=shockfrontLeft>0?shockfrontText:'';const silenceLabel=silenceLeft>0?silenceText:'';const linkLabel=overguardLeft>0?overguardText:'';if($('#overguardNotice').textContent!==linkLabel)$('#overguardNotice').textContent=linkLabel;$('#overguardStatus').textContent=OVERGUARD.links(enemies,cover,T.firstCover,uplinks.jamLeft>0,elapsed).length;$('#reformStatus').textContent=enemies.filter(e=>e.type==='warden'&&!e.dead&&e.supportActive).length;if($('#silenceNotice').textContent!==silenceLabel)$('#silenceNotice').textContent=silenceLabel;if($('#shockfrontNotice').textContent!==shockfrontLabel)$('#shockfrontNotice').textContent=shockfrontLabel;if($('#counterpulseNotice').textContent!==counterpulseLabel)$('#counterpulseNotice').textContent=counterpulseLabel;if($('#scatterNotice').textContent!==scatterLabel)$('#scatterNotice').textContent=scatterLabel;if($('#demolitionNotice').textContent!==demolitionLabel)$('#demolitionNotice').textContent=demolitionLabel;if($('#crosswindNotice').textContent!==crosswindLabel)$('#crosswindNotice').textContent=crosswindLabel;$('#focusNotice').style.display=FG.required(focusGuard)&&active&&!finished&&!defeated?'block':'none';const hostiles=enemies.filter(e=>!e.dead).length;$('#op').textContent=`${op+1}/3`;$('#relay').textContent=finished?'3/3':`${Math.min(3,relay+1)}/3`;$('#threat').textContent=hostiles;$('#hull').textContent=Math.max(0,Math.round(player.hull||0));$('#energy').textContent=Math.max(0,Math.round(player.energy||0));$('#score').textContent=Math.round(score).toLocaleString();$('#interceptCount').textContent=intercepts;$('#friendlyFireCount').textContent=diagnostics.hostileCrossfireHits;$('#counterpulseCount').textContent=counterpulseCount;$('#flankCount').textContent=flankHits;$('#evadeCount').textContent=evasion.count;$('#ghostStatus').textContent=ghost.previous?(ghost.previous.duration.toFixed(1)+'s'+(ghost.persisted?' BEST':'')):'NONE';$('#recoveries').textContent=recoveriesLeft+'/1';$('#recoveryGrace').textContent=RG.protects(recoveryGrace)?'SAFE '+recoveryGrace.remaining.toFixed(1)+'s':'';$('#recoveryPill').classList.toggle('protected',RG.protects(recoveryGrace));$('#guardReady').textContent=perfectGuard.window>0?'WINDOW '+perfectGuard.window.toFixed(2)+'s':perfectGuard.cooldown>0?perfectGuard.cooldown.toFixed(1)+'s':'READY';$('#guardPill').classList.toggle('window',perfectGuard.window>0);$('#guardPill').classList.toggle('cooling',perfectGuard.cooldown>0&&perfectGuard.window<=0);$('#pulseReady').textContent=pulseCooldown>0?pulseCooldown.toFixed(1)+'s':player.energy<CB.COST?'CHARGE':'READY';$('#pulsePill').classList.toggle('cooling',pulseCooldown>0);$('#dashReady').textContent=dash.cooldown>0?dash.cooldown.toFixed(1)+'s':player.energy<VD.COST?'CHARGE':'READY';$('#decoyReady').textContent=TD.visible(decoy)?decoy.left.toFixed(1)+'s / '+decoy.hp+'HP':decoy.cooldown>0?decoy.cooldown.toFixed(1)+'s':player.energy<TD.COST?'CHARGE':'READY';$('#decoyPill').classList.toggle('cooling',decoy.cooldown>0);$('#dashPill').classList.toggle('cooling',dash.cooldown>0);$('#dashPill').classList.toggle('ready',dash.cooldown<=0&&player.energy>=VD.COST);$('#cacheStatus').textContent=fieldCaches.channel>=0?Math.round(BEACON.snapshot(fieldCaches,fieldCaches.channel).ratio*100)+'% · '+fieldCaches.left.toFixed(1)+'s':`${fieldCaches.used.filter(x=>!x).length}/3`;$('#cachePill').classList.toggle('channel',fieldCaches.channel>=0);$('#cacheAction').disabled=!active||paused||suspended||finished||defeated||!FC.ready(fieldCaches,relay,player,cacheSightCover(relay),T.firstCover);$('#barriers').textContent=BC.BREACHABLE_IDS.length-(barriers?.breaches||0);$('#uplinkStatus').textContent=uplinks.jamLeft>0?uplinks.jamLeft.toFixed(1)+'s':`${uplinks.used.filter(x=>!x).length}/3`;$('#uplinkPill').classList.toggle('ready',uplinks.jamLeft>0);$('#mineStatus').textContent=mines.phase[relay]==='warning'?mines.left[relay].toFixed(1)+'s':`${mines.hp.filter(n=>n>0).length}/3`;$('#breachPill').classList.toggle('cooling',mines.phase[relay]==='warning');$('#uplinkAction').disabled=!active||paused||suspended||finished||defeated||!SU.ready(uplinks,relay,player.x,player.z,player.energy,hostiles>0);$('#pulseAction').disabled=!active||finished||defeated||paused||suspended||pulseCooldown>0||player.energy<CB.COST;$('#dashAction').disabled=!VD.ready(dash,player.energy,active&&!paused&&!suspended&&!finished&&!defeated);$('#decoyAction').disabled=!TD.ready(decoy,player.energy,active&&!paused&&!suspended&&!finished&&!defeated);$('#recoveryPill').classList.toggle('spent',recoveriesLeft===0);$('#energyBar').style.width=clamp(player.energy||0,0,100)+'%';const target=currentRelay();if(defeated)$('#objText').textContent='OPERATION FAILED — both hull collapses. Retry this operation; no score or unlock.';else if(finished)$('#objText').textContent='Operation secured.';else if(hostiles)$('#objText').textContent=`Relay ${relay+1}: neutralize ${hostiles} hostile${hostiles===1?'':'s'}. ${uplinks.jamLeft>0?'SIGNAL JAM ACTIVE: hostile charge weapons disabled.':uplinks.used[relay]?'Signal spire exhausted.':'Optional green salvage cache: C / RS / SALVAGE within 3.2m channels an exposed hull and energy recovery. Optional cyan signal spire: F / LB / UPLINK within 3.6m to jam weapons (30 energy). Orange mines harm pursuing drones and damage exposed armored barriers: bait the blast, shield, retreat or disarm with two shots.'} T / gamepad RB / DECOY creates a 38-energy two-hit hologram that draws enemy aim, but incoming shots still obey cover and can hit you. Destroyed units may drop repair or Aegis-energy salvage.`;else if(target){const d=Math.hypot(player.x-target[0],player.z-target[1]);$('#objText').textContent=d<5?`Hold relay perimeter: ${Math.min(100,Math.round(capture/3*100))}% stabilized. ${relaySurge?.phase==='warning'?'SURGE CHARGING: Q/PULSE jams, E/AEGIS shields, or retreat!':'Watch for amber surge warning.'}`:`Relay ${relay+1} is clear. Drive into its beacon; warning surges can be jammed with Q/PULSE or blocked with AEGIS.`}else $('#objText').textContent='All relays secured. Drive into the green extraction perimeter.';$('.shield').classList.toggle('on',shieldActive());$('#rankStatus').textContent=!active?'Ranked circuit: start in operation 1; finish all three without restart or field recovery.':rankedRun?(finished&&chainWins===3?'RANKED CIRCUIT COMPLETE · '+circuitScore.toLocaleString()+' earned points.':'RANKED CIRCUIT · '+chainWins+'/3 operations secured in order'):defeated?'DEFEAT · no clear, progression or ranked score.':'PRACTICE · progress and salvage count, but no competitive score.'}
+function routeNow(){
+ const target=currentRelay()||data.exit;
+ const goal=Array.isArray(target)?{x:target[0],z:target[1]}:null;
+ return WF.update(wayfinder,player,goal,cover,T,elapsed,active&&!finished&&!defeated&&!enemies.some(e=>!e.dead),relay,relay<3?4.5:EX.RADIUS-.5);
+}
+function render(){
+ if(!engine)return;
+ const route=routeNow();const lock=RELAYLOCK.observe({active,finished,defeated,hostiles:enemies.filter(e=>!e.dead).length,relay,capture,player,target:currentRelay()?{x:currentRelay()[0],z:currentRelay()[1]}:null,warning:relaySurge?.phase==='warning'});
+ const extraction=EX.observe({exit:data.exit,player,relay,active,finished,defeated});
+ const relayLabel=extraction?EX.label(extraction):RELAYLOCK.label(lock),relayVoice=extraction?EX.announcement(extraction):RELAYLOCK.announcement(lock);
+ if($('#relayLockStatus').textContent!==relayLabel)$('#relayLockStatus').textContent=relayLabel;
+ if($('#relayLockVoice').textContent!==relayVoice)$('#relayLockVoice').textContent=relayVoice;
+ const shotLine=active&&!finished&&!defeated?TRACE.trace(player,cover,enemies,mines,relay,T,TRACE.RANGE,{cap:CAP,state:phaseCapacitors,progress:circuitState.progress,armed:fluxTrial.startedAt!==null}):null;const breachFocus=BREACHSCAN.inspect(shotLine,barriers,BC);const breachText=BREACHSCAN.label(breachFocus);if($('#breachCue').textContent!==breachText)$('#breachCue').textContent=breachText;const started=performance.now(),low=engine.mode==='canvas2d'||innerWidth<700,fxp=Math.sin(player.yaw||0),fzp=Math.cos(player.yaw||0);
+ engine.fog=[parseInt(data.fog.slice(1,3),16)/255,parseInt(data.fog.slice(3,5),16)/255,parseInt(data.fog.slice(5,7),16)/255];
+ const now=performance.now(),frameDelta=Math.min(.06,Math.max(0,(now-cameraRenderAt)/1000));cameraRenderAt=now;
+ const desiredView=CAM.resolve(player,cover,cameraVista.mode);
+ const view=VP.follow(cameraVista,desiredView,player,cover,CAM,active&&!paused&&!suspended&&!finished&&!defeated?frameDelta:0,$('#calm').checked||calmPreference);engine.begin(view.eye,view.target);
+ engine.cubeBatch(low?sceneryLow:scenery);
+ FLUX.render(engine,low,fluxState.active,$('#calm').checked,elapsed);CIRCUIT.render(engine,low,circuitState.progress,$('#calm').checked,elapsed);PHASE.render(engine,low,$('#calm').checked,circuitState.progress,elapsed,fluxTrial.startedAt,phaseCapacitors,phaseScreens.resolved);TELEGRAPH.render(engine,PHASE.current(circuitState.progress),PHASE.timing(PHASE.current(circuitState.progress),elapsed,fluxTrial.startedAt,phaseCapacitors),low,$('#calm').checked,PHASE.current(circuitState.progress)&&phaseScreens.resolved[PHASE.SCREENS.indexOf(PHASE.current(circuitState.progress))]);CAP.render(engine,phaseCapacitors,circuitState.progress,$('#calm').checked);GUIDE.render(engine,courseGuide,WF.markers,low,$('#calm').checked,elapsed);
+ SKY.render(engine,{op,relays:data.relays,relay,elapsed,low,calm:$('#calm').checked,warning:relaySurge?.phase==='warning'});
+ // An observed prior complete-run trace, replayed in sim time. Never touches
+ // collision, AI targeting, scoring, checkpoints or physical inputs.
+ const echoAt=active&&!finished?GHOST.position(ghost.previous,elapsed):null;
+ if(echoAt){const y=1.05,a=echoAt.yaw;
+  engine.cube(echoAt.x,y,echoAt.z,1.45,.26,2.4,'#a78bfa',a,.45);
+  engine.cube(echoAt.x,y+.35,echoAt.z,.78,.38,.95,'#ddd6fe',a,.55);
+  engine.cube(echoAt.x+Math.sin(a)*1.12,y+.18,echoAt.z+Math.cos(a)*1.12,.2,.18,.6,'#c4b5fd',a,.7);
+ }
+ BREACHWAVE.render(engine,breachWave,low,$('#calm').checked||calmPreference);for(const fragment of debris){const m=SD.geometry(fragment);engine.cube(m.x,m.y,m.z,m.sx,m.sy,m.sz,m.color,m.yaw,m.em);}if(TD.visible(decoy)){
+  const t=elapsed,steady=$('#calm').checked,osc=steady?0:Math.sin(t*6)*.14,ring=steady?6:10;
+  engine.cube(decoy.x,.15,decoy.z,2.6,.18,2.6,'#42325d',.12,.35);
+  engine.cube(decoy.x,1.32+osc,decoy.z,1.25,1.65,1.25,'#b39dff',t*.5,.6);
+  engine.cube(decoy.x,2.42+osc,decoy.z,.55,.65,.55,'#f5d0fe',-t*.7,.9);
+  for(let j=0;j<ring;j++){const a=j*Math.PI*2/ring;engine.cube(decoy.x+Math.sin(a)*1.65,.12,decoy.z+Math.cos(a)*1.65,.28,.2,.6,'#a78bfa',a,.7);}
+  for(let j=0;j<decoy.hp;j++)engine.cube(decoy.x-(decoy.hp-1)*.42+j*.84,3.08+osc,decoy.z,.56,.12,.3,'#f5d0fe',0,.85);
+ }if(dashFlash>0){const rings=$('#calm').checked?2:8;for(let j=0;j<rings;j++){
+ const phase=j/rings*2*Math.PI,dist=2.1+(1-dashFlash/.32)*1.3;
+ engine.cube(player.x+Math.sin(phase)*dist,.22,player.z+Math.cos(phase)*dist,.27,.12,.65,'#2dd4bf',phase,.55);
+ }}if(pulseFlash>0&&!$('#calm').checked){for(let i=0;i<24;i++){const a=i*Math.PI/12;engine.cube(player.x+Math.sin(a)*CB.RADIUS,.14,player.z+Math.cos(a)*CB.RADIUS,.55,.13,.35,'#22d3ee',a,.95);}}
+ for(let i=0;i<3;i++){const site=uplinks.sites[i],spent=uplinks.used[i],lit=i===relay&&!spent,col=spent?'#475569':lit?'#22d3ee':'#385575';engine.cube(site.x,.16,site.z,2,.3,2,'#0b2839');engine.cube(site.x,1.5,site.z,.65,2.6,.65,col,0,lit?.8:.1);engine.cube(site.x,3.1,site.z,1.25,.45,1.25,col,elapsed*.35,lit?.9:.2);if(lit){engine.cube(site.x,3.7,site.z,.45,.35,.45,'#a5f3fc',elapsed*.65,1);}}
+ for(let i=0;i<3;i++){
+  FAB.render(engine,fieldCaches,i,elapsed,{low,calm:$('#calm').checked||calmPreference});
+  if(fieldCaches.channel===i)BEACON.render(engine,fieldCaches,i,player,{low,calm:$('#calm').checked||calmPreference});
+ }
+ for(let i=0;i<3;i++){
+  const q=mines.sites[i],hp=mines.hp[i],warning=i===relay&&mines.phase[i]==='warning',lit=i===relay&&hp>0;
+  engine.cube(q.x,.12,q.z,2.7,.18,2.7,hp>0?'#58331c':'#1f3540');
+  if(hp>0){engine.cube(q.x,.5,q.z,.95,.65,.95,lit?'#fb923c':'#766251',elapsed*.2,lit?.75:.15);
+   for(const side of[-1,1])engine.cube(q.x+side*1.25,.42,q.z,.22,.5,.8,lit?'#f59e0b':'#394958',0,lit?.7:.1);
+   if(warning){const count=$('#calm').checked?8:16;
+    for(let j=0;j<count;j++){const a=j*Math.PI*2/count;engine.cube(q.x+Math.sin(a)*AM.BLAST,.12,q.z+Math.cos(a)*AM.BLAST,.7,.1,.18,'#fbbf24',a,.85);}
+    engine.cube(q.x,1.5+Math.sin(elapsed*9)*.18,q.z,.65,.22,.65,'#fcd34d',elapsed,1);
+   }
+  }else engine.cube(q.x,.35,q.z,1.2,.35,1.2,'#395064');
+ }
+ for(let i=0;i<3;i++){const q=data.relays[i],done=i<relay,current=i===relay,col=done?'#34d399':current?data.accent:'#54677c';
+  engine.faceted('hull',q[0],.1,q[1],6,.18,6,'#142b37',0,0);for(const s of[-1,1]){engine.cube(q[0]+s*2.7,2,q[1],.55,4,.7,'#314b5d');engine.cube(q[0]+s*2.7,2.4,q[1]-.4,.16,2.7,.1,col,0,.8);}engine.cube(q[0],4.2,q[1],6,.4,.7,col,0,.4);
+  if(current||done)for(let j=0;j<12;j++){const a=j*Math.PI/6;engine.cube(q[0]+Math.sin(a)*4.5,.04,q[1]+Math.cos(a)*4.5,.8,.07,.12,col,a,.4);}
+  if(current&&relaySurge?.phase==='warning'){
+   const charging=SR.progress(relaySurge),count=$('#calm').checked?12:20;
+   for(let j=0;j<count;j++){const a=j*Math.PI*2/count;
+    engine.cube(q[0]+Math.sin(a)*SR.RADIUS,.14,q[1]+Math.cos(a)*SR.RADIUS,.72,.16+charging*.08,.18,'#fbbf24',a,.65+charging*.3);
+   }
+   engine.cube(q[0],4.9+charging*.9,q[1],1.15+charging*.65,.4,1.15+charging*.65,'#f59e0b',0,.85);
+  }
+ }
+ EX.render(engine,extraction,low,$('#calm').checked||calmPreference);
+ // The ring is only a visual projection of actual elapsed capture progress.
+ RELAYLOCK.render(engine,lock,low,$('#calm').checked||calmPreference);
+ // Render a real collision-verified walking/driving corridor, not a direct
+ // arrow through barricades. Markers are bounded and reduced in Calm mode.
+ if(route){const marks=WF.markers(route),stride=$('#calm').checked?3:1;
+  for(let i=0;i<marks.length;i+=stride){const q=marks[i],strong=i===marks.length-1;
+   engine.cube(q.x,.10,q.z,strong?1.05:.58,.08,strong?1.05:.58,strong?'#bdfcfe':'#22d3ee',0,strong?.85:.45);
+   if(strong)engine.cube(q.x,.42,q.z,.25,.66,.25,'#67e8f9',0,.75);
+  }
+ }
+ const crossfireView=active&&!paused&&!suspended&&!finished&&!defeated?CFVIEW.observe(player,enemies,cover,T.firstCover,T.segmentCircle,HT,CROSSFIRE,TYPES,TD.visible(decoy)?decoy:null,(d,ax,az,bx,bz)=>TD.hitTime(d,ax,az,bx,bz,T)):null;
+ CFVIEW.render(engine,crossfireView,low,$('#calm').checked||calmPreference);
+ const conduitTarget=active&&!finished&&!defeated?SCAN.observe(player,enemies,cover,T.firstCover,SCAN.RANGE,TYPES):null;
+ const segment=(ax,az,bx,bz,color,width=.08)=>{const d=Math.hypot(bx-ax,bz-az);engine.cube((ax+bx)/2,.09,(az+bz)/2,width,.06,d,color,Math.atan2(bx-ax,bz-az),.65);};
+ let directThreat=null;
+ for(const e of enemies)if(!e.dead){const q=TYPES[e.type],col=e.flash?'#ffffff':q.color,size=q.size;
+  engine.shadow(e.x,.01,e.z,size*2,size*2,e.yaw);
+  // Distinct first-party 3D armor classes; cumulative HP-derived plate loss and exposed conduits communicate actual enemy damage (cosmetic only). Detail is distance/perf bounded.
+  ES.render(engine,{...e,size},low||Math.hypot(e.x-player.x,e.z-player.z)>28?'lite':'full',elapsed,$('#calm').checked);
+  SPACING.render(engine,e,low,$('#calm').checked||calmPreference);BYPASS.render(engine,e,low,$('#calm').checked||calmPreference);
+  if(e.state==='evade'){engine.cube(e.x,2.15,e.z,.8,.2,.8,e.skyburstEvading?'#67e8f9':'#f97316',elapsed*4,.85);engine.cube(e.x-Math.sin(e.yaw)*.8,.65,e.z-Math.cos(e.yaw)*.8,.35,.15,.75,'#fed7aa',e.yaw,.6);}if(e.skyburstEvading){engine.cube(e.x,.21,e.z,1.35,.12,1.35,'#22d3ee',e.yaw,.7);if(!$('#calm').checked)engine.cube(e.x-Math.sin(e.yaw)*1.05,.5,e.z-Math.cos(e.yaw)*1.05,.5,.15,.7,'#a5f3fc',e.yaw,.55);}
+  if(e.suppressedLeft>0&&e.state!=='stagger'){engine.cube(e.x,3.26,e.z,size*1.5,.13,size*1.5,'#22d3ee',elapsed*4,Math.min(1,e.suppressedLeft/.3));}if(e.state==='stagger'){const phase=elapsed*3;for(const side of[-1,1])engine.cube(e.x+Math.cos(phase)*size*side,1.7,e.z+Math.sin(phase)*size*side,.15,2.5,.15,'#67e8f9',phase,1);engine.cube(e.x,3.45,e.z,.7,.15,.7,'#22d3ee',phase,1);}engine.cube(e.x,2.8,e.z,size*2,.11,.16,'#263447',0);engine.cube(e.x-size*(1-e.hp/e.max),2.8,e.z,size*2*e.hp/e.max,.13,.18,col,0,.4);
+  if(e.state==='windup'&&!e.siegeTarget){
+   const lanes=HT.lanes(e,cover,T.firstCover);HT.render(engine,e,cover,T.firstCover,low,$('#calm').checked,lanes);
+   const danger=HT.dangerAt(e,lanes,player,T.segmentCircle);
+   if(danger&&(!directThreat||danger.arrival<directThreat.arrival))directThreat=danger;
+  }
+ }
+ SCAN.render(engine,conduitTarget,elapsed,low,$('#calm').checked||calmPreference);
+ OVERGUARD.render(engine,OVERGUARD.links(enemies,cover,T.firstCover,uplinks.jamLeft>0,elapsed),low,$('#calm').checked,elapsed);AegisWardenSupport.render(engine,enemies,low,$('#calm').checked,elapsed);SB.render(engine,siegeShells,enemies,low,$('#calm').checked||calmPreference);COUNTER.render(engine,counterBursts,low,$('#calm').checked||calmPreference);SHOCK.render(engine,shockBursts,low,$('#calm').checked||calmPreference);
+ const aimX=player.x+fxp*26,aimZ=player.z+fzp*26,wall=T.firstCover(player.x,player.z,aimX,aimZ,cover);segment(player.x,player.z,wall?wall.x:aimX,wall?wall.z:aimZ,'#478d9b',.045);if(shotLine)TRACE.marker(engine,shotLine,$('#calm').checked);BREACHSCAN.render(engine,breachFocus,low,$('#calm').checked||calmPreference);
+ for(const s of shots)engine.cube(s.x,1.1,s.z,.14,.14,.9,s.reflected?'#bef264':'#d9faff',Math.atan2(s.vx,s.vz),1);
+ for(const b of bolts)engine.cube(b.x,1.1,b.z,.24,.24,.8,'#fb923c',Math.atan2(b.vx,b.vz),1);
+ for(const q of pickups){const y=1+($('#calm').checked?0:Math.sin(elapsed*4+q.bob)*.2);engine.cube(q.x,y,q.z,.75,.75,.75,q.type==='repair'?'#86efac':'#e879f9',elapsed,.6);}
+ PICKUP.render(engine,pickupFX,low,$('#calm').checked||calmPreference);
+ for(const p of particles)engine.cube(p.x,Math.max(.1,p.y),p.z,p.size,p.size,p.size,p.color,0,.6);
+ // First-party articulated vehicle geometry is cosmetic; gameplay still uses
+ // the original radius-1.15 T.move collision and authoritative cannon state.
+ engine.shadow(player.x,.01,player.z,4,4,player.yaw);
+ CONTACT.render(engine,player,bodyContactLeft,low,$('#calm').checked||calmPreference);DASHCONTACT.render(engine,dashImpact,low,$('#calm').checked||calmPreference);
+ PC.render(engine,player,playerRig,{low,calm:$('#calm').checked,accent:data.accent,shield:shieldActive(),dash:dash.remaining>0||dashFlash>.01});
+ FRACTURE.render(engine,player,shieldFractureFlash,low,$('#calm').checked||calmPreference);
+ IMPACTDIR.render(engine,impactDirection,player,low,$('#calm').checked||calmPreference);
+ SE.render(engine,player,evasion,$('#calm').checked);SP.render(engine,spatial,$('#calm').checked);
+ if(RG.protects(recoveryGrace)){const ringCount=$('#calm').checked?8:12;for(let i=0;i<ringCount;i++){const a=i*Math.PI*2/ringCount;engine.cube(player.x+Math.sin(a)*2.85,.5,player.z+Math.cos(a)*2.85,.23,.72,.15,'#fcd34d',a,.6+recoveryGrace.remaining/RG.DURATION*.3);}engine.cube(player.x,2.25,player.z,2.8,.16,2.8,'#fde68a',elapsed*.3,.55);}
+ if(muzzle>0)engine.cube(player.x+fxp*2.7,1.25,player.z+fzp*2.7,.5,.4,.6,'#fff3b0',player.yaw,1);
+ if(shieldActive())for(let i=0;i<12;i++){const a=i*Math.PI/6;
+  engine.cube(player.x+Math.sin(a)*2.7,1.15,player.z+Math.cos(a)*2.7,.15,1.7,.15,perfectGuard.window>0?'#bef264':'#67e8f9',a,perfectGuard.window>0?1:.8);
+  if(perfectGuard.window>0&&i%2===0)engine.cube(player.x+Math.sin(a)*2.25,2.3,player.z+Math.cos(a)*2.25,.12,.8,.12,'#e0ff9e',a,.7);
+ }
+ if(engine.end)engine.end();
+ const forecastText=CFVIEW.cue(crossfireView);if($('#crossfirePreview').textContent!==forecastText)$('#crossfirePreview').textContent=forecastText;
+ const conduitText=SCAN.cue(conduitTarget);if($('#conduitScanner').textContent!==conduitText)$('#conduitScanner').textContent=conduitText;
+ drawRadar();$('#hitMarker').style.opacity=impact>0&&!$('#calm').checked?'1':'0';
+ const warning=enemies.find(e=>!e.dead&&e.state==='windup'),staggered=enemies.filter(e=>!e.dead&&e.state==='stagger').length;say(!active?'':suspended?'SUSPENDED / controls frozen':FG.required(focusGuard)?'FOCUS PAUSED / press P or Resume combat':paused?'PAUSED / P or Resume':directThreat&&mines.phase[relay]!=='warning'&&!enemies.some(e=>!e.dead&&e.state==='windup'&&e.siegeTarget)?HT.dangerLabel(directThreat):staggered?(silenceLeft>0?'SKYBURST SILENCE · ':'PULSE BREAK · ')+staggered+' staggered hostile'+(staggered===1?'':'s')+' vulnerable / double shot damage':mines.phase[relay]==='warning'?'CAPACITOR ARMING · '+mines.left[relay].toFixed(1)+'s / light drones try to escape, heavy drones stay exposed':warning?(warning.siegeTarget?'WARDEN SKYBURST / EXIT THE RING, SHIELD, TAKE COVER OR LURE HOSTILES INTO IT / DEMOLISH STRIPED COVER':warning.type.toUpperCase()+(HT.pattern(warning.type).offsets.length===3?' THREE-LANE LOCK':' LOCK')+' / evade every marked orange lane or take cover'):relaySurge?.phase==='warning'?'RELAY SURGE CHARGING · Q/PULSE to jam · E/AEGIS to shield · retreat to evade':'');
+ $('#pauseButton').textContent=paused?'Resume':'Pause';$('#pauseButton').setAttribute('aria-pressed',String(paused));
+ const target=currentRelay()||data.exit,d=Math.hypot(player.x-target[0],player.z-target[1]);$('#aimCue').textContent=active?(relay<3?'RELAY '+(relay+1):'EXTRACTION')+' / '+(route?'SAFE ROUTE '+Math.round(route.distance)+'m':Math.round(d)+'m')+' / '+(route?'follow cyan waypoints':relay>=3?'green perimeter':innerWidth<700?'cyan beacon':'cyan on radar')+' / '+TRACE.label(shotLine):'SELECT AN OPERATION';
+ $('#aimCue').dataset.line=shotLine?.kind||'clear';const rendererLabel=engine.mode==='webgl2'?'WEBGL2 / LOCAL RENDERING':rendererRecovered?'SOFTWARE 3D / GRAPHICS RECOVERY':'SOFTWARE 3D / LOW-GPU MODE';if($('#renderBadge').textContent!==rendererLabel)$('#renderBadge').textContent=rendererLabel;
+ if(diagnostics.renderMs.length<360)diagnostics.renderMs.push(performance.now()-started);
+}
+function drawRadar(){
+ const ctx=$('#radar').getContext('2d'),scale=1.85,pt=(x,z)=>[82+x*scale,82+z*scale];ctx.clearRect(0,0,164,164);ctx.fillStyle='#07131eea';ctx.fillRect(0,0,164,164);ctx.strokeStyle='#233c4f';ctx.lineWidth=1;
+ for(let n=8;n<164;n+=25){ctx.beginPath();ctx.moveTo(n,0);ctx.lineTo(n,164);ctx.moveTo(0,n);ctx.lineTo(164,n);ctx.stroke();}
+ ctx.fillStyle='#5b7282';for(const b of cover){const p=pt(b.x-b.w/2,b.z-b.d/2);ctx.fillStyle=BC.status(barriers,b.id)?'#fbbf24':'#5b7282';ctx.fillRect(p[0],p[1],b.w*scale,b.d*scale);}
+ PHASE.SCREENS.forEach(s=>{const p=pt(0,s.z),mode=CAP.disabled(phaseCapacitors,s.id)?'disabled':PHASE.phase(s,elapsed,fluxTrial.startedAt);ctx.fillStyle=mode==='disabled'?'#34d399':mode==='live'?'#fb7185':mode==='warning'?'#fbbf24':'#67e8f9';ctx.fillRect(p[0]-5,p[1]-1,10,2);});
+ CIRCUIT.GATES.forEach((g,i)=>{const p=pt(g.x,g.z);ctx.strokeStyle=i<circuitState.progress?'#25645d':i===circuitState.progress?'#a7f3d0':'#2a7180';ctx.lineWidth=i===circuitState.progress?2:1;ctx.strokeRect(p[0]-3,p[1]-3,6,6);});
+ fieldCaches.sites.forEach((q,i)=>{const p=pt(q.x,q.z);ctx.strokeStyle=fieldCaches.used[i]?'#475569':i===relay?'#86efac':'#326c50';ctx.lineWidth=i===relay?2:1;ctx.strokeRect(p[0]-4,p[1]-4,8,8);if(fieldCaches.channel===i){ctx.fillStyle='#86efac';ctx.fillRect(p[0]-2,p[1]-2,4,4);}});
+ mines.sites.forEach((q,i)=>{const p=pt(q.x,q.z);ctx.fillStyle=mines.hp[i]>0?(i===relay?'#f59e0b':'#776253'):'#334155';ctx.fillRect(p[0]-3,p[1]-3,6,6);if(i===relay&&mines.phase[i]==='warning'){ctx.strokeStyle='#fbbf24';ctx.beginPath();ctx.arc(p[0],p[1],AM.BLAST*scale,0,Math.PI*2);ctx.stroke();}});
+ uplinks.sites.forEach((q,i)=>{const p=pt(q.x,q.z);ctx.fillStyle=uplinks.used[i]?'#475569':i===relay?'#22d3ee':'#3c6474';ctx.beginPath();ctx.arc(p[0],p[1],4,0,Math.PI*2);ctx.fill();});
+ data.relays.forEach((q,i)=>{const p=pt(...q);ctx.strokeStyle=i<relay?'#34d399':i===relay?'#67e8f9':'#475569';ctx.lineWidth=i===relay?2:1;ctx.strokeRect(p[0]-4,p[1]-4,8,8);if(i===relay&&relaySurge?.phase==='warning'){ctx.strokeStyle='#fbbf24';ctx.beginPath();ctx.arc(p[0],p[1],SR.RADIUS*scale,0,Math.PI*2);ctx.stroke();}});
+ if(TD.visible(decoy)){const p=pt(decoy.x,decoy.z);ctx.strokeStyle='#e9d5ff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(p[0],p[1],6,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#a78bfa';ctx.fillRect(p[0]-2,p[1]-2,4,4);}
+ const route=wayfinder.route;if(route&&active&&!finished){const points=route.points;
+  ctx.strokeStyle='#67e8f9';ctx.globalAlpha=.85;ctx.lineWidth=2;ctx.setLineDash([4,3]);ctx.beginPath();
+  const first=pt(player.x,player.z);ctx.moveTo(...first);for(const q of points)ctx.lineTo(...pt(q.x,q.z));ctx.stroke();
+  ctx.setLineDash([]);ctx.globalAlpha=1;
+ }
+ if(courseGuide.enabled&&courseGuide.route&&active&&!finished){ctx.save();ctx.strokeStyle='#d8b4fe';ctx.lineWidth=2;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(...pt(player.x,player.z));for(const q of courseGuide.route.points)ctx.lineTo(...pt(q.x,q.z));ctx.stroke();ctx.setLineDash([]);ctx.restore();}
+ for(const e of enemies)if(!e.dead){const p=pt(e.x,e.z);ctx.fillStyle=e.state==='windup'?'#fde68a':e.state==='stagger'?'#67e8f9':e.state==='evade'?'#f97316':'#fb923c';ctx.beginPath();ctx.arc(p[0],p[1],3,0,Math.PI*2);ctx.fill();}
+ for(const q of pickups){const p=pt(q.x,q.z);ctx.fillStyle=q.type==='repair'?'#86efac':'#e879f9';ctx.fillRect(p[0]-2,p[1]-2,4,4);}
+ if(relay>=3&&!defeated){const p=pt(...data.exit);ctx.strokeStyle='#34d399';ctx.beginPath();ctx.arc(p[0],p[1],EX.RADIUS*scale,0,Math.PI*2);ctx.stroke();}
+ const echoAt=active&&!finished?GHOST.position(ghost.previous,elapsed):null;
+ if(echoAt){const e=pt(echoAt.x,echoAt.z);ctx.strokeStyle='#d8b4fe';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(e[0],e[1],5,0,Math.PI*2);ctx.stroke();}
+ const p=pt(player.x,player.z);ctx.save();ctx.translate(...p);ctx.rotate(-player.yaw);ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(0,5);ctx.lineTo(-3,-3);ctx.lineTo(3,-3);ctx.closePath();ctx.fill();ctx.restore();
+}
+function km(e,on){
+ for(const k of['up','down','left','right'])if(WWGInput.is(e,k)){held[k]=on;syncControls();return true;}
+ if(WWGInput.is(e,'secondary')||e.code==='KeyE'){held.shield=on;syncControls();return true;}
+ if(WWGInput.is(e,'primary')||e.code==='Space'){held.fire=on;if(on)fire();return true;}return false;
+}
+function editable(target){return !!target?.closest?.('button,input,select,textarea,a,[contenteditable="true"]');}
+// A valid saved relay must survive R / 1-3 typed on the launch briefing.
+function liveRunHotkey(){return AegisLaunchResetGuard.mayReset(active,$('#launch').style.display==='none');}
+addEventListener('keydown',e=>{if(!engine||editable(e.target))return;if(km(e,true)){e.preventDefault();return;}if(e.code==='KeyG'){e.preventDefault();if(!e.repeat)toggleGuide();return;}if(e.code==='KeyV'){e.preventDefault();if(!e.repeat)toggleView();return;}if(e.code==='KeyT'){e.preventDefault();if(!e.repeat)deployDecoy();return;}if(e.code==='KeyC'){e.preventDefault();if(!e.repeat)engageFieldCache();return;}if(e.code==='KeyF'){e.preventDefault();if(!e.repeat)activateUplink();return;}if(e.code==='KeyQ'){e.preventDefault();if(!e.repeat)pulse();return;}if(e.code==='ShiftLeft'||e.code==='ShiftRight'){e.preventDefault();if(!e.repeat)vectorDash();return;}if(e.repeat)return;if(e.code==='KeyP'){togglePause();}if(e.code==='KeyR'){if(liveRunHotkey())resetOperation();}if(/^Digit[1-3]$/.test(e.code)&&liveRunHotkey()){const i=+e.code[5]-1;if(i<meta.unlocked)resetOperation(i);}});
+addEventListener('keyup',e=>{if(km(e,false)&&!editable(e.target))e.preventDefault();});
+// Combat actions and directional steering own distinct input channels.
+// Actual ability authority remains in existing fire/pulse/VD/TD/SU/FC handlers.
+const combatHolds=AegisCombatHolds.install(document.querySelectorAll('[data-action]'),next=>{
+ touchHeld.fire=next.fire;touchHeld.shield=next.shield;syncControls();
+},action=>{
+ if(action==='fire')fire();
+ else if(action==='pulse')pulse();
+ else if(action==='dash')vectorDash();
+ else if(action==='decoy')deployDecoy();
+ else if(action==='uplink')activateUplink();
+ else if(action==='cache')engageFieldCache();
+});
+function toggleGuide(){courseGuide.enabled=!courseGuide.enabled;GUIDE.update(courseGuide,player,CIRCUIT.GATES,circuitState.progress,cover,T,WF,elapsed,active&&!finished&&!defeated);sync();return courseGuide.enabled;}
+$('#guideButton').onclick=toggleGuide;
+function toggleView(){VP.toggle(cameraVista);const b=$('#viewButton');b.textContent=cameraVista.mode==='tactical'?'View: Tactical':'View: Chase';b.setAttribute('aria-pressed',String(cameraVista.mode==='tactical'));return cameraVista.mode;}
+$('#viewButton').onclick=toggleView;
+function togglePause(){
+ if(!engine||defeated||!active||finished||suspended)return false;
+ paused=!paused;clearControls();
+ if(!paused){SP.unlock(spatial,audible());FG.acknowledge(focusGuard);$('#focusNotice p').textContent='You switched away from Aegis Verge. Movement, combat, hull damage and mission timers stay frozen until you choose to resume.';C.focus();}
+ last=performance.now();sync();return true;
+}
+function interruptFocus(){
+ if(FG.interrupt(focusGuard,active&&!paused&&!finished&&!defeated)){paused=true;}
+ suspended=true;clearControls();last=performance.now();sync();
+}
+$('#pauseButton').onclick=togglePause;$('#quiet').addEventListener('change',()=>{if(!$('#quiet').checked)SP.unlock(spatial,true);});
+$('#focusResume').onclick=()=>{if(paused)togglePause();};
+addEventListener('blur',interruptFocus);
+addEventListener('focus',()=>{suspended=document.hidden;clearControls();last=performance.now();sync();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)interruptFocus();else{suspended=false;clearControls();last=performance.now();sync();}});
+
+function renderOps(){const x=$('#ops');x.innerHTML='';OPS.forEach((o,i)=>{const b=document.createElement('button');b.textContent=`${i+1}. ${o.name}${meta.best[i]?' · '+meta.best[i]:''}`;b.disabled=i>=meta.unlocked;if(b.disabled)b.className='lock';if(i===op&&!b.disabled)b.classList.add('sel');b.onclick=()=>{op=i;clearDeploymentWarning();renderOps()};x.appendChild(b)})}renderOps();refreshCheckpointChoice();$('#resume').onclick=()=>{clearDeploymentWarning();return resumeCheckpoint()};$('#start').onclick=requestDeployment;$('#start').addEventListener('keydown',e=>{if(e.repeat&&(e.key==='Enter'||e.key===' '))e.preventDefault()});$('#continue').onclick=()=>{if(!engine)return;if(defeated){$('#done').style.display='none';resetOperation(op);C.focus();post('operation-retry',{operation:op+1,ranked:false});return;}if(!finished)return;const wasFinal=op===2,next=wasFinal?0:op+1,carry=!wasFinal&&rankedRun&&chainWins===next;$('#done').style.display='none';resetOperation(next,carry);if(wasFinal){rankedRun=true;chainWins=0;circuitScore=0}sync()};
+function resetPadEdges(){padPulsePressed=false;padDashPressed=false;padUplinkPressed=false;padDecoyPressed=false;padCachePressed=false;padViewPressed=false;padGuidePressed=false;}
+function releasePad(){padIndex=null;padIdentity=null;padReady=false;padHeld={up:false,down:false,left:false,right:false,shield:false,fire:false};resetPadEdges();syncControls();}
+function gp(){
+ padHeld={up:false,down:false,left:false,right:false,shield:false,fire:false};
+ try{const list=navigator.getGamepads?navigator.getGamepads():[],g=Array.from(list).find(p=>p&&p.connected!==false);
+ if(!g){releasePad();return;}
+ const identity=AegisGamepadNeutral.identity(g);
+ if(identity===null){releasePad();return;}
+ if(padIndex!==g.index||padIdentity!==identity){padIndex=g.index;padIdentity=identity;padReady=false;resetPadEdges();}
+ const press=i=>!!g.buttons[i]?.pressed,x=g.axes[0]||0,y=g.axes[1]||0;
+ if(!padReady){padReady=AegisGamepadNeutral.neutral(g);syncControls();return;}
+ const guidePressed=press(9);if(guidePressed&&!padGuidePressed)toggleGuide();padGuidePressed=guidePressed;const viewPressed=press(8);if(viewPressed&&!padViewPressed)toggleView();padViewPressed=viewPressed;const cachePressed=press(11);if(cachePressed&&!padCachePressed)engageFieldCache();padCachePressed=cachePressed;const pressed=press(3);if(pressed&&!padPulsePressed)pulse();padPulsePressed=pressed;const dashPressed=press(2);if(dashPressed&&!padDashPressed)vectorDash();padDashPressed=dashPressed;const uplinkPressed=press(4);if(uplinkPressed&&!padUplinkPressed)activateUplink();padUplinkPressed=uplinkPressed;const decoyPressed=press(5);if(decoyPressed&&!padDecoyPressed)deployDecoy();padDecoyPressed=decoyPressed;padHeld={left:x<-.2||press(14),right:x>.2||press(15),up:y<-.2||press(12),down:y>.2||press(13),fire:press(0),shield:press(1)};
+ }catch{releasePad();return;}syncControls();
+}
+addEventListener('gamepaddisconnected',e=>{if(e.gamepad?.index===padIndex)releasePad();});
+function loop(n){if(engine?.mode==='webgl2'&&engine.gl?.isContextLost?.())recoverRenderer({currentTarget:C});const dt=AegisFrameClock.elapsed(n,last);if(engine&&active&&!paused&&!suspended&&diagnostics.frameMs.length<360)diagnostics.frameMs.push(n-last);last=n;if(engine){gp();update(dt);render();}requestAnimationFrame(loop);}
+resetOperation(0,false,null,true);requestAnimationFrame(loop);
+
+// Legacy QA uses Playwright.set_content (about:blank) with deterministic storage
+// to inspect real gameplay state. This fixture surface is NOT installed on any
+// served HTTP(S), file:, data:, or iframe srcdoc game document.
+if (location.href === 'about:blank' && window.top === window) {
+  Object.defineProperty(window,'padReady',{configurable:true,get:()=>padReady,set:value=>{padReady=value}});
+  Object.defineProperty(window,'padCachePressed',{configurable:true,get:()=>padCachePressed,set:value=>{padCachePressed=value}});
+  Object.defineProperty(window,'cameraVista',{configurable:true,get:()=>cameraVista});
+  Object.defineProperty(window,'spatial',{configurable:true,get:()=>spatial});
+  Object.defineProperty(window,'circuitState',{configurable:true,get:()=>circuitState});
+  Object.defineProperty(window,'fluxTrial',{configurable:true,get:()=>fluxTrial});
+  Object.defineProperty(window,'courseGuide',{configurable:true,get:()=>courseGuide});
+  Object.defineProperty(window,'player',{configurable:true,get:()=>player,set:value=>{player=value}});
+  Object.defineProperty(window,'enemies',{configurable:true,get:()=>enemies,set:value=>{enemies=value}});
+  Object.defineProperty(window,'shots',{configurable:true,get:()=>shots,set:value=>{shots=value}});
+  Object.defineProperty(window,'bolts',{configurable:true,get:()=>bolts,set:value=>{bolts=value}});
+  Object.defineProperty(window,'siegeShells',{configurable:true,get:()=>siegeShells,set:value=>{siegeShells=value}});
+  Object.defineProperty(window,'pickups',{configurable:true,get:()=>pickups,set:value=>{pickups=value}});
+  Object.defineProperty(window,'cover',{configurable:true,get:()=>cover,set:value=>{cover=value}});
+  Object.defineProperty(window,'barriers',{configurable:true,get:()=>barriers,set:value=>{barriers=value}});
+  Object.defineProperty(window,'uplinks',{configurable:true,get:()=>uplinks,set:value=>{uplinks=value}});
+  Object.defineProperty(window,'mines',{configurable:true,get:()=>mines,set:value=>{mines=value}});
+  Object.defineProperty(window,'fieldCaches',{configurable:true,get:()=>fieldCaches,set:value=>{fieldCaches=value}});
+  Object.defineProperty(window,'fieldCollision',{configurable:true,get:()=>fieldCollision,set:value=>{fieldCollision=value}});
+  Object.defineProperty(window,'scenery',{configurable:true,get:()=>scenery,set:value=>{scenery=value;sceneryLow=SKY.limited(value,true)}});
+  Object.defineProperty(window,'debris',{configurable:true,get:()=>debris,set:value=>{debris=value}});
+  Object.defineProperty(window,'breachWave',{configurable:true,get:()=>breachWave});
+  Object.defineProperty(window,'SD',{configurable:true,get:()=>SD});
+  Object.defineProperty(window,'particles',{configurable:true,get:()=>particles,set:value=>{particles=value}});
+  Object.defineProperty(window,'op',{configurable:true,get:()=>op,set:value=>{op=value}});
+  Object.defineProperty(window,'relay',{configurable:true,get:()=>relay,set:value=>{relay=value}});
+  Object.defineProperty(window,'capture',{configurable:true,get:()=>capture,set:value=>{capture=value}});
+  Object.defineProperty(window,'score',{configurable:true,get:()=>score,set:value=>{score=value}});
+  Object.defineProperty(window,'elapsed',{configurable:true,get:()=>elapsed,set:value=>{elapsed=value}});
+  Object.defineProperty(window,'damageTaken',{configurable:true,get:()=>damageTaken,set:value=>{damageTaken=value}});
+  Object.defineProperty(window,'rankedRun',{configurable:true,get:()=>rankedRun,set:value=>{rankedRun=value}});
+  Object.defineProperty(window,'chainWins',{configurable:true,get:()=>chainWins,set:value=>{chainWins=value}});
+  Object.defineProperty(window,'circuitScore',{configurable:true,get:()=>circuitScore,set:value=>{circuitScore=value}});
+  Object.defineProperty(window,'paused',{configurable:true,get:()=>paused,set:value=>{paused=value}});
+  Object.defineProperty(window,'active',{configurable:true,get:()=>active,set:value=>{active=value}});
+  Object.defineProperty(window,'finished',{configurable:true,get:()=>finished,set:value=>{finished=value}});
+  Object.defineProperty(window,'defeated',{configurable:true,get:()=>defeated,set:value=>{defeated=value}});
+  Object.defineProperty(window,'clean',{configurable:true,get:()=>clean,set:value=>{clean=value}});
+  Object.defineProperty(window,'cool',{configurable:true,get:()=>cool,set:value=>{cool=value}});
+  Object.defineProperty(window,'engine',{configurable:true,get:()=>engine,set:value=>{engine=value}});
+  Object.defineProperty(window,'decoy',{configurable:true,get:()=>decoy,set:value=>{decoy=value}});
+  Object.defineProperty(window,'perfectGuard',{configurable:true,get:()=>perfectGuard,set:value=>{perfectGuard=value}});
+  Object.defineProperty(window,'dash',{configurable:true,get:()=>dash,set:value=>{dash=value}});
+  Object.defineProperty(window,'keys',{configurable:true,get:()=>keys,set:value=>{keys=value}});
+  Object.defineProperty(window,'meta',{configurable:true,get:()=>meta,set:value=>{meta=value}});
+  Object.defineProperty(window,'data',{configurable:true,get:()=>data,set:value=>{data=value}});
+  Object.defineProperty(window,'recoveryGrace',{configurable:true,get:()=>recoveryGrace});
+  Object.defineProperty(window,'recoveriesLeft',{configurable:true,get:()=>recoveriesLeft,set:value=>{recoveriesLeft=value}});
+  Object.defineProperty(window,'suspended',{configurable:true,get:()=>suspended,set:value=>{suspended=value}});
+  Object.defineProperty(window,'shieldHeldLast',{configurable:true,get:()=>shieldHeldLast,set:value=>{shieldHeldLast=value}});
+  Object.defineProperty(window,'pulseCooldown',{configurable:true,get:()=>pulseCooldown,set:value=>{pulseCooldown=value}});
+  Object.defineProperty(window,'shieldTime',{configurable:true,get:()=>shieldTime,set:value=>{shieldTime=value}});
+  Object.defineProperty(window,'relaySurge',{configurable:true,get:()=>relaySurge,set:value=>{relaySurge=value}});
+  Object.defineProperty(window,'navClock',{configurable:true,get:()=>navClock,set:value=>{navClock=value}});
+  Object.defineProperty(window,'compatPylons',{configurable:true,get:()=>compatPylons,set:value=>{compatPylons=value}});
+  Object.defineProperty(window,'impact',{configurable:true,get:()=>impact,set:value=>{impact=value}});
+  Object.defineProperty(window,'muzzle',{configurable:true,get:()=>muzzle,set:value=>{muzzle=value}});
+  Object.defineProperty(window,'playerRig',{configurable:true,get:()=>playerRig});
+  Object.defineProperty(window,'ghost',{configurable:true,get:()=>ghost});
+  Object.defineProperty(window,'GHOST',{configurable:true,get:()=>GHOST});
+  Object.defineProperty(window,'T',{configurable:true,get:()=>T});
+  Object.defineProperty(window,'CB',{configurable:true,get:()=>CB});
+  Object.defineProperty(window,'SU',{configurable:true,get:()=>SU});
+  Object.defineProperty(window,'AM',{configurable:true,get:()=>AM});
+  Object.defineProperty(window,'TD',{configurable:true,get:()=>TD});
+  Object.defineProperty(window,'FC',{configurable:true,get:()=>FC});
+  Object.defineProperty(window,'FG',{configurable:true,get:()=>FG});
+  Object.defineProperty(window,'PG',{configurable:true,get:()=>PG});
+  Object.defineProperty(window,'BC',{configurable:true,get:()=>BC});
+  Object.defineProperty(window,'VD',{configurable:true,get:()=>VD});
+  Object.defineProperty(window,'CP',{configurable:true,get:()=>CP});
+  Object.defineProperty(window,'C',{configurable:true,get:()=>C});
+  Object.defineProperty(window,'A',{configurable:true,get:()=>A});
+  Object.defineProperty(window,'OPS',{configurable:true,get:()=>OPS});
+  Object.defineProperty(window,'TYPES',{configurable:true,get:()=>TYPES});
+  Object.defineProperty(window,'evasion',{configurable:true,get:()=>evasion});
+  Object.defineProperty(window,'diagnostics',{configurable:true,get:()=>diagnostics});
+  Object.defineProperty(window,'held',{configurable:true,get:()=>held});
+  Object.defineProperty(window,'touchHeld',{configurable:true,get:()=>touchHeld});
+  Object.defineProperty(window,'padHeld',{configurable:true,get:()=>padHeld,set:value=>{padHeld=value}});
+  Object.assign(window,{FRACTURE,fluxState,FLUX,toggleGuide,GUIDE,toggleView,spatialSignal,update,render,sync,togglePause,start,fire,pulse,vectorDash,activateUplink,engageFieldCache,deployDecoy,damage,finish,completeRelay,captureRelay,stepSimulation,updateEnemies,resetOperation,resumeCheckpoint,clearCheckpoint,writeCheckpoint,storedCheckpoint,refreshCheckpointChoice,spawnWave,spawnPickup,killEnemy,collectPickup,strikeBarrier,currentRelay,shieldActive,gp,renderOps,post,makeScenery,liveCover,cacheSightCover,updateRelaySurge,syncControls,clearControls,sound,fx,say,loop});
+window.__aegisVerge={state:()=>({impactDirection:{...impactDirection},checkpoint:storedCheckpoint(),op,mission:op,relay,capture,relayLock:RELAYLOCK.observe({active,finished,defeated,hostiles:enemies.filter(e=>!e.dead).length,relay,capture,player,target:currentRelay()?{x:currentRelay()[0],z:currentRelay()[1]}:null,warning:relaySurge?.phase==='warning'}),hostiles:enemies.filter(e=>!e.dead).length,hostileCrossfireHits:diagnostics.hostileCrossfireHits,hostileCrossfireDown:diagnostics.hostileCrossfireDown,hostileCrossfireInterrupts:diagnostics.hostileCrossfireInterrupts,defeated,recoveriesLeft,recoveryGrace:recoveryGrace.remaining,hull:player.hull,energy:player.energy,score,flankHits,evades:evasion.count,damageTaken,active,flux:{active:fluxState.active,entries:fluxState.entries,distance:fluxState.distance,energySpent:fluxState.energySpent},courseGuide:{enabled:courseGuide.enabled,gate:courseGuide.gateId,route:courseGuide.route?.points||null,bearing:GUIDE.bearing(courseGuide,player)},phaseTelegraph:{announcements:phaseTelegraph.announcements,mode:PHASE.timing(PHASE.current(circuitState.progress),elapsed,fluxTrial.startedAt,phaseCapacitors).mode,label:TELEGRAPH.label(PHASE.timing(PHASE.current(circuitState.progress),elapsed,fluxTrial.startedAt,phaseCapacitors),PHASE.current(circuitState.progress),!!phaseScreens.resolved[PHASE.SCREENS.indexOf(PHASE.current(circuitState.progress))])},phaseReturn:{hits:phaseReturn.hits,guards:phaseReturn.guards,last:phaseReturn.last},phaseScreens:{hits:phaseScreens.hits,guards:phaseScreens.guards,resolved:[...phaseScreens.resolved],capacitors:[...phaseCapacitors.hp],capacitorHits:phaseCapacitors.hits,disabled:phaseCapacitors.disabled,status:PHASE.status(phaseScreens,circuitState.progress,elapsed,fluxTrial.startedAt,phaseCapacitors)},fluxTrial:{splits:[...fluxTrial.splits],best:fluxTrial.best?.duration||null,complete:fluxTrial.complete,ineligible:fluxTrial.ineligible,stored:fluxTrial.stored,elapsed:fluxTrial.startedAt===null?null:Math.max(0,elapsed-fluxTrial.startedAt)},paused,focusResumeRequired:FG.required(focusGuard),suspended,finished,clean,rankedRun,chainWins,circuitScore,unlocked:meta.unlocked,best:[...meta.best],x:player.x,z:player.z,yaw:player.yaw,pulseCooldown,pulseFlash,shieldFractureFlash,shieldFractureCount,dashCooldown:dash.cooldown,dashRemaining:dash.remaining,dashDirection:dash.direction,dashFlash,dashImpact:{armed:dashImpact.armed,flash:dashImpact.flash,count:dashImpact.count,targetIdx:dashImpact.target?.idx??null},shots:shots.length,perfectGuard:{...perfectGuard},reflectedShots:shots.filter(s=>s.reflected).length,siegeShells:siegeShells.map(s=>({...s})),counterpulse:{count:counterpulseCount,bursts:counterBursts.length,arcOrigin:counterBursts[0]?.from||null},suppression:{count:diagnostics.skyburstSuppressed,active:enemies.filter(e=>!e.dead&&e.suppressedLeft>0).length},shockfront:{active:!!player.skyburstShock,remaining:player.skyburstShock?.left||0,bursts:shockBursts.length,hostiles:enemies.filter(e=>!!e.skyburstShock&&!e.dead).length},decoy:{x:decoy.x,z:decoy.z,left:decoy.left,cooldown:decoy.cooldown,hp:decoy.hp},uplinks:{used:SU.snapshot(uplinks),jamLeft:uplinks.jamLeft,sites:uplinks.sites.map(q=>({...q}))},fieldCaches:{used:FC.snapshot(fieldCaches),channel:fieldCaches.channel,left:fieldCaches.left,sites:fieldCaches.sites.map(q=>({...q}))},mines:{hp:AM.snapshot(mines),phase:[...mines.phase],left:[...mines.left],sites:mines.sites.map(q=>({...q}))},pickupFeedback:{active:pickupFX.flashes.length,collected:pickupFX.totalCollected,remaining:pickupFX.flashes[0]?.left||0,lastType:pickupFX.flashes[0]?.type||null},pickups:pickups.map(q=>({type:q.type,x:q.x,z:q.z,l:q.life})),pylons:compatPylons.map(d=>({hp:d?0:1,down:d})),barriers:BC.BREACHABLE_IDS.map(id=>({id,...BC.status(barriers,id)})),surge:relaySurge?{...relaySurge}:null,core:{hp:relay>=3?0:1,exposed:relay>=3}}),start,resetOperation,resumeCheckpoint,startMission:resetOperation,fire,pulse,vectorDash,activateUplink,deployDecoy,engageFieldCache,damage,hit:()=>damage(10,false),clearWave:()=>{for(const e of enemies)if(!e.dead)killEnemy(e,false);enemies=[];sync()},captureCurrent:captureRelay,teleportRelay:()=>{const q=currentRelay();if(q){player.x=q[0];player.z=q[1]}},teleportCache:()=>{const q=fieldCaches.sites[relay];if(q){const near=T.nearestFree(q.x+2.45,q.z,cover,1.15);player.x=near.x;player.z=near.z;player.speed=0;}},teleportMine:()=>{const q=mines.sites[relay];if(q){player.x=q.x;player.z=q.z}},teleportExit:()=>{player.x=data.exit[0];player.z=data.exit[1]},killDrone:i=>{const e=enemies[i||0];if(e)killEnemy(e)},collectPickup:i=>{const q=pickups[i||0];if(q){player.x=q.x;player.z=q.z;update(.01)}},breakPylons:()=>{while(relay<3){for(const e of enemies)if(!e.dead)killEnemy(e,false);enemies=[];completeRelay(true)}},destroyCore:()=>{if(relay<3){while(relay<3){for(const e of enemies)if(!e.dead)killEnemy(e,false);enemies=[];completeRelay(true)}}finish()},engineReady:()=>!!engine,tactics:()=>({cover:cover.map(b=>({...b})),barricadesRemaining:BC.BREACHABLE_IDS.length-(barriers?.breaches||0),decoy:{...decoy},enemies:enemies.map(e=>({type:e.type,x:e.x,z:e.z,state:e.state,siegeTarget:e.siegeTarget,cycles:e.cycles,windup:e.windup,staggerLeft:e.staggerLeft,suppressedLeft:e.suppressedLeft||0,cool:e.cool,aimX:e.aimX,aimZ:e.aimZ,hp:e.hp})),suspended,surge:relaySurge?{...relaySurge}:null,renderer:engine?.mode,playerRig:{...playerRig},softwareFaces:engine?.softwareFaces||0,relayLock:RELAYLOCK.observe({active,finished,defeated,hostiles:enemies.filter(e=>!e.dead).length,relay,capture,player,target:currentRelay()?{x:currentRelay()[0],z:currentRelay()[1]}:null,warning:relaySurge?.phase==='warning'}),wayfinder:{points:wayfinder.route?.points||[],arrival:wayfinder.route?.arrival||null,distance:wayfinder.route?.distance||0,computes:wayfinder.computes},perfectGuard:{...perfectGuard},diagnostics:JSON.parse(JSON.stringify(diagnostics))})};
+}
+})();
 </script></body></html>

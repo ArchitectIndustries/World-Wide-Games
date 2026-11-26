@@ -62,7 +62,7 @@ with sync_playwright() as pw:
     assert sum(1 for e in events if e.get('event')=='ascendant-warden')>=3
     p.evaluate('showTrials()')
     assert p.locator('[data-rematch]').count()==3 and p.locator('[data-asc]').count()==3
-    saved=p.evaluate('JSON.parse(localStorage.getItem(SAVE_KEY))'); meta=p.evaluate('JSON.parse(localStorage.getItem(META_KEY))')
+    saved=p.evaluate('JSON.parse(localStorage.getItem(EXPEDITION_KEY)).state'); meta=p.evaluate('JSON.parse(localStorage.getItem(EXPEDITION_KEY)).meta')
     assert all(saved['attuned'][str(h)] for h in [1,2,3])
     assert meta['starlight']==18 and all(meta['rematches'][str(h)]>=1 for h in [1,2,3]) and all(meta['ascendants'][str(h)]>=1 for h in [1,2,3])
     assert not errs,errs
@@ -76,6 +76,6 @@ with sync_playwright() as pw:
     assert p2.evaluate('[state.hab,state.crests,state.party[0].i,meta.clears,meta.best]')==[2,1,2,1,4321]
     assert p2.evaluate('JSON.stringify(state.attuned)')==json.dumps({'1':False,'2':False,'3':False},separators=(',',':'))
     p2.evaluate('save()')
-    assert p2.evaluate("localStorage.getItem('wwg:astral-menagerie:save-v3')!==null && localStorage.getItem('wwg:astral-menagerie:meta-v3')!==null")
+    assert p2.evaluate("JSON.parse(localStorage.getItem('wwg:astral-menagerie:expedition-v4')).schema===4")
     p2.close(); b.close()
 print(json.dumps({'species':15,'studyNodes':3,'trainerRematches':3,'ascendantWardens':3,'starlight':18,'v2Migration':'pass','autosave':'pass','mobileOverflow':'pass'}))

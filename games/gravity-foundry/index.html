@@ -1,4 +1,6 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Gravity Foundry</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#030816;color:#fff;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;left:12px;right:12px;top:12px;display:flex;gap:8px;justify-content:space-between;pointer-events:none}.hud div{background:#061020dc;border:1px solid #203b63;border-radius:12px;padding:8px 11px;font-size:12px;backdrop-filter:blur(8px)}.hud b{font-size:17px;margin-left:4px}.tip{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);background:#061020dc;border:1px solid #203b63;border-radius:999px;padding:8px 13px;font-size:12px;color:#c7d2fe;white-space:nowrap}.reset{position:fixed;right:12px;bottom:12px;border:1px solid #385a86;background:#0b1a31;color:#fff;border-radius:12px;padding:9px 13px;font-weight:800}@media(max-width:600px){.tip{bottom:62px;font-size:10px;max-width:92vw;white-space:normal;text-align:center}}</style></head><body><canvas id="c"></canvas><div class="hud"><div>Foundry <b id="level">1/4</b></div><div>Cores <b id="cores">0/0</b></div><div>Shots <b id="shots">0</b></div></div><div class="tip" id="tip">Drag from the probe to aim. Release to launch.</div><button class="reset" id="reset">Reset</button><script>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Gravity Foundry 1.4 - Orbital Flight Forecast</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#030816;color:#fff;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;left:12px;right:12px;top:12px;display:flex;gap:8px;justify-content:space-between;pointer-events:none}.hud div{background:#061020dc;border:1px solid #203b63;border-radius:12px;padding:8px 11px;font-size:12px;backdrop-filter:blur(8px)}.hud b{font-size:17px;margin-left:4px}.tip{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);background:#061020dc;border:1px solid #203b63;border-radius:999px;padding:8px 13px;font-size:12px;color:#c7d2fe;white-space:nowrap}.reset{position:fixed;right:12px;bottom:12px;border:1px solid #385a86;background:#0b1a31;color:#fff;border-radius:12px;padding:9px 13px;font-weight:800}@media(max-width:600px){.tip{bottom:62px;font-size:10px;max-width:92vw;white-space:normal;text-align:center}}.aim-panel{position:fixed;z-index:3;left:12px;bottom:12px;width:min(490px,calc(100vw - 24px));padding:9px 10px;background:#081c37ef;border:1px solid #466c9d;border-radius:13px;box-shadow:0 8px 24px #0008}.aim-panel .readout{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:12px;margin-bottom:7px}.aim-panel .readout b{color:#a5f3fc;font-variant-numeric:tabular-nums}.aim-actions{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}.aim-actions button{padding:8px 3px;min-width:0;min-height:40px;border:1px solid #4579a6;border-radius:9px;background:#102b4d;color:white;font-size:11px;font-weight:800;touch-action:manipulation;cursor:pointer}.aim-actions button.fire{background:#155e75;border-color:#67e8f9}.aim-actions button:disabled{opacity:.55;cursor:not-allowed}.aim-actions button:focus-visible,.reset:focus-visible{outline:3px solid #fde68a;outline-offset:2px}.tip{bottom:110px;max-width:calc(100vw - 24px);white-space:normal;text-align:center;pointer-events:none}.reset{z-index:3;cursor:pointer}@media(max-width:650px){.reset{top:60px;bottom:auto}.tip{bottom:117px;font-size:11px}.aim-panel{padding:7px}.aim-actions button{font-size:10px;min-height:42px}}@media(max-height:430px){.aim-panel{left:auto;right:12px;top:61px;bottom:auto;width:min(300px,calc(100vw - 130px))}.tip{bottom:12px;font-size:10px;max-width:min(315px,calc(100vw - 24px))}.aim-panel .readout{margin-bottom:3px;font-size:10px}.aim-actions button{min-height:33px;font-size:9px}.reset{top:9px;bottom:auto;right:12px}}
+.forecast-readout{margin-top:6px;color:#c4f1ff;font-size:11px;line-height:1.25;min-height:14px}.forecast-readout strong{color:#fff}@media(max-height:430px){.forecast-readout{font-size:9px;line-height:1.1;margin-top:3px}}
+</style></head><body><canvas id="c"></canvas><div class="hud"><div>Foundry <b id="level">1/4</b></div><div>Cores <b id="cores">0/0</b></div><div>Shots <b id="shots">0</b></div></div><div class="tip" id="tip" role="status" aria-live="polite">Aim using the controls or drag the probe. The dotted orbital forecast reveals predicted core pickups and impact. Release to launch.</div><button class="reset" id="reset" type="button">Reset field (R)</button><section class="aim-panel" aria-label="Accessible launch console"><div class="readout"><span>Rotate: <b id="aimAngle">-35 deg</b></span><span>Thrust: <b id="aimPower">55%</b></span></div><div class="aim-actions"><button type="button" data-aim="left" aria-label="Rotate launch left">LEFT</button><button type="button" data-aim="right" aria-label="Rotate launch right">RIGHT</button><button type="button" data-aim="less" aria-label="Decrease launch thrust">POWER -</button><button type="button" data-aim="more" aria-label="Increase launch thrust">POWER +</button><button type="button" id="fire" class="fire">LAUNCH</button></div><div class="forecast-readout" id="forecastReadout" role="status" aria-live="polite" aria-atomic="true">Forecast: adjust aim to predict a flight.</div></section><script>
 const C=document.getElementById('c'),X=C.getContext('2d'),VW=960,VH=540;let dpr=1,sc=1,ox=0,oy=0;function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=innerWidth*dpr;C.height=innerHeight*dpr;sc=Math.min(innerWidth/VW,innerHeight/VH);ox=(innerWidth-VW*sc)/2;oy=(innerHeight-VH*sc)/2}addEventListener('resize',resize);resize();
 const levels=[
 {start:[92,430],goal:[870,105],planets:[[375,300,46,16500],[650,220,58,23000]],cores:[[280,160],[530,410],[770,360]]},
@@ -6,10 +8,175 @@ const levels=[
 {start:[80,455],goal:[880,75],planets:[[245,335,40,15000],[470,265,66,28000],[725,250,48,18000]],cores:[[250,120],[510,455],[805,360]]},
 {start:[70,270],goal:[895,270],planets:[[280,150,42,16500],[280,390,42,16500],[530,270,72,33000],[770,150,42,16500],[770,390,42,16500]],cores:[[390,95],[390,445],[670,95],[670,445]]}
 ];
-let li=0,shot=0,drag=null,status='aim',flash='',flashT=0,probe={x:0,y:0,vx:0,vy:0,r:8},cores=[];const L=document.getElementById('level'),CS=document.getElementById('cores'),SH=document.getElementById('shots'),TIP=document.getElementById('tip');
-function load(){const q=levels[li];probe={x:q.start[0],y:q.start[1],vx:0,vy:0,r:8};cores=q.cores.map((p,i)=>({x:p[0],y:p[1],got:false,i}));status='aim';drag=null;L.textContent=(li+1)+'/4';SH.textContent=shot;sync()}function sync(){CS.textContent=cores.filter(c=>c.got).length+'/'+cores.length;TIP.textContent=status==='aim'?'Drag from the probe to aim. Release to launch.':status==='fly'?'Use gravity to sweep the cores, then enter the gate.':status==='win'?'Foundry stabilized. Tap or press N for the next field.':'Probe lost. Resetting…'}function resetLevel(count=false){if(count)shot++;load()}document.getElementById('reset').onclick=()=>resetLevel(false);
-function toWorld(e){const r=C.getBoundingClientRect();return{x:(e.clientX-r.left-ox)/sc,y:(e.clientY-r.top-oy)/sc}}C.addEventListener('pointerdown',e=>{if(status==='win'){next();return}if(status!=='aim')return;const p=toWorld(e);if(Math.hypot(p.x-probe.x,p.y-probe.y)<55){drag=p;C.setPointerCapture(e.pointerId)}});C.addEventListener('pointermove',e=>{if(drag)drag=toWorld(e)});C.addEventListener('pointerup',e=>{if(!drag||status!=='aim')return;const p=toWorld(e),dx=probe.x-p.x,dy=probe.y-p.y,mag=Math.hypot(dx,dy);if(mag>8){const k=Math.min(2.2,mag/85);probe.vx=dx*2.25*k;probe.vy=dy*2.25*k;status='fly';shot++;SH.textContent=shot;sync()}drag=null});
-function next(){if(li<levels.length-1){li++;load()}else{li=0;shot=0;flash='FOUNDRY COMPLETE';flashT=3;load()}}addEventListener('keydown',e=>{if(e.code==='KeyR')resetLevel(false);if(e.code==='KeyN'&&status==='win')next()});
-let lt=performance.now();function step(t){const dt=Math.min(.025,(t-lt)/1000);lt=t;if(status==='fly'){const q=levels[li];for(const p of q.planets){let dx=p[0]-probe.x,dy=p[1]-probe.y,d2=dx*dx+dy*dy,d=Math.sqrt(d2)||1,a=p[3]*35/Math.max(900,d2);probe.vx+=dx/d*a*dt;probe.vy+=dy/d*a*dt;if(d<p[2]+probe.r){status='dead';sync();setTimeout(()=>resetLevel(false),650)}}probe.x+=probe.vx*dt;probe.y+=probe.vy*dt;for(const c of cores)if(!c.got&&Math.hypot(probe.x-c.x,probe.y-c.y)<20){c.got=true;sync()}if(probe.x<-80||probe.x>1040||probe.y<-80||probe.y>620){status='dead';sync();setTimeout(()=>resetLevel(false),650)}const g=q.goal;if(cores.every(c=>c.got)&&Math.hypot(probe.x-g[0],probe.y-g[1])<28){status='win';sync();flash=li===levels.length-1?'FOUNDRY COMPLETE':'FIELD STABLE';flashT=2.3;let b=Number(localStorage.getItem('wwg:gravity-best')||0);if(!b||shot<b)localStorage.setItem('wwg:gravity-best',shot);try{parent.postMessage({type:'wwg:game-event',game:'gravity-foundry',event:'field-cleared',score:Math.max(250,(li+1)*1800-shot*90)},'*')}catch{}}}if(flashT>0)flashT-=dt;draw(t);requestAnimationFrame(step)}
-function draw(t){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#020617';X.fillRect(0,0,innerWidth,innerHeight);X.save();X.translate(ox,oy);X.scale(sc,sc);let bg=X.createRadialGradient(500,250,20,500,250,650);bg.addColorStop(0,'#102047');bg.addColorStop(1,'#030816');X.fillStyle=bg;X.fillRect(0,0,VW,VH);for(let i=0;i<90;i++){let x=(i*137)%VW,y=(i*71)%VH;X.globalAlpha=.18+(i%5)*.08;X.fillStyle='#dbeafe';X.fillRect(x,y,1.5,1.5)}X.globalAlpha=1;const q=levels[li];for(const p of q.planets){const g=X.createRadialGradient(p[0]-p[2]*.25,p[1]-p[2]*.25,4,p[0],p[1],p[2]);g.addColorStop(0,'#a5f3fc');g.addColorStop(.22,'#2563eb');g.addColorStop(1,'#0f172a');X.fillStyle=g;X.shadowColor='#3b82f6';X.shadowBlur=18;X.beginPath();X.arc(p[0],p[1],p[2],0,7);X.fill();X.shadowBlur=0;X.strokeStyle='#284c7d';X.beginPath();X.arc(p[0],p[1],p[2]+14,0,7);X.stroke()}for(const c of cores)if(!c.got){X.save();X.translate(c.x,c.y);X.rotate(t/700+c.i);X.fillStyle='#fef08a';X.shadowColor='#facc15';X.shadowBlur=15;X.fillRect(-7,-7,14,14);X.shadowBlur=0;X.restore()}const g=q.goal;X.strokeStyle=cores.every(c=>c.got)?'#4ade80':'#475569';X.lineWidth=5;X.shadowColor=cores.every(c=>c.got)?'#22c55e':'transparent';X.shadowBlur=18;X.beginPath();X.arc(g[0],g[1],22+Math.sin(t/250)*2,0,7);X.stroke();X.shadowBlur=0;if(drag&&status==='aim'){X.strokeStyle='#93c5fd';X.lineWidth=2;X.setLineDash([8,6]);X.beginPath();X.moveTo(probe.x,probe.y);X.lineTo(drag.x,drag.y);X.stroke();X.setLineDash([]);X.fillStyle='#bfdbfe';X.font='700 12px system-ui';X.fillText('RELEASE',drag.x+8,drag.y-8)}X.fillStyle='#f8fafc';X.shadowColor='#38bdf8';X.shadowBlur=18;X.beginPath();X.arc(probe.x,probe.y,probe.r,0,7);X.fill();X.shadowBlur=0;X.fillStyle='#38bdf8';X.fillRect(probe.x-2,probe.y+8,4,8);if(flashT>0){X.fillStyle='rgba(2,6,23,.68)';X.fillRect(230,220,500,95);X.textAlign='center';X.fillStyle='#f8fafc';X.font='900 34px system-ui';X.fillText(flash,480,276)}X.restore()}load();requestAnimationFrame(step);
+let li=0,shot=0,drag=null,status='aim',flash='',flashT=0,deathWait=0,suspended=false,probe={x:0,y:0,vx:0,vy:0,r:8},cores=[];const L=document.getElementById('level'),CS=document.getElementById('cores'),SH=document.getElementById('shots'),TIP=document.getElementById('tip'),FIRE=document.getElementById('fire'),ANGLE=document.getElementById('aimAngle'),POWER=document.getElementById('aimPower'),FORECAST_READOUT=document.getElementById('forecastReadout');let aimDeg=-35,aimPower=55,padReady=false,padWasConnected=false,padA=false,padB=false;
+function aimSync(){ANGLE.textContent=(Math.round(aimDeg)>0?'+':'')+Math.round(aimDeg)+' deg';POWER.textContent=Math.round(aimPower)+'%';FIRE.disabled=status!=='aim'||suspended;document.querySelectorAll('[data-aim]').forEach(b=>b.disabled=status!=='aim'||suspended)}
+function load(){const q=levels[li];probe={x:q.start[0],y:q.start[1],vx:0,vy:0,r:8};cores=q.cores.map((p,i)=>({x:p[0],y:p[1],got:false,i}));status='aim';deathWait=0;drag=null;aimDeg=-35;aimPower=55;L.textContent=(li+1)+'/4';SH.textContent=shot;sync()}
+function sync(){CS.textContent=cores.filter(c=>c.got).length+'/'+cores.length;TIP.textContent=status==='aim'?'Aim with LEFT/RIGHT or A/D. UP/DOWN or W/S adjust power. Enter/Space or LAUNCH fires. Drag the probe to launch by touch/mouse. Controller: stick aims, A fires.':status==='fly'?'Use gravity to sweep all cores, then enter the gate.':status==='win'?(li===levels.length-1?'Foundry complete. Tap or press N to start a new run.':'Field stabilized. Tap or press N for the next field.'):'Probe lost. Resetting the current field.';aimSync()}
+function resetLevel(){load()}document.getElementById('reset').onclick=resetLevel;
+function adjustAim(mode,fine=false){if(status!=='aim'||suspended||document.hidden)return;const a=fine?1:4,v=fine?1:5;if(mode==='left')aimDeg=Math.max(-180,aimDeg-a);else if(mode==='right')aimDeg=Math.min(180,aimDeg+a);else if(mode==='more')aimPower=Math.min(100,aimPower+v);else if(mode==='less')aimPower=Math.max(10,aimPower-v);aimSync();draw(performance.now())}
+function launchVelocity(dx,dy){const mag=Math.hypot(dx,dy);if(mag<=8)return null;const k=Math.min(2.2,mag/85);return {vx:dx*2.25*k,vy:dy*2.25*k}}
+function launchVector(dx,dy){if(status!=='aim'||suspended||document.hidden)return false;const v=launchVelocity(dx,dy);if(!v)return false;probe.vx=v.vx;probe.vy=v.vy;status='fly';shot++;SH.textContent=shot;FORECAST_READOUT.textContent='Flight in progress — collect every core before entering the gate.';sync();return true}
+function launchFromConsole(){const mag=20+aimPower*1.9,a=aimDeg*Math.PI/180;return launchVector(Math.cos(a)*mag,Math.sin(a)*mag)}
+document.querySelectorAll('[data-aim]').forEach(b=>b.addEventListener('click',()=>adjustAim(b.dataset.aim)));
+FIRE.addEventListener('click',launchFromConsole);
+function toWorld(e){const r=C.getBoundingClientRect();return{x:(e.clientX-r.left-ox)/sc,y:(e.clientY-r.top-oy)/sc}}C.addEventListener('pointerdown',e=>{if(suspended||document.hidden)return;if(status==='win'){next();return}if(status!=='aim')return;const q=toWorld(e);if(Math.hypot(q.x-probe.x,q.y-probe.y)<55){drag=q;C.setPointerCapture(e.pointerId)}});
+C.addEventListener('pointermove',e=>{if(drag)drag=toWorld(e)});
+C.addEventListener('pointerup',e=>{if(!drag||status!=='aim')return;const q=toWorld(e),dx=probe.x-q.x,dy=probe.y-q.y,mag=Math.hypot(dx,dy);if(launchVector(dx,dy)){aimDeg=Math.max(-180,Math.min(180,Math.atan2(dy,dx)*180/Math.PI));aimPower=Math.max(10,Math.min(100,(mag-20)/1.9));aimSync()}drag=null});
+C.addEventListener('pointercancel',()=>{drag=null});
+function next(){if(li<levels.length-1){li++;load()}else{li=0;shot=0;load();flash='NEW FOUNDRY RUN';flashT=1.8}}addEventListener('keydown',e=>{
+ if(e.altKey||e.ctrlKey||e.metaKey||e.isComposing)return;
+ const interactive=e.target?.closest?.('button,input,select,textarea,a,[contenteditable=true]');
+ if(interactive&&['Space','Enter','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','KeyA','KeyD','KeyW','KeyS'].includes(e.code))return; // Native button activation owns Enter/Space and direction keys; N/R remain global.
+ if(e.code==='KeyR'&&!e.repeat){e.preventDefault();resetLevel();return}
+ if(e.code==='KeyN'&&status==='win'&&!e.repeat){e.preventDefault();next();return}
+ if(status!=='aim'||suspended||document.hidden)return;
+ const k={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',ArrowUp:'more',KeyW:'more',ArrowDown:'less',KeyS:'less'}[e.code];
+ if(k){e.preventDefault();adjustAim(k,e.shiftKey);return}
+ if((e.code==='Space'||e.code==='Enter')&&!e.repeat){e.preventDefault();launchFromConsole()}
+});
+// A single flight produces one terminal outcome. Swept segment contacts are evaluated in
+// travel order so a fast probe cannot tunnel through a planet or claim a gate after impact.
+// This code is original to WorldWideGames; there are no imported physics dependencies.
+function segmentHit(ax,ay,bx,by,cx,cy,r){
+ const dx=bx-ax,dy=by-ay,ox=ax-cx,oy=ay-cy,A=dx*dx+dy*dy;
+ if(ox*ox+oy*oy<=r*r)return 0;
+ if(A<1e-12)return null;
+ const B=2*(ox*dx+oy*dy),D=B*B-4*A*(ox*ox+oy*oy-r*r);
+ if(D<0)return null;
+ const t=(-B-Math.sqrt(D))/(2*A);
+ return t>=0&&t<=1?t:null;
+}
+function lose(){if(status!=='fly')return;status='dead';deathWait=.65;sync()}
+function win(){
+ if(status!=='fly'||shot<1)return;
+ status='win';const finalField=li===levels.length-1;sync();
+ flash=finalField?'FOUNDRY COMPLETE':'FIELD STABLE';flashT=2.3;
+ try{parent.postMessage({type:'wwg:game-event',game:'gravity-foundry',event:'field-cleared',meta:{field:li+1,fields:levels.length,final:finalField}},'*')}catch{}
+ if(finalField){
+  try{const raw=localStorage.getItem('wwg:gravity-best'),b=raw===null?null:Number(raw);if(b===null||!Number.isFinite(b)||shot<b)localStorage.setItem('wwg:gravity-best',shot)}catch{}
+  try{parent.postMessage({type:'wwg:game-event',game:'gravity-foundry',event:'foundry-complete',score:shot,meta:{fields:levels.length,outcome:'foundry-complete'}},'*')}catch{}
+ }
+}
+// Live flight and the bounded aim forecast use the SAME acceleration and
+// ordered swept-contact logic. Predictive dots never move gameplay state.
+function applyFoundryGravity(state,q,dt){
+ for(const planet of q.planets){
+  const dx=planet[0]-state.x,dy=planet[1]-state.y,d2=dx*dx+dy*dy,d=Math.sqrt(d2)||1,a=planet[3]*35/Math.max(900,d2);
+  state.vx+=dx/d*a*dt;state.vy+=dy/d*a*dt;
+ }
+}
+function orderedFlightContacts(q,fromX,fromY,endX,endY,remaining,r){
+ const hits=[];
+ for(const p of q.planets){const t=segmentHit(fromX,fromY,endX,endY,p[0],p[1],p[2]+r);if(t!==null)hits.push({t,priority:0,type:'planet'})}
+ for(const c of remaining)if(!c.got){const t=segmentHit(fromX,fromY,endX,endY,c.x,c.y,20);if(t!==null)hits.push({t,priority:1,type:'core',core:c})}
+ const gt=segmentHit(fromX,fromY,endX,endY,q.goal[0],q.goal[1],28);
+ if(gt!==null)hits.push({t:gt,priority:2,type:'goal'});
+ for(const [boundary,hi,a,b] of [[-80,0,fromX,endX],[1040,1,fromX,endX],[-80,0,fromY,endY],[620,1,fromY,endY]]){
+  if(hi?a>boundary:a<boundary){hits.push({t:0,priority:0,type:'bounds'});continue}
+  if(hi?b>boundary:b<boundary){const t=(boundary-a)/(b-a);if(t>=0&&t<=1)hits.push({t,priority:0,type:'bounds'})}
+ }
+ return hits.sort((a,b)=>a.t-b.t||a.priority-b.priority);
+}
+function flightStep(dt){
+ const q=levels[li],fromX=probe.x,fromY=probe.y;
+ applyFoundryGravity(probe,q,dt);
+ const endX=fromX+probe.vx*dt,endY=fromY+probe.vy*dt;
+ for(const hit of orderedFlightContacts(q,fromX,fromY,endX,endY,cores,probe.r)){
+  if(hit.type==='planet'||hit.type==='bounds'){
+   probe.x=fromX+(endX-fromX)*hit.t;probe.y=fromY+(endY-fromY)*hit.t;lose();return;
+  }
+  if(hit.type==='core'){hit.core.got=true;sync()}
+  if(hit.type==='goal'&&cores.every(c=>c.got)){
+   probe.x=fromX+(endX-fromX)*hit.t;probe.y=fromY+(endY-fromY)*hit.t;win();return;
+  }
+ }
+ probe.x=endX;probe.y=endY;
+}
+const FORECAST_DT=1/120,FORECAST_STEPS=720,FORECAST_STRIDE=12;
+let forecastCacheKey='',forecastCache=null;
+function forecastTrajectory(dx,dy){
+ const v=launchVelocity(dx,dy);if(!v)return null;
+ const q=levels[li],state={x:probe.x,y:probe.y,vx:v.vx,vy:v.vy,r:probe.r},futureCores=cores.map(c=>({...c})),points=[[state.x,state.y]],pickups=[];
+ let terminal=null,seconds=0;
+ for(let step=1;step<=FORECAST_STEPS;step++){
+  const fromX=state.x,fromY=state.y;
+  applyFoundryGravity(state,q,FORECAST_DT);
+  const endX=fromX+state.vx*FORECAST_DT,endY=fromY+state.vy*FORECAST_DT;
+  for(const hit of orderedFlightContacts(q,fromX,fromY,endX,endY,futureCores,state.r)){
+   const x=fromX+(endX-fromX)*hit.t,y=fromY+(endY-fromY)*hit.t;
+   if(hit.type==='planet'||hit.type==='bounds'){
+    terminal={kind:hit.type,x,y};seconds=(step-1+hit.t)*FORECAST_DT;break;
+   }
+   if(hit.type==='core'){hit.core.got=true;pickups.push([x,y,hit.core.i])}
+   if(hit.type==='goal'&&futureCores.every(c=>c.got)){
+    terminal={kind:'goal',x,y};seconds=(step-1+hit.t)*FORECAST_DT;break;
+   }
+  }
+  if(terminal){points.push([terminal.x,terminal.y]);break}
+  state.x=endX;state.y=endY;seconds=step*FORECAST_DT;
+  if(step%FORECAST_STRIDE===0)points.push([state.x,state.y]);
+ }
+ return {points,terminal,pickups,seconds,remaining:futureCores.filter(c=>!c.got).length};
+}
+function currentForecast(){
+ if(status!=='aim')return null;
+ let dx,dy;if(drag){dx=probe.x-drag.x;dy=probe.y-drag.y}
+ else{const mag=20+aimPower*1.9,a=aimDeg*Math.PI/180;dx=Math.cos(a)*mag;dy=Math.sin(a)*mag}
+ const key=[li,probe.x,probe.y,cores.map(c=>+c.got).join(''),Math.round(dx*10),Math.round(dy*10)].join(':');
+ if(key!==forecastCacheKey){
+  forecastCacheKey=key;forecastCache=forecastTrajectory(dx,dy);
+  if(forecastCache){
+   const f=forecastCache,impact=f.terminal?.kind==='planet'?'planet impact':f.terminal?.kind==='bounds'?'field boundary':f.terminal?.kind==='goal'?'complete gate':'6-second horizon';
+   FORECAST_READOUT.textContent='Predicted '+impact+' · '+f.pickups.length+' core pickup'+(f.pickups.length===1?'':'s')+' · '+f.seconds.toFixed(1)+'s (approx.)';
+  }else FORECAST_READOUT.textContent='Drag farther than the probe radius to forecast a shot.';
+ }
+ return forecastCache;
+}
+function drawForecast(){
+ const f=currentForecast();if(!f||f.points.length<2)return;
+ X.save();X.lineWidth=2.3;X.strokeStyle='#a5f3fc';X.setLineDash([3,7]);X.beginPath();
+ f.points.forEach(([x,y],i)=>i?X.lineTo(x,y):X.moveTo(x,y));X.stroke();X.setLineDash([]);
+ for(const [x,y] of f.pickups){X.strokeStyle='#fef08a';X.lineWidth=2;X.beginPath();X.arc(x,y,10,0,Math.PI*2);X.stroke()}
+ if(f.terminal){X.strokeStyle=f.terminal.kind==='goal'?'#4ade80':'#fb7185';X.lineWidth=3;X.beginPath();X.arc(f.terminal.x,f.terminal.y,7,0,Math.PI*2);X.stroke()}
+ X.restore();
+}
+
+let lt=performance.now();
+function updateFocus(){suspended=document.hidden||!document.hasFocus();drag=null;padReady=false;padA=false;padB=false;lt=performance.now();aimSync()}
+addEventListener('blur',()=>{suspended=true;drag=null;padReady=false;padA=false;padB=false;aimSync()});
+addEventListener('focus',()=>{suspended=document.hidden;lt=performance.now();padReady=false;padA=false;padB=false;aimSync()});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){suspended=true;drag=null;padReady=false;padA=false}else{lt=performance.now();suspended=false;padReady=false}aimSync()});
+function pollPad(dt){
+ let g=null;try{g=Array.from(navigator.getGamepads?.()||[]).find(p=>p&&p.connected!==false&&(!p.mapping||p.mapping==='standard'))||null}catch{}
+ if(!g){padWasConnected=false;padReady=false;padA=false;padB=false;return}
+ if(!padWasConnected){padWasConnected=true;padReady=false;padA=false;padB=false}
+ const x=Number.isFinite(g.axes?.[0])?g.axes[0]:0,y=Number.isFinite(g.axes?.[1])?g.axes[1]:0,a=!!g.buttons?.[0]?.pressed,b=!!g.buttons?.[1]?.pressed;
+ if(suspended||document.hidden){padReady=false;padA=a;padB=b;return}
+ if(!padReady){if(Math.abs(x)<.2&&Math.abs(y)<.2&&!a&&!b)padReady=true;padA=a;padB=b;return}
+ if(status==='aim'){
+  if(Math.abs(x)>.28){aimDeg=Math.max(-180,Math.min(180,aimDeg+x*95*dt));aimSync()}
+  if(Math.abs(y)>.28){aimPower=Math.max(10,Math.min(100,aimPower-y*65*dt));aimSync()}
+  if(a&&!padA)launchFromConsole();
+  }else if(status==='win'&&a&&!padA)next();
+ if(b&&!padB&&status!=='win')resetLevel();
+ padA=a;padB=b;
+}
+
+function step(t){
+ const dt=Math.max(0,Math.min(.025,(t-lt)/1000));lt=t;
+ if(!suspended&&!document.hidden){
+  pollPad(dt);
+  if(status==='fly'){
+   // Multiple tiny integration steps plus segment intersections detect high-speed crossings.
+   const n=Math.max(1,Math.ceil(dt/(1/120)));
+   for(let i=0;i<n&&status==='fly';i++)flightStep(dt/n);
+  }else if(status==='dead'){
+   deathWait-=dt;if(deathWait<=0)resetLevel(false);
+  }
+  if(flashT>0)flashT=Math.max(0,flashT-dt);
+ }
+ draw(t);requestAnimationFrame(step);
+}
+function draw(t){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#020617';X.fillRect(0,0,innerWidth,innerHeight);X.save();X.translate(ox,oy);X.scale(sc,sc);let bg=X.createRadialGradient(500,250,20,500,250,650);bg.addColorStop(0,'#102047');bg.addColorStop(1,'#030816');X.fillStyle=bg;X.fillRect(0,0,VW,VH);for(let i=0;i<90;i++){let x=(i*137)%VW,y=(i*71)%VH;X.globalAlpha=.18+(i%5)*.08;X.fillStyle='#dbeafe';X.fillRect(x,y,1.5,1.5)}X.globalAlpha=1;const q=levels[li];for(const p of q.planets){const g=X.createRadialGradient(p[0]-p[2]*.25,p[1]-p[2]*.25,4,p[0],p[1],p[2]);g.addColorStop(0,'#a5f3fc');g.addColorStop(.22,'#2563eb');g.addColorStop(1,'#0f172a');X.fillStyle=g;X.shadowColor='#3b82f6';X.shadowBlur=18;X.beginPath();X.arc(p[0],p[1],p[2],0,7);X.fill();X.shadowBlur=0;X.strokeStyle='#284c7d';X.beginPath();X.arc(p[0],p[1],p[2]+14,0,7);X.stroke()}for(const c of cores)if(!c.got){X.save();X.translate(c.x,c.y);X.rotate(t/700+c.i);X.fillStyle='#fef08a';X.shadowColor='#facc15';X.shadowBlur=15;X.fillRect(-7,-7,14,14);X.shadowBlur=0;X.restore()}const g=q.goal;X.strokeStyle=cores.every(c=>c.got)?'#4ade80':'#475569';X.lineWidth=5;X.shadowColor=cores.every(c=>c.got)?'#22c55e':'transparent';X.shadowBlur=18;X.beginPath();X.arc(g[0],g[1],22+Math.sin(t/250)*2,0,7);X.stroke();X.shadowBlur=0;drawForecast();if(status==='aim'&&!drag){const mag=20+aimPower*1.9,a=aimDeg*Math.PI/180,len=35+aimPower*.75,dx=Math.cos(a)*len,dy=Math.sin(a)*len;X.strokeStyle='#67e8f9';X.lineWidth=2.5;X.setLineDash([7,5]);X.beginPath();X.moveTo(probe.x,probe.y);X.lineTo(probe.x+dx,probe.y+dy);X.stroke();X.setLineDash([]);X.fillStyle='#67e8f9';X.beginPath();X.arc(probe.x+dx,probe.y+dy,4.5,0,7);X.fill()}
+ if(drag&&status==='aim'){X.strokeStyle='#93c5fd';X.lineWidth=2;X.setLineDash([8,6]);X.beginPath();X.moveTo(probe.x,probe.y);X.lineTo(drag.x,drag.y);X.stroke();X.setLineDash([]);X.fillStyle='#bfdbfe';X.font='700 12px system-ui';X.fillText('RELEASE',drag.x+8,drag.y-8)}X.fillStyle='#f8fafc';X.shadowColor='#38bdf8';X.shadowBlur=18;X.beginPath();X.arc(probe.x,probe.y,probe.r,0,7);X.fill();X.shadowBlur=0;X.fillStyle='#38bdf8';X.fillRect(probe.x-2,probe.y+8,4,8);if(flashT>0){X.fillStyle='rgba(2,6,23,.68)';X.fillRect(230,220,500,95);X.textAlign='center';X.fillStyle='#f8fafc';X.font='900 34px system-ui';X.fillText(flash,480,276)}X.restore()}load();requestAnimationFrame(step);
 </script></body></html>

@@ -1,0 +1,11 @@
+# Tideglass Surveyor — v442 build-only provenance (2026-11-19)
+
+First-party original puzzle and controller implementation. From exact v441 source archive SHA-256 `72a5acacbd01e3d6e41887dface699243d2235cb7c65335ab73c39724eaa0466`, not a Git merge base. No external code, models, artwork, sounds or packages imported.
+
+Objective: bring a complete six-chart campaign to standard-gamepad-only users without keyboard/touch, while retaining intentional one-press probes and scores. Controller polling uses standard Gamepad API D-pad/left-stick grid selection, A probe/new atlas on completion, B optional Evidence Lens, X retry. Held buttons do not repeat; reconnect and hidden-tab foreground return require neutral rearm. Existing buttons, keyboard and pointer remain.
+
+Pinned source reviewed as mechanism-only references: `gabrielecirulli/2048@478b6ec346e3787f589e4af751378d06ded4cbbc:js/keyboard_input_manager.js` (Git blob `ca01b3ce8995a5a20ac50219712d1ef95297ed99`) illustrates separation of grid-movement commands and restart. `phoboslab/q1k3@8ee934856c3f5de3c584724b9dd554314a911694:source/game.js` (Git blob `efc524e9de1abca9202e39fef24d882511933e58`) illustrates per-frame consumption of discrete input. Both source modules inspected November 19 2026, NOT run as upstream demos; WorldWideGames logic written originally. 2048 root MIT and Q1K3 MIT plus third-party audio caveat from existing library records; upstream asset/dependency rights not comprehensively audited. No upstream code/media imported, additional cost $0.
+
+Reviewed as secondary leads: `ondras/rot.js` (browser toolkit; BSD-3-Clause from GitHub project metadata), `phoboslab/underrun` (browser shooter; MIT code with Sonant-X zlib caveat), `ganochenkodg/roguelike-js` (archived browser game, code/media reuse unverified); README/repository-level only; no demonstration or star-growth assertion. Radiant Optimizer social thread, full-list reply, Pengsonal media and supplied YouTube are UNVERIFIED this run and not used as evidence for feature parity.
+
+Focus Chromium controller-emulated 74/74 across desktop/mobile in detached test record; original v441 controller absence reproduced in Chromium. Real hardware, Safari/Firefox, screen readers, installed offline PWA, unassisted solving and hardware FPS NOT tested. Other 82 registered game executables unchanged. No GitHub or production writes.

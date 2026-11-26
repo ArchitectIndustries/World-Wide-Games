@@ -1,13 +1,15 @@
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 import json
+from parallax_test_instrument import instrument
 
 ROOT=Path('.').resolve()
 SRC=(ROOT/'games/parallax-accord/index.html').read_text()
+assert "window.__parallaxAccord" not in SRC
 for token in [
     'Parallax Accord','const OPPONENTS=[','const DISTRICTS=[','const CARD_TYPES={',
     "wwg:parallax-accord:meta-v1","post('campaign-complete'","post('sweep-match'",
-    'navigator.getGamepads','window.__parallaxAccord','ARCHITECT INDUSTRIES'
+    'navigator.getGamepads','ARCHITECT INDUSTRIES'
 ]: assert token in SRC,token
 assert SRC.count("name:'") >= 9
 
@@ -19,7 +21,7 @@ window.__events=[];window.postMessage=(d)=>{if(d&&d.type==='wwg:game-event')wind
 
 def html():
     i=SRC.lower().find('<script>')
-    return SRC[:i]+PRE+SRC[i:]
+    return instrument(SRC[:i]+PRE+SRC[i:])
 
 with sync_playwright() as pw:
     browser=pw.chromium.launch(headless=True,executable_path='/usr/bin/chromium',args=['--no-sandbox','--disable-gpu'])

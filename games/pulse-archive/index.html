@@ -1,171 +1,96 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Pulse Archive</title><style>*{box-sizing:border-box}html,body{margin:0;
-height:100%;
-overflow:hidden;
-background:#080617;
-color:white;
-font-family:system-ui,sans-serif;
-touch-action:none}canvas{width:100vw;
-height:100vh;
-display:block}.hud{position:fixed;
-top:12px;
-left:12px;
-right:12px;
-display:flex;
-justify-content:space-between;
-gap:8px;
-pointer-events:none}.hud div{background:#100b27df;
-border:1px solid #4a3a7a;
-border-radius:12px;
-padding:8px 11px;
-font-size:11px}.hud b{font-size:16px;
-margin-left:4px}.lanes{position:fixed;
-left:50%;
-transform:translateX(-50%);
-bottom:14px;
-width:min(560px,calc(100% - 28px));
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:8px}.lanes button{height:68px;
-border-radius:16px;
-border:1px solid #4b3f78;
-background:#171033d9;
-color:#fff;
-font-weight:900;
-font-size:18px}.lanes button.hit{transform:translateY(2px);
-background:#35246e}</style></head><body><canvas id="c"></canvas><div class="hud"><div>Score <b id="score">0</b></div><div>Combo <b id="combo">0</b></div><div>Accuracy <b id="acc">100%</b></div><div>Phase <b id="phase">1/4</b></div></div><div class="lanes"><button data-lane="0">D</button><button data-lane="1">F</button><button data-lane="2">J</button><button data-lane="3">K</button></div><script>
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Pulse Archive</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#080617;color:white;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}.hud div{background:#100b27df;border:1px solid #4a3a7a;border-radius:12px;padding:8px 11px;font-size:11px}.hud b{font-size:16px;margin-left:4px}.lanes{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;width:min(560px,calc(100% - 28px));display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.lanes button{height:68px;border-radius:16px;border:1px solid #4b3f78;background:#171033d9;color:#fff;font-weight:900;font-size:18px}.restart{position:fixed;right:12px;bottom:94px;border:1px solid #6f5aad;border-radius:10px;background:#171033e8;color:#eee6ff;padding:8px 12px;font:700 12px system-ui;cursor:pointer}.restart:focus-visible,.lanes button:focus-visible{outline:3px solid #67e8f9;outline-offset:3px}.lanes button.hit{transform:translateY(2px);background:#35246e}.objective{position:fixed;z-index:2;top:62px;left:10px;right:10px;text-align:center;font-size:12px;line-height:1.4;color:#ece4ff;text-shadow:0 1px 5px #050315;pointer-events:none;background:#100b27d6;border-radius:9px;padding:4px 8px;margin:0 auto;max-width:780px}.result-status{position:fixed;z-index:2;top:98px;left:10px;right:10px;text-align:center;font-size:12px;line-height:1.4;color:#d8f9ff;pointer-events:none;min-height:18px;margin:0 auto;max-width:780px;padding:4px 8px;background:#100b27d6;border-radius:9px}@media(max-width:460px){.hud{gap:3px;left:5px;right:5px}.hud div{padding:5px;font-size:10px}.hud b{font-size:13px;margin-left:2px}.objective{top:53px;font-size:11px}.result-status{top:107px;font-size:11px}.lanes button{height:64px}}</style></head><body><canvas id="c"></canvas><div class="hud"><div><span id="scoreLabel">Run points</span> <b id="score">0</b></div><div>Combo <b id="combo">0</b></div><div>Accuracy <b id="acc">100%</b></div><div>Phase <b id="phase">1/4</b></div></div><p id="objective" class="objective">Hit D F J K on the timing line. Clear all four phases at 70%+ accuracy to earn a local score.</p><p id="resultStatus" class="result-status" role="status" aria-live="polite" aria-atomic="true">READY — Press D F J K, a lane button or a gamepad face button to start. Notes begin after a 1.4-second lead-in; R restarts.</p><button class="restart" id="restart" type="button" aria-label="Restart four-phase rhythm run">Restart run (R)</button><div class="lanes" aria-label="Rhythm input lanes"><button data-lane="0" aria-label="D lane">D</button><button data-lane="1" aria-label="F lane">F</button><button data-lane="2" aria-label="J lane">J</button><button data-lane="3" aria-label="K lane">K</button></div><script>
 const C=document.getElementById('c'),X=C.getContext('2d'),VW=960,VH=540;
 let dpr=1,sc=1,ox=0,oy=0;
-function resize(){dpr=Math.min(2,devicePixelRatio||1);
-C.width=innerWidth*dpr;
-C.height=innerHeight*dpr;
-sc=Math.min(innerWidth/VW,innerHeight/VH);
-ox=(innerWidth-VW*sc)/2;
-oy=(innerHeight-VH*sc)/2}addEventListener('resize',resize);
-resize();
-const SCORE=document.getElementById('score'),COMBO=document.getElementById('combo'),ACC=document.getElementById('acc'),PHASE=document.getElementById('phase');
+function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=innerWidth*dpr;C.height=innerHeight*dpr;sc=Math.min(innerWidth/VW,innerHeight/VH);ox=(innerWidth-VW*sc)/2;oy=(innerHeight-VH*sc)/2}
+addEventListener('resize',resize);resize();
+const SCORE=document.getElementById('score'),SCORELABEL=document.getElementById('scoreLabel'),RESULT=document.getElementById('resultStatus'),COMBO=document.getElementById('combo'),ACC=document.getElementById('acc'),PHASE=document.getElementById('phase');
 const colors=['#22d3ee','#a78bfa','#f472b6','#fbbf24'],keys=['KeyD','KeyF','KeyJ','KeyK'];
-let notes=[],score=0,combo=0,hits=0,judged=0,phase=1,start=0,running=true,lastBeat=-1,pressed=[0,0,0,0],ended=false,cleared=false;
+let notes=[],score=0,combo=0,hits=0,judged=0,phase=1,lastBeat=-1,pressed=[0,0,0,0],ended=false,cleared=false;
+let started=false,suspended=false,runMs=0,clockAnchor=null;
+const downKeys=new Set(),blockedKeys=new Set();
+let gpPrev=[false,false,false,false],padNeedsNeutral=true;
 const CLEAR_ACCURACY=.70;
 const qp=new URLSearchParams(location.search),muted=qp.get('muted')==='1',volume=Math.max(0,Math.min(1,Number(qp.get('volume')??.7)));
 let audio=null;
-function tone(freq,dur=.06,vol=.035){if(muted)return;
-try{audio=audio||new (AudioContext||webkitAudioContext)();
-let o=audio.createOscillator(),g=audio.createGain();
-o.frequency.value=freq;
-o.type='sine';
-g.gain.value=vol*volume;
-o.connect(g).connect(audio.destination);
-o.start();
-g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+dur);
-o.stop(audio.currentTime+dur)}catch{}}function pattern(){notes=[];
-const lanes=[0,1,2,3,1,3,0,2,0,3,2,1,0,2,3,1];
-for(let p=0;
-p<4;
-p++)for(let i=0;
-i<16;
-i++){let lane=(lanes[i]+p)%4;
-if((i+p)%7===0)lane=(lane+2)%4;
-notes.push({lane,time:(p*16+i)*.48+1.4,hit:false,miss:false})}}pattern();
-function updateHud(){SCORE.textContent=score.toLocaleString();
-COMBO.textContent=combo;
-ACC.textContent=(judged?Math.round(hits/judged*100):100)+'%';
-PHASE.textContent=Math.min(4,phase)+'/4'}function tap(l){if(ended){reset();
-return}pressed[l]=.11;
-let now=(performance.now()-start)/1000,best=null,bd=.18;
-for(const n of notes)if(!n.hit&&!n.miss&&n.lane===l){let d=Math.abs(n.time-now);
-if(d<bd){bd=d;
-best=n}}judged++;
-if(best){best.hit=true;
-hits++;
-combo++;
-let quality=bd<.055?300:bd<.11?180:100;
-score+=quality+combo*3;
-tone(280+l*95,.055,.04)}else{combo=0;
-score=Math.max(0,score-40);
-tone(120,.05,.02)}updateHud()}function reset(){score=combo=hits=judged=0;
-phase=1;
-notes.forEach(n=>{n.hit=false;
-n.miss=false});
-start=performance.now();
-ended=false;
-cleared=false;
-lastBeat=-1;
-updateHud()}addEventListener('keydown',e=>{let i=keys.indexOf(e.code);
-if(i>=0&&!e.repeat){e.preventDefault();
-tap(i)}});
-document.querySelectorAll('[data-lane]').forEach(b=>{let l=Number(b.dataset.lane);
-b.addEventListener('pointerdown',e=>{e.preventDefault();
-tap(l)})});
-
-let gpPrev=[false,false,false,false],lt=performance.now();
-function loop(t){let dt=Math.min(.03,(t-lt)/1000);
-lt=t;
-if(!start)start=t;
-for(let i=0;
-i<4;
-i++)pressed[i]=Math.max(0,pressed[i]-dt);
-try{const g=navigator.getGamepads&&navigator.getGamepads()[0];
-if(g){const map=[0,2,3,1];
-for(let i=0;
-i<4;
-i++){let on=!!g.buttons[map[i]]?.pressed;
-if(on&&!gpPrev[i])tap(i);
-gpPrev[i]=on}}}catch{}if(!ended){let now=(t-start)/1000;
-phase=Math.min(4,Math.floor(Math.max(0,now-1.4)/(16*.48))+1);
-for(const n of notes)if(!n.hit&&!n.miss&&now-n.time>.18){n.miss=true;
-judged++;
-combo=0}let beat=Math.floor((now-1.4)/.48);
-if(beat>=0&&beat!==lastBeat){lastBeat=beat;
-tone(beat%4===0?180:130,.035,.014)}if(now>notes[notes.length-1].time+1.6){ended=true;
-let accuracy=judged?hits/judged:0,final=Math.round(score+accuracy*1500);
-score=final;
-combo=0;
-cleared=accuracy>=CLEAR_ACCURACY;
-try{parent.postMessage({type:'wwg:game-event',game:'pulse-archive',event:cleared?'archive-cleared':'archive-desynced',score:final,duration:Math.max(1,Math.round(now)),meta:{unit:'pts',direction:'high',accuracy:Math.round(accuracy*100)}},'*')}catch{}}updateHud()}draw(t);
-requestAnimationFrame(loop)}function draw(t){let now=(t-start)/1000;
-X.setTransform(dpr,0,0,dpr,0,0);
-X.fillStyle='#080617';
-X.fillRect(0,0,innerWidth,innerHeight);
-X.save();
-X.translate(ox,oy);
-X.scale(sc,sc);
-let g=X.createLinearGradient(0,0,960,540);
-g.addColorStop(0,'#100d28');
-g.addColorStop(1,'#080617');
-X.fillStyle=g;
-X.fillRect(0,0,VW,VH);
-let left=185,w=590,lw=w/4,hitY=410;
-for(let l=0;
-l<4;
-l++){X.fillStyle=l%2?'#15102b':'#110d25';
-X.fillRect(left+l*lw,40,lw-3,400);
-X.strokeStyle=colors[l]+'55';
-X.strokeRect(left+l*lw,40,lw-3,400);
-X.fillStyle=pressed[l]>0?colors[l]:'#2b2250';
-X.globalAlpha=pressed[l]>0?1:.7;
-X.fillRect(left+l*lw+10,hitY,lw-23,12);
-X.globalAlpha=1}for(const n of notes){if(n.hit||n.miss)continue;
-let y=hitY-(n.time-now)*250;
-if(y<-30||y>455)continue;
-X.fillStyle=colors[n.lane];
-X.shadowColor=colors[n.lane];
-X.shadowBlur=12;
-X.fillRect(left+n.lane*lw+18,y-10,lw-40,20);
-X.shadowBlur=0}X.fillStyle='#c4b5fd';
-X.textAlign='center';
-X.font='800 13px system-ui';
-X.fillText('PULSE ARCHIVE // sync on the line',480,28);
-if(ended){X.fillStyle='rgba(6,4,18,.82)';
-X.fillRect(0,0,VW,VH);
-X.fillStyle='#fff';
-X.font='900 42px system-ui';
-X.fillText(cleared?'ARCHIVE SYNCHRONIZED':'SIGNAL DESYNCHRONIZED',480,225);
-X.font='18px system-ui';
-X.fillText(`Score ${score.toLocaleString()} • Accuracy ${judged?Math.round(hits/judged*100):100}%`,480,264);
-X.fillStyle=cleared?'#a7f3d0':'#fda4af';
-X.fillText(cleared?'Clear signal secured':'Reach at least 70% accuracy to clear',480,292);
-X.fillStyle='#fff';
-X.fillText('Press any lane to replay',480,322)}X.restore()}reset();
-requestAnimationFrame(loop);
-
+function tone(freq,dur=.06,vol=.035){if(muted)return;try{audio=audio||new (AudioContext||webkitAudioContext)();let o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;o.type='sine';g.gain.value=vol*volume;o.connect(g).connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+dur);o.stop(audio.currentTime+dur)}catch{}}
+function pattern(){notes=[];const lanes=[0,1,2,3,1,3,0,2,0,3,2,1,0,2,3,1];for(let p=0;p<4;p++)for(let i=0;i<16;i++){let lane=(lanes[i]+p)%4;if((i+p)%7===0)lane=(lane+2)%4;notes.push({lane,time:(p*16+i)*.48+1.4,hit:false,miss:false})}}
+pattern();
+function updateHud(){SCORE.textContent=score.toLocaleString();COMBO.textContent=combo;ACC.textContent=(judged?Math.round(hits/judged*100):100)+'%';PHASE.textContent=Math.min(4,phase)+'/4'}
+// A monotonic foreground clock keeps audio judgments, misses and competitive duration consistent.
+// Discard a >250ms single-task stall instead of silently marking multiple notes missed.
+function activeSeconds(at=performance.now()){
+ if(started&&!suspended&&!ended&&clockAnchor!==null&&at>=clockAnchor){const delta=at-clockAnchor;runMs+=delta>250?0:delta;clockAnchor=at}
+ return runMs/1000;
+}
+function startRun(){if(started||suspended||ended)return;started=true;clockAnchor=performance.now();RESULT.textContent='ACTIVE — The first note reaches the timing line in 1.4 seconds. Hit D F J K on the beat.'}
+function suspendRun(){if(suspended)return;activeSeconds();suspended=true;clockAnchor=null;pressed.fill(0);for(const key of downKeys)blockedKeys.add(key);downKeys.clear();gpPrev.fill(false);padNeedsNeutral=true;if(!ended)RESULT.textContent='SUSPENDED — The beat, judgments and score are frozen while the browser is inactive.'}
+function resumeRun(){if(document.hidden||!suspended)return;suspended=false;clockAnchor=started&&!ended?performance.now():null;padNeedsNeutral=true;gpPrev.fill(false);if(!ended)RESULT.textContent=started?'ACTIVE — Rhythm resumed. Release any held controls before playing.':'READY — Press D F J K or a lane button to start.'}
+addEventListener('blur',suspendRun);
+addEventListener('focus',resumeRun);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)suspendRun();else resumeRun()});
+function finish(now){if(ended)return;ended=true;clockAnchor=null;const accuracy=judged?hits/judged:0,final=Math.round(score+accuracy*1500);score=final;combo=0;cleared=accuracy>=CLEAR_ACCURACY;SCORELABEL.textContent=cleared?'Earned score':'Attempt points';RESULT.textContent=cleared?`COMPLETE — Archive synchronized at ${Math.round(accuracy*100)}% accuracy. Eligible local score: ${final.toLocaleString()} points. Press a lane to replay.`:`FAILED — Archive desynchronized at ${Math.round(accuracy*100)}% accuracy. Attempt ${final.toLocaleString()} points; unranked. Reach 70% accuracy. Press a lane to retry.`;
+ const payload={type:'wwg:game-event',game:'pulse-archive',event:cleared?'archive-cleared':'archive-desynced',duration:Math.max(1,Math.round(now)),meta:{unit:'pts',direction:'high',accuracy:Math.round(accuracy*100),outcome:cleared?'completed':'failed'}};
+ if(cleared)payload.score=final;else payload.meta.attemptValue=final;
+ try{parent.postMessage(payload,'*')}catch{};
+ updateHud();
+}
+function progress(now){if(!started||suspended||ended)return;
+ phase=Math.min(4,Math.floor(Math.max(0,now-1.4)/(16*.48))+1);
+ for(const n of notes)if(!n.hit&&!n.miss&&now-n.time>.18){n.miss=true;judged++;combo=0}
+ const beat=Math.floor((now-1.4)/.48);if(beat>=0&&beat!==lastBeat){lastBeat=beat;tone(beat%4===0?180:130,.035,.014)}
+ if(now>notes[notes.length-1].time+1.6)finish(now);
+ updateHud();
+}
+function tap(l){if(suspended)return;if(ended){reset();startRun();return}if(!started){startRun();return}
+ pressed[l]=.11;
+ const now=activeSeconds();progress(now);if(ended)return;
+ let best=null,bd=.18;
+ for(const n of notes)if(!n.hit&&!n.miss&&n.lane===l){const d=Math.abs(n.time-now);if(d<bd){bd=d;best=n}}
+ judged++;
+ if(best){best.hit=true;hits++;combo++;const quality=bd<.055?300:bd<.11?180:100;score+=quality+combo*3;tone(280+l*95,.055,.04)}
+ else{combo=0;score=Math.max(0,score-40);tone(120,.05,.02)}
+ updateHud();
+}
+function reset(){score=combo=hits=judged=0;phase=1;notes.forEach(n=>{n.hit=false;n.miss=false});runMs=0;started=false;clockAnchor=null;ended=false;cleared=false;lastBeat=-1;pressed.fill(0);gpPrev.fill(false);padNeedsNeutral=true;SCORELABEL.textContent='Run points';RESULT.textContent=suspended?'SUSPENDED — Return to this tab to start.':'READY — Press D F J K or a lane button to start. You receive a 1.4-second lead-in. R restarts.';updateHud()}
+addEventListener('keydown',e=>{
+ if(!keys.includes(e.code)&&e.code!=='KeyR')return;
+ if(e.ctrlKey||e.metaKey||e.altKey)return;
+ e.preventDefault();if(e.repeat||blockedKeys.has(e.code)||downKeys.has(e.code)||suspended)return;
+ downKeys.add(e.code);
+ if(e.code==='KeyR')reset();else tap(keys.indexOf(e.code));
+});
+addEventListener('keyup',e=>{downKeys.delete(e.code);blockedKeys.delete(e.code)});
+document.getElementById('restart').addEventListener('click',()=>{if(!suspended)reset()});
+document.querySelectorAll('[data-lane]').forEach(b=>{
+ const l=Number(b.dataset.lane);let pointerStamp=-10000;
+ // Immediate pointerdown supports accurate timing; suppress the following synthetic click.
+ b.addEventListener('pointerdown',e=>{if(e.button!==0||suspended)return;pointerStamp=performance.now();e.preventDefault();tap(l)});
+ b.addEventListener('click',e=>{if(e.pointerType&&performance.now()-pointerStamp<1000)return;tap(l)});
+});
+let lt=performance.now();
+function loop(t){const dt=Math.min(.03,Math.max(0,(t-lt)/1000));lt=t;
+ if(!suspended){for(let i=0;i<4;i++)pressed[i]=Math.max(0,pressed[i]-dt);
+  try{const g=navigator.getGamepads&&navigator.getGamepads()[0];if(g){const map=[0,2,3,1],on=map.map(i=>!!g.buttons[i]?.pressed);
+    if(padNeedsNeutral){if(!on.some(Boolean))padNeedsNeutral=false;gpPrev=on.slice()}
+    else{for(let i=0;i<4;i++)if(on[i]&&!gpPrev[i])tap(i);gpPrev=on.slice()}
+   }else{gpPrev.fill(false);padNeedsNeutral=true}
+  }catch{gpPrev.fill(false);padNeedsNeutral=true}
+  if(started&&!ended)progress(activeSeconds());
+ }
+ draw(t);requestAnimationFrame(loop);
+}
+function draw(t){const now=runMs/1000;
+ X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#080617';X.fillRect(0,0,innerWidth,innerHeight);X.save();X.translate(ox,oy);X.scale(sc,sc);
+ const g=X.createLinearGradient(0,0,960,540);g.addColorStop(0,'#100d28');g.addColorStop(1,'#080617');X.fillStyle=g;X.fillRect(0,0,VW,VH);
+ const left=185,w=590,lw=w/4,hitY=410;
+ for(let l=0;l<4;l++){X.fillStyle=l%2?'#15102b':'#110d25';X.fillRect(left+l*lw,40,lw-3,400);X.strokeStyle=colors[l]+'55';X.strokeRect(left+l*lw,40,lw-3,400);X.fillStyle=pressed[l]>0?colors[l]:'#2b2250';X.globalAlpha=pressed[l]>0?1:.7;X.fillRect(left+l*lw+10,hitY,lw-23,12);X.globalAlpha=1}
+ for(const n of notes){if(n.hit||n.miss)continue;const y=hitY-(n.time-now)*250;if(y<-30||y>455)continue;X.fillStyle=colors[n.lane];X.shadowColor=colors[n.lane];X.shadowBlur=12;X.fillRect(left+n.lane*lw+18,y-10,lw-40,20);X.shadowBlur=0}
+ X.fillStyle='#c4b5fd';X.textAlign='center';
+ if(!started||suspended||ended){X.fillStyle='rgba(6,4,18,.82)';X.fillRect(0,0,VW,VH);X.fillStyle='#fff';X.font='900 39px system-ui';X.fillText(ended?(cleared?'ARCHIVE SYNCHRONIZED':'SIGNAL DESYNCHRONIZED'):suspended?'SUSPENDED':'READY TO SYNC',480,220);X.font='18px system-ui';
+  if(ended){X.fillText(`${cleared?'Earned score':'Attempt points'} ${score.toLocaleString()} • Accuracy ${judged?Math.round(hits/judged*100):100}%`,480,266);X.font='15px system-ui';X.fillText(cleared?'This clear qualifies for a local score.':'Attempt is unranked. Reach 70% accuracy to clear.',480,293);X.fillText('Press any lane to replay',480,324)}
+  else{X.fillText(suspended?'Return to the browser to resume':'Press D F J K or tap a lane to start',480,264);X.font='15px system-ui';X.fillText('Four phases • 64 notes • 70% accuracy to clear',480,296)}
+ }
+ X.restore();
+}
+reset();requestAnimationFrame(loop);
 </script></body></html>

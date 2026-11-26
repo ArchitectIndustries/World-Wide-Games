@@ -1,12 +1,177 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Skyhook Sprint</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#08111f;color:#fff;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;inset:12px 12px auto;display:flex;gap:8px;justify-content:space-between;pointer-events:none}.hud div{background:#07111ed9;border:1px solid #24415c;border-radius:12px;padding:8px 11px;font-size:12px}.hud b{font-size:17px;margin-left:4px}.mobile{display:none;position:fixed;left:12px;right:12px;bottom:12px;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}.mobile button{height:58px;border-radius:16px;border:1px solid #2a516d;background:#0d2138dd;color:white;font-size:20px;font-weight:900}@media(pointer:coarse){.mobile{display:grid}}</style></head><body><canvas id="c"></canvas><div class="hud"><div>Time <b id="time">0.0</b></div><div>Stars <b id="stars">0/9</b></div><div>Best <b id="best">--</b></div></div><div class="mobile"><button data-k="ArrowLeft">◀</button><button data-k="ArrowRight">▶</button><button data-act="jump">JUMP</button><button data-act="hook">HOOK</button></div><script src="../../assets/wwg-input.js"></script><script>
-const C=document.getElementById('c'),X=C.getContext('2d'),VW=960,VH=540;let scale=1,ox=0,oy=0,dpr=1;function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=innerWidth*dpr;C.height=innerHeight*dpr;C.style.width=innerWidth+'px';C.style.height=innerHeight+'px';scale=Math.min(innerWidth/VW,innerHeight/VH);ox=(innerWidth-VW*scale)/2;oy=(innerHeight-VH*scale)/2}addEventListener('resize',resize);resize();
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Skyhook Sprint 2.0 — Controller Replay</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#08111f;color:#fff;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;inset:12px 12px auto;display:flex;gap:8px;justify-content:space-between;pointer-events:none}.hud div{background:#07111ed9;border:1px solid #24415c;border-radius:12px;padding:8px 11px;font-size:12px}.hud b{font-size:17px;margin-left:4px}.run-status{position:fixed;z-index:6;right:12px;bottom:84px;max-width:min(470px,calc(100vw - 24px));background:#07111eea;border:1px solid #67e8f9;border-radius:12px;padding:10px 13px;font-size:13px;line-height:1.45;color:#e2faff}.run-status[hidden]{display:none}.checkpoint-notice[hidden]{display:none}.checkpoint-notice{position:fixed;left:12px;bottom:84px;max-width:min(430px,calc(100vw - 24px));font-size:12px;color:#a5f3fc;background:#07111eea;border:1px solid #2a516d;border-radius:12px;padding:7px 11px;pointer-events:none}.storage-note{position:fixed;top:66px;left:12px;max-width:min(480px,calc(100vw - 24px));z-index:5;background:#24141bf2;border:1px solid #f59e0b;border-radius:12px;padding:8px 12px;color:#ffefc3;font-size:12px;line-height:1.4}.traversal-status{position:fixed;top:69px;right:12px;z-index:5;max-width:min(475px,calc(100vw - 24px));border:1px solid #4ea3bc;background:#071a2cef;color:#c8f4fd;border-radius:11px;padding:7px 11px;font-size:12px;line-height:1.4}.storage-note:not([hidden])~.traversal-status{top:138px}.mobile{display:none;position:fixed;left:12px;right:12px;bottom:12px;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}.mobile button{height:58px;border-radius:16px;border:1px solid #2a516d;background:#0d2138dd;color:white;font-size:20px;font-weight:900}@media(pointer:coarse){.mobile{display:grid}.traversal-status{top:80px;left:12px;right:auto;max-width:calc(100vw - 24px)}.storage-note:not([hidden])~.traversal-status{top:146px}}
+/* Compact landscape reserves a genuine, non-overlaid playfield above touch controls. */
+.small-label{display:none}
+.compact-ui{display:none}
+@media (max-width:700px) and (max-height:360px){
+  .hud{inset:3px 43px auto 3px;gap:3px;z-index:8}
+  .hud div{min-width:0;flex:1;padding:3px 2px;border-radius:6px;font-size:10px;white-space:nowrap;text-align:center}
+  .hud b{font-size:12px;margin-left:2px}
+  .full-label{display:none}.small-label{display:inline}
+  .mobile{display:grid;z-index:9;bottom:0;left:0;right:0;height:72px;padding:7px 6px 8px;gap:4px;background:#07111ff5;border-top:1px solid #3a6077}
+  .mobile button{height:56px;border-radius:10px;font-size:16px;touch-action:none}
+  .run-status,.checkpoint-notice,.traversal-status,.storage-note{position:fixed!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;padding:0!important;margin:-1px!important;border:0!important;max-width:1px!important;top:0!important;left:0!important;right:auto!important;bottom:auto!important}
+  #compactHelp{display:block;position:fixed;z-index:12;right:4px;top:3px;width:35px;height:31px;border:1px solid #67e8f9;background:#10283f;color:white;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer}
+  #compactTicker{display:block;position:fixed;z-index:8;top:39px;left:4px;right:4px;height:22px;padding:2px 7px;border:1px solid #315975;border-radius:5px;background:#07111ee9;color:#d7faff;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:11px;line-height:16px;pointer-events:none}
+  #compactPanel:not([hidden]){display:flex;position:fixed;inset:0;z-index:30;align-items:center;justify-content:center;background:#07111ff5;padding:6px}
+  #compactPanel .compact-card{border:1px solid #67e8f9;border-radius:9px;background:#11263a;color:white;width:min(480px,100%);max-height:100%;min-height:0;padding:10px;display:flex;flex-direction:column;gap:7px}
+  #compactPanel h2{font-size:15px;margin:0}
+  #compactHelpText{overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;white-space:pre-line;line-height:1.4;font-size:12px;min-height:0;flex:1}
+  #compactClose{flex:none;align-self:flex-end;border:1px solid #67e8f9;border-radius:7px;padding:7px 17px;min-height:36px;background:#163f58;color:white;font-weight:700;cursor:pointer}
+}
+</style></head><body><canvas id="c"></canvas><div class="hud"><div>Time <b id="time">0.0</b></div><div>Stars <b id="stars">0/9</b></div><div>Best <b id="best">--</b></div><div><span class="full-label">Grounded saves</span><span class="small-label">CP</span> <b id="checkpoint">0</b></div></div><div id="storageStatus" class="storage-note" role="status" aria-live="polite" hidden></div><div id="checkpointNotice" class="checkpoint-notice" role="status" aria-live="polite" hidden>Respawn: starting runway. A checkpoint is saved only when you land on solid ground.</div><div id="runStatus" class="run-status" role="status" aria-live="polite">Ready: arrows or A/D move, Space jumps, E hooks. The race clock starts with your first action.</div><div id="traversalStatus" class="traversal-status" role="status" aria-live="polite" aria-atomic="true">Precision jumps: late ledge jumps and pre-landing inputs are forgiven. Release jump for a short hop; E hooks the nearest beacon within 300m.</div><button id="compactHelp" class="compact-ui" type="button" aria-haspopup="dialog" aria-controls="compactPanel" aria-label="Flight controls, status and saving help">Help</button><div id="compactTicker" class="compact-ui" aria-hidden="true">READY · Move, jump and hook to finish</div><div id="compactPanel" class="compact-ui" role="dialog" aria-modal="true" aria-labelledby="compactHeading" hidden><section class="compact-card"><h2 id="compactHeading">Flight controls &amp; live status</h2><div id="compactHelpText" tabindex="0"></div><button id="compactClose" type="button">Resume flight</button></section></div><div class="mobile"><button data-k="ArrowLeft" aria-label="Move left">◀</button><button data-k="ArrowRight" aria-label="Move right">▶</button><button data-act="jump" aria-label="Jump">JUMP</button><button data-act="hook" aria-label="Toggle grappling hook">HOOK</button></div><script src="../../assets/wwg-input.js"></script><script>
+const C=document.getElementById('c'),X=C.getContext('2d'),VW=960,VH=540;let scale=1,ox=0,oy=0,dpr=1;function compactScreen(){return innerWidth<=700&&innerHeight<=360}function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=innerWidth*dpr;C.height=innerHeight*dpr;C.style.width=innerWidth+'px';C.style.height=innerHeight+'px';const playableHeight=compactScreen()?Math.max(1,innerHeight-72):innerHeight;scale=Math.min(innerWidth/VW,playableHeight/VH);ox=(innerWidth-VW*scale)/2;oy=(playableHeight-VH*scale)/2}addEventListener('resize',resize);resize();
 const segs=[[0,760],[920,1500],[1680,2380],[2580,3260],[3460,4200]],plats=[[330,410,180],[780,350,160],[1110,395,150],[1500,320,170],[1860,390,170],[2220,300,190],[2700,390,170],[3090,330,170],[3560,390,170]],anchors=[[820,220],[1170,230],[1580,185],[2030,230],[2300,165],[2790,220],[3180,190],[3650,220]],stars=[[420,370],[850,305],[1180,350],[1580,275],[1900,345],[2290,255],[2790,345],[3160,285],[3620,345]].map((p,i)=>({x:p[0],y:p[1],got:false,i}));
-let keys={},cam=0,start=performance.now(),finished=false,hook=null,padJump=false,padHook=false;const p={x:70,y:450,vx:0,vy:0,w:24,h:34,on:false,respawn:70};const T=document.getElementById('time'),S=document.getElementById('stars'),B=document.getElementById('best');let best=Number(localStorage.getItem('wwg:skyhook-best')||0);B.textContent=best?best.toFixed(1)+'s':'--';
-function checkpointFor(x){for(let i=segs.length-1;i>=0;i--){const [a,b]=segs[i];if(x>=a+50)return Math.max(a+70,Math.min(b-70,x-160))}return 70}function reset(){p.x=70;p.y=450;p.vx=p.vy=0;p.respawn=70;stars.forEach(s=>s.got=false);start=performance.now();finished=false;hook=null}
-function jump(){if(finished){reset();return}if(p.on){p.vy=-455;p.on=false}}
-function useHook(){if(finished){reset();return}if(hook){hook=null;return}let near=null,dist=300;for(const a of anchors){let d=Math.hypot(a[0]-p.x,a[1]-p.y);if(d<dist){dist=d;near=a}}hook=near}
-const IN=window.WWGInput||{is:(e,a,x=[])=>({left:['KeyA','ArrowLeft'],right:['KeyD','ArrowRight'],primary:['Space'],secondary:['KeyE']}[a]||[]).concat(x).includes(e.code)};addEventListener('keydown',e=>{if(IN.is(e,'left')){keys.left=true;e.preventDefault()}if(IN.is(e,'right')){keys.right=true;e.preventDefault()}if(IN.is(e,'primary')){e.preventDefault();jump()}if(IN.is(e,'secondary')){e.preventDefault();useHook()}if(e.code==='KeyR')reset()});addEventListener('keyup',e=>{if(IN.is(e,'left'))keys.left=false;if(IN.is(e,'right'))keys.right=false});document.querySelectorAll('[data-k]').forEach(b=>{let a=b.dataset.k==='ArrowLeft'?'left':'right';b.addEventListener('pointerdown',e=>{e.preventDefault();keys[a]=true});['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,()=>keys[a]=false))});document.querySelector('[data-act="jump"]').addEventListener('pointerdown',e=>{e.preventDefault();jump()});document.querySelector('[data-act="hook"]').addEventListener('pointerdown',e=>{e.preventDefault();useHook()});
+let keys={},cam=0,activeMs=0,runStarted=false,finished=false,hook=null,padJump=false,padHook=false,padNeedsNeutral=false,focusPaused=false,windowBlurred=false,skipDelta=true;
+const COYOTE_SECONDS=.105,JUMP_BUFFER_SECONDS=.125;let coyoteLeft=COYOTE_SECONDS,jumpBufferLeft=0,jumpHeld=false;const p={x:70,y:483,vx:0,vy:0,w:24,h:34,on:true,respawn:70,spawnY:483,checkpoints:0};const T=document.getElementById('time'),S=document.getElementById('stars'),B=document.getElementById('best'),CP=document.getElementById('checkpoint'),CP_NOTICE=document.getElementById('checkpointNotice'),STORAGE_STATUS=document.getElementById('storageStatus'),RUN_STATUS=document.getElementById('runStatus'),MOVE_STATUS=document.getElementById('traversalStatus');
+const COMPACT_TICKER=document.getElementById('compactTicker'),HELP_BUTTON=document.getElementById('compactHelp'),HELP_PANEL=document.getElementById('compactPanel'),HELP_TEXT=document.getElementById('compactHelpText'),HELP_CLOSE=document.getElementById('compactClose');let helpOpen=false;function movementNotice(message){MOVE_STATUS.textContent=message;COMPACT_TICKER.textContent=message;}
+const BEST_KEY='wwg:skyhook-best';
+function storageUnavailable(){STORAGE_STATUS.hidden=false;STORAGE_STATUS.textContent='Browser storage is unavailable. New best times last only until this game is closed.';B.title='Session-only record';HELP_BUTTON.textContent='Save!';HELP_BUTTON.title='Saving unavailable; open flight help for details';HELP_BUTTON.setAttribute('aria-label','Session-only scores. Open flight controls and saving help');}
+function readBest(){
+  try{
+    const raw=localStorage.getItem(BEST_KEY),v=Number(raw);
+    return typeof raw==='string'&&raw.trim()&&Number.isFinite(v)&&v>0?v:0;
+  }catch{storageUnavailable();return 0;}
+}
+function writeBest(value){try{localStorage.setItem(BEST_KEY,String(value));}catch{storageUnavailable();}}
+let best=readBest();B.textContent=best?best.toFixed(1)+'s':'--';
+// A progress marker is only earned at a supported foothold. Horizontal travel alone
+// (including a grapple over a gap) cannot move the death-respawn point.
+function supportedFooting(){
+  if(!p.on||p.vy>0)return false;
+  const foot=p.y+p.h/2,ground=onGround(p.x,foot);
+  if(ground===null||Math.abs(foot-ground)>2)return false;
+  // Do not save a precarious one-pixel platform overlap as a death-spawn.
+  const margin=Math.min(10,p.w/2);
+  return (ground===500&&segs.some(([left,right])=>p.x>=left+margin&&p.x<=right-margin))
+    ||plats.some(([left,top,width])=>Math.abs(ground-top)<=2&&p.x>=left+margin&&p.x<=left+width-margin);
+}
+function bankCheckpoint(){
+  if(p.x<=p.respawn+430||!supportedFooting())return false;
+  p.respawn=p.x;p.spawnY=p.y;p.checkpoints++;
+  CP.textContent=p.checkpoints;CP_NOTICE.hidden=false;
+  CP_NOTICE.textContent=`Checkpoint ${p.checkpoints} saved on solid ground at ${Math.round(p.x)}m. Falls return here.`;
+  return true;
+}
+function restoreCheckpoint(){
+  p.x=p.respawn;p.y=p.spawnY;p.vx=p.vy=0;p.on=true;hook=null;coyoteLeft=COYOTE_SECONDS;jumpBufferLeft=0;jumpHeld=false;movementNotice("Safe foothold restored. Jump or hook to continue.");CP_NOTICE.hidden=false;
+  CP_NOTICE.textContent=p.checkpoints?`Respawned at earned checkpoint ${p.checkpoints}. Continue from this foothold.`:'Respawned at the start. Reach a supported platform to save progress.';
+}
+function atFinish(){
+  // The visible finish marker stands on the final runway (x=4018..4036,
+  // y=438..500). Crossing its x coordinate far above it is not a clear.
+  return p.x>4040&&p.x<4200&&supportedFooting()&&Math.abs(p.y+p.h/2-500)<=2;
+}
+function beginRun(){if(!runStarted&&!focusPaused&&!finished){runStarted=true;RUN_STATUS.hidden=true}}
+function pauseForFocus(value){if(focusPaused===value)return;focusPaused=value;if(value){keys={};padJump=false;padHook=false;padNeedsNeutral=true;jumpBufferLeft=0;jumpHeld=false;coyoteLeft=0;RUN_STATUS.textContent='Paused while this page is inactive. Your speedrun clock, movement and hazards are frozen until you return.';RUN_STATUS.hidden=false}else{lt=performance.now();skipDelta=true;RUN_STATUS.textContent='Ready: arrows or A/D move, Space jumps, E hooks. The race clock starts with your first action.';RUN_STATUS.hidden=runStarted||finished}}
+function syncFocus(){pauseForFocus(helpOpen||windowBlurred||document.hidden)}
+function closeCompactHelp(){if(!helpOpen)return;helpOpen=false;HELP_PANEL.hidden=true;syncFocus();HELP_BUTTON.focus()}
+function toggleCompactHelp(){if(!compactScreen())return;if(helpOpen){closeCompactHelp();return}helpOpen=true;HELP_TEXT.textContent=[
+  'Objective: cross the last runway and touch FINISH on solid ground. Collect up to nine stars. The race clock begins with your first valid action.',
+  'Controls: Arrow Left / A and Arrow Right / D move; Space or JUMP jumps; release early for a short hop. E or HOOK attaches to and releases a nearby beacon. R restarts the entire run. H opens this help, Escape closes it.',
+  'Checkpoint: '+CP_NOTICE.textContent,
+  'Run: '+RUN_STATUS.textContent,
+  'Movement: '+MOVE_STATUS.textContent,
+  STORAGE_STATUS.hidden?'Saving: Best time is stored in this browser when storage is permitted.':'Saving: '+STORAGE_STATUS.textContent,
+  'The game clock and physics pause while this help is open.'
+].join('\n\n');HELP_PANEL.hidden=false;syncFocus();HELP_CLOSE.focus()}
+HELP_BUTTON.addEventListener('click',toggleCompactHelp);HELP_CLOSE.addEventListener('click',closeCompactHelp);
+addEventListener('keydown',e=>{if(e.code==='KeyH'&&compactScreen()&&!e.repeat){e.preventDefault();toggleCompactHelp()}else if(e.code==='Escape'&&helpOpen){e.preventDefault();closeCompactHelp()}});
+addEventListener('resize',()=>{if(helpOpen&&!compactScreen())closeCompactHelp()});
+addEventListener('blur',()=>{windowBlurred=true;pauseForFocus(true)});
+addEventListener('focus',()=>{windowBlurred=false;syncFocus()});
+document.addEventListener('visibilitychange',syncFocus);
+function reset(){p.x=70;p.y=483;p.vx=p.vy=0;p.on=true;coyoteLeft=COYOTE_SECONDS;jumpBufferLeft=0;jumpHeld=false;p.respawn=70;p.spawnY=483;p.checkpoints=0;CP.textContent='0';CP_NOTICE.hidden=true;CP_NOTICE.textContent='Respawn: starting runway. A checkpoint is saved only when you land on solid ground.';stars.forEach(s=>s.got=false);activeMs=0;runStarted=false;finished=false;hook=null;keys={};padJump=false;padHook=false;padNeedsNeutral=true;lt=performance.now();skipDelta=true;T.textContent='0.0';S.textContent='0/9';movementNotice('Precision jumping ready: 105ms late-ledge grace, 125ms pre-landing buffer and short-hop release. Press E to hook a nearby beacon.');RUN_STATUS.textContent='Ready: arrows or A/D move, Space jumps, E hooks. The race clock starts with your first action.';RUN_STATUS.hidden=focusPaused}
+function commitJump(){if(!p.on&&coyoteLeft<=0)return false;p.vy=-455;p.on=false;coyoteLeft=0;jumpBufferLeft=0;movementNotice('Jump registered. Release jump early for a short hop.');return true}
+function jump(){if(finished){reset();return}jumpHeld=true;if(!commitJump()){jumpBufferLeft=JUMP_BUFFER_SECONDS;movementNotice('Jump queued for the next safe landing (125ms window).')}}
+function releaseJump(){if(!jumpHeld)return;jumpHeld=false;if(!p.on&&p.vy < -160){p.vy*=.55;movementNotice('Short hop: jump released early.')}}
+function useHook(){if(finished){reset();return}if(hook){hook=null;movementNotice('Beacon released. Keep your momentum or jump toward a foothold.');return}let near=null,dist=300;for(const a of anchors){let d=Math.hypot(a[0]-p.x,a[1]-p.y);if(d<dist){dist=d;near=a}}hook=near;movementNotice(near?'Grapple anchored '+Math.round(dist)+'m away. Press E / HOOK again to release.':'No anchor within 300m. Approach a cyan beacon first.')}
+// Sweep from the previous foot height to the new foot height: falling fast
+// must not skip the thin, visible 16px platforms in a single simulation step.
+function landingSurface(x,from,to){if(to<from)return null;let best=Infinity;for(const q of plats)if(x>q[0]&&x<q[0]+q[2]&&from<=q[1]&&to>=q[1])best=Math.min(best,q[1]);for(const seg of segs)if(x>seg[0]&&x<seg[1]&&from<=500&&to>=500)best=Math.min(best,500);return Number.isFinite(best)?best:null}
+const IN=window.WWGInput||{is:(e,a,x=[])=>({left:['KeyA','ArrowLeft'],right:['KeyD','ArrowRight'],primary:['Space'],secondary:['KeyE']}[a]||[]).concat(x).includes(e.code)};
+addEventListener('keydown',e=>{if(focusPaused)return;if(e.target?.closest?.('button')&&['Space','Enter'].includes(e.code))return;if(IN.is(e,'left')){e.preventDefault();if(!e.repeat){keys.left=true;beginRun()}}if(IN.is(e,'right')){e.preventDefault();if(!e.repeat){keys.right=true;beginRun()}}if(IN.is(e,'primary')){e.preventDefault();if(!e.repeat){beginRun();jump()}}if(IN.is(e,'secondary')){e.preventDefault();if(!e.repeat){beginRun();useHook()}}if(e.code==='KeyR'&&!e.repeat)reset()});
+addEventListener('keyup',e=>{if(IN.is(e,'left'))keys.left=false;if(IN.is(e,'right'))keys.right=false;if(IN.is(e,'primary'))releaseJump()});
+document.querySelectorAll('[data-k]').forEach(b=>{let a=b.dataset.k==='ArrowLeft'?'left':'right';b.addEventListener('pointerdown',e=>{e.preventDefault();if(focusPaused)return;beginRun();keys[a]=true});['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,()=>keys[a]=false));b.addEventListener('click',e=>{if(e.detail===0&&!focusPaused){beginRun();keys[a]=true;setTimeout(()=>keys[a]=false,130)}})});
+const JUMP_BUTTON=document.querySelector('[data-act="jump"]');JUMP_BUTTON.addEventListener('pointerdown',e=>{e.preventDefault();if(!focusPaused){beginRun();jump()}});for(const ev of ['pointerup','pointercancel','pointerleave'])JUMP_BUTTON.addEventListener(ev,releaseJump);JUMP_BUTTON.addEventListener('click',e=>{if(e.detail===0&&!focusPaused){beginRun();jump();setTimeout(releaseJump,80)}});
+// A physical touch fires pointerdown and can also synthesize a click with detail=0.
+// Handle the HOOK native-button activation only once, after release. This also
+// makes Enter, Space and assistive-technology/semantic clicks usable.
+const HOOK_BUTTON=document.querySelector('[data-act="hook"]');HOOK_BUTTON.addEventListener('click',e=>{if(e.button!==0||focusPaused)return;beginRun();useHook()});
 function onGround(x,y){for(const s of segs)if(x>s[0]&&x<s[1]&&y>=500)return 500;for(const q of plats)if(x>q[0]&&x<q[0]+q[2]&&y>=q[1]&&y<q[1]+18)return q[1];return null}
-let lt=performance.now();function step(t){let dt=Math.min(.03,(t-lt)/1000);lt=t;let axis=0;try{const g=navigator.getGamepads&&navigator.getGamepads()[0];if(g){axis=Math.abs(g.axes[0]||0)>.16?g.axes[0]:0;let j=!!g.buttons[0]?.pressed,h=!!g.buttons[1]?.pressed;if(j&&!padJump)jump();if(h&&!padHook)useHook();padJump=j;padHook=h}}catch{}if(!finished){let dir=Math.max(-1,Math.min(1,(keys.left?-1:0)+(keys.right?1:0)+axis));p.vx+=(dir*620-p.vx*4.4)*dt;p.vy+=980*dt;if(hook){let dx=hook[0]-p.x,dy=hook[1]-p.y,d=Math.hypot(dx,dy)||1;if(d>72){let pull=Math.min(900,(d-72)*5.2);p.vx+=dx/d*pull*dt;p.vy+=dy/d*pull*dt}else p.vy-=110*dt}let prevY=p.y;p.x+=p.vx*dt;p.y+=p.vy*dt;p.on=false;let foot=p.y+p.h/2,g=onGround(p.x,foot);if(g!==null&&p.vy>=0&&prevY+p.h/2<=g+14){p.y=g-p.h/2;p.vy=0;p.on=true}for(const s of stars)if(!s.got&&Math.hypot(p.x-s.x,p.y-s.y)<27)s.got=true;if(p.y>650){p.x=checkpointFor(p.respawn+160);p.respawn=p.x;p.y=430;p.vx=p.vy=0;hook=null}else if(p.x>p.respawn+430)p.respawn=checkpointFor(p.x);if(p.x>4040){finished=true;let tm=(t-start)/1000;if(!best||tm<best){best=tm;localStorage.setItem('wwg:skyhook-best',best);B.textContent=best.toFixed(1)+'s'}let score=Math.max(500,Math.round(100000/Math.max(10,tm)+stars.filter(s=>s.got).length*180));try{parent.postMessage({type:'wwg:game-event',game:'skyhook-sprint',event:'skyline-cleared',score,duration:Math.round(tm*100)/100,meta:{unit:'pts',direction:'high'}},'*')}catch{}}cam+=(Math.max(0,p.x-260)-cam)*Math.min(1,dt*5);T.textContent=((t-start)/1000).toFixed(1);S.textContent=stars.filter(s=>s.got).length+'/9'}draw(t);requestAnimationFrame(step)}
-function draw(t){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#08111f';X.fillRect(0,0,innerWidth,innerHeight);X.save();X.translate(ox,oy);X.scale(scale,scale);let g=X.createLinearGradient(0,0,0,VH);g.addColorStop(0,'#0e2840');g.addColorStop(1,'#08111f');X.fillStyle=g;X.fillRect(0,0,VW,VH);X.save();X.translate(-cam,0);for(let i=0;i<50;i++){let sx=i*97-(cam*.18%97);X.globalAlpha=.25+(i%4)*.08;X.fillStyle='#d8f3ff';X.fillRect(sx,60+(i*47)%260,2,2)}X.globalAlpha=1;for(const s of segs){X.fillStyle='#19354b';X.fillRect(s[0],500,s[1]-s[0],40);X.fillStyle='#2dd4bf';X.fillRect(s[0],497,s[1]-s[0],3)}for(const q of plats){X.fillStyle='#18324a';X.fillRect(q[0],q[1],q[2],16);X.fillStyle='#7dd3fc';X.fillRect(q[0],q[1],q[2],3)}for(const a of anchors){X.strokeStyle='#4b7697';X.lineWidth=2;X.beginPath();X.moveTo(a[0],a[1]-16);X.lineTo(a[0],a[1]+16);X.moveTo(a[0]-16,a[1]);X.lineTo(a[0]+16,a[1]);X.stroke();X.fillStyle='#67e8f9';X.beginPath();X.arc(a[0],a[1],5,0,7);X.fill()}for(const s of stars)if(!s.got){X.save();X.translate(s.x,s.y);X.rotate(t/700);X.fillStyle='#fde68a';X.shadowColor='#fbbf24';X.shadowBlur=12;X.beginPath();for(let i=0;i<10;i++){let a=-Math.PI/2+i*Math.PI/5,r=i%2?6:13;let xx=Math.cos(a)*r,yy=Math.sin(a)*r;i?X.lineTo(xx,yy):X.moveTo(xx,yy)}X.closePath();X.fill();X.restore()}if(hook){X.strokeStyle='#67e8f9';X.lineWidth=2;X.setLineDash([7,6]);X.beginPath();X.moveTo(p.x,p.y);X.lineTo(hook[0],hook[1]);X.stroke();X.setLineDash([])}X.fillStyle='#a78bfa';X.shadowColor='#8b5cf6';X.shadowBlur=16;X.fillRect(p.x-p.w/2,p.y-p.h/2,p.w,p.h);X.shadowBlur=0;X.fillStyle='#22d3ee';X.fillRect(4018,438,18,62);X.fillStyle='#e0f2fe';X.font='800 15px system-ui';X.fillText('FINISH',3982,425);X.restore();if(finished){X.fillStyle='rgba(3,8,18,.76)';X.fillRect(0,0,VW,VH);X.textAlign='center';X.fillStyle='white';X.font='900 44px system-ui';X.fillText('SKYLINE CLEARED',VW/2,235);X.font='18px system-ui';X.fillText('Press Space / Hook to run again',VW/2,276)}X.restore()}reset();requestAnimationFrame(step);
+// Each scored millisecond must also advance the traversable world by that duration.
+// Long rendering frames are subdivided rather than giving a 120 ms penalty for
+// only 30 ms of movement. The 120 ms per-frame ceiling bounds resume stalls.
+const MAX_ACTIVE_FRAME_MS=120, MAX_PHYSICS_STEP_MS=20;
+function advanceTraversal(dt,dir){
+  activeMs+=dt*1000;
+  jumpBufferLeft=Math.max(0,jumpBufferLeft-dt);
+  p.vx+=(dir*620-p.vx*4.4)*dt;
+  p.vy+=980*dt;
+  if(hook){
+    const dx=hook[0]-p.x,dy=hook[1]-p.y,d=Math.hypot(dx,dy)||1;
+    if(d>72){const pull=Math.min(900,(d-72)*5.2);p.vx+=dx/d*pull*dt;p.vy+=dy/d*pull*dt}
+    else p.vy-=110*dt;
+  }
+  const prevY=p.y,wasGrounded=p.on;
+  p.x+=p.vx*dt;p.y+=p.vy*dt;p.on=false;
+  const foot=p.y+p.h/2,g=p.vy>=0?landingSurface(p.x,prevY+p.h/2,foot):null;
+  if(g!==null){p.y=g-p.h/2;p.vy=0;p.on=true}
+  if(p.on){coyoteLeft=COYOTE_SECONDS;if(jumpBufferLeft>0)commitJump()}
+  else if(wasGrounded)coyoteLeft=COYOTE_SECONDS;
+  else coyoteLeft=Math.max(0,coyoteLeft-dt);
+  for(const star of stars)if(!star.got&&Math.hypot(p.x-star.x,p.y-star.y)<27)star.got=true;
+  if(p.y>650)restoreCheckpoint();else bankCheckpoint();
+  if(atFinish()){
+    finished=true;padNeedsNeutral=true;
+    movementNotice('Finish earned on the final runway. Jump or HOOK to replay, or release controller inputs then press A/B.');
+    const tm=activeMs/1000;
+    if(!best||tm<best){best=tm;writeBest(best);B.textContent=best.toFixed(1)+'s'}
+    const score=Math.max(500,Math.round(100000/Math.max(10,tm)+stars.filter(star=>star.got).length*180));
+    try{parent.postMessage({type:'wwg:game-event',game:'skyhook-sprint',event:'skyline-cleared',score,duration:Math.round(tm*100)/100,meta:{unit:'pts',direction:'high'}},'*')}catch{}
+  }
+}
+let lt=performance.now();
+function step(t){
+  const wallDelta=Math.max(0,t-lt);
+  const activeDelta=focusPaused||skipDelta||!runStarted||finished?0:Math.min(MAX_ACTIVE_FRAME_MS,wallDelta);
+  lt=t;skipDelta=false;
+  let axis=0;
+  if(!focusPaused){
+    try{
+      const g=navigator.getGamepads?.()[0];
+      if(finished){
+        // Keep polling the outcome, but require a connected neutral sample
+        // before replay. A held finish input cannot erase an earned result.
+        if(!g){padNeedsNeutral=true;}
+        else if(padNeedsNeutral){
+          if(Math.abs(g.axes?.[0]||0)<.16&&Math.abs(g.axes?.[1]||0)<.16&&!g.buttons?.[0]?.pressed&&!g.buttons?.[1]?.pressed)padNeedsNeutral=false;
+        }else if(g.buttons?.[0]?.pressed||g.buttons?.[1]?.pressed){
+          reset(); // consumes replay; reset rearms the neutral gate
+        }
+      }else if(padNeedsNeutral){
+        const neutral=!g||((Math.abs(g.axes?.[0]||0)<.16)&&(Math.abs(g.axes?.[1]||0)<.16)&&!g.buttons?.[0]?.pressed&&!g.buttons?.[1]?.pressed);
+        if(neutral){padNeedsNeutral=false;padJump=false;padHook=false}
+      }else if(g){
+        axis=Math.abs(g.axes?.[0]||0)>.16?g.axes[0]:0;
+        if(axis)beginRun();
+        const j=!!g.buttons?.[0]?.pressed,h=!!g.buttons?.[1]?.pressed;
+        if(j&&!padJump){beginRun();jump()}
+        if(!j&&padJump)releaseJump();
+        if(h&&!padHook){beginRun();useHook()}
+        padJump=j;padHook=h;
+      }
+    }catch{if(finished)padNeedsNeutral=true;}
+  }
+  if(!finished&&!focusPaused&&runStarted&&activeDelta>0){
+    const dir=Math.max(-1,Math.min(1,(keys.left?-1:0)+(keys.right?1:0)+axis));
+    const steps=Math.ceil(activeDelta/MAX_PHYSICS_STEP_MS);
+    const dt=activeDelta/steps/1000;
+    for(let i=0;i<steps&&!finished;i++)advanceTraversal(dt,dir);
+  }
+  cam+=(Math.max(0,p.x-260)-cam)*Math.min(1,activeDelta/1000*5);
+  T.textContent=(activeMs/1000).toFixed(1);
+  S.textContent=stars.filter(star=>star.got).length+'/9';
+  draw(t);requestAnimationFrame(step);
+}
+function draw(t){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#08111f';X.fillRect(0,0,innerWidth,innerHeight);X.save();X.translate(ox,oy);X.scale(scale,scale);let g=X.createLinearGradient(0,0,0,VH);g.addColorStop(0,'#0e2840');g.addColorStop(1,'#08111f');X.fillStyle=g;X.fillRect(0,0,VW,VH);X.save();X.translate(-cam,0);for(let i=0;i<50;i++){let sx=i*97-(cam*.18%97);X.globalAlpha=.25+(i%4)*.08;X.fillStyle='#d8f3ff';X.fillRect(sx,60+(i*47)%260,2,2)}X.globalAlpha=1;for(const s of segs){X.fillStyle='#19354b';X.fillRect(s[0],500,s[1]-s[0],40);X.fillStyle='#2dd4bf';X.fillRect(s[0],497,s[1]-s[0],3)}for(const q of plats){X.fillStyle='#18324a';X.fillRect(q[0],q[1],q[2],16);X.fillStyle='#7dd3fc';X.fillRect(q[0],q[1],q[2],3)}for(const a of anchors){X.strokeStyle='#4b7697';X.lineWidth=2;X.beginPath();X.moveTo(a[0],a[1]-16);X.lineTo(a[0],a[1]+16);X.moveTo(a[0]-16,a[1]);X.lineTo(a[0]+16,a[1]);X.stroke();X.fillStyle='#67e8f9';X.beginPath();X.arc(a[0],a[1],5,0,7);X.fill()}for(const s of stars)if(!s.got){X.save();X.translate(s.x,s.y);X.rotate(t/700);X.fillStyle='#fde68a';X.shadowColor='#fbbf24';X.shadowBlur=12;X.beginPath();for(let i=0;i<10;i++){let a=-Math.PI/2+i*Math.PI/5,r=i%2?6:13;let xx=Math.cos(a)*r,yy=Math.sin(a)*r;i?X.lineTo(xx,yy):X.moveTo(xx,yy)}X.closePath();X.fill();X.restore()}if(hook){X.strokeStyle='#67e8f9';X.lineWidth=2;X.setLineDash([7,6]);X.beginPath();X.moveTo(p.x,p.y);X.lineTo(hook[0],hook[1]);X.stroke();X.setLineDash([])}X.fillStyle='#a78bfa';X.shadowColor='#8b5cf6';X.shadowBlur=16;X.fillRect(p.x-p.w/2,p.y-p.h/2,p.w,p.h);X.shadowBlur=0;X.fillStyle='#22d3ee';X.fillRect(4018,438,18,62);X.fillStyle='#e0f2fe';X.font='800 15px system-ui';X.fillText('FINISH',3982,425);X.restore();if(finished){X.fillStyle='rgba(3,8,18,.76)';X.fillRect(0,0,VW,VH);X.textAlign='center';X.fillStyle='white';X.font='900 44px system-ui';X.fillText('SKYLINE CLEARED',VW/2,235);X.font='18px system-ui';X.fillText('Press Space / Hook to run again',VW/2,276)}X.restore()}reset();syncFocus();requestAnimationFrame(step);
 </script></body></html>

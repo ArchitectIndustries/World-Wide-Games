@@ -1,9 +1,162 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Windward Cargo</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#06111d;color:white;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;left:10px;right:10px;top:10px;display:flex;flex-wrap:wrap;gap:7px;pointer-events:none}.hud span,.tip{background:#071827dd;border:1px solid #2a516c;border-radius:11px;padding:7px 10px;font-size:11px}.hud b{color:#bae6fd;font-size:16px;margin-left:4px}.tip{position:fixed;left:10px;bottom:10px;max-width:600px;color:#dbeafe}.touch{position:fixed;right:10px;bottom:10px;display:grid;grid-template-columns:repeat(3,52px);gap:6px}.touch button{height:52px;border-radius:14px;border:1px solid #4b7690;background:#0b2a40dd;color:#fff;font-size:17px;font-weight:900}.touch .thrust{grid-column:2}.touch .boost{grid-column:2}@media(min-width:900px){.touch{display:none}}</style></head><body><canvas id="c"></canvas><div class="hud"><span>Delivery <b id="del">1/4</b></span><span>Fuel <b id="fuel">100</b></span><span>Cargo <b id="cargo">100</b></span><span>Wind <b id="wind">CALM</b></span><span>Score <b id="score">0</b></span></div><div class="tip" id="tip">Fly through the cyan cargo ring, then deliver it to the gold beacon. Land gently.</div><div class="touch"><button class="thrust" data-k="thrust">▲</button><button data-k="left">◀</button><button data-k="boost">BOOST</button><button data-k="right">▶</button></div><script src="../../assets/wwg-input.js"></script><script>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Windward Cargo 1.8 — Cadence-Fair Ridge Flight</title><style>*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#06111d;color:white;font-family:system-ui,sans-serif;touch-action:none}canvas{width:100vw;height:100vh;display:block}.hud{position:fixed;left:10px;right:10px;top:10px;display:flex;flex-wrap:wrap;gap:7px;pointer-events:none}.hud span,.tip{background:#071827dd;border:1px solid #2a516c;border-radius:11px;padding:7px 10px;font-size:11px}.hud b{color:#bae6fd;font-size:16px;margin-left:4px}.tip{position:fixed;left:10px;bottom:10px;max-width:600px;color:#dbeafe}.touch{position:fixed;right:10px;bottom:10px;display:grid;grid-template-columns:repeat(3,52px);gap:6px}.touch button{height:52px;border-radius:14px;border:1px solid #4b7690;background:#0b2a40dd;color:#fff;font-size:17px;font-weight:900}.touch .thrust{grid-column:2}.touch .boost{grid-column:2}.result{position:fixed;z-index:3;left:10px;right:10px;bottom:80px;max-width:530px;margin:auto;padding:14px 17px;border:2px solid #7dd3fc;background:#081b2cf5;box-shadow:0 14px 45px #0009;border-radius:16px;display:grid;gap:12px}.result[hidden],.ready-panel[hidden]{display:none}.focus-notice[hidden]{display:none}.focus-notice{position:fixed;z-index:5;left:50%;top:85px;transform:translateX(-50%);width:min(510px,calc(100vw - 28px));padding:15px 18px;border-radius:14px;border:2px solid #7dd3fc;background:#082439f7;color:#f0f9ff;font-size:14px;font-weight:800;text-align:center;box-shadow:0 10px 30px #0008}.ready-panel{position:fixed;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);width:min(510px,calc(100vw - 28px));padding:19px 21px;background:#09263deF;border:2px solid #7dd3fc;border-radius:17px;box-shadow:0 16px 44px #000b;text-align:center;display:grid;gap:12px;line-height:1.5}.ready-panel strong{font-size:20px}.ready-panel p{margin:0;color:#d9f1fe;font-size:14px}.ready-panel button{min-height:48px;border:1px solid #93e9ff;border-radius:12px;background:#087da4;color:white;font-size:17px;font-weight:850;cursor:pointer}.ready-panel button:focus-visible{outline:3px solid #facc15;outline-offset:3px}.result p{margin:0;line-height:1.5;font-size:15px}.result button{padding:12px;border-radius:12px;border:1px solid #7dd3fc;background:#075985;color:white;font-weight:800;font-size:15px}.result button:focus-visible,.touch button:focus-visible{outline:3px solid #facc15;outline-offset:3px}@media(max-width:899px){.tip{bottom:132px;max-width:calc(100% - 20px)}.result{bottom:215px}.ready-panel{top:44%;padding:12px 14px;gap:8px}.ready-panel strong{font-size:17px}}@media(min-width:900px){.touch{display:none}}
+/* Compact flight sightlines: keep instructions, statuses and outcome actions on-screen. */
+@media (max-width:680px) and (max-height:420px){
+ .hud{top:4px;left:5px;right:5px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}
+ .hud>span{min-width:0;padding:3px 4px;font-size:9px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .hud>span b{font-size:11px;margin-left:2px}
+ .hud>span>span{padding:0;border:0;border-radius:0;background:none;font-size:9px}
+ .tip{top:51px;bottom:auto;left:5px;right:5px;max-width:none;max-height:37px;overflow:auto;padding:4px 7px;font-size:10px;line-height:1.25;border-radius:8px;transform:none}
+ .touch{right:5px;bottom:5px;grid-template-columns:repeat(3,44px);gap:3px}
+ .touch button{height:44px;font-size:12px;border-radius:9px}
+ .ready-panel{top:50%;width:calc(100vw - 12px);max-height:calc(100dvh - 12px);padding:9px 11px;gap:6px;display:flex;flex-direction:column}
+ .ready-panel strong{flex:0 0 auto;font-size:14px;line-height:1.15}
+ .ready-panel p{min-height:0;flex:1 1 auto;overflow:auto;font-size:11px;line-height:1.3;overscroll-behavior:contain}
+ .ready-panel button{flex:0 0 auto;min-height:42px;font-size:13px}
+ .result{top:50%;bottom:auto;left:6px;right:6px;width:auto;transform:translateY(-50%);max-height:calc(100dvh - 12px);padding:10px 12px;gap:7px;display:flex;flex-direction:column}
+ .result p{min-height:0;flex:1 1 auto;overflow:auto;font-size:12px;line-height:1.35;overscroll-behavior:contain}
+ .result button{flex:0 0 auto;min-height:44px;padding:9px;font-size:14px}
+ .focus-notice{top:92px;max-height:calc(100dvh - 100px);overflow:auto;padding:8px;font-size:11px}
+}
+</style></head><body><canvas id="c" tabindex="0" aria-label="Windward Cargo flight field. W or Up thrusts; A D or left right pitch; Space boosts; R restarts."></canvas><div class="hud"><span>Delivery <b id="del">1/4</b></span><span>Fuel <b id="fuel">100</b></span><span>Cargo <b id="cargo">100</b></span><span>Wind <b id="wind">CALM</b></span><span>Active flight <b id="flightTime">0.0</b>s</span><span><span id="scoreLabel">Attempt</span> <b id="score">0</b></span></div><div class="tip" id="tip" role="status" aria-live="polite">Fly through the cyan cargo ring, then land gently in the gold beacon below 95 speed. Start deliberately using Start Flight, W/Up, A/D, Space, touch or a neutral-armed gamepad. Only active focused flight counts; R resets. All four deliveries earn one score. Ridge contact follows the visible slope, not an invisible rectangle.</div><div class="ready-panel" id="readyPanel" role="group" aria-label="Windward Cargo flight start"><strong>WINDWARD CARGO · READY</strong><p>Four cargo deliveries. Visible triangular ridges are solid; steer over their slopes. Ship, wind, fuel, cargo and scoring clock remain frozen until you launch. W/↑ thrusts, A/D or ←/→ pitch, Space boosts, R resets. Touch and gamepad supported.</p><button id="launchBtn" type="button">Start Flight</button></div><div class="focus-notice" id="focusNotice" role="status" aria-live="polite" aria-atomic="true" hidden>Flight paused while inactive. Return to the game to resume.</div><div class="result" id="result" hidden><p id="resultMessage" role="status" aria-live="polite"></p><button id="again" type="button">Fly again</button></div><div class="touch"><button class="thrust" data-k="thrust">▲</button><button data-k="left">◀</button><button data-k="boost">BOOST</button><button data-k="right">▶</button></div><script src="../../assets/wwg-input.js"></script><script>
 const IN=window.WWGInput||{read:()=>({up:'KeyW',down:'KeyS',left:'KeyA',right:'KeyD',primary:'Space'}),is:(e,a,x=[])=>x.includes(e.code)};const MAP=IN.read?IN.read():{up:'KeyW',down:'KeyS',left:'KeyA',right:'KeyD',primary:'Space'};
 const C=document.getElementById('c'),X=C.getContext('2d'),VW=960,VH=540,W=2800,H=900;let dpr=1,sc=1,ox=0,oy=0;function resize(){dpr=Math.min(2,devicePixelRatio||1);C.width=innerWidth*dpr;C.height=innerHeight*dpr;sc=Math.min(innerWidth/VW,innerHeight/VH);ox=(innerWidth-VW*sc)/2;oy=(innerHeight-VH*sc)/2}addEventListener('resize',resize);resize();
-const DEL=document.getElementById('del'),FUEL=document.getElementById('fuel'),CARGO=document.getElementById('cargo'),WIND=document.getElementById('wind'),SCORE=document.getElementById('score'),TIP=document.getElementById('tip');const qp=new URLSearchParams(location.search),muted=qp.get('muted')==='1',volume=Math.max(0,Math.min(1,Number(qp.get('volume')??.7)));let audio=null;function tone(f,d=.06,v=.025,t='sine'){if(muted||volume<=0)return;try{audio=audio||new (AudioContext||webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=v*volume;o.connect(g).connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch{}}
-const routes=[{pick:[430,640],drop:[920,300]},{pick:[1160,260],drop:[1510,650]},{pick:[1780,530],drop:[2140,250]},{pick:[2330,650],drop:[2650,360]}],winds=[{x:600,y:80,w:420,h:700,fx:42,fy:-10,name:'WESTERLY'},{x:1350,y:120,w:420,h:650,fx:-35,fy:15,name:'HEADWIND'},{x:2050,y:120,w:360,h:650,fx:18,fy:-42,name:'UPDRAFT'}],mountains=[{x:760,y:760,w:240,h:120},{x:1250,y:720,w:260,h:180},{x:1680,y:740,w:280,h:160},{x:2240,y:730,w:240,h:180}];let p,delivery,hasCargo,done,start,last,keys={},cam=0,padA=false,padB=false,score=0;function reset(){p={x:150,y:450,vx:0,vy:0,a:0,fuel:100,cargo:100};delivery=0;hasCargo=false;done=false;score=0;start=performance.now();last=start;TIP.textContent='Fly through the cyan cargo ring, then deliver it to the gold beacon. Land gently.';sync()}function sync(){DEL.textContent=Math.min(delivery+1,4)+'/4';FUEL.textContent=Math.max(0,Math.round(p.fuel));CARGO.textContent=Math.max(0,Math.round(p.cargo));SCORE.textContent=Math.max(0,Math.round(score)).toLocaleString()}function currentWind(){return winds.find(z=>p.x>z.x&&p.x<z.x+z.w&&p.y>z.y&&p.y<z.y+z.h)}function finish(){if(done)return;done=true;const secs=(performance.now()-start)/1000;score=Math.max(100,Math.round(7000-secs*18+p.fuel*16+p.cargo*22));sync();TIP.textContent=`All four routes delivered. Flight score ${score.toLocaleString()}. Press R to fly again.`;tone(740,.18,.04);try{parent.postMessage({type:'wwg:game-event',game:'windward-cargo',event:'route-complete',score,duration:Math.round(secs),meta:{unit:'pts',direction:'high',deliveries:4,cargo:Math.round(p.cargo),fuel:Math.round(p.fuel)}},'*')}catch{}}
-addEventListener('keydown',e=>{keys[e.code]=true;if(IN.is(e,'up',['ArrowUp'])||IN.is(e,'left',['ArrowLeft'])||IN.is(e,'right',['ArrowRight'])||IN.is(e,'primary',['Space']))e.preventDefault();if(e.code==='KeyR')reset()});addEventListener('keyup',e=>keys[e.code]=false);document.querySelectorAll('[data-k]').forEach(b=>{const k=b.dataset.k;b.addEventListener('pointerdown',e=>{e.preventDefault();keys[k]=true});['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,()=>keys[k]=false))});
-function tick(t){let dt=Math.min(.03,(t-last)/1000);last=t;if(!done){let thrust=keys[MAP.up]||keys.ArrowUp||keys.thrust,turn=((keys[MAP.right]||keys.ArrowRight||keys.right)?1:0)-((keys[MAP.left]||keys.ArrowLeft||keys.left)?1:0),boost=keys[MAP.primary]||keys.Space||keys.boost;try{const g=navigator.getGamepads&&navigator.getGamepads()[0];if(g){turn+=g.axes[0]||0;const a=!!g.buttons[0]?.pressed,b=!!g.buttons[1]?.pressed;thrust=thrust||a;boost=boost||b;padA=a;padB=b}}catch{}p.a+=turn*2.5*dt;p.a=Math.max(-1.15,Math.min(1.15,p.a));if(thrust&&p.fuel>0){let power=boost?190:125;p.vx+=Math.cos(p.a)*power*dt;p.vy+=Math.sin(p.a)*power*dt;p.fuel-=dt*(boost?4.8:2.2)}p.vy+=28*dt;const wz=currentWind();WIND.textContent=wz?wz.name:'CALM';if(wz){p.vx+=wz.fx*dt;p.vy+=wz.fy*dt}p.vx*=Math.pow(.994,dt*60);p.vy*=Math.pow(.995,dt*60);p.x+=p.vx*dt;p.y+=p.vy*dt;if(p.y<35){p.y=35;p.vy=Math.abs(p.vy)*.4;p.cargo-=1.5}if(p.y>H-35){p.y=H-35;if(Math.abs(p.vy)>80)p.cargo-=Math.min(9,Math.abs(p.vy)/24);p.vy=-Math.abs(p.vy)*.32}if(p.x<25){p.x=25;p.vx=Math.abs(p.vx)*.4}if(p.x>W-25){p.x=W-25;p.vx=-Math.abs(p.vx)*.4}for(const m of mountains){if(p.x>m.x&&p.x<m.x+m.w&&p.y>m.y-m.h&&p.y<m.y+20){p.y=m.y-m.h-18;p.vy=-Math.abs(p.vy)*.55;p.cargo-=Math.min(12,Math.hypot(p.vx,p.vy)/20);tone(100,.05,.03,'sawtooth')}}if(p.fuel<=0||p.cargo<=0){done=true;TIP.textContent=p.fuel<=0?'Fuel exhausted. Press R to restart.':'Cargo integrity lost. Press R to restart.';try{parent.postMessage({type:'wwg:game-event',game:'windward-cargo',event:'route-ended',score:Math.max(0,Math.round(score)),duration:Math.round((t-start)/1000),meta:{unit:'pts',direction:'high',deliveries:delivery}},'*')}catch{}}else{const r=routes[delivery];if(r&&!hasCargo&&Math.hypot(p.x-r.pick[0],p.y-r.pick[1])<45){hasCargo=true;tone(480,.08,.025);TIP.textContent='Cargo secured. Reach the gold beacon and slow below 95 speed.'}if(r&&hasCargo&&Math.hypot(p.x-r.drop[0],p.y-r.drop[1])<48){const sp=Math.hypot(p.vx,p.vy);if(sp<95){delivery++;hasCargo=false;score+=900+Math.round(p.cargo*3);tone(620,.1,.03);TIP.textContent=delivery>=4?'Final manifest sealed.':'Delivery accepted. Find the next cyan cargo ring.';if(delivery>=4)finish()}else TIP.textContent='Too fast to unload safely — reduce speed.'}}sync()}cam+=(Math.max(0,Math.min(W-VW,p.x-VW/2))-cam)*Math.min(1,dt*4);draw(t);requestAnimationFrame(tick)}
+const DEL=document.getElementById('del'),FUEL=document.getElementById('fuel'),CARGO=document.getElementById('cargo'),WIND=document.getElementById('wind'),SCORE=document.getElementById('score'),SCORE_LABEL=document.getElementById('scoreLabel'),FLIGHT_TIME=document.getElementById('flightTime'),READY=document.getElementById('readyPanel'),LAUNCH=document.getElementById('launchBtn'),TIP=document.getElementById('tip'),RESULT=document.getElementById('result'),RESULT_MSG=document.getElementById('resultMessage');const qp=new URLSearchParams(location.search),muted=qp.get('muted')==='1',volume=Math.max(0,Math.min(1,Number(qp.get('volume')??.7)));let audio=null;function tone(f,d=.06,v=.025,t='sine'){if(muted||volume<=0)return;try{audio=audio||new (AudioContext||webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.type=t;o.frequency.value=f;g.gain.value=v*volume;o.connect(g).connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch{}}
+const routes=[{pick:[430,640],drop:[920,300]},{pick:[1160,260],drop:[1555,650]},{pick:[1780,530],drop:[2140,250]},{pick:[2510,630],drop:[2650,360]}],winds=[{x:600,y:80,w:420,h:700,fx:42,fy:-10,name:'WESTERLY'},{x:1350,y:120,w:420,h:650,fx:-35,fy:15,name:'HEADWIND'},{x:2050,y:120,w:360,h:650,fx:18,fy:-42,name:'UPDRAFT'}],mountains=[{x:760,y:760,w:240,h:120},{x:1250,y:720,w:260,h:180},{x:1680,y:740,w:280,h:160},{x:2240,y:730,w:240,h:180}];let p,delivery,hasCargo,done,started=false,activeMs=0,justLaunched=false,last,keys={},cam=0,score=0;
+const FOCUS_NOTICE=document.getElementById('focusNotice');
+let focusPaused=false,padNeedsNeutral=true,padConnected=false,padStart=false,staleKeys=new Set();
+function flightSeconds(){return Math.max(0,activeMs/1000)}
+function pauseFlight(){if(focusPaused||done)return;focusPaused=true;staleKeys=new Set(Object.keys(keys).filter(k=>keys[k]));keys={};padNeedsNeutral=true;FOCUS_NOTICE.hidden=false;FOCUS_NOTICE.textContent='Flight paused while inactive. Return to the game to resume; release held controls before flying.'}
+function resumeFlight(){if(!focusPaused)return;focusPaused=false;last=performance.now();FOCUS_NOTICE.hidden=true;FOCUS_NOTICE.textContent='Flight resumed. Release and press controls deliberately to continue.'}
+addEventListener('blur',pauseFlight);addEventListener('focus',()=>{if(!document.hidden)resumeFlight()});document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseFlight();else resumeFlight()});
+function beginFlight(){
+ if(done||focusPaused||document.hidden)return false;
+ if(!started){started=true;justLaunched=true;READY.hidden=true;last=performance.now();TIP.textContent='Flight in progress. Collect cyan cargo, then slow below 95 speed inside the gold delivery ring. Four deliveries earn one score; R resets.';C.focus({preventScroll:true})}
+ return true;
+}
+LAUNCH.addEventListener('click',beginFlight);
+function reset(){
+ p={x:150,y:450,vx:0,vy:0,a:0,fuel:100,cargo:100};delivery=0;hasCargo=false;done=false;started=false;activeMs=0;justLaunched=false;score=0;last=performance.now();focusPaused=!!document.hidden;padNeedsNeutral=true;padConnected=false;padStart=false;staleKeys.clear();keys={};cam=0;
+ READY.hidden=false;FOCUS_NOTICE.hidden=!focusPaused;TIP.textContent='Start the four-delivery flight deliberately. W/Up thrust, A/D or Left/Right pitch, Space boosts; R resets. No ship movement, cargo wear or score time before launch; switching away safely pauses.';SCORE_LABEL.textContent='Attempt';RESULT.hidden=true;RESULT_MSG.textContent='';WIND.textContent='CALM';sync();
+}
+function sync(){DEL.textContent=Math.min(delivery+1,4)+'/4';FUEL.textContent=Math.max(0,Math.round(p.fuel));CARGO.textContent=Math.max(0,Math.round(p.cargo));SCORE.textContent=Math.max(0,Math.round(score)).toLocaleString();FLIGHT_TIME.textContent=flightSeconds().toFixed(1)}
+function currentWind(){return winds.find(z=>p.x>z.x&&p.x<z.x+z.w&&p.y>z.y&&p.y<z.y+z.h)}function finish(){if(done)return;done=true;const secs=flightSeconds();score=Math.max(100,Math.round(7000-secs*18+p.fuel*16+p.cargo*22));sync();TIP.textContent='All four deliveries completed. Your recorded flight score is shown above.';SCORE_LABEL.textContent='Score';RESULT.hidden=false;RESULT_MSG.textContent=`All four routes delivered. Recorded flight score ${score.toLocaleString()}. Fly again to improve it.`;tone(740,.18,.04);try{parent.postMessage({type:'wwg:game-event',game:'windward-cargo',event:'route-complete',score,duration:Math.round(secs),meta:{unit:'pts',direction:'high',outcome:'completed',deliveries:4,cargo:Math.round(p.cargo),fuel:Math.round(p.fuel)}},'*')}catch{}}
+function fail(reason,t){if(done)return;done=true;const attemptValue=Math.max(0,Math.round(score));TIP.textContent=reason+' This flight is unranked; no local score record. Fly again to retry.';SCORE_LABEL.textContent='Attempt';RESULT.hidden=false;RESULT_MSG.textContent=`${reason} ${delivery} of 4 deliveries completed. Unranked attempt (${attemptValue.toLocaleString()} points); no local score record. Choose Fly again or press R.`;try{parent.postMessage({type:'wwg:game-event',game:'windward-cargo',event:'route-ended',duration:Math.round(flightSeconds(t)),meta:{unit:'pts',direction:'high',outcome:'failed',attemptValue,deliveries:delivery}},'*')}catch{}}
+document.getElementById('again').addEventListener('click',()=>{reset();LAUNCH.focus({preventScroll:true})});
+addEventListener('keydown',e=>{
+ const isFlightKey=IN.is(e,'up',['ArrowUp'])||IN.is(e,'left',['ArrowLeft'])||IN.is(e,'right',['ArrowRight'])||IN.is(e,'primary',['Space']);
+ if(e.code==='KeyR'&&!e.repeat){e.preventDefault();reset();LAUNCH.focus({preventScroll:true});return}
+ if(e.target instanceof Element&&e.target.closest('button,input,select,textarea,a'))return;
+ if(isFlightKey||e.code==='Enter')e.preventDefault();
+ if(focusPaused||done)return;
+ if(staleKeys.has(e.code)){if(e.repeat)return;staleKeys.delete(e.code)}
+ if(!e.repeat&&(isFlightKey||e.code==='Enter'))beginFlight();
+ if(e.code!=='Enter'&&started)keys[e.code]=true;
+});
+addEventListener('keyup',e=>{keys[e.code]=false;staleKeys.delete(e.code)});
+document.querySelectorAll('[data-k]').forEach(b=>{const k=b.dataset.k;b.addEventListener('pointerdown',e=>{e.preventDefault();if(!beginFlight())return;keys[k]=true;try{b.setPointerCapture(e.pointerId)}catch{}});['pointerup','pointerleave','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>keys[k]=false))});
+function pollGamepad(){
+ let g=null;try{g=Array.from(navigator.getGamepads?.()||[]).find(x=>x&&x.connected!==false)||null}catch{}
+ if(!g){padConnected=false;padNeedsNeutral=true;padStart=false;return{turn:0,thrust:false,boost:false}}
+ if(!padConnected){padConnected=true;padNeedsNeutral=true}
+ const ax=Number(g.axes?.[0])||0,a=!!g.buttons?.[0]?.pressed,b=!!g.buttons?.[1]?.pressed,start=!!g.buttons?.[9]?.pressed;
+ if(padNeedsNeutral){if(Math.abs(ax)<.18&&!a&&!b&&!start)padNeedsNeutral=false;padStart=start;return{turn:0,thrust:false,boost:false}}
+ if(!started&&(Math.abs(ax)>.18||a||b||(start&&!padStart)))beginFlight();
+ if(start&&!padStart&&!done&&!started)beginFlight();padStart=start;
+ return {turn:Math.abs(ax)>.18?Math.max(-1,Math.min(1,ax)):0,thrust:a,boost:b};
+}
+// The rendered mountain is triangular, not its axis-aligned bounding rectangle.
+// Query the closest point on all three original silhouette edges; an overlapping
+// craft resolves out of the actual hill face rather than snapping to the apex.
+const SHIP_RADIUS=14;
+function ridgeContact(m,x,y,r=SHIP_RADIUS){
+ const v=[{x:m.x,y:m.y+20},{x:m.x+m.w*.5,y:m.y-m.h},{x:m.x+m.w,y:m.y+20}];
+ let nearest=null,dist2=Infinity,edge=0,negative=0,positive=0;
+ for(let i=0;i<3;i++){
+  const a=v[i],b=v[(i+1)%3],dx=b.x-a.x,dy=b.y-a.y;
+  const t=Math.max(0,Math.min(1,((x-a.x)*dx+(y-a.y)*dy)/(dx*dx+dy*dy)));
+  const qx=a.x+dx*t,qy=a.y+dy*t,d2=(x-qx)**2+(y-qy)**2;
+  if(d2<dist2){dist2=d2;nearest={x:qx,y:qy};edge=i}
+  const cross=dx*(y-a.y)-dy*(x-a.x);if(cross>1e-7)positive++;if(cross< -1e-7)negative++;
+ }
+ const inside=positive===0||negative===0,d=Math.sqrt(dist2);
+ if(!inside&&d>=r)return null;
+ let nx,ny;
+ if(inside){
+  const a=v[edge],b=v[(edge+1)%3],dx=b.x-a.x,dy=b.y-a.y;
+  const cx=(v[0].x+v[1].x+v[2].x)/3,cy=(v[0].y+v[1].y+v[2].y)/3;
+  nx=dy;ny=-dx;const midx=(a.x+b.x)/2,midy=(a.y+b.y)/2;
+  if(nx*(cx-midx)+ny*(cy-midy)>0){nx=-nx;ny=-ny}
+  const len=Math.hypot(nx,ny);nx/=len;ny/=len;
+ }else if(d>1e-7){nx=(x-nearest.x)/d;ny=(y-nearest.y)/d}
+ else return null;
+ return {nx,ny,penetration:(inside?r+d:r-d)+.05};
+}
+function resolveRidge(){
+ for(const m of mountains){
+  if(p.x<m.x-SHIP_RADIUS||p.x>m.x+m.w+SHIP_RADIUS||p.y<m.y-m.h-SHIP_RADIUS||p.y>m.y+20+SHIP_RADIUS)continue;
+  const hit=ridgeContact(m,p.x,p.y);if(!hit)continue;
+  p.x+=hit.nx*hit.penetration;p.y+=hit.ny*hit.penetration;
+  const inward=p.vx*hit.nx+p.vy*hit.ny;
+  if(inward<-.1){
+   p.vx-=1.45*inward*hit.nx;p.vy-=1.45*inward*hit.ny;
+   p.cargo-=Math.min(12,Math.max(0,-inward-12)/16);
+   TIP.textContent='Ridge contact: a solid slope redirected the craft. Watch the mountain silhouette and protect your cargo.';
+   tone(105,.05,.03,'sawtooth');
+  }
+ }
+}
+// A slow foreground rAF must not spend a full score-clock interval while simulating
+// only 30 ms of flight. Catch up in short collision-safe steps, polling input once.
+// Clip unusually long stalls consistently for both flight physics and active timer.
+const FLIGHT_SUBSTEP=1/60,MAX_FOREGROUND_CATCHUP=.3;
+function advanceFlight(dt,gamepad){
+ let thrust=keys[MAP.up]||keys.ArrowUp||keys.thrust||gamepad.thrust;
+ let turn=((keys[MAP.right]||keys.ArrowRight||keys.right)?1:0)-((keys[MAP.left]||keys.ArrowLeft||keys.left)?1:0)+gamepad.turn;
+ let boost=keys[MAP.primary]||keys.Space||keys.boost||gamepad.boost;
+ p.a+=turn*2.5*dt;p.a=Math.max(-1.15,Math.min(1.15,p.a));
+ if(thrust&&p.fuel>0){let power=boost?190:125;p.vx+=Math.cos(p.a)*power*dt;p.vy+=Math.sin(p.a)*power*dt;p.fuel-=dt*(boost?4.8:2.2)}
+ p.vy+=28*dt;
+ const wz=currentWind();WIND.textContent=wz?wz.name:'CALM';
+ if(wz){p.vx+=wz.fx*dt;p.vy+=wz.fy*dt}
+ p.vx*=Math.pow(.994,dt*60);p.vy*=Math.pow(.995,dt*60);
+ const travel=Math.hypot(p.vx,p.vy)*dt,steps=Math.max(1,Math.ceil(travel/7));
+ for(let i=0;i<steps;i++){p.x+=p.vx*dt/steps;p.y+=p.vy*dt/steps;resolveRidge()}
+ if(p.y<35){p.y=35;p.vy=Math.abs(p.vy)*.4;p.cargo-=1.5}
+ if(p.y>H-35){p.y=H-35;if(Math.abs(p.vy)>80)p.cargo-=Math.min(9,Math.abs(p.vy)/24);p.vy=-Math.abs(p.vy)*.32}
+ if(p.x<25){p.x=25;p.vx=Math.abs(p.vx)*.4}
+ if(p.x>W-25){p.x=W-25;p.vx=-Math.abs(p.vx)*.4}
+ if(p.fuel<=0||p.cargo<=0){fail(p.fuel<=0?'Fuel exhausted.':'Cargo integrity lost.');return}
+ const r=routes[delivery];
+ if(r&&!hasCargo&&Math.hypot(p.x-r.pick[0],p.y-r.pick[1])<45){hasCargo=true;tone(480,.08,.025);TIP.textContent='Cargo secured. Reach the gold beacon and slow below 95 speed.'}
+ if(r&&hasCargo&&Math.hypot(p.x-r.drop[0],p.y-r.drop[1])<48){
+  const sp=Math.hypot(p.vx,p.vy);
+  if(sp<95){delivery++;hasCargo=false;score+=900+Math.round(p.cargo*3);tone(620,.1,.03);TIP.textContent=delivery>=4?'Final manifest sealed.':'Delivery accepted. Find the next cyan cargo ring.';if(delivery>=4)finish()}
+  else TIP.textContent='Too fast to unload safely — reduce speed.'
+ }
+}
+function tick(t){
+ const rawStep=Math.max(0,(t-last)/1000);
+ last=t;
+ // Ignore a frame that is inactive or the first frame of a deliberate launch.
+ const activeStep=focusPaused||justLaunched||done||!started?0:Math.min(MAX_FOREGROUND_CATCHUP,rawStep);
+ justLaunched=false;
+ const gamepad=focusPaused||done?{turn:0,thrust:false,boost:false}:pollGamepad();
+ if(!done&&!focusPaused&&started&&activeStep>0){
+  let remaining=activeStep;
+  while(remaining>1e-6&&!done){
+   const dt=Math.min(FLIGHT_SUBSTEP,remaining);
+   activeMs+=dt*1000;
+   advanceFlight(dt,gamepad);
+   remaining-=dt;
+  }
+  sync();
+ }else if(!done&&!focusPaused&&started){
+  // Preserve collision/contact checks on a zero-duration launch frame.
+  advanceFlight(0,gamepad);sync();
+ }
+ cam+=(Math.max(0,Math.min(W-VW,p.x-VW/2))-cam)*Math.min(1,activeStep*4);
+ draw(t);
+ requestAnimationFrame(tick);
+}
 function draw(t){X.setTransform(dpr,0,0,dpr,0,0);X.fillStyle='#06111d';X.fillRect(0,0,innerWidth,innerHeight);X.save();X.translate(ox,oy);X.scale(sc,sc);X.fillStyle='#8bd8f7';X.fillRect(0,0,VW,VH);X.save();X.translate(-cam,0);X.fillStyle='#bde7f7';for(let i=0;i<30;i++){X.beginPath();X.arc((i*197)%W,80+(i*83)%360,25+(i%4)*9,0,7);X.fill()}for(const z of winds){X.fillStyle='#0ea5e922';X.fillRect(z.x,z.y,z.w,z.h);X.strokeStyle='#0369a144';for(let y=z.y+25;y<z.y+z.h;y+=45){X.beginPath();X.moveTo(z.x+20,y);X.lineTo(z.x+z.w-20,y+z.fy*.15);X.stroke()}}X.fillStyle='#475569';for(const m of mountains){X.beginPath();X.moveTo(m.x,m.y+20);X.lineTo(m.x+m.w*.5,m.y-m.h);X.lineTo(m.x+m.w,m.y+20);X.closePath();X.fill()}X.fillStyle='#0f766e';X.fillRect(0,H-30,W,30);const r=routes[delivery];if(r){function ring(pt,col){X.strokeStyle=col;X.lineWidth=5;X.beginPath();X.arc(pt[0],pt[1],34+Math.sin(t/180)*3,0,7);X.stroke()}if(!hasCargo)ring(r.pick,'#22d3ee');else ring(r.drop,'#facc15')}X.save();X.translate(p.x,p.y);X.rotate(p.a);X.fillStyle=hasCargo?'#fef3c7':'white';X.beginPath();X.moveTo(20,0);X.lineTo(-14,-10);X.lineTo(-8,0);X.lineTo(-14,10);X.closePath();X.fill();X.fillStyle='#0ea5e9';X.fillRect(-4,-4,9,8);X.restore();X.restore();X.restore()}reset();requestAnimationFrame(tick);
 </script></body></html>

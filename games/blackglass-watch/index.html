@@ -1,14 +1,352 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Blackglass Watch</title><style>*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#05080b;color:#edf6f3;font-family:system-ui,sans-serif}.wrap{min-height:100vh;display:grid;grid-template-columns:minmax(360px,780px) minmax(270px,340px);gap:18px;align-items:center;justify-content:center;padding:18px;background:radial-gradient(circle at 45% 20%,#12272b,#05080b 62%)}.monitor{background:#071014;border:1px solid #315056;border-radius:20px;padding:14px;box-shadow:0 20px 70px #0009}.screen{position:relative;min-height:470px;border-radius:15px;overflow:hidden;background:linear-gradient(#0c181b,#071013);border:1px solid #3e6268}.scanlines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 5px,#d9ffff08 6px);mix-blend-mode:screen}.room{position:absolute;inset:0;padding:26px}.room h2{margin:0;color:#b7d8d8;letter-spacing:.08em;font-size:16px}.horizon{position:absolute;left:0;right:0;top:42%;height:1px;background:#5f7d8055}.window{position:absolute;right:11%;top:18%;width:30%;height:32%;border:5px solid #40585d;background:#071013;box-shadow:inset 0 0 0 1px #9fbfc233}.desk{position:absolute;left:13%;right:19%;bottom:17%;height:16%;background:#172428;border-top:5px solid #4e666b}.chair{position:absolute;left:25%;bottom:14%;width:58px;height:84px;border:7px solid #364f55;border-radius:50% 50% 12px 12px}.lamp{position:absolute;right:21%;bottom:34%;width:15px;height:70px;background:#38545a}.lamp:before{content:'';position:absolute;width:56px;height:28px;left:-20px;top:-13px;background:#79989d;clip-path:polygon(20% 100%,80% 100%,100% 0,0 0)}.figure{display:none;position:absolute;right:15%;bottom:18%;width:38px;height:150px;background:#020303;border-radius:45% 45% 12% 12%;box-shadow:0 0 24px #000}.extra-object{display:none;position:absolute;left:48%;bottom:34%;width:46px;height:46px;border:3px solid #9db9ba;transform:rotate(18deg)}.motion-mark{display:none;position:absolute;left:20%;top:25%;width:42px;height:100px;border-left:3px solid #a9cbca;transform-origin:top}.anomaly-figure .figure,.anomaly-object .extra-object,.anomaly-motion .motion-mark{display:block}.anomaly-light{filter:brightness(1.7) contrast(1.12)}.anomaly-motion .motion-mark{animation:swing .7s ease-in-out infinite alternate}.reduced .motion-mark{animation:none;transform:rotate(18deg)}@keyframes swing{from{transform:rotate(-18deg)}to{transform:rotate(25deg)}}.noise{position:absolute;inset:0;opacity:.16;background-image:radial-gradient(#b8dddd 1px,transparent 1px);background-size:6px 6px;pointer-events:none}.camline{position:absolute;left:18px;bottom:14px;font:700 11px ui-monospace,monospace;color:#a9cbca;background:#061013dd;padding:6px 8px;border:1px solid #315056;border-radius:7px}.feed-nav{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:10px}.feed-nav button,.actions button,.types button{border:1px solid #35545a;background:#0b191d;color:#e7f6f5;border-radius:10px;padding:10px 7px;font-weight:800}.feed-nav button.active{background:#24484e;border-color:#80b7b6}.panel{background:#091317e8;border:1px solid #315056;border-radius:18px;padding:16px}.ey{font-size:10px;letter-spacing:.14em;color:#82c7c4}.panel h1{margin:4px 0}.muted{font-size:12px;line-height:1.5;color:#abc2c4}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}.stat{background:#071014;border:1px solid #28474d;border-radius:11px;padding:8px;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:9px;color:#86a7aa;text-transform:uppercase}.meter{height:10px;background:#1d2c30;border-radius:99px;overflow:hidden;margin:9px 0}.meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5eead4,#f59e0b,#ef4444)}.types{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0}.types button.active{background:#5b243b;border-color:#fb7185}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions .primary{background:#7f1d3a;border-color:#fb7185}.note{min-height:62px;color:#d5e8e7;font-size:12px;line-height:1.45}.flash{animation:flash .18s linear}@keyframes flash{50%{box-shadow:inset 0 0 80px #fff5}}@media(max-width:780px){.wrap{grid-template-columns:1fr;align-content:start;padding:10px}.screen{min-height:390px}.panel,.monitor{max-width:96vw;width:100%}.feed-nav{grid-template-columns:repeat(3,1fr)}} </style></head><body><div class="wrap"><main class="monitor"><div class="screen" id="screen"><div class="room" id="room"><h2 id="roomName">CAM 01 — NORTH HALL</h2><div class="horizon"></div><div class="window"></div><div class="desk"></div><div class="chair"></div><div class="lamp"></div><div class="figure"></div><div class="extra-object"></div><div class="motion-mark"></div><div class="noise"></div><div class="scanlines"></div><div class="camline" id="camline">BLACKGLASS STATION · 00:00:00</div></div></div><div class="feed-nav" id="feeds"></div></main><aside class="panel"><div class="ey">ARCHITECT INDUSTRIES NIGHT OBSERVATORY</div><h1>Blackglass Watch</h1><p class="muted">Six cameras. Seven anomalies. Compare the rooms, identify what changed, and file the right report before the station's stress meter overwhelms the watch.</p><div class="stats"><div class="stat"><b id="shift">1/7</b><span>Anomaly</span></div><div class="stat"><b id="caught">0</b><span>Logged</span></div><div class="stat"><b id="mistakes">0</b><span>Errors</span></div></div><div class="meter" aria-label="Station stress"><i id="stressbar"></i></div><p class="muted">Station stress <b id="stress">0%</b></p><p class="note" id="note">Scan each feed. Something is already wrong.</p><div class="types" id="types"></div><div class="actions"><button id="report" class="primary">File report</button><button id="steady">Steady signal (2)</button><button id="restart">Restart watch</button><button id="nextFeed">Next camera</button></div><p class="muted">Remappable Left/Right changes camera · Up/Down changes report type · Primary files · Secondary steadies the signal. Pointer/touch controls work throughout.</p></aside></div><script src="../../assets/wwg-input.js"></script><script>
-const IN=window.WWGInput||{is:(e,a,x=[])=>({up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],left:['KeyA','ArrowLeft'],right:['KeyD','ArrowRight'],primary:['Space'],secondary:['KeyE']}[a]||[]).concat(x).includes(e.code)};
-const ROOMS=['North Hall','Radio Room','Archive','Generator','Dormitory','Observation Deck'];const TYPES=['Figure','Lighting','Object','Movement'];
-const SHIFTS=[{room:2,type:'Object',limit:27},{room:5,type:'Figure',limit:26},{room:1,type:'Lighting',limit:25},{room:4,type:'Movement',limit:24},{room:0,type:'Figure',limit:23},{room:3,type:'Object',limit:22},{room:5,type:'Movement',limit:21}];
-const qp=new URLSearchParams(location.search),reduced=qp.get('motion')==='reduce';const SCREEN=document.getElementById('screen'),ROOM=document.getElementById('room'),NAME=document.getElementById('roomName'),FEEDS=document.getElementById('feeds'),TYPESBOX=document.getElementById('types'),NOTE=document.getElementById('note'),STRESS=document.getElementById('stress'),BAR=document.getElementById('stressbar');let si=0,feed=0,type=0,caught=0,mistakes=0,stress=0,steady=2,done=false,start=performance.now(),stageStart=start,last=start,raf=0;
-function active(){return SHIFTS[Math.min(si,SHIFTS.length-1)]}function anomalyClass(){if(done||feed!==active().room)return'';return 'anomaly-'+active().type.toLowerCase()}function render(){NAME.textContent=`CAM ${String(feed+1).padStart(2,'0')} — ${ROOMS[feed].toUpperCase()}`;ROOM.className='room '+anomalyClass()+(reduced?' reduced':'');document.getElementById('shift').textContent=Math.min(si+1,7)+'/7';document.getElementById('caught').textContent=caught;document.getElementById('mistakes').textContent=mistakes;STRESS.textContent=Math.round(stress)+'%';BAR.style.width=Math.min(100,stress)+'%';document.getElementById('steady').textContent=`Steady signal (${steady})`;FEEDS.innerHTML=ROOMS.map((r,i)=>`<button class="${i===feed?'active':''}" data-feed="${i}">CAM ${i+1}</button>`).join('');FEEDS.querySelectorAll('[data-feed]').forEach(b=>b.onclick=()=>{feed=+b.dataset.feed;render()});TYPESBOX.innerHTML=TYPES.map((t,i)=>`<button class="${i===type?'active':''}" data-type="${i}">${t}</button>`).join('');TYPESBOX.querySelectorAll('[data-type]').forEach(b=>b.onclick=()=>{type=+b.dataset.type;render()})}
-function moveFeed(d){feed=(feed+d+ROOMS.length)%ROOMS.length;render()}function moveType(d){type=(type+d+TYPES.length)%TYPES.length;render()}
-function report(){if(done)return;const a=active();if(feed===a.room&&TYPES[type]===a.type){caught++;const elapsed=(performance.now()-stageStart)/1000;stress=Math.max(0,stress-12);NOTE.textContent=`Confirmed ${a.type.toLowerCase()} anomaly in ${ROOMS[a.room]}.`;SCREEN.classList.add('flash');setTimeout(()=>SCREEN.classList.remove('flash'),180);if(si===SHIFTS.length-1){finish(true);return}si++;stageStart=performance.now();feed=(a.room+2)%ROOMS.length;type=(type+1)%TYPES.length;stress=Math.max(0,stress-4);setTimeout(render,80);return}mistakes++;stress=Math.min(100,stress+16);NOTE.textContent='Report rejected. Compare the feeds again.';render();if(stress>=100)finish(false)}
-function steadySignal(){if(done||steady<=0)return;steady--;stress=Math.max(0,stress-24);NOTE.textContent='Signal steadied. The noise floor drops for a moment.';render()}
-function finish(win){if(done)return;done=true;const secs=Math.max(1,(performance.now()-start)/1000),score=Math.max(0,Math.round(caught*900+(win?2400:0)+steady*300-Math.round(stress)*8-mistakes*180-secs*4));NOTE.textContent=win?`Watch complete. Seven anomalies logged. Score ${score.toLocaleString()}.`:`The watch collapsed under station stress. ${caught}/7 anomalies logged.`;try{parent.postMessage({type:'wwg:game-event',game:'blackglass-watch',event:win?'watch-complete':'watch-ended',score,duration:Math.round(secs),meta:{unit:'pts',direction:'high',caught,mistakes,stress:Math.round(stress)}},'*')}catch{}render()}
-function restart(){si=0;feed=0;type=0;caught=0;mistakes=0;stress=0;steady=2;done=false;start=performance.now();stageStart=start;last=start;NOTE.textContent='Scan each feed. Something is already wrong.';render()}
-function loop(t){const dt=Math.min(.1,(t-last)/1000);last=t;if(!done){const a=active(),elapsed=(t-stageStart)/1000;stress=Math.min(100,stress+dt*(1.05+si*.12));if(elapsed>a.limit){stress=Math.min(100,stress+18);stageStart=t;mistakes++;NOTE.textContent='The anomaly lingered too long. Station stress spikes.'}if(stress>=100)finish(false);if(Math.floor(t/1000)%2===0)document.getElementById('camline').textContent=`BLACKGLASS STATION · ${new Date().toLocaleTimeString([], {hour12:false})}`;render()}raf=requestAnimationFrame(loop)}
-addEventListener('keydown',e=>{if(IN.is(e,'left',['ArrowLeft'])){moveFeed(-1);e.preventDefault()}else if(IN.is(e,'right',['ArrowRight'])){moveFeed(1);e.preventDefault()}else if(IN.is(e,'up',['ArrowUp'])){moveType(-1);e.preventDefault()}else if(IN.is(e,'down',['ArrowDown'])){moveType(1);e.preventDefault()}else if(IN.is(e,'primary',['Space','Enter'])){report();e.preventDefault()}else if(IN.is(e,'secondary',['KeyE'])){steadySignal();e.preventDefault()}else if(e.code==='KeyR')restart()});document.getElementById('report').onclick=report;document.getElementById('steady').onclick=steadySignal;document.getElementById('restart').onclick=restart;document.getElementById('nextFeed').onclick=()=>moveFeed(1);restart();requestAnimationFrame(loop);
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Blackglass Watch 1.6 — Compact Patrol Desk</title><style>*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#05080b;color:#edf6f3;font-family:system-ui,sans-serif}.wrap{min-height:100vh;display:grid;grid-template-columns:minmax(360px,780px) minmax(270px,340px);gap:18px;align-items:center;justify-content:center;padding:18px;background:radial-gradient(circle at 45% 20%,#12272b,#05080b 62%)}.monitor{background:#071014;border:1px solid #315056;border-radius:20px;padding:14px;box-shadow:0 20px 70px #0009}.screen{position:relative;min-height:470px;border-radius:15px;overflow:hidden;background:linear-gradient(#0c181b,#071013);border:1px solid #3e6268}.scanlines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 5px,#d9ffff08 6px);mix-blend-mode:screen}.room{position:absolute;inset:0;padding:26px}.room h2{margin:0;color:#b7d8d8;letter-spacing:.08em;font-size:16px}.horizon{position:absolute;left:0;right:0;top:42%;height:1px;background:#5f7d8055}.window{position:absolute;right:11%;top:18%;width:30%;height:32%;border:5px solid #40585d;background:#071013;box-shadow:inset 0 0 0 1px #9fbfc233}.desk{position:absolute;left:13%;right:19%;bottom:17%;height:16%;background:#172428;border-top:5px solid #4e666b}.chair{position:absolute;left:25%;bottom:14%;width:58px;height:84px;border:7px solid #364f55;border-radius:50% 50% 12px 12px}.lamp{position:absolute;right:21%;bottom:34%;width:15px;height:70px;background:#38545a}.lamp:before{content:'';position:absolute;width:56px;height:28px;left:-20px;top:-13px;background:#79989d;clip-path:polygon(20% 100%,80% 100%,100% 0,0 0)}.figure{display:none;position:absolute;right:15%;bottom:18%;width:38px;height:150px;background:#020303;border-radius:45% 45% 12% 12%;box-shadow:0 0 24px #000}.extra-object{display:none;position:absolute;left:48%;bottom:34%;width:46px;height:46px;border:3px solid #9db9ba;transform:rotate(18deg)}.motion-mark{display:none;position:absolute;left:20%;top:25%;width:42px;height:100px;border-left:3px solid #a9cbca;transform-origin:top}.anomaly-figure .figure,.anomaly-object .extra-object,.anomaly-motion .motion-mark{display:block}.anomaly-light{filter:brightness(1.7) contrast(1.12)}.anomaly-motion .motion-mark{animation:swing .7s ease-in-out infinite alternate}.reduced .motion-mark{animation:none;transform:rotate(18deg)}@keyframes swing{from{transform:rotate(-18deg)}to{transform:rotate(25deg)}}.noise{position:absolute;inset:0;opacity:.16;background-image:radial-gradient(#b8dddd 1px,transparent 1px);background-size:6px 6px;pointer-events:none}.camline{position:absolute;left:18px;bottom:14px;font:700 11px ui-monospace,monospace;color:#a9cbca;background:#061013dd;padding:6px 8px;border:1px solid #315056;border-radius:7px}.feed-nav{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:10px}.feed-nav button,.actions button,.types button{border:1px solid #35545a;background:#0b191d;color:#e7f6f5;border-radius:10px;padding:10px 7px;font-weight:800}.feed-nav button:focus-visible,.actions button:focus-visible,.types button:focus-visible{outline:3px solid #f9d474;outline-offset:3px}.feed-nav button.active{background:#24484e;border-color:#80b7b6}.panel{background:#091317e8;border:1px solid #315056;border-radius:18px;padding:16px}.ey{font-size:10px;letter-spacing:.14em;color:#82c7c4}.panel h1{margin:4px 0}.muted{font-size:12px;line-height:1.5;color:#abc2c4}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}.stat{background:#071014;border:1px solid #28474d;border-radius:11px;padding:8px;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:9px;color:#86a7aa;text-transform:uppercase}.meter{height:10px;background:#1d2c30;border-radius:99px;overflow:hidden;margin:9px 0}.meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5eead4,#f59e0b,#ef4444)}.types{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:8px 0}.types button.active{background:#5b243b;border-color:#fb7185}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions .primary{background:#7f1d3a;border-color:#fb7185}.note{min-height:62px;color:#d5e8e7;font-size:12px;line-height:1.45}.flash{animation:flash .18s linear}@keyframes flash{50%{box-shadow:inset 0 0 80px #fff5}}@media(prefers-reduced-motion:reduce){.flash,.anomaly-motion .motion-mark{animation:none}}@media(max-width:780px){.wrap{grid-template-columns:1fr;align-content:start;padding:10px}.screen{min-height:390px}.panel,.monitor{max-width:96vw;width:100%}.feed-nav{grid-template-columns:repeat(3,1fr)}} .signal-readout{color:#d1f6e7;background:#0b2426;border:1px solid #466b68;border-radius:12px;padding:11px 13px;font-size:13px;line-height:1.5;margin:10px 0 2px;min-height:62px}.actions button,.feed-nav button,.types button{min-height:44px}.actions button[hidden]{display:none}.phase-status{padding:10px 12px;background:#0e2729;border-left:3px solid #5eead4;border-radius:7px;color:#d1f6e7;font-size:13px;line-height:1.5;margin:10px 0}.phase-status:focus-visible{outline:3px solid #f9d474} @media(max-width:400px){.actions{grid-template-columns:1fr 1fr}.screen{min-height:330px}.signal-readout{font-size:12px}} 
+/* v421: preserve the same real game controls while arranging them as a compact
+   two-pane watch desk. No floating duplicate buttons or forged interactions. */
+@media (orientation:landscape) and (max-height:420px) and (max-width:900px){
+ html,body{height:100%;overflow:hidden}
+ .wrap{height:100dvh;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:4px;padding:3px;align-items:stretch;overflow:hidden}
+ .monitor,.panel{height:calc(100dvh - 6px);min-height:0;max-width:none;min-width:0;overflow:hidden;padding:4px;border-radius:7px}
+ .monitor{display:flex;flex-direction:column;gap:3px}
+ .screen{min-height:0;height:min(35dvh,120px);flex:none;border-radius:4px}
+ .room{padding:5px}.room h2{font-size:9px;letter-spacing:0}
+ .figure{height:58px;width:19px}.extra-object{height:21px;width:21px;border-width:2px}.motion-mark{height:48px;width:25px}
+ .camline{left:4px;bottom:3px;font-size:7px;padding:2px 3px}
+ .signal-readout{flex:1;min-height:0;overflow:auto;margin:0;padding:3px;font-size:10px;line-height:1.1;border-radius:4px}
+ .feed-nav{flex:none;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;margin:0}
+ .feed-nav button{min-width:0;min-height:44px;padding:0 1px;font-size:10px;border-radius:4px}
+ .panel{overflow-y:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:3px;scrollbar-width:thin}
+ .panel>*{grid-column:1/-1;min-width:0;margin:0}
+ .panel h1{order:-20;font-size:14px;line-height:18px;margin:0}
+ .actions{display:contents}
+ .actions button{grid-column:auto;min-width:0;min-height:44px;padding:2px;font-size:10px;line-height:1.1;border-radius:5px}
+ .actions button[hidden]{display:none}
+ #begin,#pause{order:-19}
+ #report{order:-18}
+ .types{order:-17;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px}
+ .types button{min-height:44px;min-width:0;padding:2px;font-size:10px;border-radius:5px}
+ #steady{order:-16}#nextFeed{order:-15}#restart{order:-14}
+ .phase-status{order:-13;padding:4px 5px;font-size:10px;line-height:1.15}
+ .stats{order:-12;gap:2px}.stat{padding:3px}.stat b{font-size:12px}.stat span{font-size:8px}
+ .meter{order:-11;height:5px}.note{order:-10;min-height:0;font-size:10px;line-height:1.2}
+ .ey{font-size:9px}.panel .muted{font-size:10px;line-height:1.25}
+}
+@media (orientation:landscape) and (max-height:270px) and (max-width:900px){
+ .screen{height:32dvh}
+ .signal-readout{font-size:9px}
+}
+
+@media (max-width:780px) and (orientation:portrait){
+ .wrap{display:block;padding:5px}
+ .monitor,.panel{width:100%;max-width:none;padding:7px;border-radius:9px}
+ .screen{min-height:0;height:min(29dvh,210px)}
+ .room{padding:8px}.room h2{font-size:12px}
+ .figure{height:94px;width:28px}.motion-mark{height:72px;width:32px}
+ .signal-readout{min-height:0;margin:5px 0;padding:7px;font-size:11px;line-height:1.2}
+ .feed-nav{grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;margin:4px 0 0}
+ .feed-nav button{min-height:44px;padding:2px}
+ .panel{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:6px;margin-top:5px}
+ .panel>*{grid-column:1/-1;margin:0;min-width:0}
+ .panel h1{order:-20;margin:0;font-size:19px;line-height:24px}
+ .actions{display:contents}
+ .actions button{grid-column:auto;min-height:44px;padding:6px;font-size:12px}
+ #begin,#pause{order:-19}#report{order:-18}
+ .types{order:-17;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin:0}
+ .types button{min-height:44px}
+ #steady{order:-16}#nextFeed{order:-15}#restart{order:-14}
+ .phase-status{order:-13;padding:7px}.stats{order:-12;margin:0}.meter{order:-11;margin:0}.note{order:-10;min-height:0}
+}
+</style></head><body><div class="wrap"><main class="monitor"><div class="screen" id="screen"><div class="room" id="room"><h2 id="roomName" aria-live="polite" aria-atomic="true">CAM 01 — NORTH HALL</h2><div class="horizon"></div><div class="window"></div><div class="desk"></div><div class="chair"></div><div class="lamp"></div><div class="figure"></div><div class="extra-object"></div><div class="motion-mark"></div><div class="noise"></div><div class="scanlines"></div><div class="camline" id="camline">BLACKGLASS STATION · 00:00:00</div></div></div><p id="signalClue" class="signal-readout" role="status" aria-live="polite" aria-atomic="true">Camera feed analysis ready. Examine all six cameras to identify the unusual detail.</p><nav class="feed-nav" id="feeds" aria-label="Station camera feeds"></nav></main><aside class="panel"><div class="ey">ARCHITECT INDUSTRIES NIGHT OBSERVATORY · PATROL <span id="watchCode">--------</span></div><h1>Blackglass Watch</h1><p class="muted">Six cameras. Seven fresh anomalies each watch. Every station feed and all four anomaly classes appear; read the changes instead of memorizing one fixed sequence.</p><div class="stats"><div class="stat"><b id="shift">1/7</b><span>Anomaly</span></div><div class="stat"><b id="caught">0</b><span>Logged</span></div><div class="stat"><b id="mistakes">0</b><span>Errors</span></div></div><div class="meter" role="progressbar" aria-label="Station stress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="stressMeter"><i id="stressbar"></i></div><p class="muted">Station stress <b id="stress">0%</b> · Next escalation in <b id="stageLeft">27s</b> of active watch</p><p id="watchStatus" class="phase-status" role="status" aria-live="polite" aria-atomic="true">READY — Choose Begin watch; surveillance time will not start until you do.</p><p class="note" id="note" role="status" aria-live="polite" aria-atomic="true">Scan each feed. Something is already wrong.</p><div class="types" id="types" role="group" aria-label="Anomaly classification"></div><div class="actions"><button id="begin">Begin watch</button><button id="pause" hidden>Pause watch (P)</button><button id="report" class="primary">File report</button><button id="steady">Steady signal (2)</button><button id="restart">Restart watch</button><button id="nextFeed">Next camera</button></div><p class="muted">Remappable Left/Right changes camera · Up/Down changes report type · Primary files · Secondary steadies the signal. Tab through the camera and report buttons; Enter/Space activates the focused button. Pointer/touch controls work throughout. Begin with the Start button or Enter, pause/resume with P or controller Menu; R restarts. A screen-reader-friendly camera description matches every visible anomaly. Each restarted watch shuffles seven fair anomalies across every camera. Only seven confirmed reports earn the Watch score.</p></aside></div><script src="../../assets/wwg-input.js"></script><script>
+// Blackglass Watch 1.2: stable, focusable surveillance controls.
+// Camera and report buttons are created once. Live telemetry never recreates them.
+const IN = window.WWGInput || {is:(e,a,x=[])=>({up:['KeyW','ArrowUp'],down:['KeyS','ArrowDown'],left:['KeyA','ArrowLeft'],right:['KeyD','ArrowRight'],primary:['Space'],secondary:['KeyE']}[a]||[]).concat(x).includes(e.code)};
+const ROOMS = ['North Hall','Radio Room','Archive','Generator','Dormitory','Observation Deck'];
+const TYPES = ['Figure','Lighting','Object','Movement'];
+// Balanced original anomaly patrol: every watch covers all six feeds, all four
+// anomaly classes, seven unique room/type clues and descending fair deadlines.
+// The 32-bit seed makes a patrol reproducible for debugging without ever
+// trusting an externally supplied URL seed for ranked play.
+const WATCH_LIMITS=[27,26,25,24,23,22,21];
+const WATCH_TYPES=['Object','Object','Figure','Figure','Lighting','Movement','Movement'];
+function watchRandom(seed){
+  let state=seed>>>0;
+  return ()=>{state=(state+0x6D2B79F5)>>>0;let x=state;
+    x=Math.imul(x^(x>>>15),x|1);x^=x+Math.imul(x^(x>>>7),x|61);
+    return ((x^(x>>>14))>>>0)/4294967296;};
+}
+function shuffleWatch(values,random){
+  const result=values.slice();
+  for(let i=result.length-1;i>0;i--){const j=Math.floor(random()*(i+1));
+    [result[i],result[j]]=[result[j],result[i]];}
+  return result;
+}
+function buildWatch(seed){
+  const random=watchRandom(seed);
+  for(let attempt=0;attempt<80;attempt++){
+    const kinds=shuffleWatch(WATCH_TYPES,random);
+    const rooms=shuffleWatch([0,1,2,3,4,5,Math.floor(random()*6)],random);
+    const pairs=rooms.map((room,i)=>room+':'+kinds[i]);
+    if(new Set(pairs).size!==7||
+      rooms.some((room,i)=>i>0&&room===rooms[i-1])||
+      kinds.some((kind,i)=>i>0&&kind===kinds[i-1]))continue;
+    return WATCH_LIMITS.map((limit,i)=>({room:rooms[i],type:kinds[i],limit}));
+  }
+  // Deterministic and fully valid if pathological RNG draws exhaust retries.
+  const pattern=[2,5,1,4,0,3,5],types=['Object','Figure','Lighting','Movement','Figure','Object','Movement'];
+  return WATCH_LIMITS.map((limit,i)=>({room:(pattern[i]+(seed%6))%6,type:types[i],limit}));
+}
+let SHIFTS=[],watchSeed=0,watchNumber=0;
+function drawNewWatch(){
+  let entropy;
+  try{const bits=new Uint32Array(1);crypto.getRandomValues(bits);entropy=bits[0];}
+  catch{entropy=(Math.random()*4294967296)>>>0;}
+  const previous=SHIFTS.map(s=>s.room+':'+s.type).join('|');
+  watchSeed=(entropy+Math.imul(++watchNumber,0x9E3779B9))>>>0;
+  for(let tries=0;tries<16;tries++){
+    SHIFTS=buildWatch(watchSeed);
+    if(SHIFTS.map(s=>s.room+':'+s.type).join('|')!==previous)break;
+    watchSeed=(watchSeed+0x9E3779B9)>>>0;
+  }
+  document.getElementById('watchCode').textContent=watchSeed.toString(16).toUpperCase().padStart(8,'0');
+}
+const qp = new URLSearchParams(location.search);
+const reduced = qp.get('motion')==='reduce' || matchMedia('(prefers-reduced-motion: reduce)').matches;
+const SCREEN = document.getElementById('screen');
+const ROOM = document.getElementById('room');
+const NAME = document.getElementById('roomName');
+const FEEDS = document.getElementById('feeds');
+const TYPESBOX = document.getElementById('types');
+const NOTE = document.getElementById('note');
+const STRESS = document.getElementById('stress');
+const BAR = document.getElementById('stressbar');
+const REPORT = document.getElementById('report');
+const STEADY = document.getElementById('steady');
+let si=0,feed=0,type=0,caught=0,mistakes=0,stress=0,steady=2,done=false;
+// No wall-clock expiry. A watch begins on an intentional action and advances
+// only while its state is active and the document is foregrounded.
+let phase='ready',focusInterrupted=!!document.hidden,activeMs=0,stageStartMs=0;
+let last=performance.now(),lastTelemetry=0,flashTimeout=0;
+let gamepadConnected=false,padNeedsNeutral=true,padPrev=[];
+const BEGIN=document.getElementById('begin'),PAUSE=document.getElementById('pause');
+const STATUS=document.getElementById('watchStatus'),CLUE=document.getElementById('signalClue'),STAGE_LEFT=document.getElementById('stageLeft');
+function available(){return phase==='active'&&!focusInterrupted&&!document.hidden}
+function announcePhase(){
+  BEGIN.hidden=phase==='active'||phase==='paused';
+  BEGIN.textContent=phase==='done'?'Play another watch':'Begin watch';
+  PAUSE.hidden=phase==='ready'||phase==='done';
+  PAUSE.textContent=phase==='paused'?'Resume watch (P)':'Pause watch (P)';
+  STATUS.textContent=phase==='ready'?'READY — Select Begin watch or press Enter to start. Camera inspection is safe before starting.':phase==='done'?'FINISHED — Play another watch to attempt a fresh seven-anomaly shift.':phase==='paused'?'PAUSED — Station stress and deadlines are frozen. Refocus if needed, then Resume watch or press P.':'ACTIVE — Locate and classify seven anomalies. Stress advances only during foreground play.';
+  renderTelemetry();
+}
+function beginWatch(){
+  if(phase==='done')restart();
+  if(phase!=='ready'||focusInterrupted||document.hidden)return;
+  phase='active';last=performance.now();padNeedsNeutral=true;
+  NOTE.textContent='Night watch started. Scan the feeds and file confirmed anomaly reports.';
+  announcePhase();
+}
+function togglePause(){
+  if(phase==='active'){phase='paused';last=performance.now();padNeedsNeutral=true;NOTE.textContent='Watch paused. No stress or deadline time will be charged.';announcePhase()}
+  else if(phase==='paused'&&!focusInterrupted&&!document.hidden){phase='active';last=performance.now();padNeedsNeutral=true;NOTE.textContent='Watch resumed. Resume camera investigation.';announcePhase()}
+}
+function interrupt(){
+  focusInterrupted=true;last=performance.now();padNeedsNeutral=true;
+  if(phase==='active')phase='paused';
+  announcePhase();
+}
+function returnToWatch(){if(document.hidden)return;focusInterrupted=false;last=performance.now();padNeedsNeutral=true;announcePhase()}
+window.addEventListener('blur',interrupt);
+window.addEventListener('focus',returnToWatch);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)interrupt();else returnToWatch()});
+function cameraDescription(){
+  if(done)return 'Watch concluded. Start a new watch to review anomalies.';
+  const room=ROOMS[feed],a=active();
+  if(feed!==a.room)return room+': familiar desk, window and stationary fixture patterns; no new abnormal trace detected.';
+  return room+': '+({
+    Figure:'An unexpected human-shaped silhouette stands near the window.',
+    Lighting:'The entire room feed is unnaturally bright compared with the baseline.',
+    Object:'An unfamiliar geometric object is suspended above the desk.',
+    Movement:'A narrow trace swings repeatedly near the left wall.'
+  }[a.type]);
+}
+
+const cameraButtons = ROOMS.map((room,i)=>{
+  const button=document.createElement('button');
+  button.type='button';
+  button.dataset.feed=String(i);
+  button.textContent=`CAM ${i+1}`;
+  button.setAttribute('aria-label',`Camera ${i+1}: ${room}`);
+  button.addEventListener('click',()=>selectFeed(i));
+  FEEDS.appendChild(button);
+  return button;
+});
+const typeButtons = TYPES.map((reportType,i)=>{
+  const button=document.createElement('button');
+  button.type='button';
+  button.dataset.type=String(i);
+  button.textContent=reportType;
+  button.addEventListener('click',()=>selectType(i));
+  TYPESBOX.appendChild(button);
+  return button;
+});
+function active(){return SHIFTS[Math.min(si,SHIFTS.length-1)]}
+function anomalyClass(){return !done&&feed===active().room?'anomaly-'+active().type.toLowerCase():''}
+function renderSelection(){
+  NAME.textContent=`CAM ${String(feed+1).padStart(2,'0')} — ${ROOMS[feed].toUpperCase()}`;
+  ROOM.className='room '+anomalyClass()+(reduced?' reduced':'');
+  CLUE.textContent=cameraDescription();
+  for(let i=0;i<cameraButtons.length;i++){
+    const selected=i===feed;
+    cameraButtons[i].classList.toggle('active',selected);
+    cameraButtons[i].setAttribute('aria-pressed',String(selected));
+  }
+  for(let i=0;i<typeButtons.length;i++){
+    const selected=i===type;
+    typeButtons[i].classList.toggle('active',selected);
+    typeButtons[i].setAttribute('aria-pressed',String(selected));
+  }
+}
+function renderTelemetry(){
+  document.getElementById('shift').textContent=Math.min(si+1,7)+'/7';
+  document.getElementById('caught').textContent=String(caught);
+  document.getElementById('mistakes').textContent=String(mistakes);
+  STRESS.textContent=Math.round(stress)+'%';
+  BAR.style.width=Math.min(100,stress)+'%';
+  document.getElementById('stressMeter').setAttribute('aria-valuenow',String(Math.round(stress)));
+  STEADY.textContent=`Steady signal (${steady})`;
+  STAGE_LEFT.textContent=Math.max(0,Math.ceil(active().limit-(activeMs-stageStartMs)/1000))+'s';
+  STEADY.disabled=!available()||steady<=0;
+  REPORT.disabled=!available();
+}
+function render(){renderSelection();renderTelemetry()}
+function selectFeed(i,focus=false){if(i<0||i>=ROOMS.length)return;feed=i;renderSelection();if(focus)cameraButtons[i].focus()}
+function selectType(i,focus=false){if(i<0||i>=TYPES.length)return;type=i;renderSelection();if(focus)typeButtons[i].focus()}
+function moveFeed(d,focus=false){selectFeed((feed+d+ROOMS.length)%ROOMS.length,focus)}
+function moveType(d,focus=false){selectType((type+d+TYPES.length)%TYPES.length,focus)}
+function report(){
+  if(!available())return;
+  const a=active();
+  if(feed===a.room&&TYPES[type]===a.type){
+    caught++;
+    stress=Math.max(0,stress-12);
+    NOTE.textContent=`Confirmed ${a.type.toLowerCase()} anomaly in ${ROOMS[a.room]}.`;
+    SCREEN.classList.add('flash');
+    clearTimeout(flashTimeout);
+    flashTimeout=setTimeout(()=>SCREEN.classList.remove('flash'),180);
+    if(si===SHIFTS.length-1){finish(true);return}
+    si++;
+    stageStartMs=activeMs;
+    feed=(a.room+2)%ROOMS.length;
+    type=(type+1)%TYPES.length;
+    stress=Math.max(0,stress-4);
+    render();
+    return;
+  }
+  mistakes++;
+  stress=Math.min(100,stress+16);
+  NOTE.textContent='Report rejected. Compare the feeds again.';
+  renderTelemetry();
+  if(stress>=100)finish(false);
+}
+function steadySignal(){
+  if(!available()||steady<=0)return;
+  steady--;
+  stress=Math.max(0,stress-24);
+  NOTE.textContent='Signal steadied. The noise floor drops for a moment.';
+  renderTelemetry();
+}
+function finish(win){
+  if(done)return;
+  done=true;phase='done';
+  const secs=Math.max(1,activeMs/1000);
+  const attemptValue=Math.max(0,Math.round(caught*900+(win?2400:0)+steady*300-Math.round(stress)*8-mistakes*180-secs*4));
+  NOTE.textContent=win
+    ?`Watch complete. Seven anomalies logged. Score ${attemptValue.toLocaleString()}.`
+    :`The watch collapsed under station stress. ${caught}/7 anomalies logged. Failed watches are unscored; restart to try again.`;
+  try{
+    const payload={type:'wwg:game-event',game:'blackglass-watch',event:win?'watch-complete':'watch-ended',duration:Math.round(secs),meta:{unit:'pts',direction:'high',caught,mistakes,stress:Math.round(stress),outcome:win?'watch-complete':'station-overwhelmed',...(win?{}:{attemptValue})}};
+    if(win)payload.score=attemptValue;
+    parent.postMessage(payload,'*');
+  }catch{}
+  render();announcePhase();
+}
+function restart(){
+  si=0;feed=0;type=0;caught=0;mistakes=0;stress=0;steady=2;done=false;
+  drawNewWatch();
+  clearTimeout(flashTimeout);
+  SCREEN.classList.remove('flash');
+  phase='ready';focusInterrupted=!!document.hidden;activeMs=0;stageStartMs=0;last=performance.now();lastTelemetry=0;padNeedsNeutral=true;
+  NOTE.textContent='New patrol generated. Inspect each camera; begin when ready. Time and station stress remain frozen until you begin.';
+  render();announcePhase();
+}
+function pollGamepad(){
+  let pad;
+  try{pad=Array.from(navigator.getGamepads?.()||[]).find(p=>p&&p.connected!==false)}catch{}
+  if(!pad){gamepadConnected=false;padNeedsNeutral=true;padPrev=[];return}
+  const buttons=pad.buttons||[],axes=pad.axes||[];
+  const pressed=[Boolean(buttons[0]?.pressed),Boolean(buttons[1]?.pressed),Boolean(buttons[9]?.pressed),
+    Boolean(buttons[14]?.pressed||axes[0]<-.55),Boolean(buttons[15]?.pressed||axes[0]>.55),
+    Boolean(buttons[12]?.pressed||axes[1]<-.55),Boolean(buttons[13]?.pressed||axes[1]>.55)];
+  if(!gamepadConnected){gamepadConnected=true;padNeedsNeutral=true}
+  if(padNeedsNeutral){padPrev=pressed;if(!pressed.some(Boolean))padNeedsNeutral=false;return}
+  const edge=i=>pressed[i]&&!padPrev[i];
+  if(edge(2)){
+    if(phase==='ready')beginWatch();else if(phase==='done'){restart();beginWatch()}else togglePause();
+  }else if(available()){
+    if(edge(0))report();else if(edge(1))steadySignal();
+    else if(edge(3))moveFeed(-1);else if(edge(4))moveFeed(1);
+    else if(edge(5))moveType(-1);else if(edge(6))moveType(1);
+  }
+  padPrev=pressed;
+}
+// The watch clock and stress are one linear foreground simulation. A 100ms
+// per-frame cap made low-refresh devices receive extra real-world time before
+// a stage deadline (2 seconds at 5 Hz advanced just 1 second). Accept up to
+// 500ms of foreground time so 2-60Hz play has equivalent competitive time;
+// still bound a long stall and never charge paused/background intervals.
+const MAX_FOREGROUND_FRAME_SECONDS=.5;
+function loop(t){
+  const dt=Math.max(0,Math.min(MAX_FOREGROUND_FRAME_SECONDS,(t-last)/1000));last=t;
+  pollGamepad();
+  if(available()){
+    activeMs+=dt*1000;
+    const a=active(),elapsed=(activeMs-stageStartMs)/1000;
+    stress=Math.min(100,stress+dt*(1.05+si*.12));
+    if(elapsed>a.limit){
+      stress=Math.min(100,stress+18);stageStartMs=activeMs;mistakes++;
+      NOTE.textContent='The anomaly lingered too long. Station stress spikes.';
+    }
+    if(stress>=100)finish(false);
+    if(t-lastTelemetry>=125){
+      lastTelemetry=t;
+      renderTelemetry();
+      document.getElementById('camline').textContent=`BLACKGLASS STATION · ${new Date().toLocaleTimeString([], {hour12:false})}`;
+    }
+  }
+  requestAnimationFrame(loop);
+}
+addEventListener('keydown',e=>{
+  if(e.defaultPrevented||e.repeat||e.ctrlKey||e.altKey||e.metaKey)return;
+  const target=e.target;
+  if(target instanceof Element&&target.closest('input,textarea,select,[contenteditable="true"]'))return;
+  // Let focused buttons activate natively with Space or Enter. Global Primary
+  // must never override a focused camera/type/Restart/Steady control.
+  if(target instanceof Element&&target.closest('button')&&['Space','Enter'].includes(e.code))return;
+  if(e.code==='KeyP'){togglePause();e.preventDefault();return}
+  if(e.code==='KeyR'){restart();e.preventDefault();return}
+  if(phase==='ready'&&['Space','Enter'].includes(e.code)){beginWatch();e.preventDefault();return}
+  const onCamera=target instanceof Element&&!!target.closest('[data-feed]');
+  const onType=target instanceof Element&&!!target.closest('[data-type]');
+  if(IN.is(e,'left',['ArrowLeft'])){if(onCamera)feed=Number(target.dataset.feed);moveFeed(-1,onCamera);e.preventDefault()}
+  else if(IN.is(e,'right',['ArrowRight'])){if(onCamera)feed=Number(target.dataset.feed);moveFeed(1,onCamera);e.preventDefault()}
+  else if(IN.is(e,'up',['ArrowUp'])){if(onType)type=Number(target.dataset.type);moveType(-1,onType);e.preventDefault()}
+  else if(IN.is(e,'down',['ArrowDown'])){if(onType)type=Number(target.dataset.type);moveType(1,onType);e.preventDefault()}
+  else if(IN.is(e,'primary',['Space','Enter'])){report();e.preventDefault()}
+  else if(IN.is(e,'secondary',['KeyE'])){steadySignal();e.preventDefault()}
+});
+BEGIN.addEventListener('click',beginWatch);
+PAUSE.addEventListener('click',togglePause);
+REPORT.addEventListener('click',report);
+STEADY.addEventListener('click',steadySignal);
+document.getElementById('restart').addEventListener('click',restart);
+document.getElementById('nextFeed').addEventListener('click',()=>moveFeed(1));
+restart();requestAnimationFrame(loop);
 </script></body></html>

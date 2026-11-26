@@ -1,0 +1,31 @@
+const assert=require('node:assert/strict');
+const P=require('../games/aegis-verge/progression-store.js');
+const C=require('../games/aegis-verge/checkpoint.js');
+let passed=0;const ck=(v,name)=>{assert.ok(v,name);passed++};
+function store(initial={},mode='normal'){
+ const map=new Map(Object.entries(initial));return {map,getItem:k=>mode==='denied'?(()=>{throw new DOMException('denied','SecurityError')})():map.get(k)??null,setItem(k,v){if(mode==='denied'||mode==='quota')throw Error(mode);if(mode==='noop')return;map.set(k,String(v))},removeItem(k){if(mode==='denied')throw Error('denied');if(mode!=='noop')map.delete(k)}};
+}
+const key='game-progress';const base={unlocked:3,best:[123,456,789],clears:2,bestHull:94};
+let s=store();ck(P.save(()=>s,key,base),'normal progress save verified');ck(s.getItem(key)===JSON.stringify(base),'serialized content');ck(JSON.stringify(P.load(()=>s,key))===JSON.stringify(base),'normal progression reload');
+ck(JSON.stringify(P.normalize(null))===JSON.stringify({unlocked:1,best:[0,0,0],clears:0,bestHull:0}),'null fallback');
+ck(P.normalize([]).unlocked===1,'array ignored');ck(P.normalize({unlocked:Infinity}).unlocked===1,'nonfinite unlock rejected');
+ck(P.normalize({unlocked:'3'}).unlocked===1,'string unlock rejected');ck(P.normalize({unlocked:7}).unlocked===1,'out-of-range unlock rejected');
+ck(JSON.stringify(P.normalize({best:[10,NaN,1e40]}).best)==='[10,0,0]','best sanitized');
+ck(P.normalize({clears:-1,bestHull:200}).clears===0,'invalid clears sanitized');
+ck(P.normalize({clears:-1,bestHull:200}).bestHull===0,'invalid hull sanitized');
+ck(JSON.stringify(Object.keys(P.normalize({other:'injected'})))===JSON.stringify(['unlocked','best','clears','bestHull']),'untrusted extra keys discarded');
+ck(P.load(()=>store({[key]:'{oops'}),key).unlocked===1,'malformed JSON safe');
+ck(!P.save(()=>store({},'denied'),key,base),'setter denied');ck(!P.save(()=>store({},'quota'),key,base),'quota failure');
+ck(!P.save(()=>store({},'noop'),key,base),'silent no-op detected');
+ck(!P.save(()=>{throw Error('property access rejected')},key,base),'storage getter throw detected');
+ck(P.load(()=>{throw Error('getter denied')},key).unlocked===1,'load getter denial safe');
+let c=store();const snapshot={op:0,relay:1,hull:90,energy:90,score:200,recoveriesLeft:1,elapsed:40,damageTaken:0,clean:true,barrierHp:[5,5,5],uplinkUsed:[false,false,false],mineHp:[2,2,2]};
+ck(C.save(c,snapshot),'checkpoint save verified');ck(C.load(c,1)?.relay===1,'checkpoint restored');
+ck(C.clear(c),'checkpoint clear readback verified');ck(C.load(c,1)===null,'cleared checkpoint absent');
+ck(!C.save(store({},'noop'),snapshot),'silent checkpoint write rejected');
+ck(!C.save(store({},'quota'),snapshot),'quota checkpoint write rejected');
+let ghost=store({[C.KEY]:JSON.stringify({...snapshot,version:1,savedAt:Date.now()})},'noop');
+ck(!C.clear(ghost),'silent checkpoint delete rejected');ck(C.load(ghost,1)?.relay===1,'no-op deletion does not pretend to clear');
+ck(C.load(store({[C.KEY]:'not JSON'}),1)===null,'malformed checkpoint rejected');
+ck(!C.save(store({},'denied'),snapshot),'storage denied checkpoint safe');
+console.log(JSON.stringify({suite:'F3D17 verified progress',passed,total:passed}));

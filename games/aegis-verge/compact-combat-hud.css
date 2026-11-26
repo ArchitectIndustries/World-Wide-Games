@@ -1,0 +1,46 @@
+/* Architect Industries | Aegis Verge F3D58
+ * Short-landscape combat cockpit: keep physical 44px controls, usable
+ * world visibility and an explicit path to every secondary action.
+ * CSS only changes presentation; game simulation and input remain authoritative.
+ */
+.compact-control{display:none}
+@media (pointer:coarse) and (max-height:420px) and (max-width:800px){
+ .hud{top:4px!important;left:5px!important;right:5px!important;display:flex!important;flex-wrap:nowrap!important;gap:3px!important;max-height:37px;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;touch-action:pan-x;z-index:8}
+ .hud .pill{flex:0 0 auto;font-size:9px!important;padding:3px 6px!important;min-height:30px;white-space:nowrap}
+ .hud .pill b{font-size:11px!important;margin-left:3px}
+ .objective{top:45px!important;left:5px!important;right:auto!important;width:calc(100vw - 112px)!important;max-width:none!important;height:43px;max-height:43px;overflow:hidden;padding:4px 7px!important;font-size:9px!important;line-height:1.2!important;z-index:8}
+ .objective strong{font-size:8px!important;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;margin:0 0 2px!important}
+ .objective #objText{white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+ .objective #rankStatus,.objective .bar{display:none}
+ body.compact-brief-open .objective{height:auto;max-height:calc(100dvh - 105px);min-height:75px;overflow:auto;width:calc(100vw - 10px)!important;background:#061524f7;z-index:13;border:1px solid #67e8f9}
+ body.compact-brief-open .objective #objText{white-space:normal}
+ body.compact-brief-open .objective #rankStatus,body.compact-brief-open .objective .bar{display:block}
+ .compact-control{display:flex;position:fixed;z-index:12;top:45px;width:44px;height:44px;padding:0!important;align-items:center;justify-content:center;font-size:10px;border:1px solid #458a9f;border-radius:7px;background:#0b283aee;color:#d6fbff;touch-action:manipulation}
+ #compactBriefButton{right:98px}#compactToolsButton{right:51px}#compactMenuButton{right:4px}
+ .compact-control[aria-expanded="true"]{background:#176175;border-color:#b4f9ff}
+ #toolbar{display:none!important}
+ body.compact-menu-open #toolbar{display:flex!important;z-index:13;top:93px!important;right:4px!important;left:auto;bottom:auto!important;width:min(285px,calc(100vw - 8px));max-width:none;flex-wrap:wrap;gap:6px;padding:6px;background:#092338f7;box-shadow:0 5px 20px #000b}
+ body.compact-menu-open #toolbar button{min-height:44px;min-width:44px;padding:6px}
+ body.compact-menu-open #toolbar label{min-height:44px;display:flex;align-items:center;gap:5px}
+ .touch{left:5px;right:5px;bottom:max(5px,env(safe-area-inset-bottom))!important;width:auto;inset:auto 5px max(5px,env(safe-area-inset-bottom))!important;height:91px;display:flex!important;align-items:flex-end;justify-content:space-between;pointer-events:none;gap:4px}
+ .touch .steer{display:grid;grid-template-areas:'u d' 'l r';grid-template-columns:repeat(2,44px);grid-template-rows:repeat(2,44px);gap:3px}
+ .touch .actions{display:grid;grid-template-columns:repeat(2,52px);grid-template-rows:repeat(2,44px);gap:3px}
+ .touch button{pointer-events:auto;min-width:44px;min-height:44px;height:44px!important;padding:0!important;font-size:9px!important}
+ .touch .actions [data-action="decoy"],.touch .actions [data-action="uplink"],.touch .actions [data-action="cache"]{display:none}
+ body.compact-tools-open .touch{height:138px}
+ body.compact-tools-open .touch .actions{grid-template-columns:repeat(3,48px);grid-template-rows:repeat(3,44px)}
+ body.compact-tools-open .touch .actions [data-action="decoy"],body.compact-tools-open .touch .actions [data-action="uplink"],body.compact-tools-open .touch .actions [data-action="cache"]{display:block}
+ #aimCue{top:auto!important;bottom:101px!important;left:50%!important;transform:translateX(-50%)!important;max-width:calc(100vw - 12px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:4px 7px;font-size:9px!important;pointer-events:none}
+ body.compact-tools-open #aimCue{bottom:145px!important}
+ #renderBadge,.brand{display:none!important}
+ .courseReadout,.trialReadout{max-width:min(42vw,180px)!important;font-size:9px!important;bottom:102px!important;pointer-events:none}
+ body.compact-tools-open .courseReadout,body.compact-tools-open .trialReadout{bottom:148px!important}
+ .courseReadout{right:6px;left:auto}.trialReadout{left:5px}
+}
+@media (pointer:coarse) and (max-height:420px) and (max-width:800px){
+ /* Historical checkpoint/storage warnings used to cover the left steering pad
+  * on 320px landscape. Retain the actual alert and scrollable complete text. */
+ #checkpointWarning:not(:empty){top:94px!important;left:5px!important;width:min(151px,44vw)!important;max-height:43px;overflow-y:auto;overscroll-behavior:contain;pointer-events:auto;line-height:1.18;font-size:8px!important;padding:3px 4px!important;z-index:10}
+ #aimCue{left:auto!important;right:5px!important;transform:none!important;max-width:calc(100vw - 165px)}
+ body.compact-tools-open #checkpointWarning:not(:empty){max-height:0;opacity:0;pointer-events:none}
+}

@@ -1,66 +1,53 @@
 {
-  "version": "v72",
-  "title": "Harbor Pulse 1.1: Full Shift",
-  "date": "2026-10-06",
+  "version": "v497",
+  "date": "2026-11-26",
   "owner": "Architect Industries",
-  "status": "READY FOR RELEASE TASK",
+  "status": "VALIDATED_INTEGRATED_SOURCE",
   "catalog": {
-    "games": 82,
-    "genres": 129,
-    "achievements": 152,
-    "remappable": 54
+    "games": 91,
+    "genreTags": 136
   },
-  "objective": {
-    "area": "gameplay-result-semantics/platform-progression",
-    "game": "harbor-pulse",
-    "fromVersion": "1.0",
-    "toVersion": "1.1",
-    "summary": "Separate successful full-shift survival from reputation-collapse failure so only legitimate clears submit scores or count as completion."
+  "baseCommit": "8ffd27a4aa115ff4647c0946e5eea032b91504f9",
+  "sources": {
+    "catalog-v496": {
+      "sha256": "5cfe087b598e175cfe8a885cd734a657c4a2d51e1d884e8db4e7fc08df2f67be",
+      "gameCount": 83
+    },
+    "Arcade-Nights": {
+      "commit": "8ffd27a4aa115ff4647c0946e5eea032b91504f9",
+      "newGames": 6
+    },
+    "Mosaic-B1": {
+      "sha256": "4646c1b37bb26a77042b28c2d1c35bbe77c703ffa5f3c3e2e7540987ac04e400"
+    },
+    "Profile-B2": {
+      "sha256": "dbe6ca38e9c01b6018c5417bb6781b9a783d2e13e2008db313ba362bd439c552"
+    },
+    "Aegis-F3D95": {
+      "sha256": "aa9f068915f6698f0e6f93d913f1e6807a184f4563e193c75aa48f4d88914750",
+      "version": "2.95"
+    },
+    "Cyber-Wars": {
+      "version": "0.64",
+      "patchHashesMatched": 17
+    },
+    "Dynamic-Campaigns": {
+      "commit": "161d321addef199be98c26f15500a1e6327ec698",
+      "newGames": 2
+    },
+    "Lattice-Vanta-Tranche-1": {
+      "commit": "f33d5ffd014f132af21c24eef730c2de122e9535",
+      "preservedConcurrentChanges": true
+    }
   },
-  "qa": {
-    "status": "PASS",
-    "harborPulseOutcomeRegression": "PASS",
-    "gameInteractionAudit": "82/82",
-    "controlObjectivePages": "82/82",
-    "remappableProfiles": "54/54",
-    "mobileHomepageCards": "82/82",
-    "localHttpPaths": "178/178",
-    "serviceWorkerFileAssets": "177/177 plus root",
-    "recentRegressionLine": "PASS"
-  },
-  "changes": [
-    "Harbor Pulse emits neutral shift-complete plus explicit shift-cleared/shift-failed terminal telemetry",
-    "Only shift-cleared is a platform milestone/true completion and only successful clears carry a numeric score",
-    "Failed shifts no longer update wwg:harbor-best",
-    "Harbor Pulse metadata/objective/control guidance advanced to 1.1 with explicit score metadata",
-    "126 milestone events / 79 completion events",
-    "v72 cache/query metadata and Harbor Pulse install shortcut"
+  "rejectedSupersededChanges": [
+    "B3 service worker superseded by v480-v481 public-cache safeguards"
   ],
-  "github": {
-    "repository": "ArchitectIndustries/World-Wide-Games",
-    "canonicalMainAtBuildStart": "ed29d3a17e804e6610ec86b7e49f5b980a31a5d4",
-    "canonicalMainVersionAtBuildStart": "v70",
-    "candidateSourceBaseline": "verified WorldWideGames v71 package",
-    "canonicalMainChangedByBuildTask": false,
-    "candidateBranchCreatedByBuildTask": false,
-    "canonicalMainAtBuildEnd": "ed29d3a17e804e6610ec86b7e49f5b980a31a5d4",
-    "canonicalMainVersionAtBuildEnd": "v70",
-    "concurrentMainAdvanceObserved": false
-  },
   "production": {
+    "url": "https://worldwidegames.vercel.app/",
     "projectId": "prj_CgW1xTHIZOOe1R4RNzcByfvxantq",
-    "domain": "https://worldwidegames.vercel.app",
-    "changedByBuildTask": false
+    "receipt": "https://worldwidegames.vercel.app/release.json",
+    "verification": "Match the live receipt commit and file hashes to the final source commit."
   },
-  "library": {
-    "sourcePackageTarget": "/WorldWideGames/WorldWideGames_v72.zip",
-    "recordsPackageTarget": "/WorldWideGames/WorldWideGames_v72_records.zip",
-    "checksumRecordTarget": "/WorldWideGames/WorldWideGames_v72_SHA256.txt",
-    "persistenceStatus": "PERSISTED_RUNTIME_EQUIVALENT_FINAL_RECORD_REFRESH_BLOCKED",
-    "persistenceDetail": "Initial verified v72 source, records, and checksum artifacts were uploaded to /WorldWideGames. After recording that persistence result, the archives were rebuilt; two overwrite attempts for the final record-refresh build failed with transient container_session_unavailable. The durable Library v72 copy has the same runtime/gameplay/test payload but older persistence-status text and earlier archive hashes. Use and independently verify the exact final handoff archives from this run, and refresh Library before release when possible."
-  },
-  "handoff": {
-    "ready": true,
-    "instruction": "Release & Deploy must independently verify this exact v72 candidate, re-read canonical main, preserve unrelated concurrent work, reconcile the verified v71+v72 delta as needed, satisfy the GitHub main gate, deploy/promote the exact verified source to the existing Vercel project, and smoke-test production."
-  }
+  "reconciledMain": "f33d5ffd014f132af21c24eef730c2de122e9535"
 }
