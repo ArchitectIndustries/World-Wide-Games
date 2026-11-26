@@ -1,6 +1,6 @@
 // Each WorldWideGames upgrade owns only its versioned caches. Never delete or read
 // another app's CacheStorage buckets on a shared origin.
-const CACHE='wwg-v498-cedd2fe1084c';
+const CACHE='wwg-v499-22fe7b6ba843';
 const OWNED_CACHE=/^wwg-v[0-9]+(?:-[0-9a-f]{12})?$/;
 const ASSETS=[
   "./",
@@ -14,7 +14,7 @@ const ASSETS=[
   "./assets/materials/rock-normal.jpg",
   "./assets/materials/rock-roughness.jpg",
   "./assets/styles.css",
-  "./assets/styles.css?v498",
+  "./assets/styles.css?v499",
   "./assets/vendor/three-r187/LICENSE",
   "./assets/vendor/three-r187/three.core.js",
   "./assets/vendor/three-r187/three.module.js",
@@ -126,6 +126,7 @@ const ASSETS=[
   "./games/aegis-verge/checkpoint.js",
   "./games/aegis-verge/combat-holds.js",
   "./games/aegis-verge/combat-presentation.js",
+  "./games/aegis-verge/combat-rigs.js",
   "./games/aegis-verge/compact-combat-hud.css",
   "./games/aegis-verge/compact-combat-hud.js",
   "./games/aegis-verge/conduit-scanner.js",
@@ -219,6 +220,9 @@ const ASSETS=[
   "./games/cloudforge-pinball/index.html",
   "./games/command-bloom/index.html",
   "./games/crownline-tactics/index.html",
+  "./games/cyber-wars/archive-collection.js",
+  "./games/cyber-wars/canopy-archive.css",
+  "./games/cyber-wars/canopy-archive.js",
   "./games/cyber-wars/index.html",
   "./games/cyber-wars/viridia-renderer.js",
   "./games/cyber-wars/viridia-world.js",
@@ -316,17 +320,19 @@ const ASSETS=[
   "./games/windward-cargo/index.html",
   "./index.html",
   "./js/app.js",
-  "./js/app.js?v498",
+  "./js/app.js?v499",
   "./js/arcade-expansion.js",
-  "./js/arcade-expansion.js?v498",
+  "./js/arcade-expansion.js?v499",
   "./js/event-rules.js",
-  "./js/event-rules.js?v498",
+  "./js/event-rules.js?v499",
   "./js/game-page.js",
-  "./js/game-page.js?v498",
+  "./js/game-page.js?v499",
   "./js/games.js",
-  "./js/games.js?v498",
+  "./js/games.js?v499",
+  "./js/player-view.js",
+  "./js/player-view.js?v499",
   "./js/profile-safety.js",
-  "./js/profile-safety.js?v498",
+  "./js/profile-safety.js?v499",
   "./manifest.webmanifest"
 ];
 // The precache is a sealed public-resource snapshot. Never persist arbitrary

@@ -15,8 +15,10 @@ test('all 92 registrations and recovered tracks have executable files and covers
   assert.equal(games.length,92);assert.equal(new Set(games.map(g=>g.id)).size,92);
   assert.equal(release.catalogCount,92);
   for(const game of games){assert.ok(fs.statSync(path.join(dist,game.path)).size>1000,game.id);assert.ok(fs.statSync(path.join(dist,game.cover)).size>0,game.id)}
-  assert.equal(games.find(g=>g.id==='aegis-verge').version,'3.0');
-  assert.equal(games.find(g=>g.id==='cyber-wars').version,'0.65');
+  assert.equal(games.find(g=>g.id==='aegis-verge').version,'3.1');
+  assert.equal(games.find(g=>g.id==='cyber-wars').version,'0.66');
+  assert.equal(games.find(g=>g.id==='solstice-wilds').version,'1.1');
+  for(const id of ['solstice-wilds','aegis-verge','cyber-wars'])assert.equal(games.find(g=>g.id===id).presentation,'world');
   assert.equal(games.find(g=>g.id==='mosaic-memory').version,'1.1');
   for(const id of ['stormwake-rescue','iron-meridian'])assert.equal(games.find(g=>g.id===id).version,'1.0');
 });
@@ -26,7 +28,7 @@ test('published files match the release receipt and exclude engineering history'
 });
 test('cache inventory has unique existing paths and exact shell query variants',()=>{
   const sw=read('sw.js'),assets=JSON.parse(sw.match(/const ASSETS\s*=\s*(\[[\s\S]*?\]);/)[1]);
-  assert.equal(assets.length,new Set(assets).size);assert.match(release.cache,/^wwg-v498-[0-9a-f]{12}$/);assert.ok(sw.includes("const CACHE='"+release.cache+"';"));
+  assert.equal(assets.length,new Set(assets).size);assert.match(release.cache,/^wwg-v499-[0-9a-f]{12}$/);assert.ok(sw.includes("const CACHE='"+release.cache+"';"));
   for(const item of assets){const u=new URL(item,'https://worldwidegames.invalid/');let p=decodeURIComponent(u.pathname.slice(1));if(!p||p.endsWith('/'))p+='index.html';assert.ok(fs.existsSync(path.join(dist,p)),item)}
   for(const html of ['index.html','game.html'])for(const m of read(html).matchAll(/<script[^>]+src="([^"]+)"/g))assert.ok(assets.includes('./'+m[1]),html+' '+m[1]);
   assert.match(sw,/if\(!publicURLs\.has\(url\.href\)\)return/);

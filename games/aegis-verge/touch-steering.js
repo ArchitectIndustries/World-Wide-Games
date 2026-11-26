@@ -32,6 +32,7 @@ function install(steer,onChange){
  }
  function move(e){
   if(!contacts.has(e.pointerId))return;
+  if(e.pointerType==='mouse'&&Number.isInteger(e.buttons)&&!(e.buttons&1)){end(e);return;}
   const key=under(e.clientX,e.clientY);
   if(contacts.get(e.pointerId)!==key){contacts.set(e.pointerId,key);emit();}
  }
@@ -44,6 +45,14 @@ function install(steer,onChange){
   button.addEventListener('pointerup',end);
   button.addEventListener('pointercancel',end);
   button.addEventListener('lostpointercapture',end);
+ }
+ // Capture can fail or an off-button release can target another element.
+ // Listen on the owning document in capture phase, but only for owned IDs.
+ const doc=steer.ownerDocument;
+ if(doc&&typeof doc.addEventListener==='function'){
+  doc.addEventListener('pointermove',move,true);
+  for(const kind of ['pointerup','pointercancel','lostpointercapture'])doc.addEventListener(kind,end,true);
+  doc.addEventListener('pointerout',e=>{if(e.relatedTarget===null)end(e);},true);
  }
  function reset(){contacts.clear();emit();}
  return Object.freeze({reset});

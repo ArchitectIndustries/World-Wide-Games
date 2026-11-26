@@ -12,7 +12,9 @@ function finishArchive(m,s){
   assert.equal(s.completed.archive,true);
 }
 function grantCollectedParts(s,n=4){for(let i=0;i<n;i++){s.crates[i].hp=0;s.crates[i].collected=true;}s.salvage=n;}
-function finishBridge(m,s){if(!s.completed.archive)finishArchive(m,s);grantCollectedParts(s);place(s,m.SITES.bridge);assert.equal(m.interact(s),true);}
+function installCounterweight(m,s){if(!s.completed.archive)finishArchive(m,s);grantCollectedParts(s);place(s,m.TIDEWORKS.bench,2);assert.equal(m.interact(s),true);}
+function alignSluice(m,s){place(s,m.TIDEWORKS.valve,2.2);for(let i=0;i<3&&m.RUNES[s.tideworks.setting]?.id!==s.sequence[0];i++)assert.equal(m.interact(s),true);}
+function finishBridge(m,s){installCounterweight(m,s);alignSluice(m,s);place(s,m.SITES.bridge);assert.equal(m.interact(s),true);seconds(m,s,4);assert.equal(s.completed.bridge,true);}
 function finishSpire(m,s){if(!s.completed.bridge)finishBridge(m,s);for(const e of s.enemies)if(e.site==='spire'){e.hp=0;e.phase='dead';}place(s,m.SITES.spire);assert.equal(m.interact(s),true);}
 
 test('seeded worlds and weather are deterministic and numerical input is bounded',async()=>{
@@ -70,11 +72,16 @@ test('stone foundations occlude pulse targeting, and empty pulses never create r
   const enemy=s.enemies[0];Object.assign(enemy,{x:0,z:46,hp:3,phase:'patrol'});place(s,{x:0,z:36});
   m.pulse(s);assert.equal(enemy.hp,3);assert.equal(s.score,0);assert.equal(s.salvage,0);
 });
-test('bridge repair requires the Archive and four actually carried parts, spends once',async()=>{
-  const m=await model,s=m.createExpedition(4);grantCollectedParts(s);place(s,m.SITES.bridge);assert.equal(m.interact(s),false);
-  finishArchive(m,s);s.salvage=3;place(s,m.SITES.bridge);assert.equal(m.interact(s),false);assert.equal(s.completed.bridge,false);
-  s.salvage=4;assert.equal(m.interact(s),true);assert.equal(s.salvage,0);assert.equal(s.completed.bridge,true);assert.equal(s.score,600);
-  m.interact(s);assert.equal(s.score,600);assert.equal(s.salvage,0);assert.equal(m.takeEvents(s).filter(e=>e.event==='bridge-repaired').length,1);
+test('Tideworks require discovered knowledge, real parts, aligned flow and completed physical deployment',async()=>{
+  const m=await model,s=m.createExpedition(4);grantCollectedParts(s);place(s,m.TIDEWORKS.bench,2);assert.equal(m.interact(s),false);
+  finishArchive(m,s);s.salvage=3;place(s,m.TIDEWORKS.bench,2);assert.equal(m.interact(s),false);assert.equal(s.tideworks.installed,false);
+  s.salvage=4;assert.equal(m.interact(s),true);assert.equal(s.salvage,0);assert.equal(s.tideworks.installed,true);assert.equal(s.completed.bridge,false);assert.equal(s.score,300);
+  m.interact(s);assert.equal(s.salvage,0);place(s,m.SITES.bridge);assert.equal(m.interact(s),false);
+  alignSluice(m,s);place(s,m.SITES.bridge);assert.equal(m.interact(s),true);assert.equal(s.tideworks.phase,'lowering');assert.equal(s.completed.bridge,false);assert.equal(m.canOccupy(s,20,-18),false);
+  seconds(m,s,1.8);assert.ok(s.tideworks.deployment>.49&&s.tideworks.deployment<.51);assert.equal(m.canOccupy(s,20,-18),false);
+  m.setPaused(s,true);const frozen=JSON.stringify(s);seconds(m,s,10);assert.equal(JSON.stringify(s),frozen);m.setPaused(s,false);
+  seconds(m,s,2);assert.equal(s.completed.bridge,true);assert.equal(s.tideworks.phase,'locked');assert.equal(m.canOccupy(s,20,-18),true);assert.equal(s.score,600);
+  m.interact(s);seconds(m,s,4);assert.equal(s.score,600);assert.equal(s.salvage,0);assert.equal(m.takeEvents(s).filter(e=>e.event==='bridge-repaired').length,1);
 });
 test('enemy melee announces a windup, locks its target, and can be dodged',async()=>{
   const m=await model,s=m.createExpedition(4);const e=s.enemies[0];place(s,{x:18,z:13});e.x=20;e.z=13;e.cooldown=0;
@@ -135,6 +142,28 @@ test('denied, malformed and oversized browser storage are safe',async()=>{
   let raw=null;const memory={getItem:()=>raw,setItem(k,v){raw=v;},removeItem(){raw=null;}};
   assert.equal(m.writeCheckpoint(memory,s.checkpoint),true);assert.deepEqual(m.readCheckpoint(memory),s.checkpoint);assert.equal(m.clearCheckpoint(memory),true);assert.equal(m.readCheckpoint(memory),null);
 });
+test('v1.0 checkpoints migrate without closing restored crossings or spending parts twice',async()=>{
+  const m=await model,s=m.createExpedition(47);finishBridge(m,s);
+  const legacy=JSON.parse(JSON.stringify(s.checkpoint));delete legacy.tideworks;
+  const restored=m.restoreCheckpoint(legacy);assert.ok(restored);assert.equal(restored.completed.bridge,true);assert.equal(restored.tideworks.phase,'locked');assert.equal(restored.tideworks.deployment,1);assert.equal(restored.salvage,0);assert.equal(restored.ranked,false);assert.equal(m.canOccupy(restored,restored.player.x,restored.player.z),true);
+  const score=restored.score;place(restored,m.TIDEWORKS.bench,2);m.interact(restored);place(restored,m.SITES.bridge);m.interact(restored);seconds(m,restored,5);assert.equal(restored.score,score);assert.equal(restored.salvage,0);
+  const early=m.createExpedition(48);finishArchive(m,early);grantCollectedParts(early);const oldArchive=m.makeCheckpoint(early);delete oldArchive.tideworks;
+  const beforeBridge=m.restoreCheckpoint(oldArchive);assert.equal(beforeBridge.salvage,4);assert.equal(beforeBridge.tideworks.installed,false);assert.equal(beforeBridge.tideworks.setting,-1);
+  for(const broken of [{installed:false,setting:0},{installed:true,setting:99},{installed:'yes',setting:1},{installed:false,setting:-1}])assert.equal(m.validateCheckpoint({...legacy,tideworks:broken}),null);
+});
+test('a guarded warden cannot be removed by stationary pulse damage racing',async()=>{
+  const m=await model,s=m.createExpedition(7331);finishBridge(m,s);const e=s.enemies.find(e=>e.type==='warden');s.enemies=[e];place(s,{x:13.3,z:-43});assert.equal(m.canOccupy(s,s.player.x,s.player.z),true);
+  m.pulse(s);assert.equal(e.hp,e.maxHp);seconds(m,s,20,{pulse:true});
+  assert.ok(e.attackSerial>=2);assert.equal(e.hp,e.maxHp);assert.equal(s.mode,'dead');assert.equal(m.takeEvents(s).filter(e=>e.event==='guardian-defeated').length,0);
+});
+test('the warden locks its charge, allows a walking dodge, and exposes its core only after a miss',async()=>{
+  const m=await model,s=m.createExpedition(7331);finishBridge(m,s);const e=s.enemies.find(e=>e.type==='warden');s.enemies=[e];place(s,{x:13.3,z:-43});
+  for(let i=0;i<180&&e.phase!=='windup';i++)m.stepExpedition(s,{},1/60);assert.equal(e.phase,'windup');const target={...e.target},direction={...e.chargeDirection};
+  m.setPaused(s,true);const frozen=JSON.stringify(s);seconds(m,s,10,{pulse:true,mz:1});assert.equal(JSON.stringify(s),frozen);m.setPaused(s,false);
+  seconds(m,s,.85,{mz:1});assert.deepEqual(e.target,target);assert.deepEqual(e.chargeDirection,direction);assert.equal(s.player.hp,100);
+  for(let i=0;i<180&&e.phase!=='recover';i++)m.stepExpedition(s,{},1/60);assert.equal(e.phase,'recover');assert.equal(e.exposed,true);assert.equal(s.player.hp,100);assert.ok(m.canOccupy(s,e.x,e.z,.9,{crates:false}));
+  const hp=e.hp;assert.equal(m.pulse(s),true);assert.equal(e.hp,hp-1);seconds(m,s,2.2);assert.equal(e.exposed,false);assert.equal(m.pulse(s),true);assert.equal(e.hp,hp-1);
+});
 test('an actual input-driven expedition can solve, salvage, cross, fight and return',async()=>{
   const m=await model,s=m.createExpedition(20261126);
   function walk(x,z,pulse=false){
@@ -158,10 +187,13 @@ test('an actual input-driven expedition can solve, salvage, cross, fight and ret
     assert.equal(c.hp,0);walk(c.x,c.z,true);
   }
   assert.ok(s.salvage>=4);
-  for(const [x,z]of[[28,2],[20,-10]])walk(x,z,true);assert.equal(m.interact(s),true);assert.equal(s.completed.bridge,true);
+  for(const [x,z]of[[40,12],[40,25],[31,25],[31,22]])walk(x,z,true);assert.equal(m.interact(s),true);assert.equal(s.tideworks.installed,true);
+  for(const [x,z]of[[28,23],[26,20],[27,10],[28,2],[25,-5.8]])walk(x,z,true);
+  for(let i=0;i<3&&m.RUNES[s.tideworks.setting]?.id!==s.sequence[0];i++)assert.equal(m.interact(s),true);
+  walk(20,-10,true);assert.equal(m.interact(s),true);seconds(m,s,4);assert.equal(s.completed.bridge,true);
   walk(20,-25,true);walk(10,-31,true);
-  for(let lap=0;lap<3&&s.enemies.some(e=>e.site==='spire'&&e.hp>0);lap++)for(const [x,z]of[[12.5,-31],[12.5,-47.8],[-10,-47.8],[-12,-33],[4,-28],[10,-31]])walk(x,z,true);
-  assert.ok(s.enemies.filter(e=>e.site==='spire').every(e=>e.hp===0));walk(2,-33,true);walk(2,-34.9,true);assert.equal(m.interact(s),true);assert.equal(s.completed.spire,true);
+  for(let lap=0;lap<6&&s.enemies.some(e=>e.site==='spire'&&e.hp>0);lap++)for(const [x,z]of[[12.5,-31],[12.5,-47.8],[-10,-47.8],[-12,-33],[4,-28],[10,-31]])walk(x,z,true);
+  assert.ok(s.enemies.filter(e=>e.site==='spire').every(e=>e.hp===0),JSON.stringify({player:s.player,enemies:s.enemies.filter(e=>e.site==='spire')}));walk(2,-33,true);walk(2,-34.9,true);assert.equal(m.interact(s),true);assert.equal(s.completed.spire,true);
   for(const [x,z]of[[10,-31],[20,-25],[20,-10],[20,6],[15,26],[5,31],[0,37.8]])walk(x,z);assert.equal(m.interact(s),true);assert.equal(s.mode,'won');
   const events=m.takeEvents(s);assert.equal(events.filter(e=>e.event==='campaign-complete').length,1);assert.equal(events.filter(e=>e.event==='checkpoint').length,3);assert.ok(s.player.hp>0);
 });

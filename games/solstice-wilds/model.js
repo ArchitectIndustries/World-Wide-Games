@@ -3,6 +3,7 @@ export const GAME_ID = 'solstice-wilds';
 export const SAVE_KEY = 'wwg:solstice-wilds:checkpoint:v1';
 export const SAVE_SCHEMA = 1;
 export const PLAYER_RADIUS = .65;
+export const BRIDGE_HALF_WIDTH = 2.85;
 export const RUNES = Object.freeze([
   {id:'sun', name:'Sun', glyph:'☀', color:'#ffc66b'},
   {id:'tide', name:'Tide', glyph:'≈', color:'#74e7df'},
@@ -19,6 +20,12 @@ export const PILLARS = Object.freeze([
   {x:-38,z:-1,rune:'sun'}, {x:-31,z:-6,rune:'tide'}, {x:-24,z:-1,rune:'leaf'}
 ]);
 export const TABLET = Object.freeze({x:-31,z:7});
+export const TIDEWORKS = Object.freeze({
+  bench:{x:31,z:20,name:'Counterweight bench'},
+  valve:{x:25,z:-8,name:'Sluice dial'},
+  winch:{x:17.8,z:-10,name:'Bridge winch'},
+  deploymentSeconds:3.6
+});
 export const CRATES = Object.freeze([
   {x:23,z:17}, {x:27,z:23}, {x:35,z:23},
   {x:39,z:16}, {x:36,z:9}, {x:25,z:10}
@@ -35,6 +42,10 @@ export const OBSTACLES = Object.freeze([
   {x:-23,z:2.35,r:.6,kind:'column'}, {x:-23,z:-4.35,r:.6,kind:'column'},
   {x:-35,z:-10,r:1.5,kind:'rock'}, {x:-26,z:-10,r:1.6,kind:'rock'},
   {x:31,z:14,r:2,kind:'workshop'},
+  {x:TIDEWORKS.bench.x,z:TIDEWORKS.bench.z,r:.85,kind:'workbench'},
+  {x:TIDEWORKS.valve.x,z:TIDEWORKS.valve.z,r:.65,kind:'valve'},
+  {x:TIDEWORKS.winch.x,z:TIDEWORKS.winch.z,r:.65,kind:'winch'},
+  {x:16.3,z:-11,r:1,kind:'counterweight'},
   {x:TABLET.x,z:TABLET.z,r:.9,kind:'tablet'},
   {x:2,z:-38,r:1.8,kind:'spire'},
   {x:-14,z:20,r:2.3,kind:'rock'}, {x:10,z:13,r:1.65,kind:'rock'},
@@ -79,14 +90,15 @@ function enemies() {
     {id:'spire-east',x:11,z:-40,type:'sentinel',site:'spire',hp:5},
     {id:'spire-warden',x:2,z:-43,type:'warden',site:'spire',hp:8}
   ].map((e,i)=>({...e,home:{x:e.x,z:e.z},maxHp:e.hp,facing:0,phase:'patrol',clock:i*.3,
-    cooldown:1+i*.25,target:null,hitFlash:0,attackSerial:0}));
+    cooldown:1+i*.25,target:null,hitFlash:0,guardFlash:0,attackSerial:0,walk:0,moving:false,exposed:false,chargeHit:false}));
 }
 export function createExpedition(seed=7331) {
   seed=uint(seed);
   return {
     seed:uint(seed),mode:'playing',modal:null,elapsed:0,weatherTime:0,score:0,ranked:true,
-    player:{x:0,z:35,facing:Math.PI,hp:100,stamina:100,pulseCooldown:0,invulnerable:0,sprintRest:0,walk:0},
+    player:{x:0,z:35,facing:Math.PI,hp:100,stamina:100,pulseCooldown:0,invulnerable:0,sprintRest:0,walk:0,moving:false},
     completed:{archive:false,bridge:false,spire:false},archiveRead:false,archiveStep:0,
+    tideworks:{installed:false,setting:-1,phase:'idle',deployment:0,flowTime:0},
     sequence:runeSequence(seed),salvage:0,
     crates:CRATES.map((c,i)=>({...c,id:i,hp:2,collected:false,hitFlash:0})),
     enemies:enemies(),projectiles:[],effects:[],events:[],message:{text:'Follow the gold trail to the Western Archive.',ttl:7},
@@ -108,19 +120,22 @@ function isActive(s) {return s.mode==='playing'&&!s.modal;}
 export function canOccupy(s,x,z,radius=PLAYER_RADIUS,{crates=true}={}) {
   if(!finite(x)||!finite(z)||x<-49+radius||x>49-radius||z<-49+radius||z>49-radius)return false;
   // The river is a continuous impassable boundary; its only crossing is the repaired bridge.
-  if(Math.abs(z+18)<3.6+radius&&(!s.completed.bridge||Math.abs(x-20)>3.2-radius))return false;
+  if(Math.abs(z+18)<3.6+radius&&(!s.completed.bridge||Math.abs(x-20)>BRIDGE_HALF_WIDTH-radius))return false;
   for(const o of OBSTACLES)if(Math.hypot(x-o.x,z-o.z)<o.r+radius)return false;
   if(crates)for(const c of s.crates)if(c.hp>0&&Math.hypot(x-c.x,z-c.z)<1+radius)return false;
   return true;
 }
 function moveBody(s,body,dx,dz,radius=PLAYER_RADIUS,options) {
+  const fromX=body.x,fromZ=body.z;
   // Subdivision avoids tunnelling even during a permitted long foreground frame.
   const count=Math.max(1,Math.ceil(Math.hypot(dx,dz)/.25));
   for(let i=0;i<count;i++){
     if(canOccupy(s,body.x+dx/count,body.z,radius,options))body.x+=dx/count;
     if(canOccupy(s,body.x,body.z+dz/count,radius,options))body.z+=dz/count;
   }
+  return Math.hypot(body.x-fromX,body.z-fromZ);
 }
+function moveEnemy(s,e,dx,dz,radius=.75){const moved=moveBody(s,e,dx,dz,radius,{crates:false});e.walk+=moved;e.moving=moved>.00001;return moved;}
 function lineClear(s,a,b) {
   const length=dist(a,b),steps=Math.ceil(length/.55);
   for(let i=1;i<steps;i++){
@@ -149,7 +164,12 @@ export function pulse(s) {
   effect(s,'pulse',p.x,p.z,{tx:target?.x??p.x+Math.sin(p.facing)*9,tz:target?.z??p.z+Math.cos(p.facing)*9});
   emit(s,'pulse-fired',{hit:!!target});
   if(!target)return true;
-  p.facing=Math.atan2(target.x-p.x,target.z-p.z);target.hp--;target.hitFlash=.18;
+  p.facing=Math.atan2(target.x-p.x,target.z-p.z);
+  if(target.type==='warden'&&!(target.phase==='recover'&&target.exposed)){
+    target.guardFlash=.2;effect(s,'guard',target.x,target.z);emit(s,'guardian-guarded');
+    say(s,'Warden core guarded. Step out of its marked charge, then pulse the exposed core.',4);return true;
+  }
+  target.hp--;target.hitFlash=.18;
   if(target.hp===0){
     effect(s,'shatter',target.x,target.z);
     if('type'in target){target.phase='dead';s.score+=target.type==='warden'?180:60;emit(s,'guardian-defeated',{id:target.id});say(s,target.site==='spire'?'Guardian quieted. Keep moving during the amber warning.':'Workshop sentinel quieted. Pulse the wooden crates for salvage.');}
@@ -164,7 +184,9 @@ export function interaction(s) {
   add('lighthouse',{x:0,z:37.8},4,s.completed.spire?'Signal the expedition home':'Rest at the lighthouse');
   add('tablet',TABLET,3.5,s.archiveRead?'Read the rune sequence':'Read the Archive inscription');
   if(!s.completed.archive)for(const q of PILLARS)add('pillar-'+q.rune,q,3,'Attune the '+RUNES.find(r=>r.id===q.rune).name+' pillar');
-  add('bridge',SITES.bridge,4.5,s.completed.bridge?'Rest at the repaired bridge':`Repair bridge · ${s.salvage}/4 salvage`);
+  add('workbench',TIDEWORKS.bench,3.1,s.tideworks.installed?'Inspect the restored counterweight':`Install counterweight · ${s.salvage}/4 salvage`);
+  add('valve',TIDEWORKS.valve,2.8,s.completed.bridge?'Inspect the flowing sluice':`Turn sluice · ${s.tideworks.setting<0?'closed':RUNES[s.tideworks.setting].name}`);
+  add('bridge',TIDEWORKS.winch,3.2,s.completed.bridge?'Rest at the repaired bridge':s.tideworks.phase==='lowering'?'Crossing is lowering':'Operate bridge winch');
   add('spire',SITES.spire,4,s.completed.spire?'The Spire is restored':'Activate the Solstice Spire');
   candidates.sort((a,b)=>a.d-b.d);return candidates[0]??null;
 }
@@ -183,15 +205,33 @@ export function interact(s) {
     const rune=a.id.slice(7);
     if(rune!==s.sequence[s.archiveStep]){s.archiveStep=0;say(s,'The harmony broke. Begin again in the inscription’s order.',5);effect(s,'wrong',a.x,a.z);emit(s,'rune-reset');return false;}
     s.archiveStep++;effect(s,'attune',a.x,a.z);emit(s,'rune-attuned',{rune,step:s.archiveStep});
-    if(s.archiveStep===3){s.completed.archive=true;s.score+=300;checkpoint(s,'archive');emit(s,'archive-restored');say(s,'Archive restored · checkpoint saved. Recover four parts at the Tide Workshop, then repair the bridge.',8);}
+    if(s.archiveStep===3){s.completed.archive=true;s.score+=300;checkpoint(s,'archive');emit(s,'archive-restored');say(s,'Archive restored · checkpoint saved. Recover four workshop parts, then install the counterweight at its bench.',8);}
     else say(s,`Rune ${s.archiveStep} of 3 attuned. Follow the inscription.`);
     return true;
+  }
+  if(a.id==='workbench'){
+    if(s.tideworks.installed){say(s,'Counterweight installed. Set the river sluice to the Archive’s first rune, then operate the bridge winch.',6);return true;}
+    if(!s.completed.archive){say(s,'Restore the Archive first. Its inscription explains the Tideworks mechanism.',5);return false;}
+    if(s.salvage<4){say(s,'The counterweight needs four parts. Pulse wooden crates and collect the golden salvage.',5);return false;}
+    s.salvage-=4;s.tideworks.installed=true;emit(s,'counterweight-installed');effect(s,'attune',a.x,a.z);
+    say(s,'Counterweight installed. Turn the river sluice to '+RUNES.find(r=>r.id===s.sequence[0]).name+', then operate the nearby bridge winch.',8);return true;
+  }
+  if(a.id==='valve'){
+    if(s.completed.bridge){say(s,'The sluice is locked. Its waterwheel keeps the restored crossing secure.');return true;}
+    if(!s.tideworks.installed){say(s,'Install the four-part counterweight at the Tide Workshop before opening the sluice.',6);return false;}
+    if(s.tideworks.phase==='lowering'){say(s,'The mechanism is engaged. Let the bridge settle into its locks.');return false;}
+    s.tideworks.setting=(s.tideworks.setting+1)%RUNES.length;
+    const rune=RUNES[s.tideworks.setting],aligned=rune.id===s.sequence[0];emit(s,'sluice-set',{rune:rune.id,aligned});
+    say(s,aligned?`${rune.name} flow aligned. The waterwheel is turning. Operate the bridge winch.`:`${rune.name} flow selected. The Archive names ${RUNES.find(r=>r.id===s.sequence[0]).name} as the first light.`,6);return true;
   }
   if(a.id==='bridge'){
     if(s.completed.bridge){s.player.hp=100;s.player.stamina=100;say(s,'Field lantern restored. The bridge is safe to cross.');return true;}
     if(!s.completed.archive){say(s,'The bridge mechanism needs the Archive’s restored light. Visit the western ruins first.',5);return false;}
-    if(s.salvage<4){say(s,'Find four golden parts: pulse wooden crates at the Tide Workshop, then walk over the salvage.',6);return false;}
-    s.salvage-=4;s.completed.bridge=true;s.score+=300;checkpoint(s,'bridge');emit(s,'bridge-repaired');say(s,'Bridge repaired · checkpoint saved. Cross north and quiet the Spire’s three guardians.',8);effect(s,'attune',20,-18);return true;
+    if(!s.tideworks.installed){say(s,'Install four recovered parts at the workshop’s counterweight bench first.',6);return false;}
+    if(s.tideworks.phase==='lowering'){say(s,'The crossing is lowering. Its shore locks must engage before you cross.');return false;}
+    if(RUNES[s.tideworks.setting]?.id!==s.sequence[0]){say(s,'The winch has no steady flow. Turn the nearby sluice to the Archive’s first rune.',6);return false;}
+    s.tideworks.phase='lowering';s.tideworks.deployment=0;emit(s,'bridge-deploying');
+    say(s,'Counterweight released. The waterwheel is lowering both bridge leaves into place.',6);return true;
   }
   if(a.id==='spire'){
     if(s.completed.spire){say(s,'The observatory is awake. Return south to the Dawn Lighthouse.');return true;}
@@ -209,10 +249,55 @@ export function interact(s) {
   }
   return false;
 }
+function tideworksStep(s,dt){
+  const t=s.tideworks;
+  if(t.installed&&RUNES[t.setting]?.id===s.sequence[0])t.flowTime+=dt;
+  if(t.phase!=='lowering')return;
+  t.deployment=Math.min(1,t.deployment+dt/TIDEWORKS.deploymentSeconds);
+  if(t.deployment<1-1e-9)return;
+  t.deployment=1;t.phase='locked';s.completed.bridge=true;s.score+=300;
+  checkpoint(s,'bridge');emit(s,'bridge-repaired');effect(s,'attune',20,-18);
+  say(s,'Crossing locked · checkpoint saved. Follow the restored lights north; evade the warden’s charge and pulse its exposed core.',9);
+}
+function recoverWarden(s,e){
+  e.phase='recover';e.clock=0;e.cooldown=2.5;e.moving=false;
+  effect(s,'slam',e.x,e.z,{radius:1.65});
+  if(dist(s.player,e)<1.65+PLAYER_RADIUS&&lineClear(s,e,s.player)){e.chargeHit=true;damagePlayer(s,26,e.id);}
+  e.exposed=!e.chargeHit;
+  emit(s,e.exposed?'warden-exposed':'warden-reset');
+  say(s,e.exposed?'Charge evaded. The warden overextended: pulse its exposed core!':'The charge connected; its plates remain closed. Move sideways from the next marked lane.',4);
+}
+function wardenStep(s,e,dt,d,atHome){
+  const p=s.player;
+  if(e.phase==='windup'){
+    if(e.clock>=e.windup){e.phase='charge';e.clock=0;e.chargeHit=false;e.chargeRemaining=Math.min(14,dist(e,e.target));emit(s,'warden-charge');}
+    return;
+  }
+  if(e.phase==='charge'){
+    const amount=Math.min(e.chargeRemaining,18*dt),moved=moveEnemy(s,e,e.chargeDirection.x*amount,e.chargeDirection.z*amount,.9);
+    e.chargeRemaining-=amount;
+    if(dist(e,p)<1.6+PLAYER_RADIUS&&lineClear(s,e,p)){e.chargeHit=true;damagePlayer(s,26,e.id);}
+    if(e.chargeRemaining<=.001||e.clock>.85||moved<amount*.2)recoverWarden(s,e);
+    return;
+  }
+  if(e.phase==='recover'){if(e.clock>=(e.exposed?2.05:.9)){e.phase='guard';e.clock=0;e.exposed=false;}return;}
+  if(p.z>-23||d>23||atHome>25){
+    e.phase='patrol';const homeDistance=dist(e,e.home);
+    if(homeDistance>.2){e.facing=Math.atan2(e.home.x-e.x,e.home.z-e.z);moveEnemy(s,e,(e.home.x-e.x)/homeDistance*dt*2.2,(e.home.z-e.z)/homeDistance*dt*2.2,.9);}
+    return;
+  }
+  e.phase='guard';e.facing=Math.atan2(p.x-e.x,p.z-e.z);
+  if(d<14&&e.cooldown<=0&&lineClear(s,e,p)){
+    e.phase='windup';e.clock=0;e.windup=1.35;e.target={x:p.x,z:p.z};e.chargeStart={x:e.x,z:e.z};
+    e.chargeDirection={x:(p.x-e.x)/(d||1),z:(p.z-e.z)/(d||1)};e.attackSerial++;emit(s,'warden-warning');return;
+  }
+  if(d>6)moveEnemy(s,e,Math.sin(e.facing)*2.4*dt,Math.cos(e.facing)*2.4*dt,.9);
+}
 function enemyStep(s,e,dt) {
   if(e.hp<=0)return;
-  e.hitFlash=Math.max(0,e.hitFlash-dt);e.cooldown=Math.max(0,e.cooldown-dt);e.clock+=dt;
+  e.moving=false;e.hitFlash=Math.max(0,e.hitFlash-dt);e.guardFlash=Math.max(0,e.guardFlash-dt);e.cooldown=Math.max(0,e.cooldown-dt);e.clock+=dt;
   const p=s.player,d=dist(e,p),atHome=dist(e,e.home);
+  if(e.type==='warden'){wardenStep(s,e,dt,d,atHome);return;}
   if(e.site==='spire'&&p.z>-23){e.phase='patrol';return;}
   if(e.phase==='windup'){
     if(e.clock<e.windup)return;
@@ -235,32 +320,33 @@ function enemyStep(s,e,dt) {
       e.phase='windup';e.clock=0;e.windup=e.type==='warden'?1.25:e.type==='sentinel'?1.05:.8;
       e.target={x:p.x,z:p.z};e.attackSerial++;return;
     }
-    if(d>range*.7){const speed=e.type==='warden'?2.15:e.type==='sentinel'?1.7:2.9;moveBody(s,e,Math.sin(e.facing)*speed*dt,Math.cos(e.facing)*speed*dt,.75,{crates:false});}
+    if(d>range*.7){const speed=e.type==='sentinel'?1.7:2.9;moveEnemy(s,e,Math.sin(e.facing)*speed*dt,Math.cos(e.facing)*speed*dt);}
   }else{
     e.phase='patrol';
     const target={x:e.home.x+Math.sin(s.elapsed*.34+e.maxHp)*2,z:e.home.z+Math.cos(s.elapsed*.29+e.maxHp)*1.5};
     const n=dist(e,target)||1;e.facing=Math.atan2(target.x-e.x,target.z-e.z);
-    moveBody(s,e,(target.x-e.x)/n*dt*.7,(target.z-e.z)/n*dt*.7,.75,{crates:false});
+    moveEnemy(s,e,(target.x-e.x)/n*dt*.7,(target.z-e.z)/n*dt*.7);
   }
 }
 function tick(s,input,dt) {
   s.elapsed+=dt;s.weatherTime+=dt;
   const p=s.player;
+  p.moving=false;tideworksStep(s,dt);
   p.pulseCooldown=Math.max(0,p.pulseCooldown-dt);p.invulnerable=Math.max(0,p.invulnerable-dt);p.sprintRest=Math.max(0,p.sprintRest-dt);
   let mx=finite(input.mx)?clamp(input.mx,-1,1):0,mz=finite(input.mz)?clamp(input.mz,-1,1):0;
   const n=Math.hypot(mx,mz);if(n>1){mx/=n;mz/=n;}
   if(n>.05){
     const sprint=!!input.sprint&&p.stamina>1;
     if(sprint){p.stamina=Math.max(0,p.stamina-25*dt);p.sprintRest=.8;}
-    const speed=sprint?8.5:5.3;p.facing=Math.atan2(mx,mz);p.walk+=dt*speed;
+    const speed=sprint?8.5:5.3;p.facing=Math.atan2(mx,mz);
     const weather=weatherAt(s.weatherTime);const wind=weather.rain*.23;
-    moveBody(s,p,mx*speed*dt+wind*dt,mz*speed*dt);
+    const moved=moveBody(s,p,mx*speed*dt+wind*dt,mz*speed*dt);p.walk+=moved;p.moving=moved>.00001;
   }
   if(p.sprintRest===0)p.stamina=Math.min(100,p.stamina+20*dt);
   if(input.pulse)pulse(s);
   for(const c of s.crates){
     c.hitFlash=Math.max(0,c.hitFlash-dt);
-    if(c.hp===0&&!c.collected&&dist(p,c)<1.8){c.collected=true;s.salvage++;s.score+=25;effect(s,'collect',c.x,c.z);emit(s,'salvage-collected',{count:s.salvage});say(s,`Salvage recovered · ${s.salvage}/4 for the bridge.`);}
+    if(c.hp===0&&!c.collected&&dist(p,c)<1.8){c.collected=true;s.salvage++;s.score+=25;effect(s,'collect',c.x,c.z);emit(s,'salvage-collected',{count:s.salvage});say(s,s.tideworks.installed?`Spare salvage recovered · ${s.salvage}`:`Salvage recovered · ${s.salvage}/4 for the counterweight.`);}
   }
   for(const e of s.enemies){enemyStep(s,e,dt);if(s.mode!=='playing')break;}
   if(s.mode!=='playing')return;
@@ -290,12 +376,19 @@ export function weatherAt(time) {
 export function objective(s) {
   if(s.mode==='won')return {title:'Expedition complete',text:'The solstice light has returned to the lighthouse.',target:SITES.lighthouse};
   if(!s.completed.archive)return {title:'01 · Wake the Archive',text:s.archiveRead?`Attune the pillars in the recorded order · ${s.archiveStep}/3`:'Follow the western trail and read the Archive tablet.',target:s.archiveRead?SITES.archive:TABLET};
-  if(!s.completed.bridge)return s.salvage<4?{title:'02 · Restore the crossing',text:`Pulse workshop crates; collect four golden parts · ${s.salvage}/4`,target:SITES.workshop}:{title:'02 · Restore the crossing',text:'Bring your salvage to the bridge mechanism beside the river.',target:SITES.bridge};
+  if(!s.completed.bridge){
+    const title='02 · Wake the Tideworks',t=s.tideworks;
+    if(!t.installed)return s.salvage<4?{title,text:`Pulse workshop crates; collect four counterweight parts · ${s.salvage}/4`,target:SITES.workshop}:{title,text:'Install the four parts at the workshop’s counterweight bench.',target:TIDEWORKS.bench};
+    if(t.phase==='lowering')return {title,text:'The crossing is lowering. Wait for its shore locks to engage.',target:TIDEWORKS.winch};
+    if(RUNES[t.setting]?.id!==s.sequence[0])return {title,text:`Turn the river sluice to ${RUNES.find(r=>r.id===s.sequence[0]).name}, the Archive’s first rune.`,target:TIDEWORKS.valve};
+    return {title,text:'Flow aligned. Operate the nearby bridge winch to lower the crossing.',target:TIDEWORKS.winch};
+  }
   if(!s.completed.spire){const remaining=s.enemies.filter(e=>e.site==='spire'&&e.hp>0).length;return {title:'03 · Light the Solstice Spire',text:remaining?`Cross the bridge. Quiet ${remaining} guardian${remaining===1?'':'s'}; avoid their amber warnings.`:'Activate the quiet Spire at the center of the northern court.',target:SITES.spire};}
   return {title:'04 · Bring the light home',text:'Return across the bridge and signal at the Dawn Lighthouse.',target:{x:0,z:37.8}};
 }
 export function makeCheckpoint(s) {
   return {schema:SAVE_SCHEMA,seed:s.seed,completed:{...s.completed},archiveRead:s.archiveRead,
+    tideworks:{installed:s.tideworks.installed,setting:s.tideworks.setting},
     salvage:clamp(Math.floor(s.salvage),0,6),score:clamp(Math.floor(s.score),0,5000),elapsed:clamp(s.elapsed,0,36000),
     crates:s.crates.map(c=>({hp:c.hp,collected:c.collected})),defeated:s.enemies.filter(e=>e.hp===0).map(e=>e.id)};
 }
@@ -306,17 +399,23 @@ export function validateCheckpoint(value) {
   if(!Number.isInteger(value.salvage)||value.salvage<0||value.salvage>6||!Number.isInteger(value.score)||value.score<0||value.score>5000||!finite(value.elapsed)||value.elapsed<0||value.elapsed>36000)return null;
   if(!Array.isArray(value.crates)||value.crates.length!==CRATES.length||!value.crates.every(v=>record(v)&&Number.isInteger(v.hp)&&v.hp>=0&&v.hp<=2&&typeof v.collected==='boolean'&&(!v.collected||v.hp===0)))return null;
   const collected=value.crates.filter(v=>v.collected).length;
-  if(value.salvage!==collected-(c.bridge?4:0))return null;
+  // v1.0 checkpoints did not store machinery. Completed bridges stay restored;
+  // earlier saves retain their unspent parts and begin with a closed sluice.
+  const legacy=value.tideworks===undefined,expectedSetting=RUNES.findIndex(r=>r.id===runeSequence(value.seed)[0]);
+  const tideworks=legacy?{installed:c.bridge,setting:c.bridge?expectedSetting:-1}:value.tideworks;
+  if(!record(tideworks)||typeof tideworks.installed!=='boolean'||!Number.isInteger(tideworks.setting)||tideworks.setting< -1||tideworks.setting>2||(!tideworks.installed&&tideworks.setting!==-1)||(c.bridge&&(!tideworks.installed||tideworks.setting!==expectedSetting)))return null;
+  if(value.salvage!==collected-(tideworks.installed?4:0))return null;
   const ids=enemies().map(e=>e.id);
   if(!Array.isArray(value.defeated)||value.defeated.length>ids.length||new Set(value.defeated).size!==value.defeated.length||!value.defeated.every(id=>ids.includes(id)))return null;
   if(c.spire&&!ids.filter(id=>id.startsWith('spire-')).every(id=>value.defeated.includes(id)))return null;
-  return {schema:SAVE_SCHEMA,seed:value.seed,completed:{archive:c.archive,bridge:c.bridge,spire:c.spire},archiveRead:true,salvage:value.salvage,score:value.score,elapsed:value.elapsed,
+  return {schema:SAVE_SCHEMA,seed:value.seed,completed:{archive:c.archive,bridge:c.bridge,spire:c.spire},archiveRead:true,tideworks:{installed:tideworks.installed,setting:tideworks.setting},salvage:value.salvage,score:value.score,elapsed:value.elapsed,
     crates:value.crates.map(v=>({hp:v.hp,collected:v.collected})),defeated:[...value.defeated]};
 }
 export function restoreCheckpoint(value) {
   const saved=validateCheckpoint(value);if(!saved)return null;
   const s=createExpedition(saved.seed);s.completed={...saved.completed};s.archiveRead=true;s.archiveStep=3;s.salvage=saved.salvage;s.score=saved.score;s.elapsed=saved.elapsed;s.weatherTime=saved.elapsed;s.ranked=false;s.checkpoint=saved;
-  const pos=s.completed.spire?{x:2,z:-33}:s.completed.bridge?{x:20,z:-10}:{x:-31,z:10};Object.assign(s.player,pos);
+  Object.assign(s.tideworks,saved.tideworks,{phase:s.completed.bridge?'locked':'idle',deployment:s.completed.bridge?1:0});
+  const pos=s.completed.spire?{x:2,z:-33}:s.completed.bridge?{x:20,z:-7.5}:{x:-31,z:10};Object.assign(s.player,pos);
   for(let i=0;i<s.crates.length;i++)Object.assign(s.crates[i],saved.crates[i]);
   for(const e of s.enemies)if(saved.defeated.includes(e.id)){e.hp=0;e.phase='dead';}
   say(s,'Checkpoint restored · expedition practice. Finish the journey; completion scores are awarded on fresh runs.',8);return s;

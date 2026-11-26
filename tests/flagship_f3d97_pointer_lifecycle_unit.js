@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('node:assert/strict');
+const steerAPI=require('../games/aegis-verge/touch-steering.js');
+const combatAPI=require('../games/aegis-verge/combat-holds.js');
+let checks=0;const ck=(v,m)=>{assert.ok(v,m);checks++};
+function target(rect,doc,dataset){const handlers={};const active=new Set();return {ownerDocument:doc,dataset,handlers,addEventListener(k,fn){(handlers[k]??=[]).push(fn)},classList:{toggle(k,v){v?active.add(k):active.delete(k)}},getBoundingClientRect(){return rect},setPointerCapture(){throw Error('capture denied')}}}
+const doc=target();const ds=['up','down','left','right'];const ss=ds.map((k,i)=>target({left:i*50,right:i*50+44,top:0,bottom:44,width:44,height:44},doc,{k}));const cs=['fire','shield','pulse','dash','decoy','uplink','cache'].map(action=>target(null,doc,{action}));let steer={},combat={},triggers=[];
+const steering=steerAPI.install({ownerDocument:doc,querySelector:s=>ss.find(x=>s.includes('"'+x.dataset.k+'"'))},n=>steer=n);const controls=combatAPI.install(cs,n=>combat=n,a=>triggers.push(a));
+function emit(t,k,id,opts={}){const ev={pointerId:id,pointerType:'touch',button:0,buttons:1,clientX:20,clientY:20,preventDefault(){},...opts};for(const fn of t.handlers[k]||[])fn(ev)}
+emit(ss[0],'pointerdown',1);ck(steer.up,'hold');emit(doc,'pointermove',1,{clientX:120});ck(steer.left&&!steer.up,'document slide');emit(doc,'pointermove',1,{clientX:250});ck(!steer.left,'outside clears direction');emit(doc,'pointermove',1,{clientX:20});ck(steer.up,'return while held');emit(doc,'pointerup',1);ck(!steer.up,'outside release');emit(doc,'pointermove',1,{clientX:20});ck(!steer.up,'stale cannot rearm');
+emit(ss[0],'pointerdown',1);emit(ss[0],'pointerdown',2);emit(doc,'pointercancel',1);ck(steer.up,'independent pointer');emit(doc,'lostpointercapture',2);ck(!steer.up,'lost capture on document');
+emit(ss[0],'pointerdown',3);emit(doc,'pointerout',3,{relatedTarget:{}});ck(steer.up,'internal pointerout stays held');emit(doc,'pointerout',3,{relatedTarget:null});ck(!steer.up,'leave document clears');
+emit(ss[0],'pointerdown',4,{pointerType:'mouse'});emit(doc,'pointermove',4,{pointerType:'mouse',buttons:0});ck(!steer.up,'missed release detected from mouse buttons');
+emit(cs[0],'pointerdown',11);emit(cs[0],'pointerdown',12);emit(doc,'pointerup',11);ck(combat.fire,'second fire stays');emit(doc,'pointerup',12);ck(!combat.fire,'outside fire clears');emit(cs[1],'pointerdown',13);emit(doc,'pointercancel',13);ck(!combat.shield,'shield cancel');
+emit(cs[1],'pointerdown',14);emit(doc,'pointerout',14,{relatedTarget:{}});ck(combat.shield,'internal pointerout does not clear shield');emit(doc,'pointerout',14,{relatedTarget:null});ck(!combat.shield,'document exit clears shield');emit(cs[0],'pointerdown',15,{pointerType:'mouse'});emit(doc,'pointermove',15,{pointerType:'mouse',buttons:0});ck(!combat.fire,'missed mouse release clears fire');
+const n=triggers.length;emit(cs[2],'pointerdown',20);emit(cs[2],'pointerdown',20);ck(triggers.length===n+1,'same one-shot id not repeated');emit(doc,'pointerup',20);emit(cs[2],'pointerdown',20);ck(triggers.length===n+2,'new press can use same pointer id');
+emit(cs[1],'pointerdown',21);for(const fn of cs[1].handlers.keydown)fn({code:'Space',preventDefault(){}});emit(doc,'pointerup',21);ck(combat.shield,'keyboard independent');for(const fn of cs[1].handlers.keyup)fn({code:'Space',preventDefault(){}});ck(!combat.shield,'keyboard release');
+emit(ss[0],'pointerdown',30);emit(cs[0],'pointerdown',31);steering.reset();controls.reset();emit(doc,'pointermove',30);emit(doc,'pointerup',31);ck(!steer.up&&!combat.fire,'reset discards old ownership');console.log(JSON.stringify({checks,passed:checks}));

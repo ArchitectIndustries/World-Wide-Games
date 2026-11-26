@@ -1,3 +1,44 @@
+## Aegis Verge 3.1 — Articulated combat machines (November 26, 2026)
+
+`combat-rigs.js` is original Architect Industries mesh, material and pose code.
+It adds five distinct lofted hulls, inset canopy geometry, open traction belts,
+spoked road wheels, suspension links, bored cannon/exhaust tubes, cooling grilles,
+optics and command-crown details. It uses the existing Aegis-local mesh API and
+no imported mesh, texture, library or network dependency. The original chassis
+and enemy descriptors remain the no-mesh fallback.
+
+Animation reads actual displacement, steering, collision contact, windup,
+completed firing cycles, recovery and muzzle timers. The existing HP-driven
+plate removal and right/rear weakpoint cues remain authoritative. Rendering has
+no collision, AI, resource, ranking or save authority. Calm and pause retain their
+existing meaning. Sixteen reused mesh objects fit alongside both tiers of every
+world within the original 96-entry local cache.
+
+F3D97 module-only handoff SHA-256:
+`b5a408ec492144ff3c1d88d2f893e239b68102b641d47135fe603b9dfc2e1f6b`.
+Both expected v498 base blobs matched before integration. Only
+`touch-steering.js`, `combat-holds.js` and
+`tests/flagship_f3d97_pointer_lifecycle_unit.js` were copied unchanged. The
+runtime Git blobs are now `8c12323478259a027f5d84646619c9a781762d0a`
+and `1e434ba7c9d00270b568cc3ab6e3e8807dc295bd`; the test blob is
+`8a0a2cb7c39c31db08f6bde9537fa1a144f4997a`. Their document-level owned-pointer
+release behavior is integrated with the current compact cockpit. No old HTML,
+catalog, worker or release metadata was copied.
+
+A separate real keyboard-repeat rearm defect was reproduced in the current
+inline game. A repeat can now preserve an already-owned action but cannot revive
+an action cleared by pause, focus loss, visibility interruption or restart. The
+player must release and press again. This does not change movement or fire rates,
+resources, campaign, checkpoints, rankings or scoring.
+
+Fresh local validation: 54/54 combat-rig checks, 34/34 integrated input checks,
+22/22 unchanged F3D97 assertions, 65/65 environment checks, 295/295 Signal Forge
+assertions, 14/14 shared-Engine storage contracts, 38/38 cockpit checks, 40/40
+recovery integration checks and 91/91 flagship unit programs. These are Node
+geometry, modeled GL/DOM/canvas and actual game-code checks. Browser visuals,
+native input and hardware performance are separately qualified by the release
+coordinator. See `docs/Aegis-3D-upgrade.md` for budgets and exact boundaries.
+
 ## Aegis Verge 3.0 — Industrial Frontiers (November 26, 2026)
 
 Original Architect Industries procedural meshes, authored landscape composition,

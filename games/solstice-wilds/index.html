@@ -19,11 +19,12 @@
         <div class="toolbar"><button id="journalButton" class="icon-button" title="Expedition journal" aria-label="Open expedition journal">☷</button><button id="pauseButton" class="icon-button" title="Pause (P / Escape)" aria-label="Pause expedition">Ⅱ</button></div>
       </header>
       <section class="objective-panel" aria-label="Current objective"><div id="objectiveTitle"></div><p id="objectiveText"></p><div class="site-pips"><span id="archivePip">I · ARCHIVE</span><span id="bridgePip">II · BRIDGE</span><span id="spirePip">III · SPIRE</span></div></section>
+      <section id="encounter" class="encounter-panel" hidden aria-label="Warden attack state"><strong id="encounterTitle"></strong><p id="encounterText"></p></section>
       <div class="toast" id="toast" role="status" aria-live="polite"></div>
       <div class="interaction" id="interaction" hidden><kbd id="promptKey">E</kbd><span id="interactionText"></span></div>
       <div class="bottom-info"><span id="runBadge">FRESH EXPEDITION</span><span id="salvageValue">SALVAGE 0 / 4</span><span id="distanceValue"></span></div>
       <div class="map-wrap"><canvas id="map" width="156" height="156" aria-label="Valley map: Archive west, Workshop east, Spire north, Lighthouse south."></canvas><span>N</span></div>
-      <div class="keyboard-guide"><span><kbd>WASD</kbd> move</span><span><kbd id="pulseKey">SPACE</kbd> pulse</span><span><kbd id="interactKey">E</kbd> interact</span><span><kbd>SHIFT</kbd> sprint</span><span>drag to orbit</span></div>
+      <div class="keyboard-guide"><span><kbd id="moveKey">WASD</kbd> move</span><span><kbd id="pulseKey">SPACE</kbd> pulse</span><span><kbd id="interactKey">E</kbd> interact</span><span><kbd id="sprintKey">SHIFT</kbd> sprint</span><span id="cameraGuide">drag to orbit</span></div>
     </div>
     <div id="touchControls" class="touch-controls" hidden aria-label="Touch controls">
       <div id="stick" class="stick" role="group" aria-label="Movement joystick"><div class="stick-ring"></div><i id="stickThumb"></i><span>MOVE</span></div>
@@ -34,12 +35,12 @@
         <p class="eyebrow">AN ARCHITECT INDUSTRIES EXPEDITION</p>
         <h1>SOLSTICE<br><em>WILDS</em></h1>
         <p class="intro">Beyond the tide, an ancient observatory waits for its light.</p>
-        <div class="journey-list"><span><i>01</i>Decipher the Archive</span><span><i>02</i>Rebuild the river crossing</span><span><i>03</i>Quiet the Spire guardians</span></div>
+        <div class="journey-list"><span><i>01</i>Decipher the Archive</span><span><i>02</i>Restore the working Tideworks</span><span><i>03</i>Outmaneuver the Spire warden</span></div>
         <p class="journey-home">Then bring the solstice light home.</p>
         <div class="menu-actions"><button id="startButton" class="primary">Begin expedition</button><button id="continueButton" class="secondary" hidden>Continue checkpoint</button></div>
         <p id="checkpointNote" class="muted">Progress saves when you restore a site.</p>
-        <details class="controls-details"><summary>Controls & accessibility</summary><p>WASD or arrows move · Space pulses nearby enemies and crates · E interacts · Shift sprints · P / Escape pauses. Drag the view to orbit. Saved key remaps are honored.</p><p>Touch: left stick moves, right buttons act. Standard controller: left stick moves, right stick orbits, A pulses, X interacts, B or left trigger sprints, Start pauses. On the title, A begins and X continues a checkpoint.</p><p>Move out of amber attack warnings. Restoring sites refills your lantern. Resumed or retried expeditions are unranked practice.</p><label><input id="touchToggle" type="checkbox"> Show touch controls</label><label><input id="motionToggle" type="checkbox"> Reduce camera motion & weather</label><label><input id="muteToggle" type="checkbox"> Mute audio</label></details>
-        <p class="menu-foot">Original world & music tones · v1.0 <span id="renderLabel"></span></p>
+        <details id="controlsDetails" class="controls-details"><summary id="controlsSummary">Controls & accessibility</summary><p>WASD or arrows move · Space pulses nearby enemies and crates · E interacts · Shift sprints · P / Escape pauses. Drag the view to orbit. Saved key remaps are honored.</p><p>Touch: left stick moves, right buttons act. Standard controller: left stick moves, right stick orbits, A pulses, X interacts, B or left trigger sprints, View opens the journal, Start pauses. Menus: D-pad or stick chooses, A selects, B goes back. X on the title continues a checkpoint.</p><p>Recover parts, install the workshop counterweight, align the sluice to the Archive’s first rune, and operate the bridge winch. Evade the warden’s marked charge; pulse its core while the bronze plates are open.</p><p>Restoring sites refills your lantern. Resumed or retried expeditions are unranked practice. Reduced motion keeps essential bridge and attack movement readable while stopping decorative wheel, weather and camera motion.</p><label><input id="touchToggle" type="checkbox"> Show touch controls</label><label><input id="motionToggle" type="checkbox"> Reduce camera motion & weather</label><label><input id="muteToggle" type="checkbox"> Mute audio</label></details>
+        <p class="menu-foot">Original world & music tones · v1.1 <span id="renderLabel"></span></p>
       </div>
     </section>
     <section id="pauseMenu" class="overlay centered" hidden aria-label="Expedition paused"><div class="dialog-card"><p class="eyebrow">THE VALLEY CAN WAIT</p><h2>Expedition paused</h2><p>Time, weather and combat are paused.</p><button id="resumeButton" class="primary">Continue expedition</button><button id="pauseJournalButton" class="secondary">Read expedition journal</button><button id="restartButton" class="quiet-button">Start a new expedition</button><p class="muted">P / Escape resumes. Your last completed site remains saved.</p></div></section>
@@ -48,6 +49,7 @@
     <section id="confirm" class="overlay centered" hidden aria-label="Confirm new expedition"><div class="dialog-card"><p class="eyebrow">A NEW JOURNEY</p><h2>Leave this expedition?</h2><p>Beginning again replaces your saved checkpoint. The valley, its guardians and all three sites will reset.</p><button id="confirmStart" class="primary">Begin a fresh expedition</button><button id="cancelStart" class="secondary">Keep this expedition</button></div></section>
     <div id="loading" class="loading"><span class="loading-sun">✺</span><p>Following the light…</p></div>
     <div id="fatal" class="overlay centered" hidden><div class="dialog-card"><h2>The valley could not open</h2><p id="fatalText">Reload the page to try again.</p><button onclick="location.reload()" class="primary">Reload expedition</button></div></div>
+    <p id="controllerHint" class="controller-hint" hidden>D-pad / stick · choose &nbsp; A · select &nbsp; B · back</p>
   </main>
   <script src="../../assets/wwg-input.js"></script>
   <script type="module" src="./main.js"></script>

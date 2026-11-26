@@ -113,6 +113,7 @@ function parts(enemy,quality='full',time=0,calm=false){
 }
 function render(engine,e,quality='full',time=0,calm=false){
  const a=Number(e.yaw)||0,s=Math.sin(a),c=Math.cos(a),list=parts(e,quality,time,calm);
+ if(root.AegisCombatRigs&&typeof engine.mesh==='function')return root.AegisCombatRigs.enemy(engine,e,quality,time,calm,list);
  for(const part of list){
   const x=e.x+part.r*c+part.f*s,z=e.z-part.r*s+part.f*c;
   // Fixed-size armor receives true bevelled silhouettes. Charged rails,

@@ -13,19 +13,20 @@ const sharedInput=fs.readFileSync(path.join(root,'assets/wwg-input.js'),'utf8');
 // browser, and adds no debug hooks, globals or cheats to the shipped game.
 async function harness(){
   const m=await model,elements=new Map(),windowEvents=new Map(),documentEvents=new Map(),messages=[];
-  const controls={pads:[],now:0,raf:0};let document;
-  const hidden=new Set(['hud','touchControls','pauseMenu','journal','result','confirm','fatal','continueButton','interaction']);
-  const children={menu:['startButton','continueButton','touchToggle','motionToggle','muteToggle'],pauseMenu:['resumeButton','pauseJournalButton','restartButton'],journal:['closeJournalButton'],result:['retryButton','resultMenuButton'],confirm:['confirmStart','cancelStart']};
+  const controls={pads:[],now:0,raf:0,pendingRaf:new Map(),disposals:0,resizes:0,observerDisconnects:0};let document;
+  const hidden=new Set(['hud','touchControls','pauseMenu','journal','result','confirm','fatal','continueButton','interaction','encounter','controllerHint']);
+  const children={menu:['startButton','continueButton','controlsSummary','touchToggle','motionToggle','muteToggle'],pauseMenu:['resumeButton','pauseJournalButton','restartButton'],journal:['closeJournalButton'],result:['retryButton','resultMenuButton'],confirm:['confirmStart','cancelStart']};
   const context2d=new Proxy({}, {get:(target,key)=>target[key]??(()=>{}),set:(target,key,value)=>(target[key]=value,true)});
   class Element{
     constructor(id=''){this.id=id;this.hidden=hidden.has(id);this.style={};this.textContent='';this.innerHTML='';this.checked=false;this.disabled=false;this.handlers=new Map();this.clientWidth=1000;this.clientHeight=600;this.children=[];const set=new Set();this.classList={add:(...xs)=>xs.forEach(x=>set.add(x)),remove:(...xs)=>xs.forEach(x=>set.delete(x)),contains:x=>set.has(x),toggle:(x,force)=>{const add=force===undefined?!set.has(x):force;if(add)set.add(x);else set.delete(x);return add;}};}
     addEventListener(name,fn){if(!this.handlers.has(name))this.handlers.set(name,[]);this.handlers.get(name).push(fn);}
     emit(name,event={}){const e={target:this,preventDefault(){this.prevented=true;},pointerId:1,button:0,...event};for(const fn of this.handlers.get(name)||[])fn(e);return e;}
     focus(){document.activeElement=this;}
+    click(){if(this.id==='controlsSummary')get('controlsDetails').open=!get('controlsDetails').open;if(this.id.endsWith('Toggle')){this.checked=!this.checked;this.emit('change');}this.emit('click',{detail:0});}
     getContext(){return context2d;}
     append(node){this.children.push(node);}
     setPointerCapture(){}
-    getClientRects(){return this.hidden?[]:[{}];}
+    getClientRects(){return this.hidden||this.id.endsWith('Toggle')&&!get('controlsDetails').open?[]:[{}];}
     getBoundingClientRect(){return this.id==='stick'?{left:0,top:0,width:108,height:108}:{left:0,top:0,width:1000,height:600};}
     querySelectorAll(){return(children[this.id]||[]).map(get);}
     contains(node){return node===this||(children[this.id]||[]).includes(node?.id);}
@@ -35,13 +36,13 @@ async function harness(){
   document={body:new Element('body'),hidden:false,activeElement:null,getElementById:get,createElement:()=>new Element(),querySelectorAll:()=>['touchPulse','touchInteract','touchSprint'].map(get),addEventListener(name,fn){if(!documentEvents.has(name))documentEvents.set(name,[]);documentEvents.get(name).push(fn);}};
   const values=new Map();const storage={getItem:k=>values.get(k)??null,setItem:(k,v)=>values.set(k,String(v)),removeItem:k=>values.delete(k)};
   const ctx={...m,document,localStorage:storage,location:{search:'',origin:'https://example.test'},matchMedia:()=>({matches:false}),URLSearchParams,console,
-    navigator:{getGamepads:()=>controls.pads},crypto:{getRandomValues:a=>(a[0]=1337,a)},ResizeObserver:class{observe(){}disconnect(){}},requestAnimationFrame:()=>++controls.raf,cancelAnimationFrame(){},
+    navigator:{getGamepads:()=>controls.pads},crypto:{getRandomValues:a=>(a[0]=1337,a)},ResizeObserver:class{observe(){}disconnect(){controls.observerDisconnects++;}},requestAnimationFrame:fn=>{const id=++controls.raf;controls.pendingRaf.set(id,fn);return id;},cancelAnimationFrame:id=>controls.pendingRaf.delete(id),
     parent:{postMessage:(message,origin)=>messages.push({message,origin})},addEventListener(name,fn){if(!windowEvents.has(name))windowEvents.set(name,[]);windowEvents.get(name).push(fn);},
-    createValley(canvas){return{canvas,renderer:{mode:'software'},resize(){},update(){},dispose(){},project:()=>({x:0,y:0,visible:false})};}
+    createValley(canvas){return{canvas,renderer:{mode:'software'},resize(){controls.resizes++;},update(){},dispose(){controls.disposals++;},project:()=>({x:0,y:0,visible:false})};}
   };
   ctx.window=ctx;vm.createContext(ctx);vm.runInContext(sharedInput,ctx,{filename:'wwg-input.js'});vm.runInContext(mainSource,ctx,{filename:'solstice-main.js'});
   const run=code=>vm.runInContext(code,ctx);
-  const advance=(frames=1)=>{for(let i=0;i<frames;i++){controls.now+=1000/60;ctx.__frameTime=controls.now;run('animate(__frameTime)');}};
+  const advance=(frames=1)=>{for(let i=0;i<frames;i++){controls.now+=1000/60;const scheduled=[...controls.pendingRaf.values()];controls.pendingRaf.clear();for(const callback of scheduled)callback(controls.now);}};
   function key(code,repeat=false,options={}){const event={code,key:code,repeat,target:get('world'),preventDefault(){this.prevented=true;},...options};for(const fn of documentEvents.get('keydown')||[])fn(event);return event;}
   function up(code){for(const fn of documentEvents.get('keyup')||[])fn({code,target:get('world')});}
   function event(name,detail={}){for(const fn of windowEvents.get(name)||[])fn(detail);}
@@ -107,4 +108,51 @@ test('journal opened from pause returns to pause, with no hidden simulation or i
 test('saved remaps replace action defaults and update visible prompt labels',async()=>{
   const h=await harness();h.storage.setItem('wwg:keymap',JSON.stringify({primary:'KeyF',secondary:'KeyQ'}));h.event('storage',{key:'wwg:keymap'});h.get('startButton').emit('click');h.advance();
   assert.equal(h.get('pulseKey').textContent,'F');assert.equal(h.get('promptKey').textContent,'Q');h.key('Space');h.advance(30);assert.equal(h.run('state.pulses'),0);h.up('Space');h.key('KeyF');h.advance(30);assert.ok(h.run('state.pulses')>0);h.up('KeyF');h.key('KeyQ');h.advance();assert.equal(h.run('state.interactions'),1);
+});
+
+function pressPad(h,p,index){p.buttons[index]={pressed:true,value:1};h.advance();p.buttons[index]={pressed:false,value:0};h.advance();}
+test('controller navigates title options, activates checkboxes, and updates action prompts',async()=>{
+  const h=await harness(),p=h.pad();h.advance();pressPad(h,p,13);assert.equal(h.document.activeElement.id,'controlsSummary');pressPad(h,p,0);assert.equal(h.get('controlsDetails').open,true);
+  pressPad(h,p,13);assert.equal(h.document.activeElement.id,'touchToggle');pressPad(h,p,0);assert.equal(h.run('settings.touch'),true);
+  pressPad(h,p,13);assert.equal(h.document.activeElement.id,'motionToggle');pressPad(h,p,0);assert.equal(h.run('settings.reducedMotion'),true);
+  pressPad(h,p,1);assert.equal(h.get('controlsDetails').open,false);assert.equal(h.document.activeElement.id,'controlsSummary');pressPad(h,p,12);assert.equal(h.document.activeElement.id,'startButton');
+  p.buttons[0]={pressed:true,value:1};h.advance();assert.equal(h.run('state.mode'),'playing');h.advance(30);assert.equal(h.run('state.pulses'),0);assert.equal(h.get('pulseKey').textContent,'A');assert.equal(h.get('promptKey').textContent,'X');
+  p.buttons[0]={pressed:false,value:0};h.advance();h.key('KeyW');assert.equal(h.get('pulseKey').textContent,'Space');assert.equal(h.get('promptKey').textContent,'E');h.up('KeyW');
+});
+test('controller completes pause journal, restart confirmation, direct journal, and result-to-title flows',async()=>{
+  const h=await harness(),p=h.pad();h.advance();pressPad(h,p,0);pressPad(h,p,9);assert.equal(h.run('state.mode'),'paused');
+  pressPad(h,p,13);assert.equal(h.document.activeElement.id,'pauseJournalButton');pressPad(h,p,0);assert.equal(h.get('journal').hidden,false);const elapsed=h.run('state.elapsed');h.advance(60);assert.equal(h.run('state.elapsed'),elapsed);
+  pressPad(h,p,1);assert.equal(h.run('state.mode'),'paused');assert.equal(h.document.activeElement.id,'resumeButton');pressPad(h,p,13);pressPad(h,p,13);assert.equal(h.document.activeElement.id,'restartButton');
+  pressPad(h,p,0);assert.equal(h.get('confirm').hidden,false);assert.equal(h.document.activeElement.id,'cancelStart');pressPad(h,p,0);assert.equal(h.get('confirm').hidden,true);assert.equal(h.run('state.mode'),'paused');
+  pressPad(h,p,1);assert.equal(h.run('state.mode'),'playing');pressPad(h,p,8);assert.equal(h.get('journal').hidden,false);pressPad(h,p,1);assert.equal(h.run('state.mode'),'playing');
+  h.run('state.mode="won"');h.advance(2);pressPad(h,p,13);assert.equal(h.document.activeElement.id,'resultMenuButton');pressPad(h,p,0);assert.equal(h.run('state.mode'),'menu');assert.equal(h.get('menu').hidden,false);
+});
+test('keyboard, touch and controller operate the complete Tideworks without repeated spending or valve edges',async()=>{
+  for(const device of ['keyboard','touch','gamepad']){
+    const h=await harness(),p=device==='gamepad'?h.pad():null;h.get('startButton').emit('click');h.advance(2);
+    h.run('state=createExpedition(1337);state.completed.archive=true;state.archiveRead=true;state.archiveStep=3;state.crates.slice(0,4).forEach(c=>{c.hp=0;c.collected=true;});state.salvage=4;state.player.x=TIDEWORKS.bench.x;state.player.z=TIDEWORKS.bench.z+2');
+    function interact(){
+      if(device==='keyboard'){h.key('KeyE');h.advance(20);h.key('KeyE',true);h.advance();h.up('KeyE');h.advance();}
+      else if(device==='touch'){h.get('touchInteract').emit('pointerdown',{pointerId:77});h.advance(20);h.get('touchInteract').emit('pointerup',{pointerId:77});h.advance();}
+      else{p.buttons[2]={pressed:true,value:1};h.advance(20);p.buttons[2]={pressed:false,value:0};h.advance();}
+    }
+    interact();assert.equal(h.run('state.tideworks.installed'),true,device);assert.equal(h.run('state.salvage'),0);interact();assert.equal(h.run('state.salvage'),0);
+    h.run('state.player.x=TIDEWORKS.valve.x;state.player.z=TIDEWORKS.valve.z+2.2');interact();assert.equal(h.run('state.tideworks.setting'),0,device);
+    for(let i=0;i<2&&!h.run('RUNES[state.tideworks.setting].id===state.sequence[0]');i++)interact();
+    assert.equal(h.run('RUNES[state.tideworks.setting].id===state.sequence[0]'),true);
+    h.run('state.player.x=SITES.bridge.x;state.player.z=SITES.bridge.z');interact();assert.equal(h.run('state.tideworks.phase'),'lowering');h.advance(240);assert.equal(h.run('state.completed.bridge'),true,device);
+    assert.equal(h.messages.filter(x=>x.message.event==='bridge-repaired').length,1);assert.equal(h.messages.some(x=>typeof x.message.score==='number'),false);
+  }
+});
+test('persisted page-cache restores keep the world paused, retain resources, rearm input and schedule one loop',async()=>{
+  const h=await harness(),p=h.pad();h.get('startButton').emit('click');h.advance(2);h.key('KeyW');p.axes[1]=-.8;h.advance(20);
+  const elapsed=h.run('state.elapsed'),position=h.run('JSON.stringify([state.player.x,state.player.z])'),pulses=h.run('state.pulses');
+  h.event('pagehide',{persisted:true});assert.equal(h.run('state.mode'),'paused');assert.equal(h.run('stopped'),true);assert.equal(h.controls.pendingRaf.size,0);assert.equal(h.controls.disposals,0);assert.equal(h.controls.observerDisconnects,0);
+  h.advance(3600);h.event('pageshow',{persisted:true});h.event('pageshow',{persisted:true});assert.equal(h.controls.pendingRaf.size,1);assert.equal(h.controls.disposals,0);assert.equal(h.run('state.mode'),'paused');assert.equal(h.get('pauseMenu').hidden,false);
+  h.advance(60);assert.equal(h.run('state.elapsed'),elapsed);assert.equal(h.run('JSON.stringify([state.player.x,state.player.z])'),position);assert.equal(h.run('state.pulses'),pulses);assert.equal(h.controls.pendingRaf.size,1);
+  h.get('resumeButton').emit('click');h.key('KeyW',true);h.advance(30);assert.equal(h.run('JSON.stringify([state.player.x,state.player.z])'),position);assert.ok(h.run('state.elapsed')<elapsed+1);
+  p.axes[1]=0;h.advance(2);p.axes[1]=-.8;h.advance(20);assert.notEqual(h.run('JSON.stringify([state.player.x,state.player.z])'),position);
+  h.event('pagehide',{persisted:true});h.event('pagehide',{persisted:true});h.event('pageshow',{persisted:true});assert.equal(h.controls.pendingRaf.size,1);assert.equal(h.run('state.mode'),'paused');assert.equal(h.controls.disposals,0);
+  h.event('pagehide',{persisted:false});h.event('pagehide',{persisted:false});assert.equal(h.controls.disposals,1);assert.equal(h.controls.observerDisconnects,1);assert.equal(h.controls.pendingRaf.size,0);
+  h.event('pageshow',{persisted:true});h.advance(60);assert.equal(h.controls.pendingRaf.size,0);assert.equal(h.run('stopped'),true);
 });

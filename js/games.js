@@ -758,85 +758,87 @@ window.WWG_GAMES.forEach(game => {
 // Integrated November 26 recovery: merge specialist metadata without replacing the catalog.
 (()=>{const updates=[
   {
-    "id": "aegis-verge",
-    "title": "Aegis Verge",
-    "tagline": "Drive the Vesper. Break the siege. Secure the relays.",
-    "description": "Drive the Vesper through three original 3D combat operations surrounded by sculpted basins, arched causeways, working cranes, reactors and monumental arrays. Read enemy windups, use physical cover and a timed Aegis shield, secure relays, and extract. Destructible barricades, salvage, tactical tools, Flux Circuit trials and recoverable checkpoints deepen the campaign.",
-    "objective": "Defeat the defenders at each relay, stay inside its cyan perimeter for three seconds to secure it, then drive into the green extraction zone. Complete all three operations. Use cover, watch hostile firing lanes, and manage hull and Aegis energy.",
-    "genres": [
-      "Vehicle Combat",
-      "3D",
-      "Action",
-      "Shooter",
-      "Tactical"
-    ],
-    "added": "2026-10-04",
-    "updated": "2026-11-26",
-    "version": "3.0",
-    "featured": true,
-    "basePopularity": 710,
-    "cover": "covers/aegis-verge.svg",
-    "path": "games/aegis-verge/index.html",
-    "accent": "#67e8f9",
-    "remappable": true,
-    "scoreMeta": {
-      "unit": "pts",
-      "direction": "high",
-      "label": "Verge score"
-    },
-    "controls": [
-      "Arrow keys or WASD drive and steer; custom keyboard remaps remain supported.",
-      "Space fires the pulse cannon. Hold E for the Aegis shield; a well-timed press can reflect an incoming bolt.",
-      "Q triggers a counter pulse. Shift dashes; hold reverse to dash backward.",
-      "F activates a nearby relay uplink. G toggles Flux Circuit guidance; V changes the camera.",
-      "Clear a relay wave, hold its cyan perimeter for three seconds, then follow the route to the next objective.",
-      "Drive through dropped green or violet salvage to recover hull or energy. Use the in-game tools for field salvage and decoys.",
-      "P pauses; R restarts the operation. Switching away pauses combat until you resume.",
-      "Resume restores a saved relay checkpoint as unranked practice. Starting over asks before replacing an existing checkpoint.",
-      "Standard gamepad: left stick drives, A fires, B shields, Y pulses and X dashes. Touch uses DRIVE, FIRE, AEGIS, PULSE and DASH; open TOOLS for additional abilities."
-    ]
+  "id": "aegis-verge",
+  "title": "Aegis Verge",
+  "tagline": "Drive the Vesper. Break the siege. Secure the relays.",
+  "description": "Drive the articulated Vesper through three original 3D combat operations surrounded by sculpted basins, arched causeways, working cranes and monumental arrays. Distinct hostile rigs reveal their roles through hull shape, weapon mounts, windups and exposed reactors. Read their attacks, use cover and a timed Aegis shield, secure relays, and extract. Destructible barricades, salvage, tactical tools, Flux Circuit trials and recoverable checkpoints deepen the campaign.",
+  "objective": "Defeat the defenders at each relay, stay inside its cyan perimeter for three seconds to secure it, then drive into the green extraction zone. Complete all three operations. Use cover, watch hostile firing lanes, and manage hull and Aegis energy.",
+  "genres": [
+    "Vehicle Combat",
+    "3D",
+    "Action",
+    "Shooter",
+    "Tactical"
+  ],
+  "added": "2026-10-04",
+  "updated": "2026-11-26",
+  "version": "3.1",
+  "featured": true,
+  "basePopularity": 710,
+  "cover": "covers/aegis-verge.svg",
+  "path": "games/aegis-verge/index.html",
+  "accent": "#67e8f9",
+  "remappable": true,
+  "scoreMeta": {
+    "unit": "pts",
+    "direction": "high",
+    "label": "Verge score"
   },
+  "controls": [
+    "Arrow keys or WASD drive and steer; custom keyboard remaps remain supported.",
+    "Space fires the pulse cannon. Hold E for the Aegis shield; a well-timed press can reflect an incoming bolt.",
+    "Q triggers a counter pulse. Shift dashes; hold reverse to dash backward.",
+    "F activates a nearby relay uplink. G toggles Flux Circuit guidance; V changes the camera.",
+    "Clear a relay wave, hold its cyan perimeter for three seconds, then follow the route to the next objective.",
+    "Drive through dropped green or violet salvage to recover hull or energy. Use the in-game tools for field salvage and decoys.",
+    "P pauses; R restarts the operation. Switching away pauses combat until you resume.",
+    "Resume restores a saved relay checkpoint as unranked practice. Starting over asks before replacing an existing checkpoint.",
+    "Standard gamepad: left stick drives, A fires, B shields, Y pulses and X dashes. Touch uses DRIVE, FIRE, AEGIS, PULSE and DASH; open TOOLS for additional abilities."
+  ],
+  "presentation": "world"
+},
   {
-    "id": "cyber-wars",
-    "title": "Cyber Wars",
-    "tagline": "Explore Viridia. Learn from its books. Earn your place.",
-    "description": "Explore Viridia beneath rounded forest canopies, curved stone gateways and open archive galleries in an original 3D action RPG. Meet its steward, learn through books and ten Pilot trials, restore solar obelisks, and confront the Relic Warden. Weather changes stealth and wildlife behavior while the river carries rafts and cargo. Buy a home to preserve your progress.",
-    "objective": "Complete the steward’s initiation, restore three solar obelisks, defeat the southern Relic Warden, earn 100 credits to buy a home, and save at that home. Explore the archive and practical trainers to advance the ten-rank Pilot skill. The river challenge is an optional 75-second cargo expedition.",
-    "genres": [
-      "RPG",
-      "3D",
-      "Exploration",
-      "Action",
-      "Sandbox",
-      "Survival"
-    ],
-    "added": "2026-10-08",
-    "updated": "2026-11-26",
-    "version": "0.65",
-    "featured": true,
-    "basePopularity": 980,
-    "cover": "covers/cyber-wars.svg",
-    "path": "games/cyber-wars/index.html",
-    "accent": "#7fffd4",
-    "remappable": true,
-    "scoreMeta": {
-      "unit": "pts",
-      "direction": "high",
-      "label": "Viridia expedition score"
-    },
-    "controls": [
-      "Arrow keys or WASD move. Mouse movement or dragging looks around; C switches field cameras.",
-      "Space fires the pulse weapon. E interacts with characters, books, caches, obelisks, your home and the raft.",
-      "X toggles sneak. Q can quietly jam a sentry when approached from behind; F performs a timed parry.",
-      "H places temporary field cover where the ground is clear. Stone, tree trunks and cover block movement and projectiles.",
-      "In the archive: Left/Right turn pages, Escape closes the book, and Study Rank 1 records your reading.",
-      "V observes nearby wildlife; T toggles tracks. Move quietly and keep a clear view for a peaceful sighting.",
-      "At the east-bank mooring, press E to board the raft. Steer with arrows/WASD or the on-screen controls.",
-      "River cargo: collect C1–C3 by holding beside each at low speed, pass all three beacons, then land north within 75 active seconds.",
-      "Use the labeled touch controls or a standard gamepad. Individual Pilot trials display their own controls.",
-      "Progress is saved at an owned home. A home costs 100 credits; ordinary completed missions award 10 credits."
-    ]
-  }
+  "id": "cyber-wars",
+  "title": "Cyber Wars",
+  "tagline": "Explore Viridia. Learn from its books. Earn your place.",
+  "description": "Explore Viridia beneath rounded forest canopies, curved stone gateways and open archive galleries in an original 3D action RPG. Speak with the archivist and read original in-world books at reachable lecterns. Meet the steward, study the Pilot manual and undertake ten practical trials, restore solar obelisks, and confront the Relic Warden. Completed missions change the settlement’s visible signals. Weather affects stealth and wildlife while the river carries rafts and cargo. Buy a home to preserve your progress.",
+  "objective": "Complete the steward’s initiation, restore three solar obelisks, defeat the southern Relic Warden, earn 100 credits to buy a home, and save at that home. Explore the archive and practical trainers to advance the ten-rank Pilot skill. The river challenge is an optional 75-second cargo expedition.",
+  "genres": [
+    "RPG",
+    "3D",
+    "Exploration",
+    "Action",
+    "Sandbox",
+    "Survival"
+  ],
+  "added": "2026-10-08",
+  "updated": "2026-11-26",
+  "version": "0.66",
+  "featured": true,
+  "basePopularity": 980,
+  "cover": "covers/cyber-wars.svg",
+  "path": "games/cyber-wars/index.html",
+  "accent": "#7fffd4",
+  "remappable": true,
+  "scoreMeta": {
+    "unit": "pts",
+    "direction": "high",
+    "label": "Viridia expedition score"
+  },
+  "controls": [
+    "Arrow keys or WASD move. Mouse movement or dragging looks around; C switches field cameras.",
+    "Space fires the pulse weapon. E interacts with characters, books, caches, obelisks, your home and the raft.",
+    "X toggles sneak. Q can quietly jam a sentry when approached from behind; F performs a timed parry.",
+    "H places temporary field cover where the ground is clear. Stone, tree trunks and cover block movement and projectiles.",
+    "In the Canopy Archive, interact with the archivist or a book lectern. Left/Right turn pages; Escape closes. Study Rank 1 in the Pilot manual records the practical skill’s reading requirement.",
+    "V observes nearby wildlife; T toggles tracks. Move quietly and keep a clear view for a peaceful sighting.",
+    "At the east-bank mooring, press E to board the raft. Steer with arrows/WASD or the on-screen controls.",
+    "River cargo: collect C1–C3 by holding beside each at low speed, pass all three beacons, then land north within 75 active seconds.",
+    "Use the labeled touch controls or a standard gamepad. Individual Pilot trials display their own controls.",
+    "Progress is saved at an owned home. A home costs 100 credits; ordinary completed missions award 10 credits."
+  ],
+  "presentation": "world"
+}
 ];for(const update of updates){const game=window.WWG_GAMES.find(g=>g.id===update.id);if(game)Object.assign(game,update);}})();
 
 // Preserve concurrent original campaigns added on canonical main during recovery.
@@ -924,8 +926,8 @@ window.WWG_GAMES.unshift({
   "id": "solstice-wilds",
   "title": "Solstice Wilds",
   "tagline": "Read the ruins. Restore the crossing. Bring the light home.",
-  "description": "Explore a living coastal valley in an original third-person 3D expedition. Decipher the Archive’s rune sequence, recover salvage from the Tide Workshop, repair the river bridge, and confront the Solstice Spire’s telegraphed guardians. Wind, coastal rain, changing daylight, an orbit camera and checkpointed progression connect the journey.",
-  "objective": "Restore the Archive, repair the bridge using four recovered parts, defeat all three Spire guardians and activate the armillary, then return to the Dawn Lighthouse.",
+  "description": "Explore a living coastal valley in an original third-person 3D expedition. Decipher the Archive’s rune sequence, salvage a workshop counterweight, set the sluice and operate the winch to lower a physical river crossing. Evade the Spire warden’s charge to expose its core, restore the armillary and bring the light home. Wind, rain, changing daylight and checkpointed progression connect the journey.",
+  "objective": "Restore the Archive, install four salvaged parts at the workshop, set the sluice to the Archive’s first rune, and operate the bridge winch. Defeat all three Spire guardians, activate the armillary, then return to the Dawn Lighthouse.",
   "genres": [
     "3D",
     "Exploration",
@@ -936,7 +938,7 @@ window.WWG_GAMES.unshift({
   ],
   "added": "2026-11-26",
   "updated": "2026-11-26",
-  "version": "1.0",
+  "version": "1.1",
   "featured": true,
   "basePopularity": 0,
   "modes": [
@@ -957,9 +959,11 @@ window.WWG_GAMES.unshift({
     "E or your secondary action reads inscriptions, activates pillars and interacts with machinery.",
     "Shift sprints. Drag the view to orbit the camera. P or Escape pauses.",
     "Read the Archive tablet before solving its three-rune sequence. Wrong sequences can be retried.",
-    "Recover four parts from workshop crates to repair the river bridge. Defeat the three northern guardians before activating the Spire.",
+    "Install four recovered parts at the workshop, set the sluice to the Archive’s first rune, then operate the winch. The crossing opens when both bridge leaves lock.",
+    "Evade the warden’s amber charge line, then pulse its exposed core during recovery. Its closed armor blocks pulses.",
     "Return to the Dawn Lighthouse after restoring all three sites to finish. Only a complete fresh expedition earns a score.",
     "Checkpoints save after site restoration. Continued and retried expeditions are unranked practice.",
-    "Touch joystick and labeled action buttons are available. Standard gamepad: left stick moves, right stick orbits, A pulses, X interacts, B or left trigger sprints, Start pauses."
-  ]
+    "Touch joystick and labeled action buttons are available. Standard gamepad: left stick moves, right stick orbits, A pulses, X interacts, B or left trigger sprints, Start pauses. In menus, D-pad or left stick selects, A confirms and B returns; release controls before resuming."
+  ],
+  "presentation": "world"
 });

@@ -1,6 +1,6 @@
 {
   "name": "worldwidegames",
-  "version": "498.0.0",
+  "version": "499.0.0",
   "private": true,
   "description": "Original browser games by Architect Industries",
   "scripts": {
@@ -8,7 +8,8 @@
     "test:arcade": "node --test tests/arcade-expansion/*.cjs tests/arcade-expansion/*.mjs",
     "test:release": "node --test tests/recovery-release.test.cjs",
     "test:3d": "node --test tests/dynamic-3d/*.cjs",
-    "test:assets": "node --test tests/asset-assembly.test.cjs"
+    "test:assets": "node --test tests/asset-assembly.test.cjs",
+    "test:player": "node --test tests/player-view.test.cjs"
   },
   "engines": {
     "node": ">=22"

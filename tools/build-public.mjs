@@ -83,6 +83,6 @@ if(!commit){try{
   sourceDirty=!!execFileSync('git',['status','--porcelain','--untracked-files=normal'],{cwd:root,encoding:'utf8',stdio:['ignore','pipe','ignore']}).trim();
   if(sourceDirty)commit+='-working-tree';
 }catch{commit='uncommitted';sourceDirty=true;}}
-const release={version,date:'2026-11-26',owner:'Architect Industries',commit,sourceDirty,catalogCount:games.length,cache,sourceTracks:['catalog-v496','Arcade-Nights','Mosaic-B1','Profile-B2','Aegis-3.0-Worldscape','Cyber-Wars-0.65-Viridia','Dynamic-Campaigns','Solstice-Wilds-1.0','Three-r187'],games:games.map(({id,version,path:gamePath})=>({id,version,path:gamePath})),publicFileCount:inventory.length,sha256:hashes};
+const release={version,date:'2026-11-26',owner:'Architect Industries',commit,sourceDirty,catalogCount:games.length,cache,sourceTracks:['catalog-v496','Arcade-Nights','Mosaic-B1','Profile-B2','Aegis-3.1-Combat-Rigs-F3D97','Cyber-Wars-0.66-Canopy-Archive','Dynamic-Campaigns','Solstice-Wilds-1.1-Tideworks','Player-View-Visible-Time','Three-r187'],games:games.map(({id,version,path:gamePath})=>({id,version,path:gamePath})),publicFileCount:inventory.length,sha256:hashes};
 fs.writeFileSync(path.join(output,'release.json'),JSON.stringify(release,null,2)+'\n');
 console.log(JSON.stringify({version,games:games.length,publicFiles:inventory.length,precacheURLs:precache.size,output,commit}));

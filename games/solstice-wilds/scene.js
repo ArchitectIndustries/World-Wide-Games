@@ -1,6 +1,6 @@
 /* Original Solstice Wilds geometry and scene direction. No remote assets. */
 import {THREE,createRenderer,createSkyEnvironment,loadSurfaceMaterial} from '../../assets/wwg-three-scene.js';
-import {SITES,PILLARS,TABLET,OBSTACLES,TREES,RUNES,terrainHeight,weatherAt,random} from './model.js';
+import {SITES,PILLARS,TABLET,TIDEWORKS,BRIDGE_HALF_WIDTH,OBSTACLES,TREES,RUNES,terrainHeight,weatherAt,random} from './model.js';
 
 const TAU=Math.PI*2;
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
@@ -86,7 +86,7 @@ function guardian(parent,type){
   const root=group(parent),isWarden=type==='warden',stone=material(isWarden?'#9faca0':'#849e8c'),dark=material('#335b57'),glow=material('#f4c16a',{emissive:'#dc7a36',emissiveIntensity:.7});
   const scale=isWarden?1.33:type==='sentinel'?1:.8;root.scale.setScalar(scale);
   const body=group(root,0,1.1,0);mesh(tapered(1,.95,.65,.62),stone,body,0,-.16,0);mesh(geo(new THREE.IcosahedronGeometry(.31,0)),dark,body,0,1,0);mesh(geo(new THREE.BoxGeometry(.35,.1,.12)),glow,body,0,1.02,.27);
-  mesh(geo(new THREE.OctahedronGeometry(.23,0)),glow,body,0,.35,.36);
+  const core=mesh(geo(new THREE.OctahedronGeometry(.23,0)),glow,body,0,.35,.36);
   const arms=[],legs=[];
   for(const side of [-1,1]){
     const arm=group(body,side*.69,.65,0);mesh(tapered(.33,.53,.38,.83),stone,arm,0,-.48,0);mesh(geo(new THREE.OctahedronGeometry(.22,0)),dark,arm,0,-.65,0);arms.push(arm);
@@ -96,7 +96,12 @@ function guardian(parent,type){
   }
   const health=group(root,0,2.8,0);mesh(geo(new THREE.PlaneGeometry(1.05,.12)),basic('#25443f',{side:THREE.DoubleSide}),health);
   const healthFill=mesh(geo(new THREE.PlaneGeometry(1,.075)),basic('#f2cc88',{side:THREE.DoubleSide}),health,0,0,.01);
-  return {root,body,arms,legs,stone,glow,health,healthFill};
+  const guardPlates=[];
+  if(isWarden){
+    const bronze=material('#cfac68',{metalness:.3,roughness:.5});
+    for(const side of [-1,1]){const plate=mesh(tapered(.4,.72,.14,.7),bronze,body,side*.23,-.06,.55);plate.rotation.z=-side*.12;guardPlates.push(plate);}
+  }
+  return {root,body,arms,legs,stone,glow,core,guardPlates,health,healthFill};
 }
 
 export function createValley(canvas){
@@ -166,11 +171,66 @@ export function createValley(canvas){
   mesh(geo(new THREE.BoxGeometry(4.8,.13,.15)),gold,workshop,0,3.5,2.1);
   mesh(cylinder(.6,.72,.8,6),dark,workshop,0,1,0);mesh(geo(new THREE.TorusGeometry(.75,.1,4,9)),gold,workshop,0,1.95,0).rotation.x=.4;
   const banner=mesh(geo(new THREE.PlaneGeometry(1.2,1.8,2,3)),material('#d4a16b',{side:THREE.DoubleSide}),workshop,2,2.4,1.15);flags.push(banner);
-  const bridge=group(scene,20,.78,-18),brokenBridge=group(scene,20,.68,-18);
-  const planks=[];for(let i=0;i<12;i++){const p=mesh(geo(new THREE.BoxGeometry(5.7,.19,.65)),wood,bridge,0,0,(i-5.5)*.66);p.rotation.z=Math.sin(i*2)*.015;planks.push(p);}
-  for(const side of [-1,1]){mesh(geo(new THREE.BoxGeometry(.18,.18,8.3)),dark,bridge,side*2.8,1.35,0);for(const z of [-3.6,0,3.6])mesh(cylinder(.09,.11,1.6,5),wood,bridge,side*2.8,.7,z);}
-  for(const z of [-3.6,3.6]){mesh(geo(new THREE.BoxGeometry(5.4,.22,1.2)),wood,brokenBridge,0,0,z);for(const side of [-1,1])mesh(cylinder(.09,.13,1.8,5),wood,brokenBridge,side*2.6,.7,z);}
-  const repairWheel=group(scene,20,terrainHeight(20,-10),-10);mesh(tapered(1.3,1.1,.8,.8),darkStone,repairWheel);mesh(geo(new THREE.TorusGeometry(.47,.07,4,8)),gold,repairWheel,0,1.45,0);
+  // Two raised leaves, a real counterweight and a player-operated sluice make
+  // the river crossing's state legible from the approach. Collision opens only
+  // after the model locks both leaves at the end of deployment.
+  const bridge=group(scene,20,.78,-18);bridge.name='Tideworks crossing';
+  const bridgeLeaves=[];
+  for(const shore of [-1,1]){
+    const leaf=group(bridge,0,0,shore*3.96);leaf.name=shore>0?'South bridge leaf':'North bridge leaf';
+    for(let i=0;i<6;i++){const plank=mesh(geo(new THREE.BoxGeometry(BRIDGE_HALF_WIDTH*2,.19,.65)),wood,leaf,0,0,-shore*(i+.5)*.66);plank.rotation.z=Math.sin(i*2)*.012;}
+    for(const side of [-1,1]){
+      mesh(geo(new THREE.BoxGeometry(.16,.14,3.96)),dark,leaf,side*2.8,1.22,-shore*1.98);
+      for(const z of [.25,3.7])mesh(cylinder(.075,.1,1.4,5),wood,leaf,side*2.8,.62,-shore*z);
+    }
+    bridgeLeaves.push({leaf,shore});
+    const bank=group(bridge,0,0,shore*4.2);mesh(geo(new THREE.BoxGeometry(6.1,.32,.7)),darkStone,bank);
+    for(const side of [-1,1])mesh(cylinder(.24,.35,1.3,5),stone,bank,side*3,.5,0);
+  }
+  const repairWheel=group(scene,TIDEWORKS.winch.x,terrainHeight(TIDEWORKS.winch.x,TIDEWORKS.winch.z),TIDEWORKS.winch.z);
+  mesh(tapered(1.3,1.1,.8,.8),darkStone,repairWheel);
+  const winchHandle=mesh(geo(new THREE.TorusGeometry(.47,.07,3,8)),gold,repairWheel,0,1.45,0);winchHandle.name='Bridge winch handle';
+  const bench=group(scene,TIDEWORKS.bench.x,terrainHeight(TIDEWORKS.bench.x,TIDEWORKS.bench.z),TIDEWORKS.bench.z);addCull(bench,48);
+  mesh(tapered(1.65,.85,1.2,.9),wood,bench);mesh(geo(new THREE.BoxGeometry(1.9,.15,1.35)),darkStone,bench,0,.92,0);
+  const workParts=group(bench,0,1.12,0);
+  for(let i=0;i<4;i++)mesh(geo(new THREE.BoxGeometry(.36,.24,.44)),gold,workParts,(i%2-.5)*.6,Math.floor(i/2)*.2,Math.floor(i/2)*.28-.1);
+  const benchBeacon=mesh(geo(new THREE.OctahedronGeometry(.18,0)),mint,bench,0,1.7,0);
+  const gantry=group(scene,16.3,terrainHeight(16.3,-11),-11);addCull(gantry,48);
+  for(const x of [-.85,.85])mesh(geo(new THREE.BoxGeometry(.25,4.8,.3)),wood,gantry,x,2.3,0);
+  mesh(geo(new THREE.BoxGeometry(2.2,.3,.38)),darkStone,gantry,0,4.7,0);
+  const weight=mesh(tapered(1.1,1,.8,.9),gold,gantry,0,3.25,0);weight.name='Tideworks counterweight';
+  const cable=mesh(cylinder(.035,.035,1,4),dark,gantry,0,4.1,0);
+  const wheelRoot=group(scene,27,1.9,-18);wheelRoot.name='Tideworks waterwheel';addCull(wheelRoot,55);wheelRoot.rotation.y=Math.PI/2;
+  for(const side of [-1,1])mesh(geo(new THREE.TorusGeometry(1.65,.12,3,low?12:20)),wood,wheelRoot,0,0,side*.48);
+  for(let i=0;i<8;i++){
+    const a=i/8*TAU,paddle=mesh(geo(new THREE.BoxGeometry(.55,.16,1.15)),wood,wheelRoot,Math.cos(a)*1.65,Math.sin(a)*1.65,0);paddle.rotation.z=a;
+    if(i%2===0){const spoke=mesh(geo(new THREE.BoxGeometry(3.3,.1,.13)),gold,wheelRoot);spoke.rotation.z=a;}
+  }
+  mesh(cylinder(.2,.2,1.5,5),gold,wheelRoot).rotation.x=Math.PI/2;
+  const wheelHousing=group(scene,27,0,-18);addCull(wheelHousing,55);
+  for(const x of [-1,1]){mesh(tapered(.75,3,1,.8),darkStone,wheelHousing,x,0,0);mesh(geo(new THREE.BoxGeometry(.28,.28,6.7)),wood,wheelHousing,x,2.7,2.6);}
+  const sluice=group(scene,TIDEWORKS.valve.x,terrainHeight(TIDEWORKS.valve.x,TIDEWORKS.valve.z),TIDEWORKS.valve.z);addCull(sluice,52);
+  mesh(tapered(1.2,1.2,1,.85),darkStone,sluice);
+  const dial=group(sluice,0,1.42,.15);dial.name='Three-rune sluice dial';
+  mesh(geo(new THREE.TorusGeometry(.56,.065,3,12)),gold,dial);
+  const dialPointer=mesh(tapered(.13,.56,.09,.1),mint,dial,0,-.08,.06);
+  const dialRunes=[];
+  for(let i=0;i<3;i++){
+    const a=i/3*TAU,m=material(RUNES[i].color,{emissive:RUNES[i].color,emissiveIntensity:.12});
+    const glyph=mesh(geo(new THREE.OctahedronGeometry(.13,0)),m,dial,Math.sin(a)*.66,Math.cos(a)*.66,0);dialRunes.push({glyph,material:m});
+  }
+  const gate=mesh(geo(new THREE.BoxGeometry(.25,1.7,2.8)),wood,scene,27,.9,-14.5);gate.name='Tideworks sluice gate';
+  for(const x of [26.7,27.3])mesh(tapered(.2,2.6,.25,.8),stone,scene,x,.15,-14.5);
+  // Restored light follows the paths the explorer has actually made useful.
+  const conduitMat=basic('#c6ecc1',{transparent:true,opacity:.7,side:THREE.DoubleSide,depthWrite:false});
+  const archiveConduit=ribbon([[-29,10],[-19,13],[-8,16],[3,23],[15,26],[29,24],[31,21]],.065,conduitMat,scene);
+  const workshopConduit=ribbon([[30,20],[24,14],[25,3],[25,-8],[20,-10]],.07,conduitMat,scene);
+  const northConduit=ribbon([[20,-23],[18,-28],[10,-32],[2,-35]],.08,conduitMat,scene);
+  const homeConduit=ribbon([[20,-10],[20,6],[15,26],[5,31],[0,37]],.075,conduitMat,scene);
+  const pathBeacons=[];
+  for(const [x,z,site] of [[-19,13,'archive'],[3,23,'archive'],[25,3,'installed'],[20,-25,'bridge'],[10,-32,'bridge'],[5,31,'spire']]){
+    const g=group(scene,x,terrainHeight(x,z),z);mesh(tapered(.26,.8,.26,.65),darkStone,g);const lamp=mesh(geo(new THREE.OctahedronGeometry(.16,0)),mint,g,0,1,0);pathBeacons.push({lamp,site});addCull(g,48);
+  }
 
   // Spire: a broken observatory court and an animated three-ring armillary.
   const spire=group(scene,2,terrainHeight(2,-38),-38);addCull(spire,64);
@@ -229,9 +289,9 @@ export function createValley(canvas){
   const rainGeo=geo(new THREE.BoxGeometry(.025,.75,.025)),rainMat=basic('#d8e8d9',{transparent:true,opacity:.48}),rain=[];
   for(let i=0;i<(low?18:55);i++){const drop=mesh(rainGeo,rainMat,scene);drop.castShadow=false;drop.visible=false;rain.push({mesh:drop,x:rand()*25-12.5,z:rand()*25-12.5,phase:rand()*12});}
 
-  let lastWalk=0,look=new THREE.Vector3(0,1.8,35),camPosition=new THREE.Vector3(0,10,48),first=true;
+  let look=new THREE.Vector3(0,1.8,35),camPosition=new THREE.Vector3(0,10,48),first=true;
   function surface(s,x,z){
-    if(s.completed.bridge&&Math.abs(z+18)<4.2&&Math.abs(x-20)<3.4)return .92;
+    if(s.completed.bridge&&Math.abs(z+18)<4.2&&Math.abs(x-20)<BRIDGE_HALF_WIDTH)return .92;
     const ground=terrainHeight(x,z);
     if(Math.hypot(x+31,z+1)<10.5)return Math.max(ground,terrainHeight(-31,2)+.3);
     if(Math.hypot(x-2,z+38)<10.5)return Math.max(ground,terrainHeight(2,-38)+.3);
@@ -240,7 +300,11 @@ export function createValley(canvas){
   function attachActors(s){
     for(const e of s.enemies)if(!enemyVisuals.has(e.id)){
       const v=guardian(scene,e.type);enemyVisuals.set(e.id,v);
-      const warning=mesh(ringGeo,warningMat,scene);warning.rotation.x=-Math.PI/2;warning.castShadow=false;warnings.set(e.id,warning);
+      v.root.name=e.id;
+      const warning=mesh(ringGeo,warningMat,scene);warning.rotation.x=-Math.PI/2;warning.castShadow=false;
+      let lane=null;
+      if(e.type==='warden'){lane=mesh(geo(new THREE.BoxGeometry(3.2,.035,1)),basic('#f5b460',{transparent:true,opacity:.28,depthWrite:false}),scene);lane.castShadow=false;lane.name='Warden locked charge lane';}
+      warnings.set(e.id,{ring:warning,lane});
     }
     for(const c of s.crates)if(!crateVisuals.has(c.id)){
       const g=group(scene,c.x,terrainHeight(c.x,c.z),c.z);const box=mesh(geo(new THREE.BoxGeometry(1.65,1.45,1.65)),wood,g,0,.75,0);
@@ -253,21 +317,42 @@ export function createValley(canvas){
     attachActors(s);const t=s.weatherTime,weather=weatherAt(t),reduced=!!view.reducedMotion,p=s.player;
     player.root.position.set(p.x,surface(s,p.x,p.z),p.z);player.root.rotation.y=p.facing;
     playerShadow.position.set(p.x,surface(s,p.x,p.z)+.025,p.z);playerShadow.visible=low&&s.mode!=='menu';
-    const moving=Math.abs(p.walk-lastWalk)>.0001;lastWalk=p.walk;const stride=moving?Math.sin(p.walk*1.65):0;
+    const moving=!!p.moving,stride=moving?Math.sin(p.walk*1.65):0;
     player.torso.position.y=1.1+(moving&&!reduced?Math.abs(stride)*.055:0);
     for(const l of player.limbs){l.leg.rotation.x=stride*l.side*.48;l.shin.rotation.x=Math.max(0,-stride*l.side)*.4;l.arm.rotation.x=-stride*l.side*.35;l.fore.rotation.x=-.2;if(l.side===1&&p.pulseCooldown>.16){l.arm.rotation.x=-1.1;l.fore.rotation.x=-.25;}}
     player.scarfTail.rotation.x=reduced?.12:.1+Math.sin(t*2)*.15+weather.wind*.15;player.head.rotation.y=.06*Math.sin(t*.6);
     player.root.visible=s.mode!=='menu'||!view.title;
     if(p.invulnerable>0){player.lantern.material.emissiveIntensity=1.5;}else player.lantern.material.emissiveIntensity=.3;
     for(const r of runeMeshes){const done=s.completed.archive||s.sequence.slice(0,s.archiveStep).includes(r.rune);r.orb.rotation.y=t*.5;r.orb.position.y=3+(reduced?0:Math.sin(t*1.2)*.1);r.material.emissiveIntensity=done?.9:.13;r.ring.rotation.z=t*.12;r.ring.visible=done;}
-    bridge.visible=s.completed.bridge;brokenBridge.visible=!s.completed.bridge;repairWheel.children[1].rotation.z=s.completed.bridge?Math.PI/3:0;
+    const works=s.tideworks,progress=s.completed.bridge?1:works.deployment,eased=progress*progress*(3-2*progress);
+    for(const {leaf,shore} of bridgeLeaves)leaf.rotation.x=shore*1.22*(1-eased);
+    workParts.visible=!works.installed;benchBeacon.visible=s.completed.archive;
+    weight.visible=cable.visible=works.installed;weight.position.y=3.25-eased*2.5;
+    const cableLength=4.55-(weight.position.y+.95);cable.scale.y=Math.max(.08,cableLength);cable.position.y=4.55-cableLength/2;
+    winchHandle.rotation.z=progress*TAU*1.3;wheelRoot.rotation.z=reduced?0:-works.flowTime*1.2;
+    const flowAligned=works.installed&&RUNES[works.setting]?.id===s.sequence[0];gate.position.y=flowAligned?2.1:.9;
+    dialPointer.rotation.z=works.setting<0?Math.PI/3:-works.setting/3*TAU;
+    dialRunes.forEach((r,i)=>{r.material.emissiveIntensity=works.setting===i?.8:.08;r.glyph.scale.setScalar(works.setting===i?1.2:1);});
+    archiveConduit.visible=s.completed.archive;workshopConduit.visible=works.installed;northConduit.visible=s.completed.bridge;homeConduit.visible=s.completed.spire;
+    for(const b of pathBeacons)b.lamp.visible=b.site==='installed'?works.installed:!!s.completed[b.site];
     for(let i=0;i<rings.length;i++)if(!reduced){rings[i].rotation.x=i*.9+t*(s.completed.spire?.16:.04)*(i%2?1:-1);rings[i].rotation.y=.4+i*.7+t*.08;}
     heart.rotation.y=t*.45;heart.scale.setScalar(s.completed.spire?1.2:1);spireHalo.visible=s.completed.spire;homeLight.material.opacity=s.completed.spire?.16:.045;
     for(const e of s.enemies){
       const v=enemyVisuals.get(e.id),near=Math.hypot(e.x-p.x,e.z-p.z)<(low?42:65);v.root.visible=e.hp>0&&near;
-      if(e.hp>0){v.root.position.set(e.x,surface(s,e.x,e.z)+.2,e.z);v.root.rotation.y=e.facing;const step=(e.phase==='chase'||e.phase==='patrol')?Math.sin(t*5+e.maxHp)*.22:0;v.legs[0].rotation.x=step;v.legs[1].rotation.x=-step;v.arms[0].rotation.x=e.phase==='windup'?-1.2:step;v.arms[1].rotation.x=e.phase==='windup'?-1.2:-step;v.body.rotation.z=e.phase==='windup'?.06*Math.sin(t*14):0;v.stone.emissive.set(e.hitFlash>0?'#bbdfb9':'#000000');v.stone.emissiveIntensity=e.hitFlash>0?.8:0;v.health.rotation.y=(view.yaw??0)-e.facing;v.healthFill.scale.x=e.hp/e.maxHp;v.healthFill.position.x=-(1-e.hp/e.maxHp)*.5;v.health.visible=Math.hypot(e.x-p.x,e.z-p.z)<18;}
-      const warning=warnings.get(e.id);warning.visible=e.phase==='windup'&&e.hp>0&&near;
-      if(warning.visible){const q=e.target,r=e.type==='warden'?3.6:e.type==='sentinel'?1.05:2.5;warning.position.set(q.x,surface(s,q.x,q.z)+.12,q.z);warning.scale.setScalar(r*(.65+.35*clamp(e.clock/e.windup,0,1)));}
+      if(e.hp>0){
+        v.root.position.set(e.x,surface(s,e.x,e.z)+.2,e.z);v.root.rotation.y=e.facing;
+        const stride=e.moving?Math.sin(e.walk*2)*.24:0,exposed=e.type==='warden'&&e.phase==='recover'&&e.exposed;
+        v.legs[0].rotation.x=stride;v.legs[1].rotation.x=-stride;
+        v.arms[0].rotation.x=e.phase==='windup'?-1.2:exposed?.65:stride;v.arms[1].rotation.x=e.phase==='windup'?-1.2:exposed?.65:-stride;
+        v.body.rotation.z=e.phase==='windup'&&!reduced?.045*Math.sin(t*12):0;v.body.rotation.x=e.phase==='charge'?.28:exposed?.13:0;
+        v.stone.emissive.set(e.hitFlash>0?'#bbdfb9':e.guardFlash>0?'#a87932':'#000000');v.stone.emissiveIntensity=e.hitFlash>0?.8:e.guardFlash>0?.45:0;
+        for(let i=0;i<v.guardPlates.length;i++){const plate=v.guardPlates[i],side=i?1:-1;plate.position.x=side*(exposed?.66:.23);plate.rotation.z=side*(exposed?.75:-.12);}
+        v.core.scale.setScalar(exposed?1.45:1);v.glow.color.set(exposed?'#b9f5d6':'#f4c16a');v.glow.emissive.set(exposed?'#58cfa8':'#dc7a36');
+        v.health.rotation.y=(view.yaw??0)-e.facing;v.healthFill.scale.x=e.hp/e.maxHp;v.healthFill.position.x=-(1-e.hp/e.maxHp)*.5;v.health.visible=Math.hypot(e.x-p.x,e.z-p.z)<18;
+      }
+      const warning=warnings.get(e.id),visible=e.phase==='windup'&&e.hp>0&&near;warning.ring.visible=visible;
+      if(visible){const q=e.target,r=e.type==='warden'?1.65:e.type==='sentinel'?1.05:2.5;warning.ring.position.set(q.x,surface(s,q.x,q.z)+.12,q.z);warning.ring.scale.setScalar(r*(reduced?1:.65+.35*clamp(e.clock/e.windup,0,1)));}
+      if(warning.lane){warning.lane.visible=visible;if(visible){const a=e.chargeStart,b=e.target,length=Math.hypot(b.x-a.x,b.z-a.z);warning.lane.position.set((a.x+b.x)/2,surface(s,(a.x+b.x)/2,(a.z+b.z)/2)+.1,(a.z+b.z)/2);warning.lane.rotation.y=Math.atan2(b.x-a.x,b.z-a.z);warning.lane.scale.z=length;}}
     }
     for(const c of s.crates){const v=crateVisuals.get(c.id),near=Math.hypot(c.x-p.x,c.z-p.z)<(low?39:65);v.root.visible=c.hp>0&&near;v.root.rotation.z=c.hitFlash>0?Math.sin(c.hitFlash*80)*.035:0;v.salvage.visible=c.hp===0&&!c.collected&&near;v.salvage.rotation.y=t*1.2;v.salvage.position.y=terrainHeight(c.x,c.z)+.85+(reduced?0:Math.sin(t*2+c.id)*.15);}
     for(let i=0;i<s.effects.length;i++){

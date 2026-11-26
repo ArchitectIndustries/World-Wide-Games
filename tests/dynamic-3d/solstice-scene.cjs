@@ -44,7 +44,7 @@ test('spawn camera remains unobstructed at its preferred yaw and when orbiting b
 
 test('camera clears terrain, archive masonry, workshop and tree canopy across orbit directions',async()=>{
   const {THREE,valley,model}=await fixture,state=model.createExpedition(7331);
-  const sites=[['archive',-31,9],['workshop',28,20],['spire',2,-33],['coastal tree',13,45]];
+  const sites=[['archive',-31,9],['workshop',28,20],['counterweight bench',31,22],['sluice',25,-5.8],['winch',20,-10],['spire',2,-33],['coastal tree',13,45]];
   for(const [name,x,z]of sites){
     state.player.x=x;state.player.z=z;
     for(const yaw of [0,.75,Math.PI,-1.4]){
@@ -58,12 +58,25 @@ test('camera clears terrain, archive masonry, workshop and tree canopy across or
 test('software scene stays within its visible mesh budget at representative route locations',async()=>{
   const {valley,model}=await fixture,state=model.createExpedition(7331);state.weatherTime=80;
   assert.equal(valley.renderer.mode,'software');
-  for(const [x,z]of[[0,35],[-31,9],[30,23],[20,-10],[2,-33]]){
-    state.player.x=x;state.player.z=z;valley.update(state,1/30,{yaw:-.44,pitch:.57,snap:true});
-    const triangles=valley.renderer.info.render.triangles;
-    assert.ok(triangles>200,`Expected a visible 3D world at ${x},${z}`);
-    assert.ok(triangles<=3000,`Software geometry budget exceeded at ${x},${z}: ${triangles}`);
+  for(const [w,h]of[[1000,600],[1320,720]]){
+    valley.resize(w,h);
+    for(const [x,z]of[[0,35],[-31,9],[30,23],[31,22],[25,-5.8],[20,-10],[2,-33]]){
+      state.player.x=x;state.player.z=z;valley.update(state,1/30,{yaw:-.44,pitch:.57,snap:true});
+      const triangles=valley.renderer.info.render.triangles;
+      assert.ok(triangles>200,`Expected a visible 3D world at ${x},${z}`);
+      assert.ok(triangles<=3000,`Software geometry budget exceeded at ${x},${z}, ${w}x${h}: ${triangles}`);
+    }
   }
+});
+
+test('bridge leaves, counterweight and collision agree through deployment, pause and lock',async()=>{
+  const {valley,model}=await fixture,state=model.createExpedition(7331);state.completed.archive=true;state.archiveRead=true;state.archiveStep=3;
+  Object.assign(state.tideworks,{installed:true,setting:model.RUNES.findIndex(r=>r.id===state.sequence[0]),phase:'lowering'});state.player.x=20;state.player.z=-10;
+  valley.update(state,1/30,{yaw:-.44,pitch:.57,snap:true});const south=valley.scene.getObjectByName('South bridge leaf'),north=valley.scene.getObjectByName('North bridge leaf'),weight=valley.scene.getObjectByName('Tideworks counterweight'),wheel=valley.scene.getObjectByName('Tideworks waterwheel');
+  assert.ok(south.rotation.x>1.2&&north.rotation.x< -1.2);const highWeight=weight.position.y;
+  for(let i=0;i<108;i++)model.stepExpedition(state,{},1/60);valley.update(state,1/30,{yaw:-.44,pitch:.57,snap:true});assert.ok(Math.abs(south.rotation.x-.61)<.015);assert.equal(model.canOccupy(state,20,-18),false);assert.ok(weight.position.y<highWeight);
+  const angles=[south.rotation.x,north.rotation.x,weight.position.y,wheel.rotation.z];model.setPaused(state,true);model.stepExpedition(state,{},.25);valley.update(state,.25,{yaw:-.44,pitch:.57,snap:true});assert.deepEqual([south.rotation.x,north.rotation.x,weight.position.y,wheel.rotation.z],angles);model.setPaused(state,false);
+  for(let i=0;i<110;i++)model.stepExpedition(state,{},1/60);valley.update(state,1/30,{yaw:-.44,pitch:.57,snap:true,reducedMotion:true});assert.equal(south.rotation.x,0);assert.equal(Math.abs(north.rotation.x),0);assert.equal(model.canOccupy(state,20,-18),true);assert.equal(wheel.rotation.z,0);
 });
 
 test('software ocean cannot overpaint the inland traversal surface',async()=>{

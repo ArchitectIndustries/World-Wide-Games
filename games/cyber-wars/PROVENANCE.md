@@ -1,4 +1,54 @@
-# Cyber Wars 0.65 — Viridia visual world, November 26, 2026
+# Cyber Wars 0.66 — Canopy Archive, November 26, 2026
+
+This update makes the existing Canopy Archive usable: the archivist opens a
+catalogue, three books sit on lecterns mounted to the existing solid posts,
+and a native reader provides reading navigation, adjustable type and a clean
+return to the field. The existing Pilot manual remains a separate action with
+its original study and rank requirements.
+
+The creator authorized these three selected readings from the current Core
+`LIBRARY_COLLECTION.md`: **The Lake Beneath the Library** by Ilex,
+**The Beetle That Kept Time** by The Viridian field circle, and
+**The Hundred-Credit Roof** by The Commons Exchange. Their text is preserved
+from Core commit `c3f8c5055a7f0087c382b226c6d58905ad3f03e3`, collection blob
+`36da1e827fb48c6cd66e880c3695533914285bac`. The complete library and private
+design documents are not included. The creator's underlying Cyber Wars rights
+remain in force; importing these selected works does not relicense them.
+
+The reader, lecterns, book geometry, attending poses and state-derived district
+effects are original local implementation. Recovered-core lights, restored
+obelisk rings, the cleared ruin and the recorded-home light reflect existing
+gameplay flags. Reading grants no currency, skill rank, license or strategic
+save. No new paid service, runtime host or external asset is introduced.
+
+The steward briefing now pauses through a native dialog, with explicit focus
+and held-input boundaries. This fixes the reproduced case where P resumed
+movement behind a visible briefing. Solar Obelisks also have explicit objective
+names instead of an undefined compass label.
+
+Background controller sampling cannot activate or dismiss a modal. Returning
+from blur or a hidden page requires neutral input, including a suspension with
+no background animation frames. A persisted browser-history return recreates
+only the same-origin local presence channel, once; it does not automatically
+join an optional Internet relay or change gameplay authority.
+
+The focused runner passes 29 entries, including 18 new archive/briefing cases
+and seven lifecycle cases.
+The paired comparison against published v498 commit
+`e08e18a641dde60183f01737ba3fa50b732e10a5` matches eight gameplay states,
+the actual collision maps and the serialized owned-home checkpoint bytes.
+The original ten-rank Pilot/license gate and exact economy are retained.
+The source authority, detailed checks and their browser/hardware limitations
+are documented in [the upgrade record](../../docs/Cyber-Wars-visual-upgrade.md).
+
+The release coordinator also verified normal archive navigation in Chrome's
+software 3D path at 1322 × 737: the physical lectern and archivist, all three
+readings, type sizing, Pilot manual handoff and explicit Rank 1 study, with
+credits remaining 21.000. Native briefing/reader close and focus behavior
+were exercised. This is bounded interaction evidence, not a complete campaign,
+home-save playthrough or physical-controller performance qualification.
+
+## Prior release: Cyber Wars 0.65 — Viridia visual world
 
 The published 0.64 gameplay receives an original local mesh/material adapter
 and a read-only Viridia presentation layer. Rounded forest vegetation, curved

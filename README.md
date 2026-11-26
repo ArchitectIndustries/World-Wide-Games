@@ -2,17 +2,18 @@
 
 Original, instant-play browser games by **Architect Industries**.
 
-## Current source release: v498 — Dynamic 3D Worlds
+## Current source release: v499 — Worlds in Motion
 
-November 26, 2026. **92 games, 136 genre tags.** The complete 91-game v497 catalog is retained, with a new exploration game and substantial upgrades to two existing 3D worlds.
+November 26, 2026. **92 games, 136 genre tags.** This release retains the full v498 catalog and deepens three existing 3D worlds.
 
-- **Solstice Wilds 1.0** is a new third-person coastal expedition. Read the Archive's rune sequence, recover workshop salvage, repair the river crossing, defeat the Spire's guardians and return the restored light to the Dawn Lighthouse. Weather, an orbit camera, articulated characters and checkpoints connect the route. Continued or retried expeditions remain unranked practice.
-- **Aegis Verge 3.0 — Industrial Frontiers** places its three-operation vehicle campaign among sculpted basins, causeways, working cranes, reactors and monumental arrays. Installations react to actual mission state. The latest F3D96 Signal Forge presentation is also integrated, retaining the uplink's 30-energy, six-second, single-use rules. A compact combat HUD keeps the world visible while a paused guide retains detailed systems and controls.
-- **Cyber Wars 0.65** gives Viridia rounded forest canopies, curved stone gateways, open archive galleries, richer inhabitants, and simulation-driven sky, rain and river surfaces. Its compact HUD and paused Field Guide retain every original status field and full controls. Missions, collision, the exact economy, ten-rank Pilot progression and owned-home checkpoints remain intact.
+- **Solstice Wilds 1.1 — Working Tideworks:** recover four real salvage parts, install the workshop counterweight, align the sluice with the Archive’s first rune, and operate the winch. Both bridge leaves lower over active simulation time and become traversable only when locked. The Spire warden guards its core until a missed charge opens a damage window. Controller menus, old checkpoint compatibility and browser-history restoration are covered.
+- **Aegis Verge 3.1 — Articulated Combat Rigs:** the Vesper and four hostile classes use original sculpted hulls, weapon assemblies, traction belts, wheels, canopies and material separation. Actual movement, steering and weapon states drive the poses. The exact F3D97 pointer-release fix and a separate stale-keyboard-repeat repair prevent abandoned holds from reviving after interruption.
+- **Cyber Wars 0.66 — Canopy Archive:** an approachable archivist and three physical lecterns open selected original Core readings. The existing Pilot manual remains a separate practical skill path. Briefings now focus their Continue control and close before field input resumes. Named obelisk objectives, state-derived district changes, focus-safe controller menus and local co-presence restoration complete the update.
+- **More room to play:** the three worlds default to an expanded desktop play area. Standard view, Game info and Back to game preserve the running iframe. Fullscreen refusal falls back to expanded view. Visible-page playtime excludes background intervals and retains fractional time across lifecycle events; reduced-motion navigation stays immediate.
 
-These games use actual 3D geometry with bounded software fallback paths. The new Solstice renderer uses self-hosted Three.js r187 and licensed material resources. Aegis and Cyber Wars retain their original engine with game-local mesh and material extensions.
+These are actual geometry and gameplay changes. Solstice uses the self-hosted Three.js foundation; Aegis and Cyber Wars use game-local mesh extensions to their established engine. The broader seven-world Cyber Wars RPG and final production graphics remain a continuing project.
 
-**Source status: `VALIDATED_RELEASE_SOURCE`.** Automated release, gameplay, asset and cache checks have passed. Desktop Chrome checks also exercised all three worlds, including Solstice’s Archive puzzle and checkpoint restoration. See [TEST_REPORT.md](TEST_REPORT.md) for the observed scope. Production publication is verified separately through the live release receipt.
+**Source status: `VALIDATED_RELEASE_SOURCE`.** Release, gameplay, asset, cache and platform checks pass. Chrome playthroughs exercised the new Tideworks sequence and warden exposure, Aegis driving/firing/focus, and the physical Canopy Archive with reading and deliberate Pilot study. Exact scope and software-rendering limitations are recorded in [TEST_REPORT.md](TEST_REPORT.md). Production identity is verified separately through the live receipt.
 
 ## Play and verify publication
 
@@ -30,6 +31,7 @@ npm run build
 npm run test:release
 npm run test:assets
 npm run test:3d
+npm run test:player
 npm run test:arcade
 node tests/recovery_b2_profile_storage.cjs
 node tests/recovery-specialist/integration.cjs
@@ -40,9 +42,9 @@ A clean build needs access to those official resource providers. Published games
 
 The build writes **dist/** and includes only public game/runtime files and required notices. Tests, source history, internal records and optional relay service code remain outside public output. The source repository retains the original first-party code, resource download/verification logic, pinned manifest, licenses and provenance. Third-party asset bytes are recovered from their verified official sources during the build.
 
-When changing runtime files, run `node tools/build-public.mjs --update-cache` to refresh the source worker inventory. Each build independently regenerates the published inventory and uses a content-derived name such as `wwg-v498-<12 hex characters>`, so a changed runtime receives a new cache namespace.
+When changing runtime files, run `node tools/build-public.mjs --update-cache` to refresh the source worker inventory. Each build independently regenerates the published inventory and uses a content-derived name such as `wwg-v499-<12 hex characters>`, so a changed runtime receives a new cache namespace.
 
-The Cyber Wars comparison tests require the published v497 Git object. A source-only checkout may provide its verified executable through `CW_BASELINE_HTML` instead.
+The Cyber Wars comparison tests require the published v498 Git object. A source-only checkout may provide its verified executable through `CW_BASELINE_HTML` instead.
 
 ## Preserved recovery history and validation
 

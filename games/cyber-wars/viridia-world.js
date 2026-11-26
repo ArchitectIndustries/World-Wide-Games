@@ -1,4 +1,4 @@
-/* Cyber Wars 0.65: Viridia's original visual district.
+/* Cyber Wars 0.66: Viridia's original visual district.
  * Read-only adapters consume simulation positions, weather and ownership.
  * Existing solid footprints and interaction locations remain authoritative.
  */
@@ -17,6 +17,9 @@ function waterSample(x,z,time,rain=0,reduced=false){
 function actorPose(distance,kind='resident',reduced=false,crouched=false){
  const stride=reduced?0:Math.sin(distance*3.4),moving=Math.abs(distance)>1e-5;
  return {stride:stride*(kind==='fauna'?.42:.38),hip:crouched?1.05:1.24,shoulder:crouched?1.64:1.97,head:crouched?2.10:2.56,moving};
+}
+function districtMilestones(frame){
+ return {cores:clamp(Math.floor(frame.cores||0),0,3),restored:(frame.obelisks||[]).filter(Boolean).length,quiet:!!frame.bossDefeated,homeRecorded:!!frame.ownsHome&&!!frame.sliceComplete};
 }
 function build({seed=1,objects=[],solids=[],interactables=[]}={}){
  const random=rng(seed^0x65f013),covered=new WeakSet(),staticMeshes=[],water=[],motion=new Map();
@@ -86,6 +89,19 @@ function build({seed=1,objects=[],solids=[],interactables=[]}={}){
  }
  dot(-29,4.2,-5.7,3.6,.40,.15,'#49614b',{surface:4});
  for(let i=0;i<5;i++)dot(-30.2+i*.6,4.24,-5.59,.15,.16,.05,'#d9dfb0',{em:.35});
+ // Three readable volumes sit on lecterns bracketed to existing archive
+ // columns. Their supports add no floor obstacle or invisible collision wall.
+ for(const book of interactables.filter(o=>o.kind==='archive-book')){
+  const {x,z}=book,col=book.color||'#9caf83';
+  dot(x,1.08,z-.29,.28,.45,.38,'#857458',{surface:4,pitch:-.32,detail:'lectern'});
+  dot(x,1.28,z,.99,.11,.78,'#a3926b',{surface:4,pitch:-.18,detail:'lectern'});
+  for(const side of [-1,1]){
+   dot(x+side*.22,1.39,z,.44,.07,.64,col,{roll:side*.09,pitch:-.18,surface:4,detail:'archive-book'});
+   dot(x+side*.21,1.435,z+.015,.39,.025,.57,'#d6d6ae',{roll:side*.09,pitch:-.18,surface:4,detail:'archive-page'});
+   for(let line=0;line<3;line++)dot(x+side*.21,1.46,z-.16+line*.12,.27,.012,.016,'#7b8b69',{roll:side*.09,pitch:-.18,detail:'archive-script'});
+  }
+  put('column',x,1.53,z-.26,.055,.22,.055,'#b4be8d',{em:.25,detail:'archive-book'});
+ }
  // The eight existing training interactions keep their exact positions and
  // logic. Compact instruments and open diagrams replace the old opaque boxes;
  // these are stationary practice displays, never usable vehicles or licenses.
@@ -173,6 +189,30 @@ function build({seed=1,objects=[],solids=[],interactables=[]}={}){
   }
   for(const o of water){if(!visible(o,eye,forward,low))continue;const sample=waterSample(o.x,o.z,time,rain,frame.reduced);rows.push({...o,y:sample.height,color:rain>.45?'#2c6463':'#2c7a70'});}
   stats.visible=rows.length;stats.culled=staticMeshes.length+water.length-rows.length;engine.viridiaBatch(rows);
+  // Observable consequences consume existing mission flags, never grant them.
+  const milestone=districtMilestones(frame),effects=[];
+  const effect=(shape,x,y,z,sx,sy,sz,color,extra={})=>effects.push({shape,x,y,z,sx,sy,sz,color,em:0,surface:3,...extra});
+  for(let i=0;i<3;i++){
+   effect('orb',-1.7+i*1.7,2.88,8,.30,.34,.30,i<milestone.cores?'#d6e5ac':'#536751',{em:i<milestone.cores?.65:.05,detail:'core-memory'});
+   const o=[{x:-24,z:22},{x:24,z:24},{x:0,z:-18}][i],on=!!frame.obelisks?.[i];
+   if(Math.hypot(o.x-eye.x,o.z-eye.z)<(low?48:90)){
+    for(let k=0;k<4;k++){const a=k*TAU/4+(on&&!frame.reduced?time*.10:0),reach=on?1.25:.65;effect('leaf',o.x+Math.sin(a)*reach,on?8.35:7.9,o.z+Math.cos(a)*reach,.45,.30,on?1.4:.78,on?'#c9e5a6':'#778c6c',{yaw:a,pitch:on?-.15:-.72,em:on?.24:.04});}
+   }
+   if(on){
+    // Shallow inlaid light makes the restored network legible without creating
+    // a new route, solid, vehicle, collision or damage source.
+    const dx=-o.x,dz=29-o.z,len=Math.hypot(dx,dz),yaw=Math.atan2(dx,dz),steps=Math.ceil(len/4);
+    for(let k=0;k<steps;k++){const t=(k+.5)/steps;effect('box',o.x+dx*t,-.008,o.z+dz*t,.10,.012,len/steps*.70,'#a8c38b',{yaw,em:.16,detail:'solar-conduit'});}
+    const x=(i-1)*4,y=9.5,z=29,spin=frame.reduced?i*.4:time*.15+i*.4;
+    effect('arch',x,y,z,2.1,2.1,.85,'#bed59d',{yaw:spin,em:.2,detail:'solar-ring'});effect('arch',x,y,z,2.1,2.1,.85,'#bed59d',{yaw:spin,roll:Math.PI,em:.2,detail:'solar-ring'});
+   }
+  }
+  if(milestone.quiet)for(let i=0;i<6;i++){const a=i*TAU/6;effect('leaf',Math.cos(a)*4.6,.10,-39+Math.sin(a)*3.9,.6,.08,1.5,'#b6cbb0',{yaw:a,em:.08,detail:'quiet-ruin'});}
+  if(milestone.homeRecorded)effect('orb',27,3.6,-21.2,.50,.62,.50,'#f1dca1',{em:.62,detail:'recorded-home'});
+  const focus=frame.focus;if(focus&&['archivist','archive-book','manual','steward','home','obelisk'].includes(focus.kind)){
+   for(let i=0;i<8;i++){const a=i*TAU/8;effect('box',focus.x+Math.sin(a)*.88,.025,focus.z+Math.cos(a)*.88,.12,.025,.28,'#e4d49f',{yaw:a,em:.45,detail:'interaction-focus'});}
+  }
+  if(effects.length)engine.viridiaBatch(effects);
   // Small, bounded fireflies at dusk. They never stand in for observed wildlife.
   if(frame.day<.50&&!frame.reduced)for(let i=0;i<9;i++){
    const x=-18+Math.sin(i*2.1)*13,z=19+Math.cos(i*1.7)*7;
@@ -186,9 +226,9 @@ function build({seed=1,objects=[],solids=[],interactables=[]}={}){
   if(motion.size>64)motion.delete(motion.keys().next().value);
   const p=actorPose(m.distance,kind,reduced,crouched);p.stride*=step>.0001?1:0;return p;
  }
- function person(engine,{id='resident',x,z,yaw=0,color='#a8c59c',reduced=false,crouched=false}){
+ function person(engine,{id='resident',x,z,yaw=0,color='#a8c59c',reduced=false,crouched=false,time=0,attending=false,mission=0}){
   if(!engine.viridiaMesh)return false;
-  const p=pose(id,x,z,reduced,'resident',crouched),parts=[],co=Math.cos(yaw),si=Math.sin(yaw);
+  const p=pose(id,x,z,reduced,'resident',crouched),civic=id==='steward'||id==='archivist',breath=civic&&!reduced?Math.sin(time*1.7)*.025:0,parts=[],co=Math.cos(yaw),si=Math.sin(yaw);p.shoulder+=breath;p.head+=breath;
   const add=(shape,lx,y,lz,sx,sy,sz,col,extra={})=>parts.push({shape,x:x+lx*co+lz*si,y,z:z-lx*si+lz*co,sx,sy,sz,color:col,yaw,em:0,...extra});
   const limb=(a,b,width,col)=>{const dx=b[0]-a[0],dy=b[1]-a[1],dz=b[2]-a[2],len=Math.hypot(dx,dy,dz);add('column',(a[0]+b[0])*.5,(a[1]+b[1])*.5,(a[2]+b[2])*.5,width,len,width,col,{yaw:yaw+Math.atan2(dx,dz),pitch:Math.atan2(Math.hypot(dx,dz),dy),surface:4});};
   add('orb',0,p.hip,0,.73,.50,.48,'#46513b',{surface:4});add('trunk',0,(p.hip+p.shoulder)*.5,0,.91,p.shoulder-p.hip+.17,.57,color,{surface:4});
@@ -197,8 +237,13 @@ function build({seed=1,objects=[],solids=[],interactables=[]}={}){
   for(const side of [-1,1]){
    const hip=[side*.22,p.hip-.1,0],knee=[side*.24,.63,side*p.stride],foot=[side*.24,.14,-side*p.stride*.85];
    limb(hip,knee,.24,'#52614a');limb(knee,foot,.20,'#4b5744');add('rock',foot[0],.12,foot[2]+.10,.29,.23,.48,'#414636');
-   const shoulder=[side*.47,p.shoulder-.05,0],elbow=[side*.53,p.shoulder-.43,-side*p.stride*.45],hand=[side*.51,p.shoulder-.82,-side*p.stride*.75];
+   const shoulder=[side*.47,p.shoulder-.05,0],elbow=civic?[side*.50,p.shoulder-.33,.16]:[side*.53,p.shoulder-.43,-side*p.stride*.45],hand=civic?[side*.32,p.shoulder-(attending?.27:.47),.43]:[side*.51,p.shoulder-.82,-side*p.stride*.75];
    add('orb',shoulder[0],shoulder[1],0,.31,.36,.33,color,{surface:4});limb(shoulder,elbow,.19,color);limb(elbow,hand,.16,'#60755a');add('orb',hand[0],hand[1],hand[2],.18,.22,.18,'#b8a282');
+  }
+  if(civic){
+   add('leaf',0,1.30,-.29,.88,1.5,1.15,id==='archivist'?'#8c8b65':'#658664',{pitch:.24,surface:4});
+   const bookY=p.shoulder-(attending?.28:.47),cover=id==='archivist'?'#c6b47d':mission>=2?'#abc896':'#7caa8d';
+   for(const side of [-1,1]){add('box',side*.21,bookY,.46,.42,.07,.47,cover,{roll:side*.12,pitch:-.30,surface:4});add('box',side*.20,bookY+.055,.46,.36,.025,.40,'#d4d3b3',{roll:side*.12,pitch:-.30,surface:4});}
   }
   add('box',0,p.shoulder-.25,.30,.34,.08,.03,'#c2d5a0',{em:.22,surface:3});engine.viridiaBatch(parts);return true;
  }
@@ -238,5 +283,5 @@ function build({seed=1,objects=[],solids=[],interactables=[]}={}){
  stats.staticMeshes=staticMeshes.length;
  return {skip:o=>covered.has(o),render,person,home,fauna,sentinel,stats:()=>({...stats}),inspect:()=>({meshes:staticMeshes.map(o=>({...o})),water:water.map(o=>({...o}))})};
 }
-const api={atmosphere,waterSample,actorPose,build};root.CWViridia=api;if(typeof module==='object'&&module.exports)module.exports=api;
+const api={atmosphere,waterSample,actorPose,districtMilestones,build};root.CWViridia=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

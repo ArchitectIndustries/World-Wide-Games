@@ -70,6 +70,7 @@ function parts(vehicle,rig,opts={}){
 }
 function render(engine,vehicle,rig,opts={}){
  const a=Number(vehicle.yaw)||0,co=Math.cos(a),si=Math.sin(a),list=parts(vehicle,rig,opts);
+ if(root.AegisCombatRigs&&typeof engine.mesh==='function')return root.AegisCombatRigs.player(engine,vehicle,rig,opts,list);
  for(const v of list){
   const x=vehicle.x+co*v.r+si*v.f,z=vehicle.z-si*v.r+co*v.f;
   const shape=({keel:"hull","top-armor":"hull","fore-wedge":"hull",cockpit:"canopy","pod-armor":"runner"})[v.name];

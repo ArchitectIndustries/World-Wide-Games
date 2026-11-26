@@ -51,6 +51,14 @@ function install(buttons, onHold, onActivate){
   node.addEventListener('blur',()=>{if(keyboard.delete(action))state();});
  }
  if(!nodes.has('fire')||!nodes.has('shield'))return null;
+ // A failed capture must not keep firing/shielding after an outside release.
+ // Do not touch keyboard holds or any other pointer's ownership.
+ const doc=nodes.get('fire').ownerDocument;
+ if(doc&&typeof doc.addEventListener==='function'){
+  for(const kind of ['pointerup','pointercancel','lostpointercapture'])doc.addEventListener(kind,e=>stop(e.pointerId),true);
+  doc.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'&&Number.isInteger(e.buttons)&&!(e.buttons&1))stop(e.pointerId);},true);
+  doc.addEventListener('pointerout',e=>{if(e.relatedTarget===null)stop(e.pointerId);},true);
+ }
  function reset(){sources.clear();keyboard.clear();state();}
  state();
  return Object.freeze({reset});
