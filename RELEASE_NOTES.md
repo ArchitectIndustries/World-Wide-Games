@@ -195,3 +195,8 @@ Verified v57 source commit: `2ad2ef9d7eb04334afe21c4e165a02816652672f` on `relea
 ### Release gate status
 
 v56 is verified and staged but not fully shipped. The complete lineage is preserved on recovery branch `release/v56-staged` at `425a6d4011c668284029e2b76dc783594841c464`. The required non-force canonical `main` promotion remains blocked before acceptance, so Vercel production remains v55; no force update or duplicate Vercel project was attempted. The v56 source and records archives are persisted in `/WorldWideGames`.
+
+## Dynamic Campaigns candidate — November 26, 2026
+- Added Stormwake Rescue and Iron Meridian, original three-operation campaigns with separate simulation loops, touch and remappable keyboard controls, local records, original covers and completion event rules.
+- Added targeted launch-overlay and campaign regression tests; bumped the owned service-worker cache and versioned catalog/event-rule URLs.
+- Lattice Armada's preceding menu visibility hotfix remains included. Source integration is not proof of production publication. See docs/DYNAMIC_CAMPAIGNS_2026-11-26.md for test scope and limitations.

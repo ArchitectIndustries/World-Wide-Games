@@ -1,6 +1,11 @@
-const CACHE='wwg-v2026112503';
+const CACHE='wwg-v2026112601';
 const OWNED_CACHE=/^wwg-v[0-9]+$/;
 const ASSETS=[
+  "./assets/wwg-campaign.js",
+  "./covers/stormwake-rescue.svg",
+  "./games/stormwake-rescue/index.html",
+  "./covers/iron-meridian.svg",
+  "./games/iron-meridian/index.html",
   "./",
   "./index.html",
   "./game.html",
@@ -209,8 +214,8 @@ const ASSETS=[
   "./games/tabletop-commons/game.js",
   "./games/tabletop-commons/index.html",
   "./games/tabletop-commons/style.css",
-  "./js/games.js?v72",
-  "./js/event-rules.js?v72",
+  "./js/games.js?v2026112601",
+  "./js/event-rules.js?v2026112601",
   "./js/app.js?v72",
   "./js/game-page.js?v72"
 ];
