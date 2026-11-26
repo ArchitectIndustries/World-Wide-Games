@@ -98,4 +98,4 @@ An unreferenced forest-normal blob upload was in progress when the execution cel
 7. Re-read remote main, reconcile concurrent changes, publish the verified source to the existing repository/project only, and verify Vercel production.
 8. Check live release.json against the final commit, 92 entries, all public-file SHA-256 values, and actual game behavior.
 
-No billing change, duplicate hosting project, force push, account migration, canon retcon or production promotion was authorized or needed as part of this recovery record.
+No billing change, duplicate hosting project, force push, account migration, canon retcon or production promotion was performed by this recovery-record commit. The user's authorization to complete development and publish the verified update to the existing app remains in effect.
