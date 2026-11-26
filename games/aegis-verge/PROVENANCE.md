@@ -1,3 +1,36 @@
+## Aegis Verge 3.0 — Industrial Frontiers (November 26, 2026)
+
+Original Architect Industries procedural meshes, authored landscape composition,
+local material/atmosphere shaders and environmental animation in
+`environment-mesh.js` and `worldscape.js`. The existing CPU polygon renderer now
+accepts those meshes, and enemy armor uses the existing faceted mesh kit. No
+third-party art, meshes, textures, audio, runtime library or network dependency
+was added. The shared WorldWideGames engine is unchanged.
+
+The Aegis-local adapter seeds the shared cube VAO's enabled instance attributes
+with one inert 80-byte record before optional shader compilation. This repairs
+the inherited empty-buffer draw failure on batching-disabled drivers while
+preserving the original batch buffer sizing and shader-failure fallback.
+
+Sculpted basin terrain, a supported three-span causeway, crane, turbines,
+processing works, reactor and crown array provide distinct operation geometry.
+New above-ground installations remain outside the traversable square; floor and
+foundation geometry preserve the existing flat gameplay plane. Environmental
+power reads secured relays and animation reads simulation time. It has no save,
+collision, reward, enemy or navigation authority. See
+`docs/Aegis-3D-upgrade.md` for exact architecture, budgets and validation limits.
+
+### Recovered F3D96 — Signal Forge
+
+Selectively reconciled from `WorldWideGames_FLAGSHIP_F3D96_EXACT_F3D95_PATCH.zip`,
+SHA-256 `770bfc79ae0bf426ad62dec7403f04679e2586fdf5b5601a0507f1daa0cc1666`.
+`signal-uplink.js` is byte-identical to that patch, SHA-256
+`fd2b79821d6210f14a5b3b253616908059a5d15638fec5673de33b996a57c614`.
+Its original faceted pedestal, real 3.6-unit perimeter and readiness, energy,
+spent/jam, and accessible announcement cues are integrated. The original
+30-energy, six-second, single-use activation and all scoring/save rules remain.
+The patch's obsolete shared catalog, cache and project documents were excluded.
+
 ## Catalog recovery — November 26, 2026
 
 The existing F3D95 / Aegis Verge 2.95 game source was recovered from

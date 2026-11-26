@@ -22,6 +22,6 @@ assert.ok(html.includes('AegisFrameClock.elapsed(n,last)'));count++;
 assert.ok(html.includes('<script src="frame-clock.js"></script>'));count++;
 const sw=fs.readFileSync('sw.js','utf8');
 assert.ok(sw.includes('"./games/aegis-verge/frame-clock.js"'));count++;
-// Integrated catalog releases use wwg-vN; isolated flagship candidates may add -f3dN.
-assert.ok(/const CACHE='wwg-v[0-9]+(?:-f3d[0-9]+)?'/.test(sw));count++;
+// Integrated releases may fingerprint runtime content; retain both historical forms.
+assert.ok(/const CACHE='wwg-v[0-9]+(?:-f3d[0-9]+|-[a-f0-9]{12})?'/.test(sw));count++;
 console.log('F3D80 frame timing '+count+'/'+count+' assertions PASS');

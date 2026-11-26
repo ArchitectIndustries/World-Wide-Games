@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="800" viewBox="0 0 1280 800" role="img" aria-labelledby="title desc">
+<title id="title">Solstice Wilds</title><desc id="desc">An explorer overlooks a lush coastal valley, an ancient observatory and a lighthouse shining over the sea.</desc>
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#a3c9c5"/><stop offset=".6" stop-color="#e8dfbd"/><stop offset="1" stop-color="#e4c18f"/></linearGradient>
+ <linearGradient id="sea" x2=".8" y2="1"><stop stop-color="#7ba8a5"/><stop offset="1" stop-color="#2b636e"/></linearGradient>
+ <linearGradient id="foreground" x2="0" y2="1"><stop stop-color="#365b4e"/><stop offset="1" stop-color="#112f32"/></linearGradient>
+ <linearGradient id="beam"><stop stop-color="#fff1b4" stop-opacity=".8"/><stop offset="1" stop-color="#fff1b4" stop-opacity="0"/></linearGradient>
+ <linearGradient id="cliff" x2=".5" y2="1"><stop stop-color="#8c9d7b"/><stop offset="1" stop-color="#426b64"/></linearGradient>
+ <radialGradient id="sun"><stop stop-color="#fff3c9"/><stop offset=".6" stop-color="#f7e7bc" stop-opacity=".6"/><stop offset="1" stop-color="#f7e7bc" stop-opacity="0"/></radialGradient>
+ <pattern id="grain" width="35" height="35" patternUnits="userSpaceOnUse"><path d="M3 8h2m21 4h3M11 27h2" stroke="#f6edd1" stroke-opacity=".08" stroke-width="2"/></pattern>
+ <g id="tree"><path d="m-4 4 3-92 8 2 2 90Z" fill="#39584a"/><path d="m-1-81-23-11-22-38 13-24 39 1 24 29-6 26Z" fill="#547f61"/><path d="m1-103-16-28 12-35 33-3 29 26-8 24-25 17Z" fill="#79936c"/><path d="m-32-136 25-13 25 28-20 10Z" fill="#8caa7b"/></g>
+ <g id="fern"><path d="M0 0Q-6-55 18-102" fill="none" stroke="#537b62" stroke-width="4"/><path d="m1-20-42-19 19 31 22 1m0-28-35-27 10 31 25 11m3-28-24-31 3 29 18 13m7-31-13-26-1 20 10 17M2-19l38-22-14 29-25 6m1-31 37-30-10 32-28 13m9-31 29-28-7 25-26 17m10-33 23-23-4 19-22 15" fill="#648869"/></g>
+</defs>
+<path fill="url(#sky)" d="M0 0h1280v800H0z"/>
+<circle cx="953" cy="208" r="203" fill="url(#sun)"/>
+<circle cx="953" cy="208" r="55" fill="#f8e9bf" opacity=".9"/>
+<path d="m0 336 93-62 62 31 101-116 92 80 74-42 97 88 97-153 112 93 72-70 106 107 77-51 97 67V512H0Z" fill="#90afa1"/>
+<path d="m0 395 139-91 83 35 71-51 82 56 95-3 102 42 109-66 103 59 103-53 105 44 178-53v245H0Z" fill="#72998b"/>
+<path d="M0 467q197-72 331-23t313-8 336-18 300 22v360H0Z" fill="url(#sea)"/>
+<path d="M18 543q156-20 284-18m-231 49q157-29 332-7m364-96 359 3m-310 24 379 4M54 627q156-17 287-6m599-78 292 16" fill="none" stroke="#c7d6b8" stroke-width="3" opacity=".45"/>
+<!-- Distant northern observatory, raised over the wetland. -->
+<path d="m513 441 50-81 72-20 104 7 78 50 25 63-61 39-195-6Z" fill="#6b9075"/>
+<path d="m531 436 44-71 71-14 86 11 60 41-16 21-85-23-70 16-41 35Z" fill="#9ba47b"/>
+<path d="M609 365v-62h14v59m97 8v-73h15v81m-85-23v-43h12v42" stroke="#c4c5a4" stroke-width="5" fill="#bcc2a6"/>
+<path d="m594 370 155-3 19 11-184 3Z" fill="#cbd0ad"/>
+<path d="M676 355v-53" stroke="#baae7b" stroke-width="14"/>
+<g fill="none" stroke="#c6aa6f" stroke-width="6"><ellipse cx="676" cy="286" rx="41" ry="15" transform="rotate(-24 676 286)"/><ellipse cx="676" cy="286" rx="17" ry="44" transform="rotate(30 676 286)"/><ellipse cx="676" cy="286" rx="36" ry="34"/></g>
+<path d="m676 266 13 20-13 21-13-21Z" fill="#d5f4c8"/>
+<path d="m572 398 29-17 22 12-11 18-31 3Zm139 5 33-17 21 11-7 18-30 7Z" fill="#496f5d"/>
+<!-- Main valley, with a turquoise river and the reconstructed crossing. -->
+<path d="M301 800 280 643l101-114 94-67 110 23 89 43 163-63 117-6 115 52 98 111 113 70v108Z" fill="url(#cliff)"/>
+<path d="m352 631 70-97 84-44 93 27 97 46 132-51 112-23 91 37 82 80-80-35-105-11-114 29-111 15-102-39-88-15-83 61Z" fill="#94a27a"/>
+<path d="M824 460q-70 61-111 80t-80 62q-15 32-52 71t-41 127h83q-16-60 30-107t48-79q-4-29 57-56t124-63Z" fill="#8bb6af"/>
+<path d="M830 471q-72 64-111 82t-71 57q-13 30-44 66t-42 124" fill="none" stroke="#d5dbc0" stroke-width="4" opacity=".6"/>
+<path d="m623 590 95 28-5 12-96-28Z" fill="#af9464"/>
+<path d="m619 579 100 30m-100-18 100 29M627 578v28m21-23v29m22-22v29m23-24v29m22-22v28" stroke="#405b50" stroke-width="4"/>
+<path d="M1054 738 956 665l-156-3-66-32-92-12-69-47-95 14-41 76-48 61" fill="none" stroke="#ccbb88" stroke-width="13" opacity=".8"/>
+<!-- Archive arches on the western shore. -->
+<path d="m384 579 90-39 92 27-10 22-79 17Z" fill="#536f5c"/>
+<path d="M410 562v-57q0-48 35-45 33 4 32 45v36l-13 5v-40q0-32-19-32-21-1-21 32v50Zm66-19v-45q0-44 34-38 31 5 31 48v47l-13-4v-43q0-29-18-33-21-3-21 24v49Z" fill="#c6c7a5"/>
+<path d="M411 509v52m54-56v39m12-42v38m53-31v42" stroke="#a4af92" stroke-width="5"/>
+<path d="m450 570 0-40 12-4 6 40m37 17 0-41 12-3 5 37" fill="#aac0a1"/>
+<path d="m456 520 7 7-7 9-7-8Zm54 13 6 6-7 10-6-7Z" fill="#bde9bc"/>
+<!-- Trees become deeper and larger toward the shore. -->
+<g transform="translate(362 562) scale(.6)"><use href="#tree"/></g><g transform="translate(559 568) scale(.56)"><use href="#tree"/></g><g transform="translate(922 544) scale(.65)"><use href="#tree"/></g>
+<g transform="translate(1023 589) scale(.83)"><use href="#tree"/></g><g transform="translate(752 650) scale(.72)"><use href="#tree"/></g><g transform="translate(443 692) scale(.7)"><use href="#tree"/></g>
+<g transform="translate(1204 670) scale(1.1)"><use href="#tree"/></g><g transform="translate(1024 717) scale(.9)"><use href="#tree"/></g>
+<!-- Lighthouse, with a narrow metal crown and a real beacon. -->
+<path d="m904 628 51-23 62 20-12 37-68 13-46-20Z" fill="#4b7265"/>
+<path d="m932 626 11-178 33-8 30 13 13 173-41 21Z" fill="#c4c4a3"/>
+<path d="m977 441 29 12 13 173-41 21Z" fill="#a2b095"/>
+<path d="m934 455 43 15 34-15-3-15-30-11-39 10Z" fill="#658b7c"/>
+<path d="m939 440 1-47 37-13 30 13v47l-30 11Z" fill="#c1dbc1"/>
+<path d="m939 393 38 13 30-13m-30 13v45m-37-58v47m67-47v47m-67-23 37 15 30-13" stroke="#6a8874" stroke-width="5" fill="none"/>
+<path d="m931 393 47-48 41 48-42 13Z" fill="#c1a66b"/>
+<path d="m977 345 42 48-42 13Z" fill="#958f5f"/>
+<path d="M977 345v-17" stroke="#777e58" stroke-width="4"/>
+<path d="m957 512 10-3v28l-11 4m0 41 12-4v31l-13 4" fill="#517567"/>
+<path d="m976 414 304-83v156Z" fill="url(#beam)" opacity=".7"/>
+<circle cx="976" cy="414" r="9" fill="#fff1bc"/>
+<!-- Foreground coast, explorer and ferns. -->
+<path d="M0 800V659l56-21 96 30 89-23 77 60 88 28 96 67Z" fill="url(#foreground)"/>
+<path d="m53 800 47-100 82-31 78 34 44 97Z" fill="#57765b"/>
+<path d="m137 673 42-28 37 13 24 34-51 19-46-9Z" fill="#8b9370"/>
+<g transform="translate(215 625)">
+ <path d="m-17 26-7 73-14 40 19 4 25-44 4-48 9 49 13 41 22-5-16-50-5-59Z" fill="#294648"/>
+ <path d="m-25 13 8-51 32-7 24 24-2 55-28 17-31-11Z" fill="#d0ac6d"/>
+ <path d="m-21-32-15 6-14 40 16 7 20-42m46-5 14 6 13 39-15 7-17-37" fill="#c1a878"/>
+ <path d="m-50 12-8 27 9 7 18-30m74 14 5 22 10-1-2-27" fill="#a98260"/>
+ <path d="m-14-38-3-20 11-18 21 1 13 18-7 17Z" fill="#b78a60"/>
+ <path d="m-24-59 17-12 29-1 13 13-25 9Z" fill="#2b5250"/>
+ <path d="m-8-70 3-15 17-5 17 17-7 8Z" fill="#d0b578"/>
+ <path d="m-20-38 16-4 27 3-4 12-25-4-7 39-11-4Z" fill="#d8825b"/>
+ <path d="m-29-13 8-18 24 5 7 38-31 10-13-6Z" fill="#335a53"/>
+ <path d="m-27-9 23-4 6 22-24 6Z" fill="#54776a"/>
+ <path d="m-32-12-6 0-5 31 8 3Z" fill="#dbd2a8"/>
+ <path d="m47 45 11-3 5 13-11 5Z" fill="#b8dcb4"/>
+</g>
+<g transform="translate(32 797) scale(1.4)"><use href="#fern"/></g><g transform="translate(106 805) scale(1.1) rotate(20)"><use href="#fern"/></g><g transform="translate(354 814) scale(1.7) rotate(-15)"><use href="#fern"/></g>
+<path d="M1136 800q-17-108 45-156t99-39v195Z" fill="#21473e"/>
+<g transform="translate(1160 804) scale(1.5) rotate(-10)"><use href="#fern"/></g><g transform="translate(1257 807) scale(1.8) rotate(18)"><use href="#fern"/></g>
+<path fill="url(#grain)" d="M0 0h1280v800H0z"/>
+<text x="66" y="68" fill="#285248" font-family="Arial,sans-serif" font-size="14" letter-spacing="6">AN ORIGINAL EXPEDITION</text>
+<text x="62" y="151" fill="#244b44" font-family="Georgia,serif" font-size="81" letter-spacing="-3">SOLSTICE</text>
+<text x="65" y="225" fill="#315a4b" font-family="Georgia,serif" font-size="79" letter-spacing="5">WILDS</text>
+<path d="M69 253h211" stroke="#69876d" stroke-width="2"/>
+<text x="69" y="283" fill="#456850" font-family="Georgia,serif" font-size="21" font-style="italic">Bring the light home.</text>
+<text x="1210" y="766" text-anchor="end" fill="#d3dfbf" font-family="Arial,sans-serif" font-size="12" letter-spacing="3">ARCHITECT INDUSTRIES</text>
+</svg>

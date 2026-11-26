@@ -761,7 +761,7 @@ window.WWG_GAMES.forEach(game => {
     "id": "aegis-verge",
     "title": "Aegis Verge",
     "tagline": "Drive the Vesper. Break the siege. Secure the relays.",
-    "description": "An original 3D hover-combat campaign across three operations. Pilot the Vesper through fortified arenas, use cover and a timed Aegis shield, flank distinct enemy rigs, and secure each relay before extracting. Destructible barricades, salvage stations, tactical abilities, optional Flux Circuit trials, checkpoint recovery, and touch controls deepen each run.",
+    "description": "Drive the Vesper through three original 3D combat operations surrounded by sculpted basins, arched causeways, working cranes, reactors and monumental arrays. Read enemy windups, use physical cover and a timed Aegis shield, secure relays, and extract. Destructible barricades, salvage, tactical tools, Flux Circuit trials and recoverable checkpoints deepen the campaign.",
     "objective": "Defeat the defenders at each relay, stay inside its cyan perimeter for three seconds to secure it, then drive into the green extraction zone. Complete all three operations. Use cover, watch hostile firing lanes, and manage hull and Aegis energy.",
     "genres": [
       "Vehicle Combat",
@@ -772,7 +772,7 @@ window.WWG_GAMES.forEach(game => {
     ],
     "added": "2026-10-04",
     "updated": "2026-11-26",
-    "version": "2.95",
+    "version": "3.0",
     "featured": true,
     "basePopularity": 710,
     "cover": "covers/aegis-verge.svg",
@@ -800,7 +800,7 @@ window.WWG_GAMES.forEach(game => {
     "id": "cyber-wars",
     "title": "Cyber Wars",
     "tagline": "Explore Viridia. Learn from its books. Earn your place.",
-    "description": "Explore the living rainforest of Viridia in an original action RPG. Meet its steward, study in the Canopy archive, restore solar obelisks, and confront the Relic Warden. Ten Pilot ranks combine book learning with practical trials. Rain changes stealth and wildlife behavior; an optional river expedition adds raft navigation and drifting cargo. Buy a home to preserve your progress.",
+    "description": "Explore Viridia beneath rounded forest canopies, curved stone gateways and open archive galleries in an original 3D action RPG. Meet its steward, learn through books and ten Pilot trials, restore solar obelisks, and confront the Relic Warden. Weather changes stealth and wildlife behavior while the river carries rafts and cargo. Buy a home to preserve your progress.",
     "objective": "Complete the steward’s initiation, restore three solar obelisks, defeat the southern Relic Warden, earn 100 credits to buy a home, and save at that home. Explore the archive and practical trainers to advance the ten-rank Pilot skill. The river challenge is an optional 75-second cargo expedition.",
     "genres": [
       "RPG",
@@ -812,7 +812,7 @@ window.WWG_GAMES.forEach(game => {
     ],
     "added": "2026-10-08",
     "updated": "2026-11-26",
-    "version": "0.64",
+    "version": "0.65",
     "featured": true,
     "basePopularity": 980,
     "cover": "covers/cyber-wars.svg",
@@ -918,3 +918,48 @@ window.WWG_GAMES.forEach(game => {
     ]
   }
 ];for(const game of additions){if(!window.WWG_GAMES.some(existing=>existing.id===game.id))window.WWG_GAMES.push(game);}})();
+
+// v498: the new expedition is the current featured release.
+window.WWG_GAMES.unshift({
+  "id": "solstice-wilds",
+  "title": "Solstice Wilds",
+  "tagline": "Read the ruins. Restore the crossing. Bring the light home.",
+  "description": "Explore a living coastal valley in an original third-person 3D expedition. Decipher the Archive’s rune sequence, recover salvage from the Tide Workshop, repair the river bridge, and confront the Solstice Spire’s telegraphed guardians. Wind, coastal rain, changing daylight, an orbit camera and checkpointed progression connect the journey.",
+  "objective": "Restore the Archive, repair the bridge using four recovered parts, defeat all three Spire guardians and activate the armillary, then return to the Dawn Lighthouse.",
+  "genres": [
+    "3D",
+    "Exploration",
+    "Adventure",
+    "Action",
+    "Puzzle",
+    "Combat"
+  ],
+  "added": "2026-11-26",
+  "updated": "2026-11-26",
+  "version": "1.0",
+  "featured": true,
+  "basePopularity": 0,
+  "modes": [
+    "Solo"
+  ],
+  "cover": "covers/solstice-wilds.svg",
+  "path": "games/solstice-wilds/index.html",
+  "accent": "#b6dcac",
+  "remappable": true,
+  "scoreMeta": {
+    "unit": "pts",
+    "direction": "high",
+    "label": "Expedition score"
+  },
+  "controls": [
+    "WASD or Arrow keys move; custom movement remaps also work.",
+    "Space or your primary action sends a pulse at nearby guardians and salvage crates.",
+    "E or your secondary action reads inscriptions, activates pillars and interacts with machinery.",
+    "Shift sprints. Drag the view to orbit the camera. P or Escape pauses.",
+    "Read the Archive tablet before solving its three-rune sequence. Wrong sequences can be retried.",
+    "Recover four parts from workshop crates to repair the river bridge. Defeat the three northern guardians before activating the Spire.",
+    "Return to the Dawn Lighthouse after restoring all three sites to finish. Only a complete fresh expedition earns a score.",
+    "Checkpoints save after site restoration. Continued and retried expeditions are unranked practice.",
+    "Touch joystick and labeled action buttons are available. Standard gamepad: left stick moves, right stick orbits, A pulses, X interacts, B or left trigger sprints, Start pauses."
+  ]
+});

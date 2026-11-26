@@ -104,3 +104,10 @@ Original Cloudforge input repair; no third-party code, assets, dependencies or m
 
 ### v489
 Original Neon Serpent controller slot repair. Phaser 3.90.0 MIT modules studied only; no third-party source, media or dependencies imported.
+
+
+## v498 dynamic 3D resources
+
+- Three.js r187 (`three@0.187.0`), by the Three.js authors, MIT. Local distribution, retained license and original upstream file hashes are in `assets/vendor/three-r187/`. Source: https://github.com/mrdoob/three.js/releases/tag/r187.
+- Poly Haven Forest Ground 01 and Mossy Rock by Rob Tuytel, CC0-1.0. Six unmodified 1K material images are in `assets/materials/`. Exact source URLs, byte sizes and SHA-256 hashes are recorded in `assets/materials/PROVENANCE.md`. License: https://polyhaven.com/license.
+- The scene adapter, software renderer, original game geometry, environments, gameplay and interfaces in this release are Architect Industries work. These additions do not include retail game assets.

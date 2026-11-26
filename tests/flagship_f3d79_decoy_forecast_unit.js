@@ -35,5 +35,6 @@ check('cue remains uncertain',V.cue(observe(distant)).includes('positions may ch
 check('no game score/damage logic in forecast module',typeof V.observe,'function');
 const index=fs.readFileSync(path.join(root,'index.html'),'utf8');
 check('production call passes real TD.hitTime',index.includes('(d,ax,az,bx,bz)=>TD.hitTime(d,ax,az,bx,bz,T)'),true);
-check('title remains at or beyond first repaired 2.79 build',/Aegis Verge 2\.(?:79|[89]\d|\d{3,})/.test(index),true);
+const titleVersion=index.match(/<title>Aegis Verge (\d+)\.(\d+)\b/);
+check('title remains at or beyond first repaired 2.79 build',!!titleVersion&&(Number(titleVersion[1])>2||(Number(titleVersion[1])===2&&Number(titleVersion[2])>=79)),true);
 console.log(`F3D79 decoy-aware forecast ${checks}/${checks} passed`);

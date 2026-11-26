@@ -4,11 +4,13 @@ import crypto from 'node:crypto';
 import vm from 'node:vm';
 import {execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {prepareAssets} from './fetch-public-assets.mjs';
 
 // Keep application source and selected regressions in Git, and publish only the
 // game runtime. Historical build evidence stays in its preserved source archive.
-// No dependency installation, credentials or external assets are used.
+// Build-only downloads use pinned public URLs and exact hashes; runtime assets are self-hosted.
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+await prepareAssets();
 const output=path.join(root,'dist');
 const pkg=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8'));
 const version='v'+pkg.version.split('.')[0];
@@ -54,7 +56,17 @@ for(const relative of inventory.filter(p=>p.endsWith('.html'))){
 }
 let worker=fs.readFileSync(path.join(root,'sw.js'),'utf8');
 if(!/const ASSETS\s*=\s*\[[\s\S]*?\];/.test(worker))throw new Error('Missing worker inventory');
-worker=worker.replace(/const CACHE='[^']+';/,"const CACHE='wwg-"+version+"';").replace(/const ASSETS\s*=\s*\[[\s\S]*?\];/,'const ASSETS='+JSON.stringify([...precache].sort(),null,2)+';');
+worker=worker.replace(/const CACHE='[^']+';/,"const CACHE='__WWG_CACHE__';").replace(/const ASSETS\s*=\s*\[[\s\S]*?\];/,'const ASSETS='+JSON.stringify([...precache].sort(),null,2)+';');
+// A rebuilt release must replace its cached bytes even when its human-facing
+// version is unchanged. Fingerprint the full runtime and normalized worker.
+const fingerprint=crypto.createHash('sha256');
+for(const relative of inventory){
+  fingerprint.update(relative+'\0');
+  fingerprint.update(relative==='sw.js'?worker:fs.readFileSync(path.join(root,relative)));
+  fingerprint.update('\0');
+}
+const cache='wwg-'+version+'-'+fingerprint.digest('hex').slice(0,12);
+worker=worker.replace("const CACHE='__WWG_CACHE__';","const CACHE='"+cache+"';");
 if(process.argv.includes('--update-cache'))fs.writeFileSync(path.join(root,'sw.js'),worker);
 if(fs.existsSync(output)&&fs.lstatSync(output).isSymbolicLink())throw new Error('Refusing symlinked output directory');
 fs.rmSync(output,{recursive:true,force:true});fs.mkdirSync(output,{recursive:true});
@@ -65,7 +77,12 @@ for(const relative of inventory){
   hashes[relative]=crypto.createHash('sha256').update(bytes).digest('hex');
 }
 let commit=process.env.VERCEL_GIT_COMMIT_SHA||'';
-if(!commit){try{commit=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8',stdio:['ignore','pipe','ignore']}).trim()}catch{commit='uncommitted'}}
-const release={version,date:'2026-11-26',owner:'Architect Industries',commit,catalogCount:games.length,cache:'wwg-'+version,sourceTracks:['catalog-v496','Arcade-Nights','Mosaic-B1','Profile-B2','Aegis-F3D95','Cyber-Wars-0.64','Dynamic-Campaigns'],games:games.map(({id,version,path:gamePath})=>({id,version,path:gamePath})),publicFileCount:inventory.length,sha256:hashes};
+let sourceDirty=false;
+if(!commit){try{
+  commit=execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8',stdio:['ignore','pipe','ignore']}).trim();
+  sourceDirty=!!execFileSync('git',['status','--porcelain','--untracked-files=normal'],{cwd:root,encoding:'utf8',stdio:['ignore','pipe','ignore']}).trim();
+  if(sourceDirty)commit+='-working-tree';
+}catch{commit='uncommitted';sourceDirty=true;}}
+const release={version,date:'2026-11-26',owner:'Architect Industries',commit,sourceDirty,catalogCount:games.length,cache,sourceTracks:['catalog-v496','Arcade-Nights','Mosaic-B1','Profile-B2','Aegis-3.0-Worldscape','Cyber-Wars-0.65-Viridia','Dynamic-Campaigns','Solstice-Wilds-1.0','Three-r187'],games:games.map(({id,version,path:gamePath})=>({id,version,path:gamePath})),publicFileCount:inventory.length,sha256:hashes};
 fs.writeFileSync(path.join(output,'release.json'),JSON.stringify(release,null,2)+'\n');
 console.log(JSON.stringify({version,games:games.length,publicFiles:inventory.length,precacheURLs:precache.size,output,commit}));

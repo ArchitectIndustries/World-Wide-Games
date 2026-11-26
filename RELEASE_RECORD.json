@@ -1,14 +1,76 @@
 {
-  "version": "v497",
+  "version": "v498",
   "date": "2026-11-26",
   "owner": "Architect Industries",
-  "status": "VALIDATED_INTEGRATED_SOURCE",
+  "status": "VALIDATED_RELEASE_SOURCE",
   "catalog": {
-    "games": 91,
-    "genreTags": 136
+    "games": 92,
+    "genreTags": 136,
+    "retainedV497Games": 91,
+    "newGames": [
+      "solstice-wilds"
+    ],
+    "baselineIdsVerified": 91,
+    "missingBaselineIds": []
   },
-  "baseCommit": "8ffd27a4aa115ff4647c0946e5eea032b91504f9",
+  "baseCommit": "53a569bf4b8493e666298d4c702e427e2e14260d",
+  "previousRelease": {
+    "version": "v497",
+    "commit": "53a569bf4b8493e666298d4c702e427e2e14260d"
+  },
+  "gameVersions": {
+    "solstice-wilds": "1.0",
+    "aegis-verge": "3.0",
+    "cyber-wars": "0.65",
+    "mosaic-memory": "1.1"
+  },
   "sources": {
+    "Solstice-Wilds": {
+      "version": "1.0",
+      "kind": "original-first-party-game"
+    },
+    "Aegis-Verge": {
+      "version": "3.0",
+      "kind": "original-industrial-world-and-compact-guide"
+    },
+    "Aegis-F3D96": {
+      "archive": "WorldWideGames_FLAGSHIP_F3D96_EXACT_F3D95_PATCH.zip",
+      "sha256": "770bfc79ae0bf426ad62dec7403f04679e2586fdf5b5601a0507f1daa0cc1666",
+      "restoredSignalUplinkSHA256": "fd2b79821d6210f14a5b3b253616908059a5d15638fec5673de33b996a57c614"
+    },
+    "Cyber-Wars": {
+      "version": "0.65",
+      "baselineVersion": "0.64",
+      "kind": "original-Viridia-world-and-paused-field-guide",
+      "baselineGameplayComparisonStates": 8,
+      "checkpointBytesEqual": true
+    },
+    "Three": {
+      "package": "three@0.187.0",
+      "source": "https://registry.npmjs.org/three/-/three-0.187.0.tgz",
+      "distribution": "original-upstream-ES-modules",
+      "license": "MIT",
+      "archiveBytes": 4795351,
+      "archiveSHA256": "ff540832ded0cfe919764d24a3d88f3e2a05f23303f876423e4f893841e90728",
+      "moduleFiles": [
+        "assets/vendor/three-r187/three.core.js",
+        "assets/vendor/three-r187/three.module.js"
+      ],
+      "provenance": "assets/vendor/three-r187/PROVENANCE.md"
+    },
+    "Poly-Haven": {
+      "materials": [
+        "forrest_ground_01",
+        "mossy_rock"
+      ],
+      "author": "Rob Tuytel",
+      "images": 6,
+      "resolution": "1024x1024",
+      "license": "CC0-1.0",
+      "provenance": "assets/materials/PROVENANCE.md"
+    }
+  },
+  "inheritedRecoverySources": {
     "catalog-v496": {
       "sha256": "5cfe087b598e175cfe8a885cd734a657c4a2d51e1d884e8db4e7fc08df2f67be",
       "gameCount": 83
@@ -40,14 +102,167 @@
       "preservedConcurrentChanges": true
     }
   },
-  "rejectedSupersededChanges": [
-    "B3 service worker superseded by v480-v481 public-cache safeguards"
-  ],
+  "inheritedRecoveryIndex": {
+    "path": "docs/RECOVERED_CHANGE_HISTORY_2026-11-26.md",
+    "revisions": 424,
+    "from": "v73",
+    "through": "v496"
+  },
+  "assetDelivery": {
+    "sourceStrategy": "pinned-official-URL-and-checksum-build-downloads",
+    "cleanBuildRequiresProviderAccess": true,
+    "verification": "exact-resource-checksums; fail closed on missing or mismatched bytes",
+    "runtimeDelivery": "same-origin staged files",
+    "runtimeCDN": false,
+    "esbuildRequired": false,
+    "finalManifestQualification": "VALIDATED_EXACT_OUTPUTS_FAILURE_RECOVERY_AND_REAL_CLEAN_PROVIDER_DOWNLOAD",
+    "manifest": "tools/asset-sources.json",
+    "preparationTool": "tools/fetch-public-assets.mjs",
+    "sources": 7,
+    "outputs": 8,
+    "runtimeBytes": 7554421,
+    "exactLocalOutputsVerified": 8,
+    "cleanProviderRun": {
+      "downloadedSources": 7,
+      "reusedOutputs": 0,
+      "downloadBytes": 10216073,
+      "outputFiles": 8,
+      "outputBytes": 7554421,
+      "observedSeconds": 9.28
+    }
+  },
+  "worker": {
+    "namespacePattern": "wwg-v498-<12 lowercase hexadecimal characters>",
+    "fingerprint": "public paths and bytes with normalized worker namespace",
+    "namespaceAuthority": "Generated release.json cache field",
+    "precacheURLs": 325,
+    "catalogGames": 92
+  },
+  "validation": {
+    "solstice": {
+      "modelTests": 20,
+      "inputTests": 9,
+      "geometryCameraTests": 4,
+      "reportedPassed": 33
+    },
+    "aegis": {
+      "worldChecksPassed": 65,
+      "signalForgeAssertionsPassed": 295,
+      "instanceStorageChecksPassed": 14,
+      "hudChecksPassed": 38
+    },
+    "cyberWars": {
+      "visualAssertionsPassed": 1295,
+      "instanceStorageChecksPassed": 14,
+      "fieldGuideGroupsPassed": 14,
+      "baselineStatesMatched": 8,
+      "checkpointBytesEqual": true
+    },
+    "specialistIntegration": {
+      "passed": 40,
+      "total": 40
+    },
+    "legacyFlagshipPrograms": {
+      "latestPassed": 90,
+      "total": 90,
+      "basis": "89 passing programs in fresh sweep plus affected F3D80 recheck, 16/16 checks after cache fingerprint predicate correction"
+    },
+    "finalCombinedGates": {
+      "releaseTestCases": {
+        "passed": 5,
+        "total": 5
+      },
+      "dynamic3DRunnerEntries": {
+        "passed": 47,
+        "total": 47,
+        "note": "Node test-runner entries include cases and script programs; embedded assertion totals are separate"
+      },
+      "workerContractChecks": {
+        "passed": 113,
+        "total": 113,
+        "precacheURLs": 325,
+        "catalogGames": 92
+      },
+      "localBuildPublicFiles": 343,
+      "status": "PASSED",
+      "arcadeTestCases": {
+        "passed": 51,
+        "total": 51
+      },
+      "profileStorageChecks": {
+        "passed": 198,
+        "total": 198
+      },
+      "specialistIntegrationChecks": {
+        "passed": 40,
+        "total": 40
+      },
+      "latticeMenuChecks": {
+        "passed": 26,
+        "total": 26
+      },
+      "assetPreparationTestCases": {
+        "passed": 9,
+        "total": 9
+      },
+      "fingerprintChecks": {
+        "passed": 7,
+        "total": 7,
+        "behavior": [
+          "unchanged build stable",
+          "runtime edit changes cache key",
+          "revert restores original cache and all public hashes"
+        ]
+      }
+    },
+    "realBrowserQA": "COMPLETED_FOR_RECORDED_DESKTOP_SCOPE",
+    "hardwareAndDeviceCertification": "NOT_CLAIMED",
+    "browserObservations": {
+      "environment": "cloud Chrome, software 3D fallback",
+      "gameFrame": {
+        "width": 978,
+        "height": 550
+      },
+      "cyberWars": [
+        "compact core HUD and objective",
+        "guide scrolling, closing and focus return",
+        "C camera switching",
+        "movement changes objective distance",
+        "Pause menu opens"
+      ],
+      "solsticeWilds": [
+        "corrected lighthouse spawn camera",
+        "coastal ocean no longer overpaints inland ground; avatar and terrain visible",
+        "walked to Archive and read Leaf \u2192 Sun \u2192 Tide clue",
+        "physically attuned all three pillars; Archive restored and checkpoint saved",
+        "next workshop objective displayed",
+        "reloaded and selected Continue; stage 2 restored as CHECKPOINT PRACTICE",
+        "journal opens and closes; P pauses"
+      ],
+      "notClaimed": [
+        "complete browser-played campaigns",
+        "hardware FPS",
+        "hardware WebGL",
+        "physical controllers",
+        "mobile devices",
+        "screen readers",
+        "other browser engines"
+      ],
+      "aegisVerge": [
+        "slim Hull/Aegis/hostile HUD and short objective",
+        "guide opens and pauses; Resume closes it",
+        "driving and firing work; hostiles decrease from three to two",
+        "P opens pause",
+        "Settings camera changes the view"
+      ]
+    }
+  },
   "production": {
     "url": "https://worldwidegames.vercel.app/",
     "projectId": "prj_CgW1xTHIZOOe1R4RNzcByfvxantq",
     "receipt": "https://worldwidegames.vercel.app/release.json",
-    "verification": "Match the live receipt commit and file hashes to the final source commit."
-  },
-  "reconciledMain": "f33d5ffd014f132af21c24eef730c2de122e9535"
+    "status": "VERIFY_LIVE_RECEIPT_AFTER_PUBLICATION",
+    "verification": "After publication, match the live receipt commit, 92-game catalog, target executable versions, generated worker namespace and public hashes to the committed source. This validated source record does not assert that the deployment is already live.",
+    "identityAuthority": "Runtime release.json: commit, cache, catalog and public file SHA-256 hashes"
+  }
 }

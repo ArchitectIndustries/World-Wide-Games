@@ -4,3 +4,8 @@ node_modules/
 .vercel/
 __pycache__/
 *.pyc
+
+# Generated public assets; approved sources and hashes are tracked in tools/asset-sources.json.
+/assets/materials/*.jpg
+/assets/vendor/three-r187/three.core.js
+/assets/vendor/three-r187/three.module.js

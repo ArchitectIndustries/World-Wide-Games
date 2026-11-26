@@ -115,7 +115,11 @@ function render(engine,e,quality='full',time=0,calm=false){
  const a=Number(e.yaw)||0,s=Math.sin(a),c=Math.cos(a),list=parts(e,quality,time,calm);
  for(const part of list){
   const x=e.x+part.r*c+part.f*s,z=e.z-part.r*s+part.f*c;
-  engine.cube(x,part.y,z,part.w,part.h,part.d,part.color,a,part.em);
+  // Fixed-size armor receives true bevelled silhouettes. Charged rails,
+  // growing cores and other changing dimensions retain the bounded cube path.
+  const shape=({keel:'hull',armor:'hull','swept-fin':'runner','shield-shoulder':'runner','ram-plate':'hull',spire:'relay',crown:'hull',nacelle:'runner'})[part.name];
+  if(shape&&engine.faceted)engine.faceted(shape,x,part.y,z,part.w,part.h,part.d,part.color,a,part.em);
+  else engine.cube(x,part.y,z,part.w,part.h,part.d,part.color,a,part.em);
  }
  return list.length;
 }

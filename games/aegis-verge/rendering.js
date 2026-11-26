@@ -19,7 +19,8 @@ function install(engine){
   engine.resize();w=engine.canvas.width;h=engine.canvas.height;eye={...e};engine.cam={...e};
   const yaw=Math.atan2(target.x-e.x,target.z-e.z),pitch=Math.atan2(target.y-e.y,Math.hypot(target.x-e.x,target.z-e.z));cy=Math.cos(yaw);syaw=Math.sin(yaw);cp=Math.cos(pitch);sp=Math.sin(pitch);fog=engine.fog.map(v=>v*255);f=h*.5/Math.tan(engine.fov/2);faces=[];engine.calls=0;
   const c=fog.map(Math.round),sky=ctx.createLinearGradient(0,0,0,h);
-  sky.addColorStop(0,`rgb(${c[0]+16},${c[1]+24},${c[2]+36})`);sky.addColorStop(.6,`rgb(${c[0]},${c[1]},${c[2]})`);sky.addColorStop(1,'#02050b');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+  const atmosphere=engine.environmentFrame;
+  sky.addColorStop(0,atmosphere?.sky||`rgb(${c[0]+16},${c[1]+24},${c[2]+36})`);sky.addColorStop(.6,atmosphere?.horizon||`rgb(${c[0]},${c[1]},${c[2]})`);sky.addColorStop(1,atmosphere?.fog||'#02050b');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
  };
  const meshCache=new Map();
  engine.cube=(x,y,z,sx,sy,sz,color='#fff',angle=0,em=0,shape=null,ground=false)=>{
@@ -46,6 +47,23 @@ function install(engine){
  engine.faceted=(shape,...args)=>engine.cube(...args,shape);
  engine.meshStats=()=>({entries:meshCache.size,bytes:[...meshCache.values()].reduce((n,r)=>n+r.triangles.byteLength,0)});
  engine.cubeBatch=list=>{for(const q of list)engine.cube(q.x,q.y,q.z,q.sx,q.sy,q.sz,q.color,q.yaw,q.em,null,q.ground===true);};
+ // The environment uses the same original polygon path, including near-plane
+ // clipping. Low-tier scene geometry is bounded separately by Worldscape.
+ engine.mesh=(mesh,pose={},material={})=>{
+  if(material.pattern===9)return true; // the low-tier sky is the gradient above
+  const M=root.AegisEnvironmentMesh,r=M.rotation(pose),pts=mesh.vertices.map(v=>M.point(v,pose,r)),projected=new Array(pts.length),col=rgb(material.color||'#ffffff');
+  for(const face of mesh.faces){
+   const n=M.normal(face.n,pose,r),p=pts[face.ix[0]];
+   if(n[0]*(eye.x-p[0])+n[1]*(eye.y-p[1])+n[2]*(eye.z-p[2])<=0)continue;
+   const poly=clip(face.ix.map(i=>projected[i]||(projected[i]=view(pts[i]))));if(poly.length<3)continue;
+   const depth=poly.reduce((s,p)=>s+p.z,0)/poly.length;if(depth>engine.far)continue;
+   const screen=poly.map(p=>[w*.5+p.x/p.z*f,h*.5-p.y/p.z*f]);
+   if(screen.every(p=>p[0]<0)||screen.every(p=>p[0]>w)||screen.every(p=>p[1]<0)||screen.every(p=>p[1]>h))continue;
+   const amount=Math.min(.92,Math.max(0,(depth-engine.fogNear)/(engine.fogFar-engine.fogNear))),light=Math.min(1.6,.38+Math.max(0,n[0]*-.40+n[1]*.85+n[2]*-.30)*.72+(material.emissive||0)*.6),fill=col.map((v,i)=>Math.round(Math.min(255,v*light)*(1-amount)+fog[i]*amount));
+   faces.push({screen,depth,ground:material.ground===true,fill:`rgba(${fill.join(',')},${material.alpha??1})`});
+  }
+  engine.calls++;return true;
+ };
  engine.shadow=(x,y,z,sx,sz,angle)=>engine.cube(x,y,z,sx,.025,sz,'#03060c',angle,0);
  engine.end=()=>{faces.sort((a,b)=>Number(b.ground)-Number(a.ground)||b.depth-a.depth);for(const face of faces){ctx.beginPath();face.screen.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();ctx.fillStyle=face.fill;ctx.fill();}engine.softwareFaces=faces.length;};
  return engine;

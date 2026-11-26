@@ -7,7 +7,8 @@ const html=fs.readFileSync(path.join(home,'index.html'),'utf8');
 const css=fs.readFileSync(path.join(home,'compact-combat-hud.css'),'utf8');
 const js=fs.readFileSync(path.join(home,'compact-combat-hud.js'),'utf8');
 let passed=0;const ck=(name,val)=>{assert.ok(val,name);passed++};
-ck('compact cockpit remains present at version 2.58 or later',/Aegis Verge 2\.(?:5[8-9]|[6-9]\d|\d{3,})/.test(html));
+const titleVersion=html.match(/<title>Aegis Verge (\d+)\.(\d+)\b/);
+ck('compact cockpit remains present at version 2.58 or later',!!titleVersion&&(Number(titleVersion[1])>2||(Number(titleVersion[1])===2&&Number(titleVersion[2])>=58)));
 ck('separate original CSS loaded',html.includes('<link rel="stylesheet" href="compact-combat-hud.css">'));
 ck('separate controls handler loaded',html.includes('<script src="compact-combat-hud.js"></script>'));
 for(const [id,target] of [['compactBriefButton','objectivePanel'],['compactToolsButton','touchActions'],['compactMenuButton','toolbar']]){
