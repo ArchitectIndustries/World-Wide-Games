@@ -809,3 +809,91 @@ window.WWG_GAMES.push(...[
     ]
   }
 ]);
+
+// Reconcile two original titles from the verified v496 source; preserve all other catalog records.
+for(const update of [
+  {
+    "id": "lattice-armada",
+    "title": "Lattice Armada",
+    "tagline": "Break the formation. Charge the burst. Dismantle the Crown Array.",
+    "description": "A four-sector vertical shoot-em-up campaign with precision movement, chain scoring, elite weapon cores, tri-shot and rapid-fire upgrades, shield recovery, a bullet-clearing Phase Burst, a multi-pattern final boss with six/nine-lane warning arcs, distinct scout/weaver/turret one/two/three-lane warned volleys that lock the aimed position, earned sector scores, enemy-contact collision, blur/hidden-tab suspension with released controls and explicit resume, honest unscored defeats, validated campaign records with clear session-only saving notices, a compact-landscape unobstructed flight stage and 44px touch dock, gamepad support, and original runtime visuals and audio. Ranked campaign completions no longer expose production test shortcuts; local rankings are not server-authoritative.",
+    "objective": "Destroy the required hostile formation in each of four orbital sectors, read warned firing lanes and dodge enemy hulls and incoming fire, then defeat the Crown Array in sector four to dismantle the armada.",
+    "genres": [
+      "Shoot 'Em Up",
+      "Space",
+      "Arcade",
+      "Action",
+      "Bullet Hell"
+    ],
+    "added": "2026-10-03",
+    "updated": "2026-11-16",
+    "version": "2.0",
+    "featured": false,
+    "basePopularity": 520,
+    "cover": "covers/lattice-armada.svg",
+    "path": "games/lattice-armada/index.html",
+    "accent": "#67e8f9",
+    "remappable": true,
+    "scoreMeta": {
+      "unit": "pts",
+      "direction": "high",
+      "label": "Four-sector championship score"
+    },
+    "controls": [
+      "Arrow keys or WASD always move; saved custom movement remaps remain valid",
+      "Primary / Space fires the lattice cannon",
+      "Secondary / E triggers one Phase Burst per deliberate press at 100% charge; holding never spends an earned recharge",
+      "Read yellow enemy attack rings (0.55s) and Crown Array fan markers (0.65s), then dodge the locked paths. Enemy hull contact still costs shields or hull and awards no kill.",
+      "Destroy elites and kill chains to earn Rapid, Tri-shot, and Shield cores",
+      "P or the on-screen Pause button freezes the formation; after focus loss, return and explicitly Resume; R restarts; 1–4 selects unlocked sectors",
+      "Gamepad left stick moves; A fires; B triggers Phase Burst; Start pauses/resumes; release controls after reconnect or refocus",
+      "Touch D-pad, FIRE, and BURST controls support mobile play",
+      "For ranked points, clear sectors 1 through 4 in one uninterrupted run starting at sector 1; unlocked-sector replays and restarts are unranked practice"
+    ]
+  },
+  {
+    "id": "vanta-frontline",
+    "title": "Vanta Frontline",
+    "tagline": "Secure the uplinks. Survive the response. Reach extraction.",
+    "description": "A runtime-rendered tactical first-person shooter with three original operations, pointer-lock aiming, ADS, sprint/crouch/jump/lean movement, cover-aware rifle/rusher/sniper enemies with last-sighting memory and visible attack preparation, armor, pickups, graphics profiles, complete standard-controller play (deploy/continue, hold-Y uplinks, triggers/face buttons), pause/focus-safe foreground simulation with substep physics and frame-rate-fair scored time, failure-safe final-operation retry that retains only prior earned operation points, persistent records with a playable session-only fallback when storage is restricted, initially visible compact-landscape 44px Deploy and graphic profiles plus an optional expandable, scrollable mission briefing, and runtime-generated visuals and audio.",
+    "objective": "Secure every encrypted uplink in each of three operations, survive the response teams, then reach the cyan extraction gate. Clear all three operations to finish the campaign and earn a local ranked Frontline score; partial operations and losses are unranked.",
+    "genres": [
+      "FPS",
+      "Tactical",
+      "Shooter",
+      "3D",
+      "Action"
+    ],
+    "added": "2026-10-03",
+    "updated": "2026-11-23",
+    "version": "1.9",
+    "featured": false,
+    "basePopularity": 470,
+    "cover": "covers/vanta-frontline.svg",
+    "path": "games/vanta-frontline/index.html",
+    "accent": "#67e8f9",
+    "scoreMeta": {
+      "unit": "pts",
+      "direction": "high",
+      "label": "Frontline score"
+    },
+    "controls": [
+      "WASD or Arrow keys move and strafe",
+      "Mouse movement aims; Z / X provide keyboard turn fallback",
+      "Left mouse fires; right mouse holds ADS",
+      "Shift sprints; Ctrl crouches; Space vault-jumps; Q / E lean",
+      "Hold F, touch USE, or standard gamepad Y for 1.05 seconds while near a safe uplink",
+      "R reloads; ammunition and trauma kits are collected automatically",
+      "Standard gamepad: left/right sticks move/look; RT hold fires, LT ADS, Y hold secures uplinks, A jump/confirm, X reload, B crouch, Start pauses",
+      "Touch D-pad, FIRE, ADS, USE, RELOAD, and CROUCH controls support mobile play",
+      "Controller can deploy/continue/replay with A; release held buttons/sticks after connection or window refocus to arm safely",
+      "Choose Low, Medium, or High graphics before deployment; compact landscapes show all graphics choices and Deploy without scrolling; open the optional briefing to read complete mission and controls; restricted storage may make settings session-only",
+      "Amber hostile visor = 280ms aim preparation; break sightline or get behind cover to interrupt fire",
+      "Enemies investigate your last visible position, then disengage if you stay hidden",
+      "Secure all uplinks and reach extraction across all three operations"
+    ]
+  }
+]){
+  const entry=window.WWG_GAMES.find(g=>g.id===update.id);
+  if(entry) Object.assign(entry,update);
+}

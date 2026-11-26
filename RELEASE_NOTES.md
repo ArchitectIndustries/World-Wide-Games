@@ -200,3 +200,7 @@ v56 is verified and staged but not fully shipped. The complete lineage is preser
 - Added Stormwake Rescue and Iron Meridian, original three-operation campaigns with separate simulation loops, touch and remappable keyboard controls, local records, original covers and completion event rules.
 - Added targeted launch-overlay and campaign regression tests; bumped the owned service-worker cache and versioned catalog/event-rule URLs.
 - Lattice Armada's preceding menu visibility hotfix remains included. Source integration is not proof of production publication. See docs/DYNAMIC_CAMPAIGNS_2026-11-26.md for test scope and limitations.
+
+## v496 historical recovery — tranche 1 (2026-11-26)
+- Recover Lattice Armada 2.0 and Vanta Frontline 1.9; preserve the Lattice overlay hotfix and make launch/resume immediately visible at 320×240.
+- 401/401 selected Chromium assertions plus existing menu-visibility regression passed; exact shared input retained. See docs/V496_RECOVERY_TRANCHE_1.md for limitations. No claim of full v496 integration or production verification.
