@@ -1,0 +1,4 @@
+# Project-scoped Codex configuration. Loaded only when the local repository is trusted.
+# Actual multi-agent execution requires a compatible Codex session/runtime.
+[features]
+multi_agent = true
